@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+
+  build:
+    name: Build Transcendece
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello World" > file.txt   #this is where our build command goes
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ft_transcence
+          path: containers/
+          
+  all_test:
+    name: Test the system 
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ft_transcendence
+          path: containers
+      - run: |
+          echo "Run test for component1"
+          echo "Run test for component2"
