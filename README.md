@@ -1,6 +1,6 @@
 # 🚧 ft_transcendence 🚧
 
-Welcome to the "ft_transcendence" project! This project is part of the curriculum at Hive Helsinki (School 42) and aims to create a real-time web application - a multiplayer online game. The game is designed to showcase various skills, including web development, database management, and networking.
+Welcome to the "ft_transcendence" project! This project is part of the curriculum at Hive Helsinki (School 42) and aims to create a real-time web application - a multiplayer online game. The game is designed to showcase various skills, including web development, database management, and networking. This project was done in collaboration between [Meri Eskelinen](https://github.com/merituulie), [Dorian Jagusch](https://github.com/dorianjagusch), [Sakari Salmi](https://github.com/sakarisalmi) and [Äzär Sarikhani](https://github.com/azarSarikhani/).
 
 ## Table of Contents
 - [Overview](#overview)
