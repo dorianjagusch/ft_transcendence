@@ -24,7 +24,7 @@ The "ft_transcendence" project is focused on building an engaging online multipl
 
 To get started with the "ft_transcendence" project, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/ft_transcendence.git`
+1. Clone the repository: `git clone https://github.com/dorianjagusch/ft_transcendence.git`
 2. Navigate to the project directory: `cd ft_transcendence`
 3. Follow the setup instructions in the `docs/setup.md` file to configure your environment.
 4. Run the application locally and start exploring!
