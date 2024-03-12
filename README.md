@@ -5,7 +5,7 @@ Welcome to the "ft_transcendence" project! This project is part of the curriculu
 - [Josefina Husso](https://github.com/hussojo)
 - [Dorian Jagusch](https://github.com/dorianjagusch)
 - [Sakari Salmi](https://github.com/sakarisalmi)
-- [Azär Sarikhani](https://github.com/azarSarikhani/).
+- [Azär Sarikhani](https://github.com/azarSarikhani/)
 
 ## Table of Contents
 - [Overview](#overview)
