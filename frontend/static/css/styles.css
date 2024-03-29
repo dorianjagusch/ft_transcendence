@@ -1,0 +1,55 @@
+:root{
+	--background-color: rgb(1,21,45);
+	--nav-color: rgb(16,107,136);
+}
+
+body {
+	color:white;
+	font-family: Roboto ;
+	background-color: var(--background-color);
+}
+
+h1{
+	font-size: 90px;
+}
+
+h2{
+	font-size: 50px;
+}
+
+#navbar{
+	background-color: var(--nav-color);
+	padding: 25px;
+	margin: 0px;
+	font-size: 20px;
+	display: flex;
+	justify-content: space-between;
+
+}
+
+.navbar-item{
+	padding:10px;
+
+}
+
+a{
+	color: white;
+
+}
+
+a:link { 
+	text-decoration: none; 
+  } 
+
+  a:visited { 
+	text-decoration: none; 
+  } 
+
+  a:hover {
+	color: var(--background-color);
+}
+
+a:active { 
+	text-decoration: none; 
+}
+
