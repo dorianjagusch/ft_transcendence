@@ -19,34 +19,67 @@ h2{
 }
 
 #navbar{
+	background-position-x: 0%;
+	background-position-y: 0%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	background-color: var(--nav-color);
 	padding: 25px;
 	margin: 0px;
-	font-size: 20px;
-	display: flex;
-	justify-content: space-between;
-
 }
 
-.navbar-item{
-	padding:10px;
+#navbar ul{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
 
+#navbar ul{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#navbar > .nav-login {
+	width: max(30vw, 400px)
+}
+
+#navbar .nav-user ul{
+	width: 240px;
+}
+
+
+#nav-nologin ul{
+	display: flex;
+	justify-content: space-between;
+	width: 200px;
 }
 
 a{
 	color: white;
 
+#navbar img {
+	border-radius: 50px;
+	width: 2em;
+	margin-right:10px;
 }
 
-a:link { 
-	text-decoration: none; 
-  } 
 
-  a:visited { 
-	text-decoration: none; 
-  } 
+.navbar-item{
+	margin-left: 25px;
+	margin-right: 25px;
+}
 
-  a:hover {
+a {
+	color: white;
+}
+
+a:visited, a:link, a:active a:hover { 
+	text-decoration: none; 
+} 
+
+a:hover {
 	color: var(--background-color);
 }
 
