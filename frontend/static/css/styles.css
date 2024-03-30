@@ -97,7 +97,7 @@ header {
 	justify-content: space-between;
 	align-items: center;
 	background-color: var(--nav-color);
-	font-size: 25px;
+	padding: 25px;
 	margin: 0px;
 }
 
