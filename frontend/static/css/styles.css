@@ -178,6 +178,77 @@ a:is(:hover, :focus) {
 	font-size: 48px;
 }
 
+@media (max-width: 200px){
+	.col-list {
+		font-size: 60px;
+	}
+}
+
+@media (max-width: 576px){
+	.col-list {
+		font-size: 10px;
+	}
+}
+
+@media (max-width: 800px){
+	.col-list {
+		font-size: 18px;
+		min-width: 50vw;
+		padding-left:60px
+	}
+
+}
+
+@media (max-width: 992px){
+
+	h1{
+		font-size: 70px;
+	}
+
+	h2{
+		font-size: 50px;
+	}
+
+	.container{
+		flex-direction: column-reverse;
+		justify-content: center;
+		align-items: center;
+		align-content: center;;
+		padding-left:20px;
+		padding-right: 20px;
+	}
+	.col-list {
+		font-size: 22px;
+		min-width: 80vw;
+		margin: 0.5em
+	}
+}
+@media (max-width: 1200px){
+	.col-list {
+		font-size: 28px;
+	}
+}
+
+@media (max-width: 1400px){
+	.col-list {
+		font-size: 38px;
+		width: 45vw;
+	}
+}
+
+@media (max-width: 1780px){
+	.col-list {
+		font-size: 45px;
+		width: 50vw;
+	}
+}
+
+.list-body {
+	margin: 0px;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
 .placement-card {
 	background-color: var(--background-color);
 	border-radius: 1em;
