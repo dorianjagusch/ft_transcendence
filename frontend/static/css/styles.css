@@ -145,7 +145,11 @@ a {
 	color: hsl(0, 0%, 100%);
 }
 
+<<<<<<< HEAD
 a:is(:visited, :link, :active :hover, :focus) {
+=======
+a:visited, a:link, a:active a:hover {
+>>>>>>> 3397f97 (Clean format)
 	text-decoration: none;
 }
 
@@ -155,6 +159,11 @@ a:is(:hover, :focus) {
 
 .layer-1{
 	background-color:var(--nav-color);
+	border-radius: 20px;
+}
+
+.layer-2{
+	background-color:var(--background-color);
 	border-radius: 20px;
 }
 
@@ -196,7 +205,6 @@ a:is(:hover, :focus) {
 		min-width: 50vw;
 		padding-left:60px
 	}
-
 }
 
 @media (max-width: 992px){
@@ -223,6 +231,7 @@ a:is(:hover, :focus) {
 		margin: 0.5em
 	}
 }
+
 @media (max-width: 1200px){
 	.col-list {
 		font-size: 28px;
