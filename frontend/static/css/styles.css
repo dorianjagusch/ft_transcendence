@@ -74,9 +74,9 @@ a {
 	color: white;
 }
 
-a:visited, a:link, a:active a:hover { 
-	text-decoration: none; 
-} 
+a:visited, a:link, a:active a:hover {
+	text-decoration: none;
+}
 
 a:hover {
 	color: var(--background-color);
@@ -84,6 +84,11 @@ a:hover {
 
 .layer-1{
 	background-color:var(--nav-color);
+	border-radius: 20px;
+}
+
+.layer-2{
+	background-color:var(--background-color);
 	border-radius: 20px;
 }
 
@@ -125,7 +130,6 @@ a:hover {
 		min-width: 50vw;
 		padding-left:60px
 	}
-
 }
 
 @media (max-width: 992px){
@@ -152,6 +156,7 @@ a:hover {
 		margin: 0.5em
 	}
 }
+
 @media (max-width: 1200px){
 	.col-list {
 		font-size: 28px;
