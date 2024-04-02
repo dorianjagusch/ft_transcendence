@@ -10,16 +10,28 @@
 	<link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
-	<div class="layer-1 login-menu">
-		<h2 class="login-title">Login</h2>
-		<form>
-			<label for="username">Username:</label>
-			<input id="username" name="username"><br><br>
-			<label for="pwd">Password:</label>
-			<input type="password" id="pwd" name="pwd" minlength="10"><br><br>
-			<input class="primary-sign-btn" type="submit" text="Sign in">
-		</form>
+	<div class="menu">
+		<div class="layer-1 menu">
+			<div>
+				<h2 class="login-title">Login</h2>
+			</div>
+			<div>
+				<form>
+					<div class="menu-item">
+						<label for="username">Username:</label>
+						<input type="text" id="username" name="username">
+					</div>
+					<div class="menu-item">
+						<label for="pwd">Password:</label>
+						<input type="password" id="pwd" name="pwd" minlength="10">
+					</div>
+					<div>
+						<input class="primary-sign-btn" type="submit" value="Sign in">
+					</div>
+				</form>
+			</div>
+		</div>
+		<button type="button" class="secondary-sign-btn">Sign up</button>
 	</div>
-	<button type="button" class="secondary-sign-btn">Sign up</button>
 </body>
 </html>
