@@ -156,6 +156,7 @@ a:is(:hover, :focus) {
 .layer-1{
 	background-color:var(--nav-color);
 	border-radius: 20px;
+	margin: 0;
 }
 
 .layer-2{
@@ -173,7 +174,7 @@ a:is(:hover, :focus) {
 .col-list {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-items: center;
 	padding-left: 2rem;
 	padding-right: 2rem;
@@ -349,6 +350,7 @@ a:is(:hover, :focus) {
 }
 
 .welcome > *{
+
 	display:flex;
 
 	&:nth-child(1){
@@ -362,9 +364,10 @@ a:is(:hover, :focus) {
 }
 
 .accept-btn {
-	background-color: rgb(126, 217, 87);
-	padding: 0.8rem 2em;
+	background-color: var(--accept-color);
+	padding: 0.9rem 2.1em;
 	border-radius: 0.6em;
+	border-width: 0px;
 	font-size: 1em;
 	font-weight: bold;
 }
@@ -446,11 +449,10 @@ form > div:not(.menu-item){
 }
 
 .secondary-sign-btn {
-	width: 60vw;
+	width: 100%;
 	border-width: 5px;
 	border-radius: 0.6em;
 	border-color: white;
-	border-style: solid;
 	background-color: var(--background-color);
 	color: white;
 	font-weight: bold;
