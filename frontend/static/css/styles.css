@@ -4,6 +4,7 @@
 	--border-color: rgb(219,255,251);
 	--accept-color: rgb(126, 217, 87);
 	--decline-color: #D44343;
+	--border-width: 0.1em;
 }
 
 body {
@@ -20,24 +21,28 @@ html {
 	background-size: cover;
 }
 
-.cut-box-outer{
-    clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%);
-	padding: 0.2em;
-	background-color: var(--border-color);
-	display: block;
-}
-
-.cut-box-inner{
+.cut-box-outer {
+	display: inline-block;
+	position: relative;
 	width: 100%;
-    height: 100%;
-	padding: 2em;
-	margin: 0.2em;
-    clip-path: polygon(22.5% 7.5%, 92.5% 7.5%, 92.5% 77.5%, 77.5% 92.5%, 7.5% 92.5%, 7.5% 22.5%);
-	background-color: var(--background-color);
-	transform: translate(-5%, -5%);
+	height: 100%;
+	padding: var(--border-width);
+	background: var(--border-color);
+	box-sizing: border-box;
+	clip-path: polygon(0% 25%, 0% 100%, 75% 100%, 100% 75%, 100% 0%, 25% 0%)
+  }
+
+  .cut-box-inner {
+	position: absolute;
+	width: calc(100% - 2 * var(--border-width));
+	height: calc(100% - 2 * var(--border-width));
+	background: var(--background-color);
+	box-sizing: border-box;
+	clip-path: polygon(0% 25%, 0% 100%, 75% 100%, 100% 75%, 100% 0%, 25% 0%);
 	display: flex;
-	f
-}
+	justify-content: center;
+	align-items: center;
+  }
 
 
 button{
