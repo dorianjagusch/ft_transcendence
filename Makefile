@@ -44,7 +44,7 @@ stop:
 
 clean: down clear_database_dir
 
-# docker system prune is probably too much, might have to make it more limited
+# change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
 	docker system prune
 

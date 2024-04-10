@@ -18,6 +18,6 @@ RUN pip install --upgrade pip \
 RUN python manage.py makemigrations && \
 	python manage.py migrate
 
-EXPOSE 8001
+EXPOSE 8080
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]

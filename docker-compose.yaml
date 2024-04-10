@@ -21,14 +21,16 @@ services:
     container_name: backend_c
     build:
       context: ./backend
+    ports:
+      - "8080:8080"
     volumes:
-      - database:/var/lib/postgresql/data   # chatGPT recommendation...
+      - database:/var/lib/postgresql/data
     # depends_on:
     #   - frontend
     restart: always
     networks:
       - ft_transcendence_network
-    env_file: # change this later to individual env_variables (safer)...
+    env_file: # change this later to individual env_variables when you've find out all of them (more secure)...
       - backend/.env
 
   # create frontend service later
