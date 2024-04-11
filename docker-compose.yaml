@@ -1,0 +1,38 @@
+version: '3.8'
+
+networks:
+  ft_transcendence_network:
+    name: ft_transcendence_network
+    driver: bridge
+
+volumes:
+  database:
+    name: database
+    driver: local
+    driver_opts:
+      device: ./database
+      type: none
+      o: bind
+
+
+services:
+  backend:
+    image: backend:42
+    container_name: backend_c
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - database:/var/lib/postgresql/data
+    # depends_on:
+    #   - frontend
+    restart: always
+    networks:
+      - ft_transcendence_network
+    env_file: # change this later to individual env_variables when you've find out all of them (more secure)...
+      - backend/.env
+
+  # create frontend service later
+    # remember to expose port 443 for host
+
