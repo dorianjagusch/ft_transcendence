@@ -15,7 +15,7 @@
 <body>
 	<header>
 		<nav id="navbar">
-			<div class="nav-login" hidden>
+			<div class="nav-login" data-visible="false">
 				<ul>
 					<li class="nav-item">
 						<a onClick="route()" href="/leaderboard">Leaderboard</a>
@@ -28,7 +28,7 @@
 					</li>
 				</ul>
 			</div>
-			<div class="nav-user" hidden>
+			<div class="nav-user" data-visible="false">
 				<ul>
 					<li class="nav-item">
 						<img src="./static/assets/img/default-user.png">
@@ -43,7 +43,7 @@
 					</ul>
 				</ul>
 			</div>
-			<div id="nav-nologin">
+			<div id="nav-nologin" data-visible="true">
 				<ul>
 					<li class="nav_item">
 						<a onClick="route()" href="/login">Login</a>
@@ -55,10 +55,7 @@
 			</div>
 		</nav>
 	</header>
-	<main>
-			<div id="content-container"></div>
-		</div>
-	</main>
+	<main id="content-container"></main>
 	<script src="./static/js/index.js"></script>
 </body>
 </html>

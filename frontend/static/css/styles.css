@@ -25,12 +25,17 @@ html {
 	background-size: cover;
 }
 
-/* main {
+[data-visible="false"]{
+	display: none
+}
+
+menu {
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-} */
+}
 
 .cut-box-outer {
 	display: inline-block;
