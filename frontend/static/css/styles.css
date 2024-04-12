@@ -491,4 +491,100 @@ form > div:not(.menu-item){
 }
 
 
+section {
+	padding: 50px
+}
 
+.card-scroller {
+	display: grid;
+	grid-auto-flow: column;
+	gap: 2em;
+	grid-auto-columns: 23%;
+	padding: 50px;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+}
+
+.card-scroller::-webkit-scrollbar {
+	display: none;
+}
+
+.scroll-element{
+	aspect-ratio: 16 / 9;;
+}
+
+.user-card {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	gap: 2em;
+	padding: 2em;
+	background-color: var(--background-color);
+	border-radius: 5px;
+	min-width: 150px;
+	transition: transform 150ms ease-in;
+}
+
+.user-card:hover {
+	transform: scale(1.1);
+}
+
+.user-card-text{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	gap: 20px;
+	padding: 10%
+}
+
+.user-card-text > .user-name{
+	font-size: 1.5em;
+}
+
+.user-card img{
+	height: clamp(10px, 80%, 150px);
+	aspect-ratio: 1;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.user-card .status{
+	position: relative;
+}
+
+.user-card .status::before{
+	content: '';
+	top: 0.25em;
+	left: -1em;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	z-index: 1;
+	border-radius: 50%;
+}
+
+.user-card .status::after{
+	content: attr(data-status);
+	text-transform: capitalize;
+}
+
+.user-card .status[data-status="online"]::before {
+	background-color: var(--accept-color);
+}
+
+.user-card .status[data-status="offline"]::before {
+	background-color: var(--decline-color);
+}
+
+.user-card .status[data-status="busy"]::before {
+	background-color: orange;
+}
+
+.snaps-inline {
+	scroll-snap-type: inline mandatory;
+	scroll-padding-inline: 2em;
+}
+
+.snaps-inline > * {
+	scroll-snap-align: start;;
+}
