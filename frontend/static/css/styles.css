@@ -1,9 +1,9 @@
 :root{
-	--background-color: rgb(1,21,45);
-	--nav-color: rgb(16,107,136);
-	--border-color: rgb(219,255,251);
-	--accept-color: rgb(126, 217, 87);
-	--decline-color: #D44343;
+	--background-color: hsl(213, 96%, 9%);
+	--nav-color: hsl(195, 79%, 30%);
+	--border-color: hsl(173, 100%, 93%);
+	--accept-color: hsl(102, 63%, 60%);
+	--decline-color: hsl(0, 63%, 55%);
 	--border-width: 0.1em;
 }
 
@@ -21,7 +21,7 @@ html {
 	width: 100%;
 	height: 100%;
 	color:white;
-	background: linear-gradient(135deg, var(--background-color), rgba(0, 15, 20, 0.9)), url("../assets/img/pong-background.png") no-repeat;
+	background: linear-gradient(135deg, var(--background-color), hsla(195, 100%, 4%, 0.9)), url("../assets/img/pong-background.png") no-repeat;
 	background-size: cover;
 }
 
