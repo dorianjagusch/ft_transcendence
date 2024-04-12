@@ -25,6 +25,7 @@ html {
 	background-size: cover;
 }
 
+<<<<<<< HEAD
 [data-visible="false"]{
 	display: none
 }
@@ -40,6 +41,14 @@ menu {
 	justify-content: center;
 	align-items: center;
 }
+=======
+/* main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+} */
+>>>>>>> 8616044 (Cleanup single page App)
 
 .cut-box-outer {
 	display: inline-block;
@@ -526,6 +535,7 @@ section {
 	padding: 50px;
 	overflow-x: auto;
 	overscroll-behavior-inline: contain;
+	width: 80%;
 }
 
 .card-scroller::-webkit-scrollbar {
