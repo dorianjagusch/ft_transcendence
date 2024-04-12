@@ -28,6 +28,21 @@ const handleLocation = async () => {
 	document.getElementById("content-container").innerHTML = html;
 }
 
+const friendButtons = document.querySelectorAll(".user-card")
+
+friendButtons.forEach(userCard => {
+    userCard.addEventListener("click", () => {
+        // Accessing all subelements of the user-card
+        const userCardText = userCard.querySelector(".user-card-text");
+        const userName = userCardText.querySelector(".user-name").textContent;
+        const status = userCardText.querySelector(".status").getAttribute("data-status");
+
+        console.log("User Name:", userName);
+        console.log("Status:", status);
+    });
+});
+
+
 window.onpopstate = handleLocation
 window.route = route;
 
