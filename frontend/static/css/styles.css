@@ -25,7 +25,6 @@ html {
 	background-size: cover;
 }
 
-<<<<<<< HEAD
 [data-visible="false"]{
 	display: none
 }
@@ -41,14 +40,6 @@ menu {
 	justify-content: center;
 	align-items: center;
 }
-=======
-/* main {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-} */
->>>>>>> 8616044 (Cleanup single page App)
 
 .cut-box-outer {
 	display: inline-block;
