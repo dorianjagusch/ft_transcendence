@@ -29,6 +29,10 @@ html {
 	display: none
 }
 
+#content-container{
+	text-align: center;
+}
+
 menu {
 	display: flex;
 	flex: 1;
@@ -70,7 +74,7 @@ button{
 
 button:hover,
 input[type="submit"]:hover {
-	box-shadow: inset 0em 0em 0em 10em rgba(0, 0, 0, 0.5);
+	box-shadow: inset 0em 0em 0em 10em hsla(0, 0%, 0%, 0.5);
 	cursor: pointer;
 }
 
@@ -135,7 +139,7 @@ h2{
 }
 
 a {
-	color: white;
+	color: hsl(0, 0%, 100%);
 }
 
 a:visited, a:link, a:active a:hover {
@@ -519,7 +523,6 @@ section {
 	padding: 50px;
 	overflow-x: auto;
 	overscroll-behavior-inline: contain;
-	width: 80%;
 }
 
 .card-scroller::-webkit-scrollbar {
@@ -559,7 +562,7 @@ section {
 }
 
 .user-card img{
-	height: clamp(10px, 80%, 150px);
+	height: clamp(50px, 80%, 150px);
 	aspect-ratio: 1;
 	object-fit: cover;
 	border-radius: 50%;
