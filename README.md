@@ -7,7 +7,6 @@ Welcome to the "ft_transcendence" project! This project is part of the curriculu
 - [Sakari Salmi](https://github.com/sakarisalmi)
 - [Azär Sarikhani](https://github.com/azarSarikhani/)
 
-
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
