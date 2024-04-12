@@ -7,6 +7,10 @@
 	--border-width: 0.1em;
 }
 
+*, *:hover *:focus {
+	box-sizing: border-box;
+}
+
 body {
 
 	font-family: "Roboto", sans-serif ;
@@ -20,6 +24,13 @@ html {
 	background: linear-gradient(135deg, var(--background-color), rgba(0, 15, 20, 0.9)), url("../assets/img/pong-background.png") no-repeat;
 	background-size: cover;
 }
+
+/* main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+} */
 
 .cut-box-outer {
 	display: inline-block;
@@ -492,17 +503,18 @@ form > div:not(.menu-item){
 
 
 section {
-	padding: 50px
+	padding: 50px;
 }
 
 .card-scroller {
 	display: grid;
 	grid-auto-flow: column;
 	gap: 2em;
-	grid-auto-columns: 23%;
+	grid-auto-columns:23%;
 	padding: 50px;
 	overflow-x: auto;
 	overscroll-behavior-inline: contain;
+	width: 80%;
 }
 
 .card-scroller::-webkit-scrollbar {
