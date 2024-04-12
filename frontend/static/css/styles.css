@@ -72,9 +72,9 @@ button{
 	color: white
 }
 
-button:is(:hover, :focus),
-input[type="submit"]:is(:hover, :focus) {
-	box-shadow: inset 0em 0em 0em 10em hsla(0, 0%, 0%, 0.5);
+button:hover,
+input[type="submit"]:hover {
+	box-shadow: inset 0em 0em 0em 10em rgba(0, 0, 0, 0.5);
 	cursor: pointer;
 }
 
@@ -526,7 +526,6 @@ section {
 	padding: 50px;
 	overflow-x: auto;
 	overscroll-behavior-inline: contain;
-	width: 80%;
 }
 
 .card-scroller::-webkit-scrollbar {
