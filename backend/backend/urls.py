@@ -22,6 +22,8 @@ from UserManagement.views import users_list_view, user_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # UserManagement views
     path('users/', users_list_view),
     path('users/<int:id>', user_view)
 ]
