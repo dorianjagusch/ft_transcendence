@@ -41,7 +41,7 @@ stop:
 	${DOCKER_COMPOSE} stop
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
-clean: down clear_database_dir
+clean: down remove_database_dir
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
@@ -50,10 +50,7 @@ fclean: clean
 create_database_directory:
 	mkdir ${DATABASE_DIR}
 
-clear_database_dir:
-	@if [ -z "$$(ls -A ${DATABASE_DIR})" ]; then \
-		rm -rf ${DATABASE_DIR}/${WORDPRESS_DATA_DIR}; \
-		echo "${YELLOW}database directory removed!${C_RESET}"; \
-	fi
+remove_database_dir:
+		rm -rf ${DATABASE_DIR}
 
-.PHONY: all up down start stop clean fclean clear_database_dir create_database_directory
+.PHONY: all up down start stop clean fclean remove_database_dir create_database_directory
