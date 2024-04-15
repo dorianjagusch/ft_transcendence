@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 @api_view(['GET', 'POST'])
-def users_list_view(request):
+def users_list(request):
 
 	if request.method == 'GET':
 		users = User.objects.all()
@@ -19,7 +19,7 @@ def users_list_view(request):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def user_view(request, id):
+def user(request, id):
 
 	try:
 		user = User.objects.get(pk=id)
