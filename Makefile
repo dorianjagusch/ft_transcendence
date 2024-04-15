@@ -1,6 +1,7 @@
 NAME 					= Ft_Transcendence
 
 DATABASE_DIR			= ./database
+DATABASE_HIDDEN_FILE	= .database_already_exists
 
 BACKEND_DIR				= ./backend
 BACKEND_ENV				= ./backend/.env
@@ -48,9 +49,17 @@ fclean: clean
 	docker system prune
 
 create_database_directory:
-	mkdir ${DATABASE_DIR}
+	@if [ ! -f ${DATABASE_HIDDEN_FILE} ]; then \
+		mkdir ${DATABASE_DIR}; \
+		touch ${DATABASE_HIDDEN_FILE}; \
+		echo "${YELLOW}created database directory!${C_RESET}"; \
+	fi;
 
 remove_database_dir:
-		rm -rf ${DATABASE_DIR}
+	@if [ -f ${DATABASE_HIDDEN_FILE} ]; then \
+		rm -rf ${DATABASE_DIR}; \
+		rm ${DATABASE_HIDDEN_FILE}; \
+		echo "${YELLOW}deleted database directory!${C_RESET}"; \
+	fi;
 
 .PHONY: all up down start stop clean fclean remove_database_dir create_database_directory
