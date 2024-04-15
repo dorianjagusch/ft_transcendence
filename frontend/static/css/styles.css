@@ -72,8 +72,8 @@ button{
 	color: white
 }
 
-button:hover,
-input[type="submit"]:hover {
+button:is(:hover, :focus),
+input[type="submit"]:is(:hover, :focus) {
 	box-shadow: inset 0em 0em 0em 10em hsla(0, 0%, 0%, 0.5);
 	cursor: pointer;
 }
@@ -86,28 +86,32 @@ h2{
 	font-size: 50px;
 }
 
+header {
+	width: 100%;
+}
+
 #navbar{
 	background-position-x: 0%;
 	background-position-y: 0%;
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 	background-color: var(--nav-color);
-	padding: 25px;
 	font-size: 25px;
 	margin: 0px;
 }
 
 #navbar ul{
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-}
-
-#navbar ul{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	list-style-type: none;
+	margin: 0;
+}
+
+#navbar ul > li{
+	margin-inline-start: 10px;
+	padding: 25px;
 }
 
 #navbar > .nav-login {
@@ -121,8 +125,8 @@ h2{
 
 #nav-nologin ul{
 	display: flex;
-	justify-content: space-between;
-	width: 200px;
+	justify-content: end;
+	width: 100%;
 }
 
 
@@ -142,11 +146,11 @@ a {
 	color: hsl(0, 0%, 100%);
 }
 
-a:visited, a:link, a:active a:hover {
+a:is(:visited, :link, :active :hover, :focus) {
 	text-decoration: none;
 }
 
-a:hover {
+a:is(:hover, :focus) {
 	color: var(--background-color);
 }
 
@@ -208,7 +212,7 @@ a:hover {
 	}
 	.menu-item {
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: space-between;
 	}
 }
 
@@ -273,6 +277,16 @@ a:hover {
 	padding-left: 1em;
 	padding-right: 1em;
 }
+
+.placements{
+	overflow-y: scroll;
+	height: 80vh;
+}
+
+::-webkit-scrollbar{
+	color: var(--background-color)
+}
+
 
 .placement-card {
 	background-color: var(--background-color);
@@ -545,7 +559,7 @@ section {
 	transition: transform 150ms ease-in;
 }
 
-.user-card:hover {
+.user-card:is(:hover, :focus) {
 	transform: scale(1.1);
 }
 

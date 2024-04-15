@@ -1,3 +1,4 @@
+const base_url="127.0.0.1:8000"
 
 const route = (event) => {
 	event = event || window.event;
@@ -41,6 +42,29 @@ friendButtons.forEach(userCard => {
         console.log("Status:", status);
     });
 });
+
+
+const confirmPassword = function() {
+	const userPassword = document.getElementById("pwd");
+	const confirmPassword = document.getElementById("repeat-pwd");
+	if (userPassword.value !== confirmPassword.value){
+		confirmPassword.setCustomValidity("Passwords Don't Match");
+	} else {
+		confirmPassword.setCustomValidity("Passwords Don't Match");
+	}
+}
+
+
+const registerUser = async () => {
+	const formData = new FormData(document.getElementById("registration-form"));
+	console.log(formData);
+	const request = await fetch(url = `${base_url}/users/`,
+								{
+									method: "post",
+									data: data,
+								});
+	return request.then(response => response.data);
+}
 
 
 window.onpopstate = handleLocation
