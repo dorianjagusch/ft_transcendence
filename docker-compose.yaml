@@ -1,0 +1,68 @@
+version: '3.8'
+
+networks:
+  default:
+    name: ft_transcendence_network
+    #driver: bridge
+
+volumes:
+  database:
+#    name: database
+#    driver: local
+#    driver_opts:
+#      device: ./database
+#      type: none
+#      o: bind
+
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres142
+    # hostname: postgresHost
+    user: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - PGUSER=postgres
+      - POSTGRES_DB=djangoDb
+    volumes:
+      - database:/var/lib/postgresql/data/
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 80s
+    #networks:
+    #  - ft_transcendence_network
+  backend:
+    image: backend:42
+    #command: python manage.py runserver 0.0.0.0:8000
+    command: >
+            bash -c "sleep 10 &&
+            python manage.py makemigrations backend && 
+            python manage.py migrate backend &&
+            python manage.py runserver 0.0.0.0:8000"                
+    container_name: backend_c
+    build:
+      context: ./backend
+    ports:
+      - 8000:8000
+    environment: 
+        - DB_HOST=postgres
+        - POSTGRES_DB=djangoDb
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    depends_on:
+       postgres:
+         condition: service_healthy
+    restart: always
+    #networks:
+    #  - ft_transcendence_network
+
+  # create frontend service later
+    # remember to expose port 443 for host
+
