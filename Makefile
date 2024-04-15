@@ -1,7 +1,6 @@
 NAME 					= Ft_Transcendence
 
 DATABASE_DIR			= ./database
-DATABASE_HIDDEN_FILE	= .database_already_set
 
 BACKEND_DIR				= ./backend
 BACKEND_ENV				= ./backend/.env
@@ -26,7 +25,7 @@ CYAN = \033[0;96m
 
 all: up
 
-up:
+up: create_database_directory
 	${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
@@ -48,10 +47,13 @@ clean: down clear_database_dir
 fclean: clean
 	docker system prune
 
+create_database_directory:
+	mkdir ${DATABASE_DIR}
+
 clear_database_dir:
 	@if [ -z "$$(ls -A ${DATABASE_DIR})" ]; then \
-		rm -rf ${DATABASE_DIR}/${WORDPRESS_DATA_DIR}/*; \
-		echo "${YELLOW}database directory cleared of its contents!${C_RESET}"; \
+		rm -rf ${DATABASE_DIR}/${WORDPRESS_DATA_DIR}; \
+		echo "${YELLOW}database directory removed!${C_RESET}"; \
 	fi
 
-.PHONY: all up down start stop clean fclean clear_database_dir
+.PHONY: all up down start stop clean fclean clear_database_dir create_database_directory
