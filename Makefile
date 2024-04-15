@@ -12,7 +12,7 @@ FRONTEND_ENV			= ./frontend/.env
 DOCKER_COMPOSE_FILE		= ./docker-compose.yaml
 
 # add later '--env-file ${FRONTEND_ENV}' to DOCKER_COMPOSE below
-DOCKER_COMPOSE			= docker compose \
+DOCKER_COMPOSE			= sudo docker compose \
 							--env-file ${BACKEND_ENV} \
 							-f ${DOCKER_COMPOSE_FILE}
 
