@@ -17,9 +17,6 @@ WORKDIR /app
 RUN pip install --upgrade pip \
 	&& pip install -r requirements.txt
 
-#RUN python manage.py makemigrations backend && \
-#	python manage.py migrate backend
-
 EXPOSE 8080
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
