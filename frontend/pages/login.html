@@ -1,42 +1,33 @@
-<<<<<<< HEAD
-
-=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login</title>
+	<title>Document</title>
+
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+
 	<link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
->>>>>>> 8616044 (Cleanup single page App)
 	<main id="content-container">
-		<div class="menu">
-			<div class="layer-1 menu">
-				<div>
-					<h2 class="login-title">Login</h2>
-				</div>
-				<div>
-					<form action="https://127.0.0.1/users/2" method="GET">
-						<div class="menu-item">
-							<label for="login">Username:</label>
-							<input type="text" id="login" name="login">
-						</div>
-						<div class="menu-item">
-							<label for="pwd">Password:</label>
-							<input type="password" id="pwd" name="pwd" minlength="10">
-						</div>
-						<div>
-							<input class="primary-sign-btn" type="submit" value="Sign in">
-						</div>
-					</form>
-				</div>
+		<div class="modal-container">
+			<div class="login bg-secondary">
+				<h2 class="login-title">Login</h2>
+				<form action="https://127.0.0.1/users/2" method="GET">
+
+						<label for="login">Username</label>
+						<input type="text" id="login" name="login">
+
+						<label for="pwd">Password</label>
+						<input type="password" id="pwd" name="pwd" minlength="10">
+
+						<input class="primary-sign-btn" type="submit" value="Sign in">
+				</form>
 			</div>
-			<button type="button" class="secondary-sign-btn">Sign up</button>
+			<button type="button" class="secondary-sign-btn" onClick="route('/register')">Sign up</button>
 		</div>
 	</main>
 </body>

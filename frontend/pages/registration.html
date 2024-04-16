@@ -3,40 +3,28 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Register</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="../static/css/styles.css">
+	<title>Register</title>	<link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
 	<main id="content-container">
-		<div class="menu">
-			<div class="layer-1 menu">
-				<div>
-					<h2 class="register-title">Register</h2>
-				</div>
-				<div>
-					<form id="registration-form">
-						<div class="menu-item">
-							<label for="username">Username:</label>
-							<input type="text" id="username" name="login">
-						</div>
-						<div class="menu-item">
-							<label for="pwd">Password:</label>
-							<input type="password" id="pwd" name="pwd" minlength="10">
-						</div>
-						<div class="menu-item">
-							<label for="pwd-repeat">Repeat Password:</label>
-							<input type="password" id="pwd-repeat" name="pwd-repeat" minlength="10">
-						</div>
-						<div>
-							<input class="primary-sign-btn" type="submit" value="Sign in" onsubmit="">
-						</div>
-					</form>
-				</div>
+		<div class="modal-container">
+			<div class="register bg-secondary">
+				<h2>Register</h2>
+				<form id="registration-form">
+
+					<label for="username">Username</label>
+					<input type="text" id="username" name="login">
+
+					<label for="pwd">Password</label>
+					<input type="password" id="pwd" name="pwd">
+
+					<label for="pwd-repeat">Repeat Password</label>
+					<input type="password" id="pwd-repeat" name="pwd-repeat">
+
+					<input class="primary-sign-btn" type="submit" value="Sign in">
+				</form>
 			</div>
-			<button type="button" class="secondary-sign-btn">Sign up</button>
+			<button type="button" class="secondary-sign-btn" onClick="route('/register')">Sign up</button>
 		</div>
 	</main>
 </body>
