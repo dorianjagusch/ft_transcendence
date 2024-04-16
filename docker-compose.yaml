@@ -41,11 +41,6 @@ services:
 
   backend:
     image: backend:42
-    command: >
-            bash -c "sleep 10 &&
-            python manage.py makemigrations UserManagement &&
-            python manage.py migrate UserManagement &&
-            python manage.py runserver 0.0.0.0:8080"
     container_name: backend_c
     build:
       context: ./backend
