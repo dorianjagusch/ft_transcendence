@@ -15,9 +15,9 @@
 </head>
 <body>
 	<header>
-		<nav id="navbar">
-			<div class="nav-login" data-visible="false">
-				<ul>
+		<nav>
+			<ul>
+				<div class="nav-partition" data-visible="false">
 					<li class="nav-item">
 						<a onClick="route()" href="/leaderboard">Leaderboard</a>
 					</li>
@@ -27,47 +27,32 @@
 					<li class="nav-item">
 						<a onClick="route()" href="/friends">Friends</a>
 					</li>
-				</ul>
-			</div>
-			<div class="nav-user" data-visible="false">
-				<ul>
+				</div>
+				<div class="nav-partition" data-visible="false">
 					<li class="nav-item">
 						<img src="./static/assets/img/default-user.png">
 					</li>
-					<ul>
-						<li class="nav-item">
-							<a onClick="route()" href="/user-profile">User1</a> <!--- replace with dynamic username --->
-						</li>
-						<li class="nav-item">
-							<a onClick="route()" href="/menu"><img src="./static/assets/img/gear.png"></a>
-						</li>
-					</ul>
-				</ul>
-			</div>
-			<div id="nav-nologin" data-visible="true">
-				<ul>
+					<li class="nav-item">
+						<a onClick="route()" href="/user">User1</a>
+					</li>
+					<li class="nav-item">
+						<a onClick="route()" href="/menu"><img src="./static/assets/img/gear.png"></a>
+					</li>
+				</div>
+				<div class="nav-partition" data-visible="true">
 					<li class="nav_item">
 						<a onClick="route()" href="/login">Login</a>
 					</li>
 					<li class="nav_item">
 						<a onClick="route()" href="/register">Register</a>
 					</li>
-					<li class="nav_item">
-						<a onClick="route()" href="/friends">Friends</a>
-					</li>
-				</ul>
-			</div>
+				</div>
+			</ul>
 		</nav>
 	</header>
+	<h1>Transcence</h1>
+	<main id="content-container"></main>
 
-
-<main id="content-container"></main>
-
-	<main>
-			<div id="content-container"></div>
-		</div>
-	</main>
-	<script src="./static/js/index.js"></script>
-
+	<script type="module" src="./static/js/index.js"></script>
 </body>
 </html>
