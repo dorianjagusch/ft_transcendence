@@ -18,13 +18,21 @@ from django.contrib import admin
 from django.urls import path
 
 # add app views here
-from UserManagement.views import UserDetailView
-from UserManagement.views import UserListView
+from UserManagement.views import UserDetailView, \
+                                UserListView
+
+from Friends.views import FriendsDetailView, \
+                        FriendsListView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
 	# UserManagement views
 	path('users/', UserListView.as_view()),
-	path('users/<int:id>', UserDetailView.as_view())
+	path('users/<int:id>', UserDetailView.as_view()),
+
+    # Friends views
+    path('friends/<int:user_id>', FriendsListView.as_view()),
+    path('friends/<int:current_user_id>/<int:friends_user_id>', FriendsDetailView.as_view()),
+
 ]
