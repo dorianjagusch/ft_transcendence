@@ -10,14 +10,14 @@ class Friends(models.Model):
     # User who received the friend request
     user2_id = models.ForeignKey(User, related_name='user2_id', null=False, blank=False, on_delete=models.CASCADE)
 
-    # Date and time when the friend relation is set
+    # Date and time when the friend request is sent
     start_date_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user1_id} - {self.user2_id}"
+        return f"{self.user1_id} - {self.user2_id} - {self.start_date_time}"
     
     class Meta:
-        # RuntimeError: Model class Friends.models.Friends doesn't declare an explicit app_label and isn't in an application in INSTALLED_APPS
+        # required because of RunTimeError
         app_label = 'Friends'
 
         # prevents a user from having the same relation to another user twice in the table

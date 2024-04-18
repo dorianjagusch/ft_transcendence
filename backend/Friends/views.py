@@ -10,12 +10,15 @@ from .serializers import FriendsSerializer
 
 class FriendsListView(APIView):
     def get(self,request, user_id):
+        print("inside FriendsListView")
         friends = Friends.objects.filter(user1_id=user_id)
         if friends.exists():
+            print("in if")
             serializer = FriendsSerializer(friends, many=True)
             return JsonResponse({"user Friends" : serializer.data})
         else:
-            Response({"message": "No friends found for the user"}, status=status.HTTP_404_NOT_FOUND)
+            print("in else")
+            return Response({"message": "No friends found for the user"}, status=status.HTTP_200_OK)
     
 
 class FriendsDetailView(APIView):
@@ -39,7 +42,6 @@ class FriendsDetailView(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
     # put only for updating already existing Friends
     def put(self, request, current_user_id, friends_user_id):
         try:
@@ -52,7 +54,15 @@ class FriendsDetailView(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        
+    def delete(self, request, current_user_id, friends_user_id):
+        try:
+            friends = Friends.objects.get(user1_id=current_user_id, user2_id=friends_user_id)
+        except Friends.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        friends.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
     
