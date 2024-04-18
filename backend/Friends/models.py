@@ -17,7 +17,7 @@ class Friends(models.Model):
         return f"{self.user1_id} - {self.user2_id} - {self.start_date_time}"
     
     class Meta:
-        # required because of RunTimeError
+        # required because of RunTimeError that complains about lack of app_label
         app_label = 'Friends'
 
         # prevents a user from having the same relation to another user twice in the table

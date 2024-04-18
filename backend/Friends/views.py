@@ -8,6 +8,13 @@ from .models import Friends
 from .serializers import FriendsSerializer
 
 
+class FriendsListAllView(APIView):
+    def get(self, request):
+        print("inside FriendsListAllView")
+        friends = Friends.objects.all()
+        serializer = FriendsSerializer(friends, many=True)
+        return JsonResponse({"all Friends" : serializer.data})
+
 class FriendsListView(APIView):
     def get(self,request, user_id):
         print("inside FriendsListView")
@@ -18,7 +25,7 @@ class FriendsListView(APIView):
             return JsonResponse({"user Friends" : serializer.data})
         else:
             print("in else")
-            return Response({"message": "No friends found for the user"}, status=status.HTTP_200_OK)
+            return Response({"message": "No friends found for the user"}, status=status.HTTP_404_NOT_FOUND)
     
 
 class FriendsDetailView(APIView):
