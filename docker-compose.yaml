@@ -57,6 +57,8 @@ services:
         - POSTGRES_DB=djangoDb
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./backend:/app/
     depends_on:
        postgres:
          condition: service_healthy
