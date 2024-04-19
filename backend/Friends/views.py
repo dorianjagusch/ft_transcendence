@@ -25,7 +25,7 @@ class FriendsListView(APIView):
             return JsonResponse({"user Friends" : serializer.data})
         else:
             print("in else")
-            return Response({"message": "No friends found for the user"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "No friends found for user"}, status=status.HTTP_404_NOT_FOUND)
     
 
 class FriendsDetailView(APIView):
@@ -33,7 +33,7 @@ class FriendsDetailView(APIView):
         try:
             friends = Friends.objects.get(user1_id=current_user_id, user2_id=friends_user_id)
         except Friends.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Friendship doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
         serializer = FriendsSerializer(friends)
         return Response(serializer.data)
     
@@ -41,32 +41,20 @@ class FriendsDetailView(APIView):
     def post(self, request, current_user_id, friends_user_id):
         try:
             friends = Friends.objects.get(user1_id=current_user_id, user2_id=friends_user_id)
-            return Response(status=status.HTTP_409_CONFLICT)
+            return Response({"error": "Friendship already exists"}, status=status.HTTP_409_CONFLICT)
         except Friends.DoesNotExist:
-            serializer = FriendsSerializer(data=request.data)
+            serializer = FriendsSerializer(data={'user1_id': current_user_id, 'user2_id': friends_user_id})
             if serializer.is_valid():
+                serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # put only for updating already existing Friends
-    def put(self, request, current_user_id, friends_user_id):
-        try:
-            friends = Friends.objects.get(user1_id=current_user_id, user2_id=friends_user_id)
-        except Friends.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = FriendsSerializer(friends, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def delete(self, request, current_user_id, friends_user_id):
         try:
             friends = Friends.objects.get(user1_id=current_user_id, user2_id=friends_user_id)
         except Friends.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Friendship doesn't exist"},status=status.HTTP_404_NOT_FOUND)
         
         friends.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
