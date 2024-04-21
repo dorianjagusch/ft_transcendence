@@ -1,7 +1,7 @@
 NAME 					= Ft_Transcendence
 
 DATABASE_DIR			= ./database
-DATABASE_HIDDEN_FILE	= .database_already_set
+DATABASE_HIDDEN_FILE	= .database_already_exists
 
 BACKEND_DIR				= ./backend
 BACKEND_ENV				= ./backend/.env
@@ -26,7 +26,7 @@ CYAN = \033[0;96m
 
 all: up
 
-up:
+up: create_database_directory
 	${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
@@ -42,16 +42,24 @@ stop:
 	${DOCKER_COMPOSE} stop
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
-clean: down clear_database_dir
+clean: down remove_database_dir
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
-	docker system prune
+	sudo docker system prune
 
-clear_database_dir:
-	@if [ -z "$$(ls -A ${DATABASE_DIR})" ]; then \
-		rm -rf ${DATABASE_DIR}/${WORDPRESS_DATA_DIR}/*; \
-		echo "${YELLOW}database directory cleared of its contents!${C_RESET}"; \
-	fi
+create_database_directory:
+	@if [ ! -f ${DATABASE_HIDDEN_FILE} ]; then \
+		mkdir ${DATABASE_DIR}; \
+		touch ${DATABASE_HIDDEN_FILE}; \
+		echo "${YELLOW}created database directory!${C_RESET}"; \
+	fi;
 
-.PHONY: all up down start stop clean fclean clear_database_dir
+remove_database_dir:
+	@if [ -f ${DATABASE_HIDDEN_FILE} ]; then \
+		sudo rm -rf ${DATABASE_DIR}/; \
+		sudo rm ${DATABASE_HIDDEN_FILE}; \
+		echo "${YELLOW}deleted database directory!${C_RESET}"; \
+	fi;
+
+.PHONY: all up down start stop clean fclean remove_database_dir create_database_directory
