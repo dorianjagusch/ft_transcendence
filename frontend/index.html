@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pong Tournament</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="./static/css/styles.css">
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<div class="nav-partition" data-visible="false">
+					<li class="nav-item">
+						<a onClick="route()" href="/leaderboard">Leaderboard</a>
+					</li>
+					<li class="nav-item">
+						<a onClick="route()" href="/play">Play</a>
+					</li>
+					<li class="nav-item">
+						<a onClick="route()" href="/friends">Friends</a>
+					</li>
+				</div>
+				<div class="nav-partition" data-visible="false">
+					<li class="nav-item">
+						<img src="./static/assets/img/default-user.png">
+					</li>
+					<li class="nav-item">
+						<a onClick="route()" href="/user">User1</a>
+					</li>
+					<li class="nav-item">
+						<a onClick="route()" href="/menu"><img src="./static/assets/img/gear.png"></a>
+					</li>
+				</div>
+				<div class="nav-partition" data-visible="true">
+					<li class="nav_item">
+						<a onClick="route()" href="/login">Login</a>
+					</li>
+					<li class="nav_item">
+						<a onClick="route()" href="/register">Register</a>
+					</li>
+				</div>
+			</ul>
+		</nav>
+	</header>
+	<h1>Transcence</h1>
+	<main id="content-container"></main>
+
+	<script type="module" src="./static/js/index.js"></script>
+</body>
+</html>
