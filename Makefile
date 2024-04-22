@@ -46,7 +46,7 @@ clean: down remove_database_dir
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
-	docker system prune
+	sudo docker system prune
 
 create_database_directory:
 	@if [ ! -f ${DATABASE_HIDDEN_FILE} ]; then \
@@ -57,8 +57,8 @@ create_database_directory:
 
 remove_database_dir:
 	@if [ -f ${DATABASE_HIDDEN_FILE} ]; then \
-		rm -rf ${DATABASE_DIR}; \
-		rm ${DATABASE_HIDDEN_FILE}; \
+		sudo rm -rf ${DATABASE_DIR}/; \
+		sudo rm ${DATABASE_HIDDEN_FILE}; \
 		echo "${YELLOW}deleted database directory!${C_RESET}"; \
 	fi;
 

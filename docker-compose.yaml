@@ -41,18 +41,14 @@ services:
 
   backend:
     image: backend:42
-    #command: python manage.py runserver 0.0.0.0:8000
-    command: >
-            bash -c "sleep 10 &&
-            python manage.py makemigrations UserManagement && 
-            python manage.py migrate UserManagement &&
-            python manage.py runserver 0.0.0.0:8080"                
     container_name: backend_c
     build:
       context: ./backend
     ports:
       - 8080:8080
-    environment: 
+    entrypoint: ./entrypoint.sh
+    command: bash -c "python manage.py runserver 0.0.0.0:8080"
+    environment:
         - DB_HOST=postgres
         - POSTGRES_DB=djangoDb
         - POSTGRES_USER=postgres
