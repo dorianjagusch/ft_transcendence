@@ -35,6 +35,6 @@ urlpatterns = [
     # Friends views
     path('friends/', FriendsListAllView.as_view()),
     path('friends/<int:user_id>', FriendsListView.as_view()),
-    path('friends/<int:current_user_id>/<int:friends_user_id>', FriendsDetailView.as_view()),
+    path('friends/<int:user_id>/<int:friend_id>', FriendsDetailView.as_view()),
 
 ]
