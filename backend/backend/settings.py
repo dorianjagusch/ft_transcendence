@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Backend apps here
-    'UserManagement'
+    'UserManagement',
 ]
 
 MIDDLEWARE = [
@@ -95,6 +95,20 @@ DATABASES = {
         'PORT': 5432,        
     }
 }
+
+# Default database-backed sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
+
+# our custom User model
+AUTH_USER_MODEL = 'UserManagement.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
+]
+
+# Configure login URL
+LOGIN_URL = '/users/login/'  # Set the URL where the login view is located
 
 
 

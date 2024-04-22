@@ -1,9 +1,14 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from .serializers import UserSerializer
 from django.http import JsonResponse
+
+from .decorators import user_is_object_owner
+
 
 class UserListView(APIView):
 	def get(self, request):
@@ -20,17 +25,18 @@ class UserListView(APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetailView(APIView):
-	def get(self, request, id):
+	def get(self, request, user_id):
 		try:
-			user = User.objects.get(pk=id)
+			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		serializer = UserSerializer(user)
 		return Response(serializer.data)
 
-	def put(self, request, id):
+	@user_is_object_owner
+	def put(self, request, user_id):
 		try:
-			user = User.objects.get(pk=id)
+			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -41,11 +47,33 @@ class UserDetailView(APIView):
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	def delete(self, request, id):
+	@user_is_object_owner
+	def delete(self, request, user_id):
 		try:
-			user = User.objects.get(pk=id)
+			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		user.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserLoginView(APIView):
+	def post(self, request):
+		username_input = request.data.get('username')
+		password_input = request.data.get('password')
+		if not username_input or not password_input:
+			return Response({"message": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+		
+		print("Received username:", username_input)
+		print("Received password:", password_input)
+
+		user = authenticate(request, username=username_input, password=password_input)
+		if user is not None:
+			login(request, user)
+			# set additional session data if necessary
+			request.session['is_authenticated'] = True
+			return Response({"message": "User login successful"}, status=status.HTTP_202_ACCEPTED)
+		else:
+			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
