@@ -29,7 +29,7 @@ services:
       - PGUSER=postgres
       - POSTGRES_DB=djangoDb
     volumes:
-      - database:/var/lib/postgresql/data/
+      - ./database:/var/lib/postgresql/data/
     healthcheck:
       test: "pg_isready -U postgres"
       interval: 30s
@@ -60,6 +60,18 @@ services:
     networks:
      - ft_transcendence_network
 
-  # create frontend service later
+  nginx:
+    image: nginx:latest
+    container_name: nginx_c
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - ft_transcendence_network
     # remember to expose port 443 for host
 
