@@ -441,11 +441,11 @@ main#content-container .user-card{
 	text-transform: capitalize;
 }
 
-.check-btn{
+.user-card .status[data-status="online"]::before {
 	background-color: var(--accept-color);
 }
 
-.x-btn{
+.user-card .status[data-status="offline"]::before {
 	background-color: var(--decline-color);
 }
 
