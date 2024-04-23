@@ -29,7 +29,7 @@ services:
       - PGUSER=postgres
       - POSTGRES_DB=djangoDb
     volumes:
-      - database:/var/lib/postgresql/data/
+      - ./database:/var/lib/postgresql/data/
     healthcheck:
       test: "pg_isready -U postgres"
       interval: 30s

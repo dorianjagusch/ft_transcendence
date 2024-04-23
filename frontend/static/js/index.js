@@ -1,10 +1,9 @@
-import { route } from './route.js';
-import { routes } from './Routes.js';
-import { handleLocation } from './handleLocation.js';
-import './displayFriend.js';
-import { confirmPassword } from './registration.js';
+// import { confirmPassword, registerUser } from 'services/friendService'
+// import {handleLocation} from routing
+import {showLandingPage} from './pages/landingPage.js'
 
-window.route = route;
-window.confirmPassword = confirmPassword;
+const base_url="127.0.0.1:8080"
 
-handleLocation();
+showLandingPage();
+
+// handleLocation();
