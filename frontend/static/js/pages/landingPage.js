@@ -1,4 +1,5 @@
 import showLoginPage from './loginPage.js';
+import showRegisterPage from './registerPage.js';
 // import {fillLeaderBoard} from './components/leaderBoard.js' TODO: Uncomment this line when the backend is ready
 
 
