@@ -1,46 +1,7 @@
 
-function generateInputField(type, label) {
-	const labelElement = document.createElement('label');
-	labelElement.textContent = label;
-	labelElement.setAttribute('for', label);
+import loginService from '../services/loginService.js';
+import {InputField} from '../components/inputField.js';
 
-	const inputElement = document.createElement('input');
-	inputElement.setAttribute('type', type);
-	inputElement.setAttribute('id', label);
-
-	const container = document.createElement('div');
-	container.classList.add('menu-item');
-	container.appendChild(labelElement);
-	container.appendChild(inputElement);
-
-	document.body.appendChild(container);
-
-	return container;
-}
-
-function sendLogin(username, password) {
-	const response = fetch('http://127.0.0.1:8080/login', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			username: username,
-			password: password
-		})
-	})
-	return (
-		response.then((response) =>
-		{
-			if (response.ok){
-				return response.json()
-			}
-		})
-		.catch((error)=>{
-			return console.error(error);
-		})
-	)
-}
 
 async function login() {
 	const username = document.getElementById('username').value;
@@ -49,7 +10,7 @@ async function login() {
 		alert('Please enter both username and password');
 		return;
 	}
-	await sendLogin(username, password)
+	await loginService.postLogin(username, password)
 	.then(data => {
 		if (data.success) {
 			window.location.href = '/dashboard';
@@ -64,8 +25,8 @@ function createForm(){
 
 	const form = document.createElement('form');
 
-	const userNameField = generateInputField('text', 'username');
-	const passwordField = generateInputField('password', 'current-password');
+	const userNameField = InputField('text', 'Username', 'username');
+	const passwordField = InputField('password', 'Password', 'current-password');
 
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('primary-sign-btn');
@@ -108,4 +69,4 @@ function showLoginPage() {
 }
 
 
-export { showLoginPage };
+export default showLoginPage;
