@@ -18,7 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Add new apps here
 APP_DIRS = [
-    os.path.join(BASE_DIR, "UserManagement"),
+    # os.path.join(BASE_DIR, "UserManagement"),
+    os.path.join(BASE_DIR, "User"),
 ]
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
@@ -49,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Backend apps here
-    'UserManagement',
+    # 'UserManagement',
+    'User',
 ]
 
 MIDDLEWARE = [
@@ -101,14 +103,14 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
 
 # our custom User model
-AUTH_USER_MODEL = 'UserManagement.User'
+AUTH_USER_MODEL = 'User.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
 ]
 
 # Configure login URL
-LOGIN_URL = '/users/login/'  # Set the URL where the login view is located
+LOGIN_URL = '/users/login/'  # The URL where the login view is located
 
 
 
