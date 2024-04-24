@@ -371,6 +371,7 @@ input[type="password"] {
 	border: none;
 	height: 2.5rem;
 	border-radius: 2rem;
+	padding: 0 1rem;
 }
 
 input[type="submit"]{
