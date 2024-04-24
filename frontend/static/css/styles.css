@@ -257,6 +257,10 @@ nav img {
 	padding: var(--page-padding);
 }
 
+.modal-title{
+ text-transform: capitalize;
+}
+
 /* Leaderboard */
 
 #leaderboard{
