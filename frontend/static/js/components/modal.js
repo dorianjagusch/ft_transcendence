@@ -1,6 +1,6 @@
 
 const Modal = (type, background) => {
-	
+
 	const modalContainer = document.createElement('div');
 	modalContainer.classList.add('modal-container');
 
@@ -13,6 +13,7 @@ const Modal = (type, background) => {
 
 	innerModal.appendChild(header);
 	modalContainer.appendChild(innerModal);
+	return modalContainer;
 }
 
 export {Modal}

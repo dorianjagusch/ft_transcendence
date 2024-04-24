@@ -1,4 +1,5 @@
 import { Modal } from '../components/modal.js';
+import { InputField } from '../components/inputField.js';
 // import userService from '../services/UserService.js';
 
 const register = async (e) => {
@@ -43,6 +44,7 @@ const createForm = () => {
 
 	form.appendChild(userNameField);
 	form.appendChild(passwordField);
+	form.appendChild(repeatPasswordField);
 	form.appendChild(registerButton);
 
 	return form;

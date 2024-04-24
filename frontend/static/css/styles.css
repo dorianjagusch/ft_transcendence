@@ -357,6 +357,7 @@ nav img {
 
 .menu-item{
 	display: flex;
+	justify-content: space-between;
 	gap: 1em;
 }
 

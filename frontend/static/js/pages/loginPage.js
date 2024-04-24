@@ -17,7 +17,7 @@ async function login() {
 			window.location.href = '/dashboard';
 		} else {
 			alert('Invalid username or password');
-		}
+		};
 	})
 	.catch(error => console.error('Error:', error));
 }
@@ -32,7 +32,7 @@ function createForm(){
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('primary-sign-btn');
 	loginButton.textContent = 'Sign in';
-	loginButton.addEventListener('click', login);
+	// loginButton.addEventListener('click', login); TODO: Uncomment this line when backend is ready
 
 	form.appendChild(userNameField);
 	form.appendChild(passwordField);
@@ -42,10 +42,14 @@ function createForm(){
 }
 
 function showLoginPage() {
+	const main = document.querySelector("main");
+    main.innerHTML = "";
 
 	const modalContainer = Modal('login', 'bg-secondary');
-	const loginModal = modalContainer.querySelector('login');
+	console.log(modalContainer.innerHTML);
+	const loginModal = modalContainer.querySelector('.login');
 	const form = createForm();
+	console.log(loginModal);
 
 	const signUpButton = document.createElement('button');
 	signUpButton.classList.add('secondary-sign-btn');
@@ -57,8 +61,7 @@ function showLoginPage() {
 	loginModal.appendChild(form);
 	modalContainer.appendChild(signUpButton);
 
-	const main = document.querySelector('main');
-	main.innerHTML = '';
+
 	main.appendChild(modalContainer);
 }
 
