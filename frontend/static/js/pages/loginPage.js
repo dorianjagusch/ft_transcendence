@@ -1,6 +1,7 @@
 
 import loginService from '../services/loginService.js';
-import {InputField} from '../components/inputField.js';
+import { InputField } from '../components/inputField.js';
+import { Modal } from '../components/modal.js';
 
 
 async function login() {
@@ -41,26 +42,19 @@ function createForm(){
 }
 
 function showLoginPage() {
-	const modalContainer = document.createElement('div');
-	modalContainer.classList.add('modal-container');
 
-	const loginModal = document.createElement('div');
-	loginModal.classList.add('login', 'bg-secondary');
-
-	const header = document.createElement('h2');
-	header.classList.add('modal-title');
-	header.textContent = 'Login';
-
+	const modalContainer = Modal('login', 'bg-secondary');
+	const loginModal = modalContainer.querySelector('login');
 	const form = createForm();
 
 	const signUpButton = document.createElement('button');
 	signUpButton.classList.add('secondary-sign-btn');
 	signUpButton.textContent = 'Sign up';
+	signUpButton.addEventListener('click', () => {
+		showRegisterPage();
+	});
 
-	loginModal.appendChild(header);
 	loginModal.appendChild(form);
-
-	modalContainer.appendChild(loginModal);
 	modalContainer.appendChild(signUpButton);
 
 	const main = document.querySelector('main');
