@@ -1,11 +1,8 @@
 import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
-
+import { scrollContainer } from '../components/scrollContainer.js'
 
 const main = document.querySelector('main');
-
-
-
 
 const showFriends = async () => {
 
@@ -48,23 +45,15 @@ const showFriends = async () => {
   ];
 	// const friends = Call friendsAPI	to	get	friends in a json array
 
-	friendScroller.classList.add('scroll-container', 'friends', 'bg-secondary');
-	
-  const friendScroller = document.createElement('section');
-  friendScroller.classList.add('scroll-container', 'friends', 'bg-secondary');
+  const friendScroller = scrollContainer(friends, friendCard);
+	friendScroller.classList.add('friends', 'bg-secondary');
 
-  const friendInnerScroller = document.createElement('div');
-  friendInnerScroller.classList.add('snaps-inline', 'row-scroll');
+  const requestScroller = scrollContainer(friends, friendCard);
+	requestScroller.classList.add('friend-request', 'bg-secondary');
 
-	friends.forEach((friend) => {
-		const currentCard = friendCard(friend);
-		currentCard.classList.add('scroll-element', 'user-card');
-		friendInnerScroller.appendChild(currentCard);
-	});
-
-	friendScroller.appendChild(friendInnerScroller);
 
 	main.appendChild(friendScroller);
+	main.appendChild(requestScroller);
 }
 
 export default showFriends;

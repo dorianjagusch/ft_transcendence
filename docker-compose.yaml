@@ -7,16 +7,8 @@ networks:
 
 volumes:
   database:
-   name: database
-   driver: local
-   driver_opts:
-     device: ./database
-     type: none
-     o: bind
-
 
 services:
-
   postgres:
     image: postgres:14
     container_name: postgres_c
@@ -29,7 +21,7 @@ services:
       - PGUSER=postgres
       - POSTGRES_DB=djangoDb
     volumes:
-      - ./database:/var/lib/postgresql/data/
+      - database:/var/lib/postgresql/data/
     healthcheck:
       test: "pg_isready -U postgres"
       interval: 30s
