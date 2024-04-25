@@ -23,7 +23,8 @@
 
 *,
 *::before,
-*::after {
+*::after,
+input {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -256,15 +257,6 @@ nav img {
 	padding: var(--page-padding);
 }
 
-
-.register form,
-.login form{
-	display: grid;
-	height: minmax(30vh, 500px);
-	grid-template-columns: 1fr 1fr;
-	gap: 2em;
-}
-
 /* Leaderboard */
 
 #leaderboard{
@@ -358,16 +350,19 @@ nav img {
 .register form,
 .login form{
 	display: grid;
-	height: minmax(30vh, 500px);
-	grid-template-columns: 1fr 1fr;
+	height: minmax(30vh, 100px);
+	grid-template-columns: 1fr;
 	gap: 2em;
 }
 
-@media (max-width: 750px){
-	.register form,
-	.login form{
-		grid-template-columns: 1fr;
-		gap: 0.5em;
+.menu-item{
+	display: flex;
+	gap: 1em;
+}
+
+@media (max-width: 800px){
+	.menu-item{
+		flex-direction: column;
 	}
 }
 
@@ -376,7 +371,7 @@ input[type="password"] {
 	border: none;
 	height: 2.5rem;
 	border-radius: 2rem;
-
+	padding: 0 1rem;
 }
 
 input[type="submit"]{
