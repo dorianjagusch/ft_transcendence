@@ -1,12 +1,11 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from .models import User
-from .serializers import UserSerializer
 from django.http import JsonResponse
+from rest_framework import status
+from django.contrib.auth import authenticate, login
 
+from .models import CustomUser
+from .serializers import UserSerializer
 from .decorators import user_is_object_owner
 
 #  rm later
@@ -14,16 +13,17 @@ import sys
 
 class UserListView(APIView):
 	def get(self, request):
-		users = User.objects.all()
+		users = CustomUser.objects.all()
 		serializer = UserSerializer(users, many=True)
 		return JsonResponse({"users": serializer.data})
 
 	def post(self, request):
 		serializer = UserSerializer(data=request.data)
 		if serializer.is_valid():
+			# serializer.save()
 			username = serializer.validated_data.get('username')
 			password = serializer.validated_data.get('password')
-			user = User.objects.create_user(username=username, password=password)
+			user = CustomUser.objects.create_user(username=username, password=password)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -31,17 +31,17 @@ class UserListView(APIView):
 class UserDetailView(APIView):
 	def get(self, request, user_id):
 		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
+			user = CustomUser.objects.get(pk=user_id)
+		except CustomUser.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		serializer = UserSerializer(user)
 		return Response(serializer.data)
 
-	@user_is_object_owner
+	# @user_is_object_owner
 	def put(self, request, user_id):
 		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
+			user = CustomUser.objects.get(pk=user_id)
+		except CustomUser.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		serializer = UserSerializer(user, data=request.data, partial=True)
@@ -54,8 +54,8 @@ class UserDetailView(APIView):
 	@user_is_object_owner
 	def delete(self, request, user_id):
 		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
+			user = CustomUser.objects.get(pk=user_id)
+		except CustomUser.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		user.delete()
@@ -76,5 +76,4 @@ class UserLoginView(APIView):
 			return Response({"message": "User login successful"}, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
-
 
