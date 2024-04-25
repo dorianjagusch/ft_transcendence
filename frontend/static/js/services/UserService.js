@@ -10,6 +10,7 @@ const getUser = async (id) => {
 	});
 }
 
+
 const postUser = async ({username, password}) => {
 	const response = fetch(`${userUrl}`, {
 		method: 'POST',
@@ -28,7 +29,7 @@ const postUser = async ({username, password}) => {
 
 const putUser = async ({id, username, password}) => {
 	const response = fetch(`${userUrl}/${id}`,	{
-			method: 'POST',
+			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				username: username,
@@ -41,6 +42,28 @@ const putUser = async ({id, username, password}) => {
 		});
 }
 
+
+const deleteUser = async ({ id }) => {
+  const response = fetch(`${userUrl}/${id}`, {
+    method: "Delete",
+    headers: { "Content-Type": "application/json" },
+	body: JSON.stringify({
+				username: username,
+				password: password
+			})
+  });
+  return response.then((response) => {
+    if (response.ok) return response.json();
+  });
+};
+
+
+const getAllUsers = async () => {
+	  const response = fetch(`${userUrl}`);
+  return response.then((response) => {
+	if (response.ok) return response.json();
+  });
+}
 
 
 export default {getUser, postUser, putUser, deleteUser, getAllUsers};
