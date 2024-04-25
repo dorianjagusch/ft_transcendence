@@ -1,7 +1,16 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import Friends
+from UserManagement.models import User
+
+# rm later
+import sys
 
 class FriendsSerializer(serializers.ModelSerializer):
+	user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+	friend_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+	insertTS = serializers.DateTimeField(write_only=True)
+
 	class Meta:
 		model = Friends
-		fields = ['id', 'user_id', 'friend_id', 'start_date_time']
+		fields = ['id', 'user_id', 'friend_id', 'insertTS']

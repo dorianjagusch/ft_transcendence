@@ -11,10 +11,10 @@ class Friends(models.Model):
     friend_id = models.ForeignKey(User, related_name='friend_id', null=False, blank=False, on_delete=models.CASCADE)
 
     # Date and time when the friend request is sent
-    start_date_time = models.DateTimeField(auto_now_add=True)
+    insertTS = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user_id} - {self.friend_id} - {self.start_date_time}"
+        return f"{self.user_id} - {self.friend_id} - {self.insertTS}"
     
     class Meta:
         # required because of RunTimeError that complains about lack of app_label

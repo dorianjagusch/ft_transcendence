@@ -22,8 +22,9 @@ from UserManagement.views import UserDetailView, \
                                 UserListView
 
 from Friends.views import  FriendsListAllView, \
-                        FriendsDetailView, \
-                        FriendsListView
+                        FriendsListView, \
+                        FriendsSingleFriendshipView, \
+                        FriendsDetailView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -33,8 +34,9 @@ urlpatterns = [
 	path('users/<int:id>', UserDetailView.as_view()),
 
     # Friends views
-    path('friends/', FriendsListAllView.as_view()),
-    path('friends/<int:user_id>', FriendsListView.as_view()),
-    path('friends/<int:user_id>/<int:friend_id>', FriendsDetailView.as_view()),
+    path('friends/all', FriendsListAllView.as_view()),
+    path('friends/all/<int:user_id>', FriendsListView.as_view()),
+    path('friends/single/user', FriendsSingleFriendshipView.as_view()),
+    path('friends/', FriendsDetailView.as_view()),
 
 ]
