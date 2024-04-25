@@ -46,36 +46,6 @@ clean: down # remove_database_dir
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
-	sudo docker system prune
-
-<<<<<<< Updated upstream
-create_database_directory:
-	@if [ ! -f ${DATABASE_HIDDEN_FILE} ]; then \
-		mkdir ${DATABASE_DIR}; \
-		touch ${DATABASE_HIDDEN_FILE}; \
-		echo "${YELLOW}created database directory!${C_RESET}"; \
-	fi;
-
-remove_database_dir:
-	@if [ -f ${DATABASE_HIDDEN_FILE} ]; then \
-		sudo rm -rf ${DATABASE_DIR}/; \
-		sudo rm ${DATABASE_HIDDEN_FILE}; \
-		echo "${YELLOW}deleted database directory!${C_RESET}"; \
-	fi;
-=======
-# create_database_directory:
-# 	@if [ ! -f ${DATABASE_HIDDEN_FILE} ]; then \
-# 		mkdir ${DATABASE_DIR}; \
-# 		touch ${DATABASE_HIDDEN_FILE}; \
-# 		echo "${YELLOW}created database directory!${C_RESET}"; \
-# 	fi;
-
-# remove_database_dir:
-# 	@if [ -f ${DATABASE_HIDDEN_FILE} ]; then \
-# 		rm -rf ${DATABASE_DIR}/; \
-# 		rm ${DATABASE_HIDDEN_FILE}; \
-# 		echo "${YELLOW}deleted database directory!${C_RESET}"; \
-# 	fi;
->>>>>>> Stashed changes
+	docker system prune
 
 .PHONY: all up down start stop clean fclean remove_database_dir create_database_directory
