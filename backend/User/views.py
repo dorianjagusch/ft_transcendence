@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth import authenticate, login
 
-from .models import CustomUser
+from .models import User
 from .serializers import UserSerializer
 from .decorators import user_is_object_owner
 
@@ -13,7 +13,7 @@ import sys
 
 class UserListView(APIView):
 	def get(self, request):
-		users = CustomUser.objects.all()
+		users = User.objects.all()
 		serializer = UserSerializer(users, many=True)
 		return JsonResponse({"users": serializer.data})
 
@@ -23,7 +23,7 @@ class UserListView(APIView):
 			# serializer.save()
 			username = serializer.validated_data.get('username')
 			password = serializer.validated_data.get('password')
-			user = CustomUser.objects.create_user(username=username, password=password)
+			user = User.objects.create_user(username=username, password=password)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -31,8 +31,8 @@ class UserListView(APIView):
 class UserDetailView(APIView):
 	def get(self, request, user_id):
 		try:
-			user = CustomUser.objects.get(pk=user_id)
-		except CustomUser.DoesNotExist:
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		serializer = UserSerializer(user)
 		return Response(serializer.data)
@@ -40,8 +40,8 @@ class UserDetailView(APIView):
 	# @user_is_object_owner
 	def put(self, request, user_id):
 		try:
-			user = CustomUser.objects.get(pk=user_id)
-		except CustomUser.DoesNotExist:
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		serializer = UserSerializer(user, data=request.data, partial=True)
@@ -54,8 +54,8 @@ class UserDetailView(APIView):
 	@user_is_object_owner
 	def delete(self, request, user_id):
 		try:
-			user = CustomUser.objects.get(pk=user_id)
-		except CustomUser.DoesNotExist:
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		user.delete()

@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-from .managers import CustomUserManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import check_password, make_password
 
+from .managers import UserManager
+
 # Create your models here.
-class CustomUser(AbstractBaseUser):
+class User(AbstractBaseUser):
 	username = models.CharField(_('username'), max_length=30, null=False, blank=False, unique=True)
 	password = models.CharField(_('password'), max_length=128, null=False, blank=False)
 	
@@ -18,7 +19,7 @@ class CustomUser(AbstractBaseUser):
 	
 	# profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
-	objects = CustomUserManager()
+	objects = UserManager()
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = []

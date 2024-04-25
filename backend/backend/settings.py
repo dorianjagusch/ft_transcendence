@@ -103,7 +103,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
 
 # our custom User model
-AUTH_USER_MODEL = 'User.CustomUser'
+AUTH_USER_MODEL = 'User.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default authentication backend

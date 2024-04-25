@@ -18,11 +18,6 @@ from django.contrib import admin
 from django.urls import path
 
 # add app views here
-# from UserManagement.views import UserDetailView
-# from UserManagement.views import UserListView
-
-# from UserManagement.views import UserLoginView
-
 from User.views import UserDetailView, \
                         UserListView, \
                         UserLoginView
