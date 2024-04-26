@@ -43,6 +43,6 @@ clean: down
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
-	docker system prune
+	sudo docker system prune
 
 .PHONY: all up down start stop clean fclean

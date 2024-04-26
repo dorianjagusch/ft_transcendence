@@ -70,4 +70,4 @@ const getAllUsers = async () => {
 }
 
 
-export default {getUser, postUser, putUser, deleteUser, getAllUsers};
+export default {getUser, postUser, putUser};

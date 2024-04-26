@@ -4,6 +4,18 @@ import loginService from '../services/loginService.js';
 import { InputField } from '../components/inputField.js';
 import { Modal } from '../components/modal.js';
 
+const showUser = ({id, login}) => {
+	const main = document.querySelector('main');
+	main = "";
+
+	const name = document.createElement('h1')
+	name.innerHTML = login;
+
+	const ID = document.createElement('h2')
+	ID.innerHTML = `your id is ${id}`;
+
+	main.append(name, ID);
+}
 
 async function login() {
 	const username = document.getElementById('username').value;
@@ -12,15 +24,12 @@ async function login() {
 		alert('Please enter both username and password');
 		return;
 	}
-	await loginService.postLogin(username, password)
+	const toSend = {username, password};
+	await loginService.postLogin(toSend)
 	.then(data => {
-		if (data.success) {
-			window.location.href = '/dashboard';
-		} else {
-			alert('Invalid username or password');
-		};
-	})
-	.catch(error => console.error('Error:', error));
+			window.location.href = '/login';
+			showUser(data.json());
+	});
 }
 
 function createForm(){
@@ -33,7 +42,7 @@ function createForm(){
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('primary-sign-btn');
 	loginButton.textContent = 'Sign in';
-	// loginButton.addEventListener('click', login); TODO: Uncomment this line when backend is ready
+	loginButton.addEventListener('click', login);
 
 	form.appendChild(userNameField);
 	form.appendChild(passwordField);
