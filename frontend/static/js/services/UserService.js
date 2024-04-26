@@ -3,15 +3,16 @@ import { baseURL } from '../constants.js';
 userUrl = baseURL + 'user/'
 
 const getUser = async (id) => {
-	const respone = await fetch(`${userUrl}${id}`)
-	return respone.then((response) => {
+	const request = await fetch(`${userUrl}${id}`)
+	return request.then((response) => {
 		if (response.ok)
 			return response.json()
 	});
 }
 
+
 const postUser = async ({username, password}) => {
-	const response = fetch(`${userUrl}`, {
+	const request = await fetch(`${userUrl}`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
@@ -19,7 +20,7 @@ const postUser = async ({username, password}) => {
 			password: password
 		})
 	})
-	return response.then((response) => {
+	return request.then((response) => {
 			if (response.ok)
 				return response.json();
 });
@@ -27,20 +28,42 @@ const postUser = async ({username, password}) => {
 
 
 const putUser = async ({id, username, password}) => {
-	const response = fetch(`${userUrl}/${id}`,	{
-			method: 'POST',
+	const request = await fetch(`${userUrl}/${id}`,	{
+			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				username: username,
 				password: password
 			})}
 	)
-	return response.then((response) => {
+	return request.then((response) => {
 			if (response.ok)
 				return response.json();
 		});
 }
 
+
+const deleteUser = async ({ id }) => {
+  const request = await fetch(`${userUrl}/${id}`, {
+    method: "Delete",
+    headers: { "Content-Type": "application/json" },
+	body: JSON.stringify({
+				username: username,
+				password: password
+			})
+  });
+  return request.then((response) => {
+    if (response.ok) return response.json();
+  });
+};
+
+
+const getAllUsers = async () => {
+	  const request = await fetch(`${userUrl}`);
+  return request.then((response) => {
+	if (response.ok) return response.json();
+  });
+}
 
 
 export default {getUser, postUser, putUser, deleteUser, getAllUsers};
