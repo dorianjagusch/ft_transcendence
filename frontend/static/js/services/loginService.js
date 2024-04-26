@@ -1,8 +1,8 @@
-import { baseURL } from "../constants.js";
+import backendURL from "../constants.js";
 
 
 function postLogin({username, password}) {
-	const response = fetch(`${baseURL}login/`, {
+	const response = fetch(`${backendURL.baseURL}login/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

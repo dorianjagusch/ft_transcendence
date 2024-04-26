@@ -2,8 +2,52 @@ import showLandingPage from "./pages/landingPage.js";
 import showLoginPage from "./pages/loginPage.js";
 import showRegisterPage from "./pages/registerPage.js";
 import showFriendsPage from "./pages/friendsPage.js";
-// import showDashboardPage from "./pages/dashboardPage.js";
+import showDashboardPage from "./pages/dashboardPage.js";
 // import showProfilePage from "./pages/profilePage.js";
+
+// const machineConfig = {
+//   initialState: "landing",
+//   states: {
+//     landing: {},
+//     register: {},
+//     login: {},
+//     loggedIn: {
+//       leaderboard: {},
+//       dashboard: {},
+//       friends: {},
+//       play: {},
+//       settings: {},
+//     },
+//     loggedOut: {},
+//   },
+//   transitions: {
+//     landing: {
+//       goToRegister: "register",
+//       goToLogin: "login",
+// 	  goToLanding: "landing",
+//     },
+//     register: {
+//       goToLanding: "landing",
+//       goToLogin: "login",
+//     },
+//     login: {
+//       goToLanding: "landing",
+//       goToRegister: "register",
+//       goToLoggedIn: "loggedIn",
+//     },
+//     loggedIn: {
+//       goToLoggedOut: "loggedOut",
+//       goToLeaderboard: "leaderboard",
+//       goToDashboard: "dashboard",
+//       goToFriends: "friends",
+//       goToPlay: "play",
+//       goToSettings: "settings",
+//     },
+//     loggedOut: {
+//       goToLogin: "login",
+//     },
+//   },
+// };
 
 const machineConfig = {
   initialState: "landing",
@@ -11,38 +55,36 @@ const machineConfig = {
     landing: {},
     register: {},
     login: {},
-    loggedIn: {
-      leaderboard: {},
-      dashboard: {},
-      friends: {},
-      play: {},
-      settings: {},
-    },
+  leaderboard: {},
+  dashboard: {},
+  friends: {},
+  play: {},
+  settings: {},
+  logginIn: {},
     loggedOut: {},
   },
   transitions: {
     landing: {
       goToRegister: "register",
       goToLogin: "login",
-	  goToLanding: "landing",
+    goToLanding: "landing",
     },
     register: {
       goToLanding: "landing",
       goToLogin: "login",
+    goToLoggedIn: "loggedIn",
     },
     login: {
       goToLanding: "landing",
       goToRegister: "register",
-      goToLoggedIn: "loggedIn",
-    },
-    loggedIn: {
-      goToLoggedOut: "loggedOut",
-      goToLeaderboard: "leaderboard",
       goToDashboard: "dashboard",
-      goToFriends: "friends",
-      goToPlay: "play",
-      goToSettings: "settings",
     },
+    dashboard: {
+      goToFriends: "friends",
+    },
+  friends: {
+    goToDashboard: "dashboard",
+  },
     loggedOut: {
       goToLogin: "login",
     },
@@ -74,16 +116,25 @@ const stateMachine = {
 
         showLandingPage();
       },
-      goToLoggedIn: () => {
+      goToDashboard: () => {
+        // Remove event listeners from current page
+
+        showDashboardPage();
+      },
+      goToFriends: () => {
         // Remove event listeners from current page
 
         showFriendsPage();
       },
-    //   goToLoggedOut: () => {
-    //     // Remove event listeners from current page
-    //     showLoggedOutPage();
-    //   },
-    //   // Define other actions here
+      goToLoggedIn: () => {
+        // Remove event listeners from current page
+        document.querySelector('main').innerHTML = '';
+        const navSections = document.querySelectorAll('.nav-partition');
+        navSections.forEach(section => {
+          section.getAttribute('data-visible') === 'false' ? section.setAttribute('data-visible', 'true') : section.setAttribute('data-visible', 'false');
+        });
+        stateMachine.transition('goToDashboard');
+          },
     };
 
     const actionFunction = actions[action];
