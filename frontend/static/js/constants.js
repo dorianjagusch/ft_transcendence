@@ -5,7 +5,6 @@ const friendsURL = `${baseURL}friends/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 
-
 export {
 		baseURL,
 		userURL,

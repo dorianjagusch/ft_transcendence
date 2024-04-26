@@ -1,4 +1,3 @@
-import showLandingPage from './pages/landingPage.js'
+import stateMachine from "./stateMachine.js";
 
-showLandingPage();
-
+stateMachine.transition("goToLanding");
