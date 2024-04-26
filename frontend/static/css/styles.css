@@ -510,8 +510,6 @@ main#content-container .user-card{
 }
 
 
-
-
 /* MENU ITEMS */
 
 
@@ -586,24 +584,22 @@ button:is(:focus, :hover)
 	height: 2.5em;
 	width: 5em;
 	position: relative;
-}
-
-.check-btn img,
-.x-btn img{
-	position: absolute;
-	width: 2.5rem;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .check-btn{
+	background-size: 70%;
 	background-color: var(--accept-color);
+	background-image: url("../assets/img/tickmark.png");
 }
 
 .x-btn{
+	background-size: 60%;
 	background-color: var(--decline-color);
+	background-image: url("../assets/img/x.png");
 }
+
 
 .add-btn,
 .remove-btn{

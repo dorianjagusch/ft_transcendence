@@ -48,7 +48,7 @@ const showFriends = async () => {
   const friendScroller = scrollContainer(friends, friendCard);
 	friendScroller.classList.add('friends', 'bg-secondary');
 
-  const requestScroller = scrollContainer(friends, friendCard);
+  const requestScroller = scrollContainer(friends, requestCard);
 	requestScroller.classList.add('friend-request', 'bg-secondary');
 
 
