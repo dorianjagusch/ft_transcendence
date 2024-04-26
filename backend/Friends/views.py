@@ -30,13 +30,9 @@ class FriendsListView(APIView):
 
 # for viewing a single, existing friendship
 class FriendsSingleFriendshipView(APIView):
-    def post(self, request):
-        serializer = FriendsSerializer(data=request.data, partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    def get(self, request, user_id, friend_id):
         try:
-            friends = Friends.objects.get(user_id=serializer.data.get('user_id'), friend_id=serializer.data.get('friend_id'))
+            friends = Friends.objects.get(user_id=user_id, friend_id=friend_id)
         except Friends.DoesNotExist:
             return Response({"message": "Friendship doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
         response_serializer = FriendsSerializer(friends)
@@ -44,35 +40,15 @@ class FriendsSingleFriendshipView(APIView):
 
 
 class FriendsDetailView(APIView):
-    
-    # post only for creating new Friends
     def post(self, request):
         serializer = FriendsSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # print("user_id of serializer [DATA]: ", serializer.data.get('user_id'), file=sys.stderr)
-        # print("user_id of serializer [VALIDATED_DATA]: ", serializer.validated_data.get('user_id'), file=sys.stderr)
-        # print("friend_id of serializer: ", serializer.data.get('friend_id'), file=sys.stderr)
-        
-        # user_id = serializer.data.get('user_id')
-        
-        # friend_id = serializer.data.get('friend_id')
-        # # if not User.objects.filter(pk=friend_id).exists():
-        # #     return Response({"message": "user with the id of friend_id doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
     def delete(self, request):
-
-        # is_valid causes an error here because of the 'unique_user_friend_pair' constrait; try to solve later
-        # serializer = FriendsSerializer(data=request.data, partial=True)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # user_id = serializer.data.get('user_id')
-        # friend_id = serializer.data.get('friend_id')
-
         user_id = request.data.get('user_id')
         friend_id = request.data.get('friend_id')
 
