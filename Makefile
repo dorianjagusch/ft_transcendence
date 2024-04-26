@@ -26,7 +26,7 @@ CYAN = \033[0;96m
 
 all: up
 
-up: create_database_directory
+up: #create_database_directory
 	${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
@@ -42,24 +42,10 @@ stop:
 	${DOCKER_COMPOSE} stop
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
-clean: down remove_database_dir
+clean: down # remove_database_dir
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
-	sudo docker system prune
-
-create_database_directory:
-	@if [ ! -f ${DATABASE_HIDDEN_FILE} ]; then \
-		mkdir ${DATABASE_DIR}; \
-		touch ${DATABASE_HIDDEN_FILE}; \
-		echo "${YELLOW}created database directory!${C_RESET}"; \
-	fi;
-
-remove_database_dir:
-	@if [ -f ${DATABASE_HIDDEN_FILE} ]; then \
-		sudo rm -rf ${DATABASE_DIR}/; \
-		sudo rm ${DATABASE_HIDDEN_FILE}; \
-		echo "${YELLOW}deleted database directory!${C_RESET}"; \
-	fi;
+	docker system prune
 
 .PHONY: all up down start stop clean fclean remove_database_dir create_database_directory

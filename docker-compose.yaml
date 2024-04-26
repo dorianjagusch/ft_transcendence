@@ -7,16 +7,8 @@ networks:
 
 volumes:
   database:
-   name: database
-   driver: local
-   driver_opts:
-     device: ./database
-     type: none
-     o: bind
-
 
 services:
-
   postgres:
     image: postgres:14
     container_name: postgres_c
