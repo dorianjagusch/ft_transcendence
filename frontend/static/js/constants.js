@@ -8,7 +8,6 @@ export {
 		baseURL,
 		userURL,
 		loginURL,
-		friendsURL,
 		leaderboardURL,
 		settingsURL
 	};
