@@ -27,7 +27,6 @@ async function login() {
 	const toSend = {username, password};
 	await loginService.postLogin(toSend)
 	.then(data => {
-			window.location.href = '/login';
 			showUser(data.json());
 	});
 }

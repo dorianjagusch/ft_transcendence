@@ -36,10 +36,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1",
-]
-
 
 # Application definition
 
@@ -69,6 +65,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # For development
+# For production, use:
+# CORS_ALLOWED_ORIGINS = ['http://localhost:80']
 
 ROOT_URLCONF = 'backend.urls'
 

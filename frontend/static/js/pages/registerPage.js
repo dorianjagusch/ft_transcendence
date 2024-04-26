@@ -25,12 +25,8 @@ const register = async (e) => {
 	};
 
 	userService.postUser(data)
-	.then((data) => {
-		if (data.success) {
-			stateMachine.transition('goToDashboard');
-		} else {
-			alert('Username already taken');
-		}
+	.then(() => {
+		stateMachine.transition('goToLogin');
 	})
 	.catch((error) => {
 		console.error(error);
