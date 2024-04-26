@@ -20,14 +20,16 @@ from django.urls import path
 # add app views here
 from User.views import UserDetailView, \
                         UserListView, \
-                        UserLoginView
+                        UserLoginView, \
+                        UserAdminDetailsView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
-	# UserManagement views
+	# User views
 	path('users/', UserListView.as_view()),
 	path('users/<int:user_id>', UserDetailView.as_view()),
-
     path('users/login/', UserLoginView.as_view()),
+    path('admins/', UserAdminDetailsView.as_view()),
+
 ]

@@ -1,3 +1,4 @@
+from functools import partial
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -6,7 +7,8 @@ from django.contrib.auth import authenticate, login
 
 from .models import User
 from .serializers import UserSerializer
-from .decorators import user_is_object_owner
+from .decorators import user_is_object_owner_url
+
 
 #  rm later
 import sys
@@ -20,7 +22,6 @@ class UserListView(APIView):
 	def post(self, request):
 		serializer = UserSerializer(data=request.data)
 		if serializer.is_valid():
-			# serializer.save()
 			username = serializer.validated_data.get('username')
 			password = serializer.validated_data.get('password')
 			user = User.objects.create_user(username=username, password=password)
@@ -37,7 +38,7 @@ class UserDetailView(APIView):
 		serializer = UserSerializer(user)
 		return Response(serializer.data)
 
-	# @user_is_object_owner
+	@user_is_object_owner_url
 	def put(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -51,7 +52,7 @@ class UserDetailView(APIView):
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	@user_is_object_owner
+	@user_is_object_owner_url
 	def delete(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -77,3 +78,20 @@ class UserLoginView(APIView):
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
+# admin stuff, for debugging
+class UserAdminDetailsView(APIView):
+	def get(self, request):
+		admins = User.objects.filter(is_superuser=True)
+		serializer = UserSerializer(admins, many=True)
+		return JsonResponse({"admins": serializer.data})
+
+	def post(self, request):
+		serializer = UserSerializer(data=request.data)
+		if serializer.is_valid():
+			username = serializer.validated_data.get('username')
+			password = serializer.validated_data.get('password')
+			user = User.objects.create_superuser(username=username, password=password)
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		else:
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	
