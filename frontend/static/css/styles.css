@@ -257,6 +257,10 @@ nav img {
 	padding: var(--page-padding);
 }
 
+.modal-title{
+ text-transform: capitalize;
+}
+
 /* Leaderboard */
 
 #leaderboard{
@@ -357,6 +361,7 @@ nav img {
 
 .menu-item{
 	display: flex;
+	justify-content: space-between;
 	gap: 1em;
 }
 

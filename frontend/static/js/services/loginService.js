@@ -1,5 +1,8 @@
+import { baseURL } from "../constants.js";
+
+
 function postLogin({username, password}) {
-	const response = fetch('http://127.0.0.1:8080/login', {
+	const response = fetch(`${baseURL}login/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
