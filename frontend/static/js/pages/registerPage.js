@@ -1,6 +1,16 @@
 import { Modal } from '../components/modal.js';
 import { InputField } from '../components/inputField.js';
-// import userService from '../services/UserService.js';
+import userService from '../services/UserService.js';
+
+const showUser = ({username}) => {
+	const main = document.querySelector('main');
+	main = "";
+
+	const name = document.createElement('h1')
+	name.innerHTML = `Welcome ${login}`;
+
+	main.append(name);
+}
 
 const register = async (e) => {
 	e.preventDefault();
@@ -23,11 +33,13 @@ const register = async (e) => {
 		password: password
 	};
 
-	// const USER = userService.postUser(data).
-	// catch((error) => {
-	// 	console.error(error);
-	// });
-	// console.log(USER); TODO: Test this on Thursday with the containers running
+	userService.postUser(data)
+	.then((data) => {
+			showUser(data);
+	})
+	.catch((error) => {
+		console.error(error);
+	});
 }
 
 const createForm = () => {

@@ -9,7 +9,7 @@ const showUser = ({id, login}) => {
 
 	const name = document.createElement('h1')
 	name.innerHTML = login;
-	
+
 	const ID = document.createElement('h2')
 	ID.innerHTML = `your id is ${id}`;
 
@@ -26,15 +26,9 @@ async function login() {
 	const toSend = {username, password};
 	await loginService.postLogin(toSend)
 	.then(data => {
-		if (data.success) {
-			window.location.href = '/dashboard';
+			window.location.href = '/login';
 			showUser(data.json());
-		} else {
-			alert('Invalid username or password');
-		};
-	})
-	.catch(error => console.error('Error:', error));
-
+	});
 }
 
 function createForm(){

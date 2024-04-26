@@ -1,28 +1,33 @@
 import { baseURL } from "../constants.js";
 
-const loginURL = `${baseURL}users/login/`
-function postLogin({username, password}) {
-	console.log(loginURL)
-	const response = await fetch(loginURL, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			username: username,
-			password: password
-		})
-	})
-	console.log(response);
-	response.then((response) =>
-	{
-		if (response.ok){
-			return response.json()
-		}
-	})
-	.catch((error)=>{
-		return console.error(error);
-	})
+const loginURL = `${baseURL}users/login/`;
+
+function postLogin({ username, password }) {
+  console.log(loginURL);
+  return fetch(loginURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Network response was not ok.");
+      }
+    })
+    .catch((error) => {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+    });
 }
+
 
 export default {postLogin};
