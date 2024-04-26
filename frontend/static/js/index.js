@@ -1,10 +1,3 @@
-import showLandingPage from './pages/landingPage.js'
-import showLoginPage from './pages/loginPage.js'
-import showRegisterPage from './pages/registerPage.js';
+import stateMachine from "./stateMachine.js";
 
-
-showLandingPage();
-// showLoginPage();
-
-// handleLocation();
-
+stateMachine.transition("goToLanding");

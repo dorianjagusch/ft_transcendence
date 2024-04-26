@@ -1,4 +1,5 @@
 
+import stateMachine from '../stateMachine.js';
 import loginService from '../services/loginService.js';
 import { InputField } from '../components/inputField.js';
 import { Modal } from '../components/modal.js';
@@ -55,7 +56,7 @@ function showLoginPage() {
 	signUpButton.classList.add('secondary-sign-btn');
 	signUpButton.textContent = 'Sign up';
 	signUpButton.addEventListener('click', () => {
-		showRegisterPage();
+		stateMachine.transition('goToRegister');
 	});
 
 	loginModal.appendChild(form);
