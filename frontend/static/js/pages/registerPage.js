@@ -1,6 +1,7 @@
 import { Modal } from '../components/modal.js';
 import { InputField } from '../components/inputField.js';
 // import userService from '../services/UserService.js';
+import stateMachine from '../stateMachine.js';
 
 const register = async (e) => {
 	e.preventDefault();
@@ -60,9 +61,6 @@ const showRegisterPage = () => {
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('secondary-sign-btn');
 	loginButton.textContent = 'Sign in';
-	loginButton.addEventListener('click', () => {
-		showLoginPage();
-	});
 
 	registerModal.appendChild(form);
 	modalContainer.appendChild(loginButton);
@@ -70,6 +68,10 @@ const showRegisterPage = () => {
 	const main = document.querySelector('main');
 	main.innerHTML = '';
 	main.appendChild(modalContainer);
+
+	loginButton.addEventListener('click', () => {
+		stateMachine.transition('goToLogin');
+	});
 }
 
 export default showRegisterPage;

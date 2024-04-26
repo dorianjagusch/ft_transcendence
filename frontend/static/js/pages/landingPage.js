@@ -1,8 +1,4 @@
-import showLoginPage from './loginPage.js';
-import showRegisterPage from './registerPage.js';
-// import {fillLeaderBoard} from './components/leaderBoard.js' TODO: Uncomment this line when the backend is ready
-
-
+import stateMachine from "../stateMachine.js";
 
 const showLandingPage = () => {
 	const main = document.querySelector('main')
@@ -11,13 +7,13 @@ const showLandingPage = () => {
 	const loginButton = document.querySelector('#login');
 	loginButton.addEventListener('click', (e) => {
 		e.preventDefault();
-		showLoginPage();
+		stateMachine.transition('goToLogin');
 	});
 
 	const registerButton = document.querySelector('#register');
 	registerButton.addEventListener('click', (e) => {
 		e.preventDefault();
-		showRegisterPage();
+		stateMachine.transition('goToRegister');
 	});
 
 	const leaderBoard = document.createElement('section');
