@@ -26,7 +26,7 @@ CYAN = \033[0;96m
 
 all: up
 
-up: #create_database_directory
+up:
 	${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
@@ -42,10 +42,10 @@ stop:
 	${DOCKER_COMPOSE} stop
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
-clean: down # remove_database_dir
+clean: down
 
 # change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
 	docker system prune
 
-.PHONY: all up down start stop clean fclean remove_database_dir create_database_directory
+.PHONY: all up down start stop clean fclean

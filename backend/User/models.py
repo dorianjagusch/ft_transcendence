@@ -10,10 +10,10 @@ class User(AbstractBaseUser):
 	password = models.CharField(_('password'), max_length=128, null=False, blank=False)
 	
 	is_active = models.BooleanField(_('active'), default=True)
-	is_staff = models.BooleanField(_('is staff'), default=False)
-	is_superuser = models.BooleanField(_('is superuser'), default=False)
-	date_created = models.DateTimeField(_('date created'), auto_now_add=True, blank=True, null=True)
-	last_login = models.DateTimeField(_('last login'), blank=True, null=True)
+	is_staff = models.BooleanField(_('is_staff'), default=False)
+	is_superuser = models.BooleanField(_('is_superuser'), default=False)
+	insertTS = models.DateTimeField(_('insertTS'), auto_now_add=True, blank=True, null=True)
+	last_login = models.DateTimeField(_('last_login'), blank=True, null=True)
 	
 	# profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
