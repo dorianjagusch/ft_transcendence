@@ -18,7 +18,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Add new apps here
 APP_DIRS = [
-    # os.path.join(BASE_DIR, "UserManagement"),
     os.path.join(BASE_DIR, "User"),
 ]
 
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Backend apps here
-    # 'UserManagement',
     'User',
 ]
 
