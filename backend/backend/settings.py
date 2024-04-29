@@ -85,7 +85,7 @@ TEMPLATES = [
 
 # Daphne
 ASGI_APPLICATION = 'backend.asgi.application'
-#WSGI_APPLICATION = 'backend.wsgi.application'
+# WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 # Database
