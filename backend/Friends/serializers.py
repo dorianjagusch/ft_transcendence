@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import Friends
-from UserManagement.models import User
+from User.models import User
 
 # rm later
 import sys

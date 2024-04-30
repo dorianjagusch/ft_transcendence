@@ -1,6 +1,6 @@
 from django.db import models
 
-from UserManagement.models import User
+from User.models import User
 
 # Create your models here.
 class Friends(models.Model):

@@ -18,38 +18,35 @@ from django.contrib import admin
 from django.urls import path
 
 # add app views here
-<<<<<<< HEAD
-from UserManagement.views import UserDetailView, \
-                                UserListView
-
-from Friends.views import  FriendsListAllView, \
-                        FriendsListView, \
-                        FriendsSingleFriendshipView, \
-                        FriendsDetailView
-=======
 from User.views import UserDetailView, \
                         UserListView, \
                         UserLoginView, \
                         UserAdminDetailsView
->>>>>>> e381115527ae0494cd16789ea7d912c43ef1cb2d
+
+from Friends.views import FriendsListView, \
+                        UserFriendsListView, \
+                        UserApprovedFriendsListView, \
+                        UserPendingFriendsListView, \
+                        UserReceivedFriendsListView, \
+                        FriendshipDetailView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
 	# User views
 	path('users/', UserListView.as_view()),
-<<<<<<< HEAD
 	path('users/<int:id>', UserDetailView.as_view()),
-
-    # Friends views
-    path('friends/all', FriendsListAllView.as_view()), # for debugging, will be removed later
-    path('<int:user_id>/friends', FriendsListView.as_view()),
-    path('<int:user_id>/friends/<int:friend_id>', FriendsSingleFriendshipView.as_view()),
-    path('friends/', FriendsDetailView.as_view()),
-=======
-	path('users/<int:user_id>', UserDetailView.as_view()),
     path('login/', UserLoginView.as_view()),
     path('admins/', UserAdminDetailsView.as_view()),
->>>>>>> e381115527ae0494cd16789ea7d912c43ef1cb2d
+
+
+    # Friends views
+    path('friends/', FriendsListView.as_view()),
+    path('users/<int:user_id>/friends/', UserFriendsListView.as_view()),
+    path('users/<int:user_id>/friends/approved/', UserApprovedFriendsListView.as_view()),
+    path('users/<int:user_id>/friends/pending/', UserPendingFriendsListView.as_view()),
+    path('users/<int:user_id>/friends/received/', UserReceivedFriendsListView.as_view()),
+    path('friends/<int:friendship_id>', FriendshipDetailView.as_view()),
+
 
 ]
