@@ -2,9 +2,11 @@ import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
 import { scrollContainer } from '../components/scrollContainer.js'
 
-const main = document.querySelector('main');
 
 const showFriends = async () => {
+
+	const main = document.querySelector('main');
+	main.innerHTML = '';
 
 	const friends = [
     {

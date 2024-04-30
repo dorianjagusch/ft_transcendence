@@ -4,20 +4,8 @@ import loginService from '../services/loginService.js';
 import { InputField } from '../components/inputField.js';
 import { Modal } from '../components/modal.js';
 
-const showUser = ({id, login}) => {
-	const main = document.querySelector('main');
-	main = "";
-
-	const name = document.createElement('h1')
-	name.innerHTML = login;
-
-	const ID = document.createElement('h2')
-	ID.innerHTML = `your id is ${id}`;
-
-	main.append(name, ID);
-}
-
-async function login() {
+async function login(e) {
+	e.preventDefault();
 	const username = document.getElementById('username').value;
 	const password = document.getElementById('current-password').value;
 	if (username === '' || password === '') {
@@ -26,9 +14,16 @@ async function login() {
 	}
 	const toSend = {username, password};
 	await loginService.postLogin(toSend)
-	.then(data => {
-			showUser(data.json());
-	});
+    .then(() => {
+      stateMachine.context.username =toSend.username;
+      stateMachine.transition("goToFriends");
+    })
+    .catch((error) => {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+    });;
 }
 
 function createForm(){
