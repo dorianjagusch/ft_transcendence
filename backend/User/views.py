@@ -4,11 +4,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth import authenticate, login
-
 from .models import User
-from .serializers import UserSerializer
-# from .decorators import user_is_object_owner_url
-
+from .serializers import UserOutputSerializer, UserInputSerializer
 
 #  rm later
 import sys
@@ -16,18 +13,19 @@ import sys
 class UserListView(APIView):
 	def get(self, request):
 		users = User.objects.all()
-		serializer = UserSerializer(users, many=True)
+		serializer = UserOutputSerializer(users, many=True)
 		return JsonResponse({"users": serializer.data})
 
 	def post(self, request):
-		serializer = UserSerializer(data=request.data)
-		if serializer.is_valid():
-			username = serializer.validated_data.get('username')
-			password = serializer.validated_data.get('password')
+		inputSerializer = UserInputSerializer(data=request.data)
+		if inputSerializer.is_valid():
+			username = inputSerializer.validated_data.get('username')
+			password = inputSerializer.validated_data.get('password')
 			user = User.objects.create_user(username=username, password=password)
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+			outputSerializer = UserOutputSerializer(user)
+			return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetailView(APIView):
 	def get(self, request, user_id):
@@ -35,7 +33,7 @@ class UserDetailView(APIView):
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-		serializer = UserSerializer(user)
+		serializer = UserOutputSerializer(user)
 		return Response(serializer.data)
 
 	# @user_is_object_owner_url
@@ -45,12 +43,13 @@ class UserDetailView(APIView):
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
-		serializer = UserSerializer(user, data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
+		inputSerializer = UserInputSerializer(user, data=request.data, partial=True)
+		if inputSerializer.is_valid():
+			user = inputSerializer.save()
+			outputSerializer = UserOutputSerializer(user)
+			return Response(outputSerializer.data)
 		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 	# @user_is_object_owner_url
 	def delete(self, request, user_id):
@@ -82,16 +81,16 @@ class UserLoginView(APIView):
 class UserAdminDetailsView(APIView):
 	def get(self, request):
 		admins = User.objects.filter(is_superuser=True)
-		serializer = UserSerializer(admins, many=True)
+		serializer = UserOutputSerializer(admins, many=True)
 		return JsonResponse({"admins": serializer.data})
 
 	def post(self, request):
-		serializer = UserSerializer(data=request.data)
-		if serializer.is_valid():
-			username = serializer.validated_data.get('username')
-			password = serializer.validated_data.get('password')
+		inputSerializer = UserInputSerializer(data=request.data)
+		if inputSerializer.is_valid():
+			username = inputSerializer.validated_data.get('username')
+			password = inputSerializer.validated_data.get('password')
 			user = User.objects.create_superuser(username=username, password=password)
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+			outputSerializer = UserOutputSerializer(user)
+			return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-	
+			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
