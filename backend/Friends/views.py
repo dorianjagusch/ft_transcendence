@@ -112,13 +112,13 @@ class FriendshipDetailView(APIView):
         except Friends.DoesNotExist:
             return Response({"message": "Friendship doesn't exist"},status=status.HTTP_404_NOT_FOUND)
         
-        # remove possible opposing friend row from Friends table
+        # remove possible reciprocal friend row from Friends table
         user_id = friends.user_id
         friend_id = friends.friend_id
 
         try:
-            opposing_friends = Friends.objects.get(user_id=friend_id, friend_id=user_id)
-            opposing_friends.delete()
+            reciprocal_friends = Friends.objects.get(user_id=friend_id, friend_id=user_id)
+            reciprocal_friends.delete()
         except Friends.DoesNotExist:
             pass
         
