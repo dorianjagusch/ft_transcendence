@@ -19,6 +19,10 @@ class FriendsListView(APIView):
         return JsonResponse({"friends" : serializer.data})
     
     def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
+        if request.user.id != request.data.get('user_id'):
+            return Response({"message": "Cannot access other user's data"},status=status.HTTP_403_FORBIDDEN)
         serializer = FriendsSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -27,6 +31,11 @@ class FriendsListView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
+        if not request.user.is_authenticated:
+            return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
+        if request.user.id != request.data.get('user_id'):
+            return Response({"message": "Cannot access other user's data"},status=status.HTTP_403_FORBIDDEN)
+
         user_id = request.data.get('user_id')
         friend_id = request.data.get('friend_id')
 
@@ -44,16 +53,6 @@ class FriendsListView(APIView):
         
         friends.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class UserFriendsListView(APIView):
-    def get(self,request, user_id):
-        friends = Friends.objects.filter(user_id=user_id)
-        if friends.exists():
-            serializer = FriendsSerializer(friends, many=True)
-            return JsonResponse({"friends" : serializer.data})
-        else:
-            return Response({"message": "No friends found for user"}, status=status.HTTP_404_NOT_FOUND)
 
 
 # for viewing a single, existing friendship
