@@ -9,8 +9,7 @@ import sys
 class FriendsSerializer(serializers.ModelSerializer):
 	user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 	friend_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-	insertTS = serializers.DateTimeField(write_only=True)
 
 	class Meta:
 		model = Friends
-		fields = ['id', 'user_id', 'friend_id', 'insertTS']
+		fields = ['id', 'user_id', 'friend_id']

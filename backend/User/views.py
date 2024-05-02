@@ -7,7 +7,6 @@ from django.contrib.auth import authenticate, login
 
 from .models import User
 from .serializers import UserSerializer
-# from .decorators import user_is_object_owner_url
 
 
 #  rm later
@@ -38,7 +37,6 @@ class UserDetailView(APIView):
 		serializer = UserSerializer(user)
 		return Response(serializer.data)
 
-	# @user_is_object_owner_url
 	def put(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -52,7 +50,6 @@ class UserDetailView(APIView):
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	# @user_is_object_owner_url
 	def delete(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)

@@ -25,9 +25,6 @@ from User.views import UserDetailView, \
 
 from Friends.views import FriendsListView, \
                         UserFriendsListView, \
-                        UserApprovedFriendsListView, \
-                        UserPendingFriendsListView, \
-                        UserReceivedFriendsListView, \
                         FriendshipDetailView
 
 urlpatterns = [
@@ -43,10 +40,5 @@ urlpatterns = [
     # Friends views
     path('friends/', FriendsListView.as_view()),
     path('users/<int:user_id>/friends/', UserFriendsListView.as_view()),
-    path('users/<int:user_id>/friends/approved/', UserApprovedFriendsListView.as_view()),
-    path('users/<int:user_id>/friends/pending/', UserPendingFriendsListView.as_view()),
-    path('users/<int:user_id>/friends/received/', UserReceivedFriendsListView.as_view()),
     path('friends/<int:friendship_id>', FriendshipDetailView.as_view()),
-
-
 ]
