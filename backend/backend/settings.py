@@ -19,9 +19,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Add new apps here
 APP_DIRS = [
     os.path.join(BASE_DIR, "UserManagement"),
+	os.path.join(BASE_DIR, "pong"),
+	
 ]
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -150,3 +153,7 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer'
     }
 }
+
+print('*************')
+print(TEMPLATE_DIRS)
+print(BASE_DIR)
