@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-import os
 from pathlib import Path
 import os
 
@@ -19,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Add new apps here
 APP_DIRS = [
     os.path.join(BASE_DIR, "User"),
+    os.path.join(BASE_DIR, "Friends"),
 ]
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # Backend apps here
     'User',
+    'Friends',
 ]
 
 MIDDLEWARE = [

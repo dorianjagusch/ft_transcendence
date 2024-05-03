@@ -23,6 +23,9 @@ from User.views import UserDetailView, \
                         UserLoginView, \
                         UserAdminDetailsView
 
+from Friends.views import FriendsListView, \
+                        FriendshipDetailView
+
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
@@ -32,4 +35,8 @@ urlpatterns = [
     path('login/', UserLoginView.as_view()),
     path('admins/', UserAdminDetailsView.as_view()),
 
+
+    # Friends views
+    path('friends/', FriendsListView.as_view()),
+    path('friends/<int:friendship_id>', FriendshipDetailView.as_view()),
 ]

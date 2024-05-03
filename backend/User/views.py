@@ -36,7 +36,6 @@ class UserDetailView(APIView):
 		serializer = UserOutputSerializer(user)
 		return Response(serializer.data)
 
-	# @user_is_object_owner_url
 	def put(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -51,7 +50,6 @@ class UserDetailView(APIView):
 		else:
 			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	# @user_is_object_owner_url
 	def delete(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
