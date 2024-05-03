@@ -9,6 +9,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
 
+	<script type="module" src="./static/js/index.js" defer></script>
 	<link rel="stylesheet" href="./static/css/styles.css">
 </head>
 <body>
@@ -39,19 +40,17 @@
 				</div>
 				<div class="nav-partition" data-visible="true">
 					<li class="nav_item">
-						<a onClick="route()" href="/login">Login</a>
+						<a id ="login">Login</a>
 					</li>
 					<li class="nav_item">
-						<a onClick="route()" href="/register">Register</a>
+						<a id="register">Register</a>
 					</li>
 				</div>
 			</ul>
 		</nav>
 	</header>
 	<h1>Transcence</h1>
-	
-	<main id="content-container"></main>
 
-	<script type="module" src="./static/js/index.js"></script>
+	<main id="content-container"></main>
 </body>
 </html>

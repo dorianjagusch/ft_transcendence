@@ -1,8 +1,5 @@
 NAME 					= Ft_Transcendence
 
-DATABASE_DIR			= ./database
-DATABASE_HIDDEN_FILE	= .database_already_exists
-
 BACKEND_DIR				= ./backend
 BACKEND_ENV				= ./backend/.env
 
