@@ -31,7 +31,7 @@ urlpatterns = [
 
 	# User views
 	path('users/', UserListView.as_view()),
-	path('users/<int:id>', UserDetailView.as_view()),
+	path('users/<int:user_id>', UserDetailView.as_view()),
     path('login/', UserLoginView.as_view()),
     path('admins/', UserAdminDetailsView.as_view()),
 
