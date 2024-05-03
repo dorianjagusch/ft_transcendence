@@ -2,10 +2,7 @@ import json
 from functools import wraps
 from django.http import HttpResponseForbidden
 
-from .models import User
-
-
-# This decorator is for checking that the authenticated user is the same user whose trying to access the data of a user whose user_id is in the url.
+# # This decorator is for checking that the authenticated user is the same user whose trying to access the data of a user whose user_id is in the url.
 # def user_is_object_owner_url(view_func):
 #     @wraps(view_func)
 #     def _wrapped_view(self, request, *args, **kwargs):
