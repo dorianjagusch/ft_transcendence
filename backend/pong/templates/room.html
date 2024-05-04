@@ -24,17 +24,20 @@
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
+            console.info('received from consumer ' + data.message);
         };
 
         chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
+            console.error('haha your socket closed unexpectedly');
         };
 
         document.querySelector('#chat-message-input').focus();
         document.querySelector('#chat-message-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
                 document.querySelector('#chat-message-submit').click();
+                console.info('the code is '+ e.keyCode);
             }
+            console.info('the code is not enter '+ e.keyCode);
         };
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
@@ -44,6 +47,7 @@
                 'message': message
             }));
             messageInputDom.value = '';
+            console.info('sending to the socket ' + message);
         };
     </script>
 </body>

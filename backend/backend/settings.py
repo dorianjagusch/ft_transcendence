@@ -154,6 +154,6 @@ CHANNEL_LAYERS = {
     }
 }
 
-print('*************')
+print('settings *************')
 print(TEMPLATE_DIRS)
 print(BASE_DIR)
