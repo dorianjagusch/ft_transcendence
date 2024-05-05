@@ -7,7 +7,6 @@ const register = async (e) => {
 	e.preventDefault();
 	const username = document.getElementById('username').value;
 	const password = document.getElementById('current-password').value;
-	console.log(username, password);
 	const repeatPassword = document.getElementById('password').value;
 
 	if (username === '' || password === '' || repeatPassword === '') {

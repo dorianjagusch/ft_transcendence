@@ -1,6 +1,6 @@
 const baseURL = "http://127.0.0.1:8080/";
 const userURL = `${baseURL}users/`;
-const loginURL = `${baseURL}users/login/`;
+const loginURL = `${baseURL}login/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
@@ -15,5 +15,3 @@ export default {
 };
 
 const problemWithFetchMsg = "There was a problem with the fetch operation: ";
-
-const jsonContentType = { "Content-Type": "application/json" };

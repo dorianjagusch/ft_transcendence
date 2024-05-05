@@ -14,16 +14,16 @@ async function login(e) {
 	}
 	const toSend = {username, password};
 	await loginService.postLogin(toSend)
-    .then(() => {
-      stateMachine.context.username =toSend.username;
-      stateMachine.transition("goToFriends");
-    })
-    .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
-    });;
+		.then(() => {
+			stateMachine.context.username =toSend.username;
+			stateMachine.transition("goToFriends");
+		})
+		.catch((error) => {
+			console.error(
+				"There has been a problem with your fetch operation:",
+				error
+			);
+		});;
 }
 
 function createForm(){
@@ -47,7 +47,7 @@ function createForm(){
 
 function showLoginPage() {
 	const main = document.querySelector("main");
-    main.innerHTML = "";
+		main.innerHTML = "";
 
 	const modalContainer = modal('login', 'bg-secondary');
 	console.log(modalContainer.innerHTML);
@@ -68,6 +68,5 @@ function showLoginPage() {
 
 	main.appendChild(modalContainer);
 }
-
 
 export default showLoginPage;
