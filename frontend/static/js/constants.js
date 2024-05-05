@@ -3,11 +3,17 @@ const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}users/login/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
+const friendURL = `${baseURL}friends/`;
 
 export default {
-		baseURL,
-		userURL,
-		loginURL,
-		leaderboardURL,
-		settingsURL
-	};
+	baseURL,
+	userURL,
+	loginURL,
+	leaderboardURL,
+	settingsURL,
+	friendURL
+};
+
+const problemWithFetchMsg = "There was a problem with the fetch operation: ";
+
+const jsonContentType = { "Content-Type": "application/json" };

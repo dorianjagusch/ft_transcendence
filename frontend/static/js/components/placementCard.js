@@ -23,13 +23,13 @@ const createPlacement = (index) => {
 	document.createElement('h3');
 	placement.classList.add('placement');
 	if (index % 10 == 0 && index % 100 !== 10) {
-		placement.textContent = `${index + 1}st Place`;
+		placement.textContent = `${ index + 1}st Place`;
 	} else if (index % 10 === 1 && index % 100 !== 11) {
-		placement.textContent = `${index + 1}nd Place`;
+		placement.textContent = `${ index + 1}nd Place`;
 	} else if (index % 10 === 2 && index % 100 !== 12) {
-		placement.textContent = `${index + 1}rd Place`;
+		placement.textContent = `${ index + 1}rd Place`;
 	} else {
-		placement.textContent = `${index + 1}th Place`;
+		placement.textContent = `${ index + 1}th Place`;
 	}
 	return placement;
 }

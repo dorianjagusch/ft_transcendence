@@ -121,12 +121,12 @@ const stateMachine = {
       goToFriends: () => {
         // Remove event listeners from current page
 
-		const navSections = document.querySelectorAll('.nav-partition');
-		navSections.forEach(section => {
-		  section.getAttribute('data-visible') === 'false' ? section.setAttribute('data-visible', 'true') : section.setAttribute('data-visible', 'false');
-		});
-		const userName = document.querySelector('#user');
-		userName.textContent = this.context.username;
+        const navSections = document.querySelectorAll('.nav-partition');
+        navSections.forEach(section => {
+          section.getAttribute('data-visible') === 'false' ? section.setAttribute('data-visible', 'true') : section.setAttribute('data-visible', 'false');
+        });
+        const userName = document.querySelector('#user');
+        userName.textContent = this.context.username;
         showFriendsPage();
       },
       goToLoggedIn: () => {

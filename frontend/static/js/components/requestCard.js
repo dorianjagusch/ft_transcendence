@@ -11,7 +11,7 @@ const requestOptions = () => {
 	return options;
 }
 
-const requestCard = ({img, username}) => {
+const requestCard = ({ img, username}) => {
 	const card = document.createElement('div');
 	card.className = 'scroll-element request-card';
 

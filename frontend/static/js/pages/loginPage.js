@@ -1,8 +1,8 @@
 
 import stateMachine from '../stateMachine.js';
 import loginService from '../services/loginService.js';
-import { InputField } from '../components/inputField.js';
-import { Modal } from '../components/modal.js';
+import { inputField } from '../components/inputField.js';
+import { modal } from '../components/modal.js';
 
 async function login(e) {
 	e.preventDefault();
@@ -30,8 +30,8 @@ function createForm(){
 
 	const form = document.createElement('form');
 
-	const userNameField = InputField('text', 'Username', 'username');
-	const passwordField = InputField('password', 'Password', 'current-password');
+	const userNameField = inputField('text', 'Username', 'username');
+	const passwordField = inputField('password', 'Password', 'current-password');
 
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('primary-sign-btn');
@@ -49,11 +49,11 @@ function showLoginPage() {
 	const main = document.querySelector("main");
     main.innerHTML = "";
 
-	const modalContainer = Modal('login', 'bg-secondary');
+	const modalContainer = modal('login', 'bg-secondary');
 	console.log(modalContainer.innerHTML);
-	const loginModal = modalContainer.querySelector('.login');
+	const loginmodal = modalContainer.querySelector('.login');
 	const form = createForm();
-	console.log(loginModal);
+	console.log(loginmodal);
 
 	const signUpButton = document.createElement('button');
 	signUpButton.classList.add('secondary-sign-btn');
@@ -62,7 +62,7 @@ function showLoginPage() {
 		stateMachine.transition('goToRegister');
 	});
 
-	loginModal.appendChild(form);
+	loginmodal.appendChild(form);
 	modalContainer.appendChild(signUpButton);
 
 

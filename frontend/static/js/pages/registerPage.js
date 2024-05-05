@@ -1,6 +1,6 @@
-import { Modal } from '../components/modal.js';
-import { InputField } from '../components/inputField.js';
-import userService from '../services/UserService.js';
+import { modal } from '../components/modal.js';
+import { inputField } from '../components/inputField.js';
+import userService from '../services/userService.js';
 import stateMachine from '../stateMachine.js';
 
 const register = async (e) => {
@@ -39,9 +39,9 @@ const register = async (e) => {
 const createForm = () => {
 	const form = document.createElement('form');
 
-	const userNameField = InputField('text', 'Username', 'username');
-	const passwordField = InputField('password', 'Password', 'current-password');
-	const repeatPasswordField = InputField('password', 'Repeat Password', 'password');
+	const userNameField = inputField('text', 'Username', 'username');
+	const passwordField = inputField('password', 'Password', 'current-password');
+	const repeatPasswordField = inputField('password', 'Repeat Password', 'password');
 
 	const registerButton = document.createElement('button');
 	registerButton.classList.add('primary-sign-btn');
@@ -59,15 +59,15 @@ const createForm = () => {
 
 
 const showRegisterPage = () => {
-	const modalContainer = Modal('register', 'bg-secondary');
-	const registerModal = modalContainer.querySelector('.register');
+	const modalContainer = modal('register', 'bg-secondary');
+	const registermodal = modalContainer.querySelector('.register');
 	const form = createForm();
 
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('secondary-sign-btn');
 	loginButton.textContent = 'Sign in';
 
-	registerModal.appendChild(form);
+	registermodal.appendChild(form);
 	modalContainer.appendChild(loginButton);
 
 	const main = document.querySelector('main');

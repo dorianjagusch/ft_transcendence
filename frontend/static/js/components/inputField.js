@@ -1,4 +1,4 @@
-function InputField(type='password', label='password', id="current-password") {
+function inputField(type='password', label='password', id="current-password") {
 	const labelElement = document.createElement('label');
 	labelElement.textContent = label;
 	labelElement.setAttribute('for', id);
@@ -17,4 +17,4 @@ function InputField(type='password', label='password', id="current-password") {
 	return container;
 }
 
-export { InputField }
+export { inputField }
