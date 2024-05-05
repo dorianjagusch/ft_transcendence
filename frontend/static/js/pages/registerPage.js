@@ -1,6 +1,6 @@
 import { modal } from '../components/modal.js';
 import { inputField } from '../components/inputField.js';
-import userService from '../services/userService.js';
+import UserService from '../services/userService.js';
 import stateMachine from '../stateMachine.js';
 
 const register = async (e) => {
@@ -25,7 +25,8 @@ const register = async (e) => {
 		password: password
 	};
 
-	userService.postUser(data)
+	var userService = new UserService();
+	userService.postRequest(data)
 	.then((newData) => {
 		alert('User created successfully. Please login.');
 		stateMachine.transition('goToLogin');

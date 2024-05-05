@@ -1,103 +1,42 @@
 import backendURL from '../constants.js';
+import RequestService from './requestService.js'
 
-const getUser = async (id) => {
-	const request = fetch(`${backendURL.userURL}${ id}`)
-	return request
-    .then((response) => {
-      if (response.ok) {
-        const data = response.json();
-        return data;
-      } else throw new Error("Error: " + response.status);
-    })
-    .catch((error) => {
-      console.error(problemWithFetchMsg, error);
-    });
-}
+class UserService extends RequestService {
+	constructor() {
+		super();
+	}
 
+	async getRequest(id) {
+		return super.getRequest(`${backendURL.userURL}${id}`, id);
+	}
 
-const postUser = async ({ username, password }) => {
-	console.log(username)
-  const request = fetch(`${backendURL.userURL}`, {
-    method: "POST",
-    headers: jsonContentType,
-    body: JSON.stringify({
-      username: username,
-      password: password,
-    }),
-  });
-  return request
-    .then((response) => {
-      if (response.ok){
-		const data = response.json();
-	  	return data;
-	  }
-      else
-	  	throw new Error("Error: " + response.status);
-    })
-    .catch((error) => {
-      console.error(problemWithFetchMsg, error);
-    });
-};
+	async getAllRequest() {
+		return super.getAllRequest(`${backendURL.userURL}`);
+	}
 
-
-const putUser = async ({ id, username, password }) => {
-  const request = fetch(`${backendURL.userURL}${ id}`, {
-    method: "PUT",
-    headers: jsonContentType,
-    body: JSON.stringify({
-      username: username,
-      password: password,
-    }),
-  });
-  return request
-    .then((response) => {
-      if (response.ok) {
-        const data = response.json();
-        return data;
-      } else throw new Error("Error: " + response.status);
-    })
-    .catch((error) => {
-      console.error(problemWithFetchMsg, error);
-    });
-};
-
-
-const deleteUser = async ({ id }) => {
-  const request = fetch(`${backendURL.userURL}${ id}`, {
-    method: "DELETE",
-    headers: jsonContentType,
-	body: JSON.stringify({
+	async postRequest({username, password}) {
+		console.log(username);
+		return super.postRequest(
+			`${backendURL.userURL}`,
+			JSON.stringify({
 				username: username,
-				password: password
-			})
-  });
-  return request
-    .then((response) => {
-      if (response.ok) {
-        const data = response.json();
-        return data;
-      } else throw new Error("Error: " + response.status);
-    })
-    .catch((error) => {
-      console.error(problemWithFetchMsg, error);
-    });
-};
+				password: password,
+		}));
+	}
 
+	async putRequest(id, {username, password}) {
+		return super.putRequest(
+			`${backendURL.userURL}${id}`,
+			id,
+			JSON.stringify({
+				username: username,
+				password: password,
+		}));
+	}
 
-const getAllUsers = async () => {
-	  const request = fetch(`${backendURL.userURL}`);
-  return request.then((response) => {
-	if (response.ok){
-		const data = response.json();
-	  	return data;
-	  }
-      else
-	  	throw new Error("Error: " + response.status);
-    })
-    .catch((error) => {
-      console.error(problemWithFetchMsg, error);
-    });
+	async deleteRequest(id) {
+		return super.deleteRequest(`${backendURL.userURL}${id}`, id);
+	}
 }
 
-
-export default {getUser, postUser, putUser, deleteUser, getAllUsers};
+export default UserService;

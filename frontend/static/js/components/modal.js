@@ -16,4 +16,4 @@ const modal = (type, background) => {
 	return modalContainer;
 }
 
-export {modal}
+export { modal }

@@ -1,57 +1,42 @@
 import backendURL from '../constants.js'
+import RequestService from './requestService.js'
 
-const getFriends = async () => {
-	const request = fetch(`${backendURL.friendURL}`)
-	return request
-		.then((response) => {
-			if (response.ok) {
-				const data = response.json();
-				return data;
-			}
-			else
-				throw new Error("Error: " + response.status);
-		})
-		.catch((error) => {
-			console.error(problemWithFetchMsg, error);
-		})
+class FriendService extends RequestService {
+	constructor() {
+		super();
+	}
+
+	async getRequest(id) {
+		return super.getRequest(`${backendURL.friendURL}${id}`, id);
+	}
+
+	async getAllRequest() {
+		return super.getAllRequest(`${backendURL.friendURL}`);
+	}
+
+	async postRequest({ user_id, friend_id }) {
+		console.log(username);
+		return super.postRequest(
+			`${backendURL.friendURL}`,
+			JSON.stringify({
+				user_id: user_id,
+				friend_id: friend_id,
+		}));
+	}
+
+	async putRequest(id, {username, password}) {
+		return super.putRequest(
+			`${backendURL.friendURL}${id}`,
+			id,
+			JSON.stringify({
+				username: username,
+				password: password,
+		}));
+	}
+
+	async deleteRequest(id) {
+		return super.deleteRequest(`${backendURL.friendURL}${id}`, id);
+	}
 }
 
-const getFriend = async ({ id }) => {
-	const request = fetch(`${backendURL.friendURL}`)
-	return request
-		.then((response) => {
-			if (response.ok) {
-				const data = response.json();
-				return data;
-			}
-			else
-				throw new Error("Error: " + response.status);
-		})
-		.catch((error) => {
-			console.error(problemWithFetchMsg, error);
-		})
-}
-
-const postFriend = async ({ user_id, friend_id }) => {
-	const request = fetch(`${backendURL.friendURL}`, {
-		method: "POST",
-		headers: jsonContentType,
-		body: JSON.stringify({
-			user_id: user_id,
-			friend_id: friend_id
-		})
-	});
-
-	return request
-		.then((response) => {
-			if (response.ok) {
-				const data = response.json();
-				return data;
-			}
-			else
-				throw new Error("Error: " + response.status);
-		})
-		.catch((error) => {
-			console.error(problemWithFetchMsg, error)
-		})
-}
+export default FriendService;
