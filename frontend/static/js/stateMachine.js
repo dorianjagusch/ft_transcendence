@@ -4,43 +4,6 @@ import showRegisterPage from "./pages/registerPage.js";
 import showFriendsPage from "./pages/friendsPage.js";
 import showDashboardPage from "./pages/dashboardPage.js";
 import { friendCard } from "./components/friendCard.js";
-// import showProfilePage from "./pages/profilePage.js";
-
-// const machineConfig = {
-//   initialState: "landing",
-//    states: {
-//     // ... other states
-//     register: {
-//       states: {
-//         idle: {},
-//         processing: {},
-//         error: {},
-//       },
-//       transitions: {
-//         goToLanding: "landing",
-//         goToLogin: "login",
-//         fetchData: "processing",
-//         onSuccess: "loggedIn",
-//         onFailure: "error",
-//       },
-//     },
-//     login: {
-//       states: {
-//         idle: {},
-//         processing: {},
-//         error: {},
-//       },
-//       transitions: {
-//         goToLanding: "landing",
-//         goToRegister: "register",
-//         fetchData: "processing",
-//         onSuccess: "dashboard",
-//         onFailure: "error",
-//       },
-//     },
-//     // ... other states
-//   },
-// }
 
 const machineConfig = {
   initialState: "landing",
@@ -148,45 +111,5 @@ const stateMachine = {
   },
 };
 
-
-// const stateMachine = {
-//   currentState: machineConfig.initialState,
-//   subState: "idle", // Add this line to track the sub-state
-//   transition: function (action) {
-//     const nextState = machineConfig.transitions[this.currentState][action];
-//     if (nextState) {
-//       this.currentState = nextState;
-//       this.subState = "idle"; // Reset the sub-state to 'idle' when transitioning to a new state
-//       this.executeAction(action);
-//     } else {
-//       const nextSubState =
-//         machineConfig.states[this.currentState].transitions[action];
-//       if (nextSubState) {
-//         this.subState = nextSubState; // Update the sub-state if the action is a sub-state transition
-//         this.executeAction(action);
-//       }
-//     }
-//   },
-//   executeAction: function (action) {
-//     const actions = {
-//       // ... other actions
-//       fetchData: () => {
-//         // Add your code to fetch data here
-//         // Once the data is fetched, call `this.transition('onSuccess')` or `this.transition('onFailure')` based on the result
-//       },
-//       onSuccess: () => {
-//         // Add your code to handle successful data fetch here
-//       },
-//       onFailure: () => {
-//         // Add your code to handle failed data fetch here
-//       },
-//       // ... other actions
-//     };
-//     // Execute the action if it exists
-//     if (actions[action]) {
-//       actions[action]();
-//     }
-//   },
-// };
 
 export default stateMachine;
