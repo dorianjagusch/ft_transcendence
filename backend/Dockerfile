@@ -8,7 +8,6 @@ RUN apt-get update && \
     apt-get clean
 
 RUN apt-get install libpq-dev
-# postgresql
 COPY requirements.txt app/
 COPY entrypoint.sh app/
 COPY . app/

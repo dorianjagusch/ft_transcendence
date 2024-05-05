@@ -1,24 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-from .managers import CustomUserManager
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.hashers import check_password, make_password
+
+from .managers import UserManager
 
 # Create your models here.
-class CustomUser(AbstractBaseUser):
+class User(AbstractBaseUser):
 	username = models.CharField(_('username'), max_length=30, null=False, blank=False, unique=True)
 	password = models.CharField(_('password'), max_length=128, null=False, blank=False)
 	
 	is_active = models.BooleanField(_('active'), default=True)
-	is_staff = models.BooleanField(_('is staff'), default=False)
-	is_superuser = models.BooleanField(_('is superuser'), default=False)
-	password_reset_token = models.CharField(_('password reset token'), max_length=100, blank=True)
-	date_created = models.DateTimeField(_('date created'), auto_now_add=True, blank=True, null=True)
-	last_login = models.DateTimeField(_('last login'), blank=True, null=True)
+	is_staff = models.BooleanField(_('is_staff'), default=False)
+	is_superuser = models.BooleanField(_('is_superuser'), default=False)
+	insertTS = models.DateTimeField(_('insertTS'), auto_now_add=True, blank=True, null=True)
+	last_login = models.DateTimeField(_('last_login'), blank=True, null=True)
 	
 	# profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
-	objects = CustomUserManager()
+	objects = UserManager()
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = []

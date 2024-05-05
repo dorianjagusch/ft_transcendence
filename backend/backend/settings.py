@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-import os
 from pathlib import Path
 import os
 
@@ -18,8 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Add new apps here
 APP_DIRS = [
-    # os.path.join(BASE_DIR, "UserManagement"),
     os.path.join(BASE_DIR, "User"),
+    os.path.join(BASE_DIR, "Friends"),
 ]
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
@@ -51,8 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Backend apps here
-    # 'UserManagement',
     'User',
+    'Friends',
 ]
 
 MIDDLEWARE = [
@@ -109,7 +108,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
 
 # our custom User model
-AUTH_USER_MODEL = 'User.CustomUser'
+AUTH_USER_MODEL = 'User.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
