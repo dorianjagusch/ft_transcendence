@@ -1,12 +1,19 @@
+import { navigateTo } from "../index.js";
+
 export default class {
-	constructor() {
+	constructor(params) {
+		this.params = params;
 	};
 
-	setTtile(title) {
+	setTitle(title) {
 		document.title = title;
 	};
 
-	createHTML(){
-		return "";
+	navigateTo(path){
+		navigateTo(path);
+	}
+
+	async getHTML(){
+		return ;
 	}
 }

@@ -1,83 +1,99 @@
 import { Modal } from "../components/modal.js";
 import { InputField } from "../components/inputField.js";
 import userService from "../services/UserService.js";
-import stateMachine from "../route.js";
+import AView from "./AView.js";
 
-const register = async (e) => {
-  e.preventDefault();
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("current-password").value;
-  const repeatPassword = document.getElementById("password").value;
+export default class extends AView {
 
-  if (username === "" || password === "" || repeatPassword === "") {
-    alert("Please enter all fields");
-    return;
-  }
+	constructor(params) {
+		super(params);
+		this.setTitle("Register");
+		this.registerHandler = this.registerHandler.bind(this);
+	}
 
-  if (password !== repeatPassword) {
-    alert("Passwords do not match");
-    return;
-  }
+	registerHandler = async (e) => {
+		console.log("registerHandler");
+		e.preventDefault();
+		const username = document.getElementById("username").value;
+		const password = document.getElementById("current-password").value;
+		const repeatPassword = document.getElementById("password").value;
 
-  const data = {
-    username: username,
-    password: password,
-  };
+		if (username === "" || password === "" || repeatPassword === "") {
+			alert("Please enter all fields");
+			return;
+		}
 
-  userService
-    .postUser(data)
-    .then((newData) => {
-      alert("User created successfully. Please login.");
-      stateMachine.transition("goToLogin");
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+		if (password !== repeatPassword) {
+			alert("Passwords do not match");
+			return;
+		}
 
-const createForm = () => {
-  const form = document.createElement("form");
+		const data = {
+			username: username,
+			password: password,
+		};
 
-  const userNameField = InputField("text", "Username", "username");
-  const passwordField = InputField("password", "Password", "current-password");
-  const repeatPasswordField = InputField(
-    "password",
-    "Repeat Password",
-    "password"
-  );
+		userService
+				.postUser(data)
+				.then(() => {
+				alert("User created successfully. Please login.");
+				this.navigateTo("/login");
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
 
-  const registerButton = document.createElement("button");
-  registerButton.classList.add("primary-sign-btn");
-  registerButton.textContent = "Sign up";
-  registerButton.addEventListener("click", register);
+	appendEventListeners(element) {
+		const registerButton = element.querySelector(".primary-sign-btn");
+		registerButton.addEventListener("click", this.registerHandler);
 
-  form.appendChild(userNameField);
-  form.appendChild(passwordField);
-  form.appendChild(repeatPasswordField);
-  form.appendChild(registerButton);
+		const loginButton = element.querySelector(".secondary-sign-btn");
+		console.log(loginButton);
+		loginButton.addEventListener("click", () => {
+			this.navigateTo("/login");
+		});
+	};
 
-  return form;
-};
+	createForm() {
+		const form = document.createElement("form");
 
-const showRegisterPage = () => {
-  const modalContainer = Modal("register", "bg-secondary");
-  const registerModal = modalContainer.querySelector(".register");
-  const form = createForm();
+		const userNameField = InputField("text", "Username", "username");
+		const passwordField = InputField("password", "Password", "current-password");
+		const repeatPasswordField = InputField(
+			"password",
+			"Repeat Password",
+			"password"
+		);
 
-  const loginButton = document.createElement("button");
-  loginButton.classList.add("secondary-sign-btn");
-  loginButton.textContent = "Sign in";
+		const registerButton = document.createElement("button");
+		registerButton.classList.add("primary-sign-btn");
+		registerButton.textContent = "Sign up";
 
-  registerModal.appendChild(form);
-  modalContainer.appendChild(loginButton);
+		form.appendChild(userNameField);
+		form.appendChild(passwordField);
+		form.appendChild(repeatPasswordField);
+		form.appendChild(registerButton);
 
-  const main = document.querySelector("main");
-  main.innerHTML = "";
-  main.appendChild(modalContainer);
+		return form;
+	};
 
-  loginButton.addEventListener("click", () => {
-    stateMachine.transition("goToLogin");
-  });
-};
+	async getHTML(){
 
-export default showRegisterPage;
+		const modalContainer = Modal("register", "bg-secondary");
+		const registerModal = modalContainer.querySelector(".register");
+		const form = this.createForm();
+		registerModal.appendChild(form);
+
+		const loginButton = document.createElement("button");
+		loginButton.classList.add("secondary-sign-btn");
+		loginButton.textContent = "Sign in";
+		modalContainer.appendChild(loginButton);
+
+		const main = document.querySelector("main");
+		main.innerHTML = "";
+		main.appendChild(modalContainer);
+		this.appendEventListeners(main);
+	};
+
+}
