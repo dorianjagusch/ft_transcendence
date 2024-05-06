@@ -7,7 +7,7 @@ class FriendService extends RequestService {
 	}
 
 	async getRequest(id) {
-		return super.getRequest(`${backendURL.friendURL}${id}`, id);
+		throw new NotImplentedError("GET method not implemented for FriendService");
 	}
 
 	async getAllRequest() {
@@ -24,14 +24,8 @@ class FriendService extends RequestService {
 		}));
 	}
 
-	async putRequest(id, {username, password}) {
-		return super.putRequest(
-			`${backendURL.friendURL}${id}`,
-			id,
-			JSON.stringify({
-				username: username,
-				password: password,
-		}));
+	async putRequest(id, {user_id, friend_id}) {
+		throw new NotImplentedError("PUT method not implemented for FriendService");
 	}
 
 	async deleteRequest(id) {
