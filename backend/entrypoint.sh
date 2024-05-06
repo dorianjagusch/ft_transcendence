@@ -5,6 +5,6 @@ python manage.py makemigrations
 python manage.py migrate
 
 echo "Running app1 management commands"
-# python manage.py runserver
+python manage.py runserver
 
 exec "$@"

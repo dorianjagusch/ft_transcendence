@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 # add app views here
 from User.views import UserDetailView, \
@@ -43,3 +45,7 @@ urlpatterns = [
     #pong game views
 	path("pong/", include("pong.urls")),
 ]
+
+# Serve static files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
