@@ -733,10 +733,8 @@ button:is(:focus, :hover)
 	position: absolute;
 	opacity: 0;
 	transform-origin: bottom;
-	width: 85%;
 	z-index: 100;
-	left: 1rem;
-	transform: translateX(1rem) translateY(0) translateZ(2rem);
+	transform: translateY(0) translateZ(2rem);
 	transition: var(--animation-timing) ease;
 	scale: 1 1.2;
 }
@@ -744,5 +742,5 @@ button:is(:focus, :hover)
 .game-card:hover .front-img{
 	opacity: 1;
 	rotate: x calc(var(--rotation) * -1);
-	transform: translateX(1rem) translateY(-3rem) translateZ(2rem);
+	transform: translateY(-3rem) translateZ(2rem);
 }

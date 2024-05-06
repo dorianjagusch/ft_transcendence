@@ -31,4 +31,4 @@ const GameCard = (game, imgFront, imgBack) => {
 	return section;
 };
 
-export {GameCard};
+export { GameCard };
