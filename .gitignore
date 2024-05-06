@@ -143,5 +143,7 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
+**/html
+
 # MAC #
 *.DS_Store
