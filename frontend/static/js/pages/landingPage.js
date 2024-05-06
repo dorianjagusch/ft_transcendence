@@ -14,7 +14,6 @@ export default class extends AView {
 		const leaderBoardTitle =
 		'<h2>Leaderboard</h2><ul class="col-scroll placements"></ul></section>';
 		leaderBoard.innerHTML = leaderBoardTitle;
-		// fillLeaderBoard();  TODO: Uncomment this line when the backend is ready
 
 		const welcomeSection = document.createElement("section");
 		welcomeSection.setAttribute("id", "welcome");
