@@ -3,6 +3,8 @@ import loginPage from "./pages/loginPage.js";
 import registerPage from "./pages/registerPage.js";
 import friendsPage from "./pages/friendsPage.js";
 import friendPage from "./pages/friendPage.js";
+import playPage from "./pages/playPage.js";
+import leaderBoard from "./pages/leaderboardPage.js";
 import show404Page from "./pages/404Page.js";
 
 const pathToRegex = path => new RegExp('^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$');
@@ -29,6 +31,8 @@ const router = async () => {
     { path: "/login", view: loginPage },
     { path: "/register", view: registerPage },
     { path: "/friends", view: friendsPage },
+	{ path: "/play", view: playPage },
+	{ path: "/leaderboard", view: leaderBoard },
     { path: '/friends/:id', view: friendPage },
   ];
 
@@ -48,6 +52,7 @@ const router = async () => {
     };
   }
   const view = new match.route.view(getParams(match));
+  document.querySelector("main").removeAttribute('class')
   await view.getHTML();
 
 };

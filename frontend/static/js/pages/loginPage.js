@@ -49,7 +49,7 @@ export default class extends AView {
 		const passwordField = InputField("password", "Password", "current-password");
 
 		const loginButton = document.createElement("button");
-		loginButton.classList.add("primary-sign-btn");
+		loginButton.classList.add("primary-btn");
 		loginButton.textContent = "Sign in";
 
 
@@ -67,7 +67,7 @@ export default class extends AView {
 		const form = this.createForm();
 
 		const signUpButton = document.createElement("button");
-		signUpButton.classList.add("secondary-sign-btn");
+		signUpButton.classList.add("secondary-btn");
 		signUpButton.textContent = "Sign up";
 
 		loginModal.appendChild(form);
