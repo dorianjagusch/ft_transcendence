@@ -1,5 +1,6 @@
 import backendURL from '../constants.js'
 import RequestService from './requestService.js'
+import NotImplementedError from '../exceptions/notImplemented.js'
 
 class FriendService extends RequestService {
 	constructor() {
@@ -7,7 +8,7 @@ class FriendService extends RequestService {
 	}
 
 	async getRequest(id) {
-		throw new NotImplentedError("GET method not implemented for FriendService");
+		throw new NotImplementedError("GET method not implemented for FriendService");
 	}
 
 	async getAllRequest() {
@@ -25,7 +26,7 @@ class FriendService extends RequestService {
 	}
 
 	async putRequest(id, {user_id, friend_id}) {
-		throw new NotImplentedError("PUT method not implemented for FriendService");
+		throw new NotImplementedError("PUT method not implemented for FriendService");
 	}
 
 	async deleteRequest(id) {

@@ -5,3 +5,5 @@ class NotImplentedError extends Error {
 		this.name = "NotImplementedError";
 	}
 }
+
+export default NotImplentedError;
