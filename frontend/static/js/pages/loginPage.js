@@ -10,6 +10,17 @@ export default class extends AView {
 		this.setTitle("Login");
 	}
 
+	setNavbar() {
+		const navPartitions = document.querySelectorAll(".nav-partition");
+		navPartitions.forEach((partition) => {
+			const visibility = partition.getAttribute("data-visible");
+			partition.setAttribute("data-visible", visibility === "true" ? "false" : "true");
+
+			document.querySelector("#user").innerHTML =
+        		document.getElementById("username").value;;
+		});
+	}
+
 	loginHandler = async (e) => {
 		e.preventDefault();
 		const username = document.getElementById("username").value;
@@ -22,6 +33,7 @@ export default class extends AView {
 		await loginService
 			.postLogin(toSend)
 			.then(() => {
+			this.setNavbar();
 			this.navigateTo("/friends");
 			})
 			.catch((error) => {
@@ -29,14 +41,14 @@ export default class extends AView {
 				"There has been a problem with your fetch operation:",
 				error
 			);
-			});
+		});
 	}
 
 	appendEventListeners(element) {
-		const loginButton = element.querySelector(".primary-sign-btn");
+		const loginButton = element.querySelector(".primary-btn");
 			loginButton.addEventListener("click", this.loginHandler);
 
-		const signUpButton = element.querySelector(".secondary-sign-btn");
+		const signUpButton = element.querySelector(".secondary-btn");
 			signUpButton.addEventListener("click", () => {
 			this.navigateTo("/register");
 		});
