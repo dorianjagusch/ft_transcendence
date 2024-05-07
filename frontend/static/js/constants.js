@@ -1,4 +1,4 @@
-const baseURL = "http://127.0.0.1:8080/";
+const baseURL = 'http://127.0.0.1:8080/';
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
@@ -9,5 +9,5 @@ export default {
 	userURL,
 	loginURL,
 	leaderboardURL,
-	settingsURL
+	settingsURL,
 };

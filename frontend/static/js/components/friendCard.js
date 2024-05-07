@@ -1,6 +1,4 @@
-
-const friendCard = ({username, status, img}) => {
-
+const friendCard = ({ username, status, img }) => {
 	const friendCard = document.createElement('button');
 	friendCard.className = 'scroll-element user-card';
 
@@ -24,6 +22,6 @@ const friendCard = ({username, status, img}) => {
 	friendCard.appendChild(imgElement);
 	friendCard.appendChild(userCardText);
 	return friendCard;
-}
+};
 
-export { friendCard }
+export { friendCard };

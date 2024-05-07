@@ -1,6 +1,4 @@
-
 const scrollContainer = (elements, callback) => {
-
 	const outerScroller = document.createElement('section');
 	outerScroller.classList.add('scroll-container');
 
@@ -16,6 +14,6 @@ const scrollContainer = (elements, callback) => {
 	outerScroller.appendChild(innerScroller);
 
 	return outerScroller;
-}
+};
 
-export { scrollContainer }
+export { scrollContainer };
