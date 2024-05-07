@@ -1,6 +1,7 @@
 import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
 import { scrollContainer } from '../components/scrollContainer.js'
+import AView from './AView.js';
 
 export default class extends AView {
 
