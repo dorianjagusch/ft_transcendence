@@ -15,10 +15,8 @@ export default class extends AView {
 		const gameOne = GameCard("Pong", "pong-front", "pong-card");
 		const gameTwo = GameCard("Other game", "pong-front", "pong-card");
 
+		this.updateMain(gameOne, gameTwo);
 		const main = document.querySelector("main");
-		main.innerHTML = '';
-		main.appendChild(gameOne);
-		main.appendChild(gameTwo);
 		main.classList.add("flex-row");
 	}
 }

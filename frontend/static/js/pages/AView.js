@@ -16,4 +16,12 @@ export default class {
 	async getHTML(){
 		return ;
 	}
+
+	updateMain(...elements){
+		const main = document.querySelector("main");
+		main.innerHTML = "";
+		elements.forEach(element => {
+			main.appendChild(element);
+		});
+	}
 }

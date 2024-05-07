@@ -111,16 +111,13 @@ export default class extends AView {
 			}
 		];
 
-		// leaderBoardOne fillLeaderBoard(
+		// get players from API
 		const leaderBoardOne = scrollContainer(players, PlacementCard);
 		leaderBoardOne.classList.add("leaderboard", "bg-secondary");
 		const leaderBoardTwo = scrollContainer(players, PlacementCard);
 		leaderBoardTwo.classList.add("leaderboard", "bg-secondary");
 
-		const main = document.querySelector("main");
-		main.innerHTML = '';
-		main.append(leaderBoardOne);
-		main.append(leaderBoardTwo);
+		this.updateMain(leaderBoardOne, leaderBoardTwo)
 	}
 
 }

@@ -64,9 +64,7 @@ export default class extends AView {
     loginButton.textContent = "Sign in";
     modalContainer.appendChild(loginButton);
 
-    const main = document.querySelector("main");
-    main.innerHTML = "";
-    main.appendChild(modalContainer);
-    this.appendEventListeners(main);
+	this.updateMain(modalContainer);
+    this.appendEventListeners();
   }
 }

@@ -12,8 +12,6 @@ export default class extends AView {
 		const leaderBoardTitle =
 		'<h2>Dis yo friend?</h2>';
 
-		const main = document.querySelector('main');
-		main.innerHTML = '';
-		main.appendChild(leaderBoardTitle);
+		this.updateMain(leaderBoardTitle);
 	};
 }

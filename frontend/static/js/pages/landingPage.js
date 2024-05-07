@@ -20,11 +20,7 @@ export default class extends AView {
 		const welcomeHtml = "<h2>Welcome</h2><h3>to the great pong tournament</h3>";
 		welcomeSection.innerHTML = welcomeHtml;
 
-
-		const main = document.querySelector('main');
-		main.innerHTML = '';
-		main.appendChild(leaderBoard);
-		main.appendChild(welcomeSection);
+		this.updateMain(leaderBoard, welcomeSection);
 	};
 }
 

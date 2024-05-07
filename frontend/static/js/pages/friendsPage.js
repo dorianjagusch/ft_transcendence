@@ -84,9 +84,6 @@ export default class extends AView {
   const requestScroller = scrollContainer(friends, requestCard);
   requestScroller.classList.add("friend-request", "bg-secondary");
 
-  const main = document.querySelector("main");
-    main.innerHTML = "";
-    main.appendChild(friendScroller);
-    main.appendChild(requestScroller);
+  this.updateMain(friendScroller, requestScroller);
   }
 }
