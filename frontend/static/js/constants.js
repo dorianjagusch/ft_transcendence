@@ -3,6 +3,7 @@ const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
+const friendURL = `${baseURL}friends/`;
 
 export default {
 	baseURL,
@@ -10,4 +11,7 @@ export default {
 	loginURL,
 	leaderboardURL,
 	settingsURL,
+	friendURL
 };
+
+const problemWithFetchMsg = "There was a problem with the fetch operation: ";

@@ -1,4 +1,4 @@
-const friendCard = ({ username, status, img }) => {
+const friendCard = ({ id, username, status, img }) => {
 	const friendCard = document.createElement('button');
 	friendCard.className = 'scroll-element user-card';
 
