@@ -1,28 +1,25 @@
-import { baseURL } from "../constants.js";
+import backendURL from "../constants.js";
 
-
-function postLogin({username, password}) {
-	const response = fetch(`${baseURL}login/`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			username: username,
-			password: password
+async function postLogin({ username, password }) {
+	const request = fetch(backendURL.loginURL, {
+			method: "POST",
+			headers: {
+			"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				username: username,
+				password: password,
+			}),
 		})
+	return request.then((response) => {
+		if (response.ok) {
+			const newData = response.json();
+			return newData;
+		} else {
+			throw new Error(`${response.status}`);
+		}
 	})
-	return (
-		response.then((response) =>
-		{
-			if (response.ok){
-				return response.json()
-			}
-		})
-		.catch((error)=>{
-			return console.error(error);
-		})
-	)
 }
+
 
 export default {postLogin};

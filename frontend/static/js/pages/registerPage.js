@@ -1,6 +1,6 @@
 import { Modal } from '../components/modal.js';
 import { InputField } from '../components/inputField.js';
-// import userService from '../services/UserService.js';
+import userService from '../services/UserService.js';
 import stateMachine from '../stateMachine.js';
 
 const register = async (e) => {
@@ -24,12 +24,16 @@ const register = async (e) => {
 		password: password
 	};
 
-	// const USER = userService.postUser(data).
-	// catch((error) => {
-	// 	console.error(error);
-	// });
-	// console.log(USER); TODO: Test this on Thursday with the containers running
+	userService.postUser(data)
+	.then((newData) => {
+		alert('User created successfully. Please login.');
+		stateMachine.transition('goToLogin');
+	})
+	.catch((error) => {
+		console.error(error);
+	});
 }
+
 
 const createForm = () => {
 	const form = document.createElement('form');
