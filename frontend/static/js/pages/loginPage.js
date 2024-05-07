@@ -68,6 +68,7 @@ export default class extends AView {
 
 		const ProfileModal = Modal("profile", "bg-secondary", ProfileForm);
 		ProfileModal.classList.add("overlay");
+		ProfileModal.setAttribute("data-visible", "false");
 
 		this.updateMain(modalContainer, ProfileModal);
 		this.appendEventListeners();
