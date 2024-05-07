@@ -1,14 +1,14 @@
-import AView from "./AView.js";
+import AView from './AView.js';
 
 export default class extends AView {
-  constructor() {
-    super();
-    this.setTitle("404 Not Found");
-  }
+	constructor() {
+		super();
+		this.setTitle('404 Not Found');
+	}
 
-  async getHTML() {
-    const title404 = "<h2>Page not found</h2>";
-	
-    this.updateMain(title404);
-  }
+	async getHTML() {
+		const title404 = '<h2>Page not found</h2>';
+
+		this.updateMain(title404);
+	}
 }

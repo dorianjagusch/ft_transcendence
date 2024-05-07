@@ -1,6 +1,4 @@
-
 const InputMediaField = (type, label, id) => {
-
 	const mediaItem = document.createElement('div');
 	mediaItem.classList.add('menu-item');
 
@@ -19,6 +17,6 @@ const InputMediaField = (type, label, id) => {
 	mediaItem.appendChild(mediaInput);
 
 	return mediaItem;
-}
+};
 
-export { InputMediaField }
+export { InputMediaField };

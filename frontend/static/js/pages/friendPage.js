@@ -1,17 +1,14 @@
-import AView from "./AView.js";
+import AView from './AView.js';
 
 export default class extends AView {
-
-	constructor(params){
+	constructor(params) {
 		super(params);
-		this.setTitle("Freeeeen");
+		this.setTitle('Freeeeen');
 	}
 
-	async getHTML () {
-
-		const leaderBoardTitle =
-		'<h2>Dis yo friend?</h2>';
+	async getHTML() {
+		const leaderBoardTitle = '<h2>Dis yo friend?</h2>';
 
 		this.updateMain(leaderBoardTitle);
-	};
+	}
 }

@@ -3,7 +3,12 @@ const GameCard = (game, imgFront, imgBack) => {
 	section.classList.add('flex-col');
 
 	const modalContainer = document.createElement('div');
-	modalContainer.classList.add('modal-container', 'border', 'game-card', 'bg-primary');
+	modalContainer.classList.add(
+		'modal-container',
+		'border',
+		'game-card',
+		'bg-primary'
+	);
 
 	const frontImg = document.createElement('img');
 	frontImg.src = `./static/assets/img/${imgFront}.png`;
