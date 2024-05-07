@@ -1,7 +1,7 @@
 import { Modal } from '../components/modal.js';
-import userService from '../services/UserService.js';
 import AView from './AView.js';
 import { RegisterForm } from '../components/forms.js';
+import UserService from '../services/userService.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -32,8 +32,8 @@ export default class extends AView {
 			password: password,
 		};
 
-		userService
-			.postUser(data)
+		var userService = new UserService();
+		userService.postUser(data)
 			.then(() => {
 				alert('User created successfully. Please login.');
 				this.navigateTo('/login');
