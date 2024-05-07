@@ -33,11 +33,10 @@
 
 }
 
-
 *,
 *::before,
 *::after,
-input {
+input, select, textarea {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -83,7 +82,7 @@ section {
 }
 
 h1, h2, h3, h4,
-button, input, label {
+button, input, label, select, textarea {
   line-height: 1.1;
 }
 
@@ -303,6 +302,31 @@ nav img {
  text-transform: capitalize;
 }
 
+.overlay{
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	z-index: 1000;
+}
+
+.overlay::after{
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-color: hsl(0 0% 0% / 0.5);
+	z-index: -1;
+	width: 100vw;
+	height:100vh
+
+}
+
+.overlay-right{
+	position: absolute;
+	z-index: 1000;
+	right: 0;
+	height: 100%;
+}
+
 /* Leaderboard */
 
 #leaderboard{
@@ -380,21 +404,19 @@ nav img {
 }
 
 
-.register,
-.login{
+.inner-modal{
 	border-radius: 1em;
 	padding: 2em;
 	margin-bottom: 2rem;
 }
 
-.register h2,
-.login h2{
+
+.inner-modal h2{
 	text-align: center;
 	text-shadow: 5px 5px var(--bg-color);
 }
 
-.register form,
-.login form{
+.inner-modal form{
 	display: grid;
 	height: minmax(30vh, 100px);
 	grid-template-columns: 1fr;
@@ -413,12 +435,22 @@ nav img {
 	}
 }
 
-input[type="text"],
-input[type="password"] {
+
+input,
+select{
 	border: none;
-	height: 2.5rem;
 	border-radius: 2rem;
 	padding: 0 1rem;
+	background-color: white;
+}
+
+select, option{
+	max-width: 400px;
+}
+
+input[type="text"],
+input[type="password"]{
+	height: 2.5rem;
 }
 
 input[type="submit"]{
@@ -550,7 +582,7 @@ input[type="password"]:is(:hover, :focus),
 input[type="radio"]:is(:hover, :focus),
 input[type="checkbox"]:is(:hover, :focus),
 input[type="image"]:is(:hover, :focus),
-textarea{
+textarea:is(:hover, :focus), select:is(:hover, :focus){
 	border: 3px solid black;
 }
 
@@ -744,3 +776,4 @@ button:is(:focus, :hover)
 	rotate: x calc(var(--rotation) * -1);
 	transform: translateY(-3rem) translateZ(2rem);
 }
+
