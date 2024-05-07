@@ -1,0 +1,63 @@
+import constants from '../constants.js';
+
+class RequestService {
+	constructor() {
+		if (this.constructor == RequestService) {
+			throw new Error("Abstract classes can't be instantiated.");
+		}
+	}
+
+	async checkResponse(request) {
+		return request
+		.then((response) => {
+		  if (response.ok)
+			return response.json()
+		  else
+			throw new Error("Error: " + response.status);
+		})
+		.catch((error) => {
+		  console.error(constants.problemWithFetchMsg, error);
+		});
+	}
+
+	async getRequest(url, id) {
+		const request = fetch(`${url}${id}`)
+		return this.checkResponse(request);
+	}
+
+	async getAllRequest(url) {
+		const request = fetch(`${url}`);
+		return this.checkResponse(request);
+	}
+
+	async postRequest(url, jsonBody) {
+		const request = fetch(`${url}`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: jsonBody
+		});
+
+		return this.checkResponse(request);
+	}
+
+	async putRequest(url, id, jsonBody) {
+		const request = fetch(`${url}${ id}`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: jsonBody
+		});
+
+		return this.checkResponse(request);
+	}
+
+	async deleteRequest(url, id) {
+		const request = fetch(`${url}${ id}`, {
+			method: "DELETE",
+			headers: { "Content-Type": "application/json" }
+		});
+
+		return this.checkResponse(request);
+	}
+}
+
+export default RequestService;
