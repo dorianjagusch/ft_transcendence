@@ -1,6 +1,3 @@
-const showDashboardPage = () => {
-	
-}
-
+const showDashboardPage = () => {};
 
 export default showDashboardPage;

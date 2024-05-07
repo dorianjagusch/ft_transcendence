@@ -1,29 +1,27 @@
+const friendCard = ({ id, username, status, img }) => {
+	const friendCard = document.createElement('button');
+	friendCard.className = 'scroll-element user-card';
 
-const friendCard = ({username, status, img}) => {
+	const imgElement = document.createElement('img');
+	imgElement.src = img;
 
-  const friendCard = document.createElement('button');
-  friendCard.className = 'scroll-element user-card';
+	const userCardText = document.createElement('div');
+	userCardText.className = 'user-card-text';
 
-  const imgElement = document.createElement('img');
-  imgElement.src = img;
+	const userName = document.createElement('div');
+	userName.className = 'user-name';
+	userName.innerText = username;
 
-  const userCardText = document.createElement('div');
-  userCardText.className = 'user-card-text';
+	const userStatus = document.createElement('div');
+	userStatus.className = 'status';
+	userStatus.setAttribute('data-status', status);
 
-  const userName = document.createElement('div');
-  userName.className = 'user-name';
-  userName.innerText = username;
+	userCardText.appendChild(userName);
+	userCardText.appendChild(userStatus);
 
-  const userStatus = document.createElement('div');
-  userStatus.className = 'status';
-  userStatus.setAttribute('data-status', status);
+	friendCard.appendChild(imgElement);
+	friendCard.appendChild(userCardText);
+	return friendCard;
+};
 
-  userCardText.appendChild(userName);
-  userCardText.appendChild(userStatus);
-
-  friendCard.appendChild(imgElement);
-  friendCard.appendChild(userCardText);
-  return friendCard;
-}
-
-export { friendCard }
+export { friendCard };

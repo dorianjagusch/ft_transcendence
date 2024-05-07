@@ -1,82 +1,68 @@
-import { modal } from '../components/modal.js';
-import { InputField } from '../components/inputField.js';
-import UserService from '../services/userService.js';
-import stateMachine from '../stateMachine.js';
+import { Modal } from '../components/modal.js';
+import userService from '../services/UserService.js';
+import AView from './AView.js';
+import { RegisterForm } from '../components/forms.js';
 
-const register = async (e) => {
-	e.preventDefault();
-	const username = document.getElementById('username').value;
-	const password = document.getElementById('current-password').value;
-	const repeatPassword = document.getElementById('password').value;
-
-	if (username === '' || password === '' || repeatPassword === '') {
-		alert('Please enter all fields');
-		return;
+export default class extends AView {
+	constructor(params) {
+		super(params);
+		this.setTitle('Register');
+		this.registerHandler = this.registerHandler.bind(this);
 	}
 
-	if (password !== repeatPassword) {
-		alert('Passwords do not match');
-		return;
-	}
+	registerHandler = async (e) => {
+		console.log('registerHandler');
+		e.preventDefault();
+		const username = document.getElementById('username').value;
+		const password = document.getElementById('current-password').value;
+		const repeatPassword = document.getElementById('password').value;
 
-	const data = {
-		username: username,
-		password: password
+		if (username === '' || password === '' || repeatPassword === '') {
+			alert('Please enter all fields');
+			return;
+		}
+
+		if (password !== repeatPassword) {
+			alert('Passwords do not match');
+			return;
+		}
+
+		const data = {
+			username: username,
+			password: password,
+		};
+
+		userService
+			.postUser(data)
+			.then(() => {
+				alert('User created successfully. Please login.');
+				this.navigateTo('/login');
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
-	var userService = new UserService();
-	userService.postRequest(data)
-	.then((newData) => {
-		alert('User created successfully. Please login.');
-		stateMachine.transition('goToLogin');
-	})
-	.catch((error) => {
-		console.error(error);
-	});
+	appendEventListeners() {
+		const registerButton = document.querySelector('.primary-btn');
+		registerButton.addEventListener('click', this.registerHandler);
+
+		const loginButton = document.querySelector('.secondary-btn');
+		console.log(loginButton);
+		loginButton.addEventListener('click', () => {
+			this.navigateTo('/login');
+		});
+	}
+
+	async getHTML() {
+		const modalContainer = Modal('register', 'bg-secondary', RegisterForm);
+
+		const loginButton = document.createElement('button');
+		loginButton.classList.add('secondary-btn');
+		loginButton.textContent = 'Sign in';
+		modalContainer.appendChild(loginButton);
+
+		this.updateMain(modalContainer);
+		this.appendEventListeners();
+	}
 }
-
-
-const createForm = () => {
-	const form = document.createElement('form');
-
-	const userNameField = InputField('text', 'Username', 'username');
-	const passwordField = InputField('password', 'Password', 'current-password');
-	const repeatPasswordField = InputField('password', 'Repeat Password', 'password');
-
-	const registerButton = document.createElement('button');
-	registerButton.classList.add('primary-sign-btn');
-	registerButton.textContent = 'Sign up';
-	registerButton.addEventListener('click', register);
-
-	form.appendChild(userNameField);
-	form.appendChild(passwordField);
-	form.appendChild(repeatPasswordField);
-	form.appendChild(registerButton);
-
-	return form;
-
-}
-
-
-const showRegisterPage = () => {
-	const modalContainer = modal('register', 'bg-secondary');
-	const registermodal = modalContainer.querySelector('.register');
-	const form = createForm();
-
-	const loginButton = document.createElement('button');
-	loginButton.classList.add('secondary-sign-btn');
-	loginButton.textContent = 'Sign in';
-
-	registermodal.appendChild(form);
-	modalContainer.appendChild(loginButton);
-
-	const main = document.querySelector('main');
-	main.innerHTML = '';
-	main.appendChild(modalContainer);
-
-	loginButton.addEventListener('click', () => {
-		stateMachine.transition('goToLogin');
-	});
-}
-
-export default showRegisterPage;

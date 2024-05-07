@@ -15,20 +15,10 @@ const showFriends = async () => {
 		console.error(error);
 	}));
 
-	const users = [];
-	var userService = new UserService();
-	friendsResponse.array.forEach(friend =>
-		users.push(userService.getRequest(friend.friend_id)
-			.catch((error) => {
-				alert("Something went wrong");
-				console.error(error);
-			})
-		)
-	);
-
 	const friends = [];
 	users.forEach(user =>
 		friends.push({
+			id: user.id,
 			username: user.username,
 			img: "https://unsplash.it/200/200",
 			status: "online"

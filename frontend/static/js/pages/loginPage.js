@@ -1,71 +1,76 @@
-import stateMachine from '../stateMachine.js';
 import loginService from '../services/loginService.js';
-import { InputField } from '../components/inputField.js';
-import { modal } from '../components/modal.js';
+import { LoginForm, ProfileForm } from '../components/forms.js';
+import { Modal } from '../components/modal.js';
+import AView from './AView.js';
 
-async function login(e) {
-	e.preventDefault();
-	const username = document.getElementById('username').value;
-	const password = document.getElementById('current-password').value;
-	if (username === '' || password === '') {
-		alert('Please enter both username and password');
-		return;
+export default class extends AView {
+	constructor(params) {
+		super(params);
+		this.setTitle('Login');
 	}
-	const toSend = {username, password};
-	await loginService.postLogin(toSend)
-		.then(() => {
-			stateMachine.context.username =toSend.username;
-			stateMachine.transition("goToFriends");
-		})
-		.catch((error) => {
-			console.error(
-				"There has been a problem with your fetch operation:",
-				error
+
+	setNavbar() {
+		const navPartitions = document.querySelectorAll('.nav-partition');
+		navPartitions.forEach((partition) => {
+			const visibility = partition.getAttribute('data-visible');
+			partition.setAttribute(
+				'data-visible',
+				visibility === 'true' ? 'false' : 'true'
 			);
-		});;
+
+			document.querySelector('#user').innerHTML =
+				document.getElementById('username').value;
+		});
+	}
+
+	loginHandler = async (e) => {
+		e.preventDefault();
+		const username = document.getElementById('username').value;
+		const password = document.getElementById('current-password').value;
+		if (username === '' || password === '') {
+			alert('Please enter both username and password');
+			return;
+		}
+		const toSend = { username, password };
+		await loginService
+			.postLogin(toSend)
+			.then(() => {
+				this.setNavbar();
+				this.navigateTo('/friends');
+			})
+			.catch((error) => {
+				console.error(
+					'There has been a problem with your fetch operation:',
+					error
+				);
+			});
+	};
+
+	appendEventListeners() {
+		const loginButton = document.querySelector('.primary-btn');
+		loginButton.addEventListener('click', this.loginHandler);
+
+		const signUpButton = document.querySelector('.secondary-btn');
+		signUpButton.addEventListener('click', () => {
+			this.navigateTo('/register');
+		});
+	}
+
+	async getHTML() {
+		const modalContainer = Modal('login', 'bg-secondary', LoginForm);
+		const loginModal = modalContainer.querySelector('.login');
+
+		const signUpButton = document.createElement('button');
+		signUpButton.classList.add('secondary-btn');
+		signUpButton.textContent = 'Sign up';
+
+		modalContainer.appendChild(signUpButton);
+
+		const ProfileModal = Modal('profile', 'bg-secondary', ProfileForm);
+		ProfileModal.classList.add('overlay');
+		ProfileModal.setAttribute('data-visible', 'false');
+
+		this.updateMain(modalContainer, ProfileModal);
+		this.appendEventListeners();
+	}
 }
-
-function createForm(){
-
-	const form = document.createElement('form');
-
-	const userNameField = InputField('text', 'Username', 'username');
-	const passwordField = InputField('password', 'Password', 'current-password');
-
-	const loginButton = document.createElement('button');
-	loginButton.classList.add('primary-sign-btn');
-	loginButton.textContent = 'Sign in';
-	loginButton.addEventListener('click', login);
-
-	form.appendChild(userNameField);
-	form.appendChild(passwordField);
-	form.appendChild(loginButton);
-
-	return form;
-}
-
-function showLoginPage() {
-	const main = document.querySelector("main");
-		main.innerHTML = "";
-
-	const modalContainer = modal('login', 'bg-secondary');
-	console.log(modalContainer.innerHTML);
-	const loginmodal = modalContainer.querySelector('.login');
-	const form = createForm();
-	console.log(loginmodal);
-
-	const signUpButton = document.createElement('button');
-	signUpButton.classList.add('secondary-sign-btn');
-	signUpButton.textContent = 'Sign up';
-	signUpButton.addEventListener('click', () => {
-		stateMachine.transition('goToRegister');
-	});
-
-	loginmodal.appendChild(form);
-	modalContainer.appendChild(signUpButton);
-
-
-	main.appendChild(modalContainer);
-}
-
-export default showLoginPage;
