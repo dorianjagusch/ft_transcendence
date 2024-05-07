@@ -44,8 +44,8 @@ export default class extends AView {
 		});
 	}
 
-	appendEventListeners(element) {
-		const loginButton = element.querySelector(".primary-btn");
+	appendEventListeners() {
+		const loginButton = document.querySelector(".primary-btn");
 			loginButton.addEventListener("click", this.loginHandler);
 
 		const signUpButton = document.querySelector(".secondary-btn");

@@ -44,11 +44,11 @@ export default class extends AView {
       });
   };
 
-  appendEventListeners(element) {
-    const registerButton = element.querySelector(".primary-btn");
+  appendEventListeners() {
+    const registerButton = document.querySelector(".primary-btn");
     registerButton.addEventListener("click", this.registerHandler);
 
-    const loginButton = element.querySelector(".secondary-btn");
+    const loginButton = document.querySelector(".secondary-btn");
     console.log(loginButton);
     loginButton.addEventListener("click", () => {
       this.navigateTo("/login");
