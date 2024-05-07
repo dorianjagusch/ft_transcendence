@@ -1,5 +1,5 @@
 import loginService from "../services/loginService.js";
-import { InputField } from "../components/inputField.js";
+import { LoginForm, ProfileForm } from "../components/forms.js";
 import { Modal } from "../components/modal.js";
 import AView from "./AView.js";
 
@@ -48,43 +48,26 @@ export default class extends AView {
 		const loginButton = element.querySelector(".primary-btn");
 			loginButton.addEventListener("click", this.loginHandler);
 
-		const signUpButton = element.querySelector(".secondary-btn");
+		const signUpButton = document.querySelector(".secondary-btn");
 			signUpButton.addEventListener("click", () => {
 			this.navigateTo("/register");
 		});
 	}
 
-	createForm() {
-		const form = document.createElement("form");
-
-		const userNameField = InputField("text", "Username", "username");
-		const passwordField = InputField("password", "Password", "current-password");
-
-		const loginButton = document.createElement("button");
-		loginButton.classList.add("primary-btn");
-		loginButton.textContent = "Sign in";
-
-
-		form.appendChild(userNameField);
-		form.appendChild(passwordField);
-		form.appendChild(loginButton);
-
-		return form;
-	};
-
 	async getHTML() {
 
-		const modalContainer = Modal("login", "bg-secondary");
+		const modalContainer = Modal("login", "bg-secondary", LoginForm);
 		const loginModal = modalContainer.querySelector(".login");
-		const form = this.createForm();
+
 
 		const signUpButton = document.createElement("button");
 		signUpButton.classList.add("secondary-btn");
 		signUpButton.textContent = "Sign up";
 
-		loginModal.appendChild(form);
 		modalContainer.appendChild(signUpButton);
 
+		const ProfileModal = Modal("profile", "bg-secondary", ProfileForm);
+		ProfileModal.classList.add("overlay");
 
 		const main = document.querySelector("main");
 		main.innerHTML = "";

@@ -1,7 +1,8 @@
 import { Modal } from "../components/modal.js";
-import { InputField } from "../components/inputField.js";
 import userService from "../services/UserService.js";
 import AView from "./AView.js";
+import {RegisterForm} from "../components/forms.js";
+
 
 export default class extends AView {
   constructor(params) {
@@ -54,38 +55,9 @@ export default class extends AView {
     });
   }
 
-  createForm() {
-    const form = document.createElement("form");
-
-    const userNameField = InputField("text", "Username", "username");
-    const passwordField = InputField(
-      "password",
-      "Password",
-      "current-password"
-    );
-    const repeatPasswordField = InputField(
-      "password",
-      "Repeat Password",
-      "password"
-    );
-
-    const registerButton = document.createElement("button");
-    registerButton.classList.add("primary-btn");
-    registerButton.textContent = "Sign up";
-
-    form.appendChild(userNameField);
-    form.appendChild(passwordField);
-    form.appendChild(repeatPasswordField);
-    form.appendChild(registerButton);
-
-    return form;
-  }
 
   async getHTML() {
-    const modalContainer = Modal("register", "bg-secondary");
-    const registerModal = modalContainer.querySelector(".register");
-    const form = this.createForm();
-    registerModal.appendChild(form);
+    const modalContainer = Modal("register", "bg-secondary", RegisterForm);
 
     const loginButton = document.createElement("button");
     loginButton.classList.add("secondary-btn");
