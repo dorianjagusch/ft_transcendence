@@ -1,5 +1,4 @@
 import { Modal } from '../components/modal.js';
-import userService from '../services/userService.js';
 import AView from './AView.js';
 import { RegisterForm } from '../components/forms.js';
 import UserService from '../services/userService.js';
