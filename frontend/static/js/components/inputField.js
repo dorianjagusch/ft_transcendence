@@ -17,4 +17,4 @@ function InputField(type='password', label='password', id="current-password") {
   return container;
 }
 
-export { inputField }
+export { InputField }

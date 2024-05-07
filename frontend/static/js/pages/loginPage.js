@@ -1,7 +1,6 @@
-
 import stateMachine from '../stateMachine.js';
 import loginService from '../services/loginService.js';
-import { inputField } from '../components/inputField.js';
+import { InputField } from '../components/inputField.js';
 import { modal } from '../components/modal.js';
 
 async function login(e) {
@@ -30,8 +29,8 @@ function createForm(){
 
 	const form = document.createElement('form');
 
-	const userNameField = inputField('text', 'Username', 'username');
-	const passwordField = inputField('password', 'Password', 'current-password');
+	const userNameField = InputField('text', 'Username', 'username');
+	const passwordField = InputField('password', 'Password', 'current-password');
 
 	const loginButton = document.createElement('button');
 	loginButton.classList.add('primary-sign-btn');
