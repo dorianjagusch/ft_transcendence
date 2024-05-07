@@ -1,4 +1,4 @@
-import { router } from './router.js';
+import { router, navigateTo } from './router.js';
 
 window.addEventListener('popstate', router);
 

@@ -1,4 +1,4 @@
-import { navigateTo } from '../index.js';
+import { navigateTo } from '../router.js';
 
 export default class {
 	constructor(params) {
