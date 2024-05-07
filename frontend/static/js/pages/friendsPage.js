@@ -11,56 +11,53 @@ export default class extends AView {
 
 	async getHTML() {
 
-		const main = document.querySelector('main');
-		main.innerHTML = '';
-
 		const friends = [
 		{
-		username: "test",
-		img: "https://unsplash.it/200/200",
-			status: "online",
-		},
-		{
-		username: "test1",
-		img: "https://unsplash.it/200/200",
-		status: "online",
-		},
-		{
-		username: "test2",
-		img: "https://unsplash.it/200/200",
-			status: "online",
-		},
-		{
-		username: "test3",
-		img: "https://unsplash.it/200/200",
-		status: "online",
-		},
-		{
-		username: "test4",
-		img: "https://unsplash.it/200/200",
-		status: "online",
-		},
-		{
-		username: "test5",
-		img: "https://unsplash.it/200/200",
-		status: "online",
-		},
-		{
-		username: "test6",
-		img: "https://unsplash.it/200/200",
-		status: "online",
-		},
-	];
+				username: "test",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+			{
+				username: "test1",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+			{
+				username: "test2",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+			{
+				username: "test3",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+			{
+				username: "test4",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+			{
+				username: "test5",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+			{
+				username: "test6",
+				img: "https://unsplash.it/200/200",
+				status: "online",
+			},
+		];
 	// const friends = Call friendsAPI	to	get	friends in a json array
 
-	const friendScroller = scrollContainer(friends, friendCard);
-	friendScroller.classList.add('friends', 'bg-secondary');
+		const friendScroller = scrollContainer(friends, friendCard);
+		friendScroller.classList.add('friends', 'bg-secondary');
 
-	const requestScroller = scrollContainer(friends, requestCard);
-	requestScroller.classList.add('friend-request', 'bg-secondary');
+		const requestScroller = scrollContainer(friends, requestCard);
+		requestScroller.classList.add('friend-request', 'bg-secondary');
 
 
-	this.updateMain(friendScroller, requestScroller);
-}
+		this.updateMain(friendScroller, requestScroller);
+	}
 
 }
