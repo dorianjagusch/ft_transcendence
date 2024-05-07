@@ -12,7 +12,7 @@ const showFriends = async () => {
     {
       username: "test",
       img: "https://unsplash.it/200/200",
-	  status: "online",
+	    status: "online",
     },
     {
       username: "test1",
@@ -22,7 +22,7 @@ const showFriends = async () => {
     {
       username: "test2",
       img: "https://unsplash.it/200/200",
-	  status: "online",
+	    status: "online",
     },
     {
       username: "test3",
