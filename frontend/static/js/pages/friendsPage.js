@@ -1,6 +1,7 @@
 import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
-import { scrollContainer } from '../components/scrollContainer.js'
+import { scrollContainer } from '../components/scrollContainer.js';
+import FriendService from '../services/friendService.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -10,44 +11,29 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		const friends = [
-			{
-				username: "test",
+		// TODO: Use the actual response
+		// var friendService = new FriendService();
+		//var friendResponse = friendService.getAllRequest()
+		//.catch((error) => {
+		//	console.error(error);
+		//});
+
+		const fakeFriendsResponse = [
+			{ id: 1, username: "meri" },
+			{ id: 2, username: "azar" },
+			{ id: 3, username: "jose" }
+		  ];
+
+		const friends = [];
+		fakeFriendsResponse.forEach(element => {
+			friends.push({
+				id: element.id,
+				username: element.username,
 				img: "https://unsplash.it/200/200",
-				status: "online",
-			},
-			{
-				username: "test1",
-				img: "https://unsplash.it/200/200",
-				status: "online",
-			},
-			{
-				username: "test2",
-				img: "https://unsplash.it/200/200",
-				status: "online",
-			},
-			{
-				username: "test3",
-				img: "https://unsplash.it/200/200",
-				status: "online",
-			},
-			{
-				username: "test4",
-				img: "https://unsplash.it/200/200",
-				status: "online",
-			},
-			{
-				username: "test5",
-				img: "https://unsplash.it/200/200",
-				status: "online",
-			},
-			{
-				username: "test6",
-				img: "https://unsplash.it/200/200",
-				status: "online",
-			}
-		];
-	// const friends = Call friendsAPI	to	get	friends in a json array
+				status: "online"
+			});
+		});
+		// const friends = Call friendsAPI	to	get	friends in a json array
 
 		const friendScroller = scrollContainer(friends, friendCard);
 		friendScroller.classList.add('friends', 'bg-secondary');
