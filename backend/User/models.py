@@ -14,6 +14,7 @@ class User(AbstractBaseUser):
 	is_superuser = models.BooleanField(_('is_superuser'), default=False)
 	insertTS = models.DateTimeField(_('insertTS'), auto_now_add=True, blank=True, null=True)
 	last_login = models.DateTimeField(_('last_login'), blank=True, null=True)
+	is_online = models.BooleanField(_('is_online'), default=False)
 	
 	# profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
