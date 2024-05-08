@@ -18,14 +18,18 @@ class UserListView(APIView):
 
 	def post(self, request):
 		inputSerializer = UserInputSerializer(data=request.data)
-		if inputSerializer.is_valid():
-			username = inputSerializer.validated_data.get('username')
-			password = inputSerializer.validated_data.get('password')
-			user = User.objects.create_user(username=username, password=password)
-			outputSerializer = UserOutputSerializer(user)
-			return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
-		else:
-			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		if not inputSerializer.is_valid():
+			errors = inputSerializer.errors
+			if 'username' in errors and 'exists' in errors['username'][0]:
+				return Response(inputSerializer.errors, status=status.HTTP_409_CONFLICT)
+			else:
+				return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+		username = inputSerializer.validated_data.get('username')
+		password = inputSerializer.validated_data.get('password')
+		user = User.objects.create_user(username=username, password=password)
+		outputSerializer = UserOutputSerializer(user)
+		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 
 class UserDetailView(APIView):
 	def get(self, request, user_id):

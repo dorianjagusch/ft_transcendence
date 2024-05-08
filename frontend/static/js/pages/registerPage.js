@@ -40,7 +40,7 @@ export default class extends AView {
 				this.navigateTo('/login');
 			})
 			.catch((error) => {
-				console.error(error);
+				console.log("Custom Error:" + error);
 			});
 	};
 
