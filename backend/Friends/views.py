@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 
+from User.serializers import UserOutputSerializer
+
 from .models import Friends
 from .serializers import FriendsSerializer
 
@@ -14,8 +16,8 @@ class FriendsListView(APIView):
         if not request.user.is_authenticated:
             return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
         user_id = request.user.id
-        friends = Friends.objects.filter(user_id=user_id)
-        serializer = FriendsSerializer(friends, many=True)
+        friends = Friends.objects.get_user_friends(user_id)
+        serializer = UserOutputSerializer(friends, many=True)
         return JsonResponse({"friends" : serializer.data})
 
     def post(self, request):

@@ -1,6 +1,7 @@
 from django.db import models
 
 from User.models import User
+from .managers import FriendsManager
 
 # Create your models here.
 class Friends(models.Model):
@@ -12,6 +13,8 @@ class Friends(models.Model):
 
     # Date and time when the friend request is sent
     insertTS = models.DateTimeField(auto_now_add=True)
+
+    objects = FriendsManager()
 
     def __str__(self):
         return f"{self.user_id} - {self.friend_id} - {self.insertTS}"
