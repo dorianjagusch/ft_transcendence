@@ -19,19 +19,23 @@ export default class extends AView {
 		//});
 
 		const fakeFriendsResponse = [
-			{ id: 1, username: "meri" },
-			{ id: 2, username: "azar" },
-			{ id: 3, username: "jose" }
+			{ id: 1, username: "meri", is_online: true },
+			{ id: 2, username: "azar", is_online: false },
+			{ id: 3, username: "jose", is_online: true }
 		  ];
 
 		const friends = [];
 		fakeFriendsResponse.forEach(element => {
-			friends.push({
+			let friend = {
 				id: element.id,
 				username: element.username,
-				img: "https://unsplash.it/200/200",
-				status: "online"
-			});
+				img: 'https://unsplash.it/200/200',
+				status: 'offline'
+			};
+
+			if (element.is_online)
+				friend.status = 'online';
+			friends.push(friend);
 		});
 		// const friends = Call friendsAPI	to	get	friends in a json array
 
