@@ -31,3 +31,4 @@ const requestCard = ({ img, username }) => {
 };
 
 export { requestCard };
+
