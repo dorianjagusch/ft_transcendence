@@ -327,6 +327,24 @@ nav img {
 	height: 100%;
 }
 
+/* Notifications */
+
+.notification{
+	position: absolute;
+	top: var(--fs-medium);
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: transparent;
+}
+
+.error{
+	color: var(--decline-color);
+}
+
+.success{
+	color: var(--accept-color);
+}
+
 /* Leaderboard */
 
 #leaderboard{
