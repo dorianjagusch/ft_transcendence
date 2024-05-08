@@ -8,7 +8,6 @@ class FriendsManager(models.Manager):
         friends_of_user = self.filter(friend_id=user_id).values_list('user_id', flat=True)
         actual_user_friends = set(user_friends) | set(friends_of_user)
 
-        # get the User instances of all the friends
         friends = User.objects.filter(id__in=actual_user_friends)
         return friends
     
@@ -21,7 +20,3 @@ class FriendsManager(models.Manager):
     def create_friendship(self, user_id, friend_id):
         return self.create(user_id=user_id, friend_id=friend_id)
 
-
-
-
-    # Add more custom methods as needed
