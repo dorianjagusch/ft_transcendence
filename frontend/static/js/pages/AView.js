@@ -22,7 +22,7 @@ export default class {
 		userNotification(message, type);
 		setTimeout(() => {
 			document.querySelector('.notification').remove();
-		}, 10000);
+		}, 3000);
 	}
 
 	updateMain(...elements) {
