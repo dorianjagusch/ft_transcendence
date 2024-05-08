@@ -6,3 +6,4 @@ typing_extensions==4.11.0
 psycopg2==2.9.9
 channels==4.1.0
 daphne==4.1.2
+django-cors-headers==3.10.

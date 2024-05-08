@@ -2,15 +2,17 @@ import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
 import { scrollContainer } from '../components/scrollContainer.js'
 
-const main = document.querySelector('main');
 
 const showFriends = async () => {
+
+	const main = document.querySelector('main');
+	main.innerHTML = '';
 
 	const friends = [
     {
       username: "test",
       img: "https://unsplash.it/200/200",
-	  status: "online",
+	    status: "online",
     },
     {
       username: "test1",
@@ -20,7 +22,7 @@ const showFriends = async () => {
     {
       username: "test2",
       img: "https://unsplash.it/200/200",
-	  status: "online",
+	    status: "online",
     },
     {
       username: "test3",

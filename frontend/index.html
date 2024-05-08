@@ -18,13 +18,13 @@
 			<ul>
 				<div class="nav-partition" data-visible="false">
 					<li class="nav-item">
-						<a onClick="route()" href="/leaderboard">Leaderboard</a>
+						<a href="/leaderboard" data-link>Leaderboard</a>
 					</li>
 					<li class="nav-item">
-						<a onClick="route()" href="/play">Play</a>
+						<a href="/play" data-link>Play</a>
 					</li>
 					<li class="nav-item">
-						<a onClick="route()" href="/friends">Friends</a>
+						<a href="/friends" data-link>Friends</a>
 					</li>
 				</div>
 				<div class="nav-partition" data-visible="false">
@@ -32,18 +32,18 @@
 						<img src="./static/assets/img/default-user.png">
 					</li>
 					<li class="nav-item">
-						<a onClick="route()" href="/user">User1</a>
+						<a id="user" href="/user" data-link></a>
 					</li>
 					<li class="nav-item">
-						<a onClick="route()" href="/menu"><img src="./static/assets/img/gear.png"></a>
+						<a href="/menu" data-link><img src="./static/assets/img/gear.png"></a>
 					</li>
 				</div>
 				<div class="nav-partition" data-visible="true">
 					<li class="nav_item">
-						<a id ="login">Login</a>
+						<a id ="login" href="/login" data-link>Login</a>
 					</li>
 					<li class="nav_item">
-						<a id="register">Register</a>
+						<a id="register" href="/register" data-link>Register</a>
 					</li>
 				</div>
 			</ul>
