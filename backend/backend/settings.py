@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-import os
 from pathlib import Path
 import os
 
@@ -18,7 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Add new apps here
 APP_DIRS = [
-    os.path.join(BASE_DIR, "UserManagement"),
+    os.path.join(BASE_DIR, "User"),
+    os.path.join(BASE_DIR, "Friends"),
 ]
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
@@ -39,6 +39,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders', #Added for CORS header configuration
     'rest_framework',
     'backend',
     'django.contrib.admin',
@@ -49,10 +50,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Backend apps here
-    'UserManagement'
+    'User',
+    'Friends',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #Has to be before CommonMiddleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,6 +64,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # For development
+# For production, use:
+# CORS_ALLOWED_ORIGINS = ['http://localhost:80']
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -92,9 +99,23 @@ DATABASES = {
         'USER':  os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
-        'PORT': 5432,        
+        'PORT': 5432,
     }
 }
+
+# Default database-backed sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
+
+# our custom User model
+AUTH_USER_MODEL = 'User.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
+]
+
+# Configure login URL
+LOGIN_URL = '/users/login/'  # The URL where the login view is located
 
 
 
