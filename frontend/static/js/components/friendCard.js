@@ -2,6 +2,11 @@ const friendCard = ({ id, username, status, img }) => {
 	const friendCard = document.createElement('button');
 	friendCard.className = 'scroll-element user-card';
 
+	const userId = document.createElement('div');
+	userId.className = 'user-id';
+	user.setAttribute('data-id', id);
+	user.setAttribute('data-visible', 'false');
+
 	const imgElement = document.createElement('img');
 	imgElement.src = img;
 
@@ -21,6 +26,7 @@ const friendCard = ({ id, username, status, img }) => {
 
 	friendCard.appendChild(imgElement);
 	friendCard.appendChild(userCardText);
+	friendCard.appendChild(userId);
 	return friendCard;
 };
 
