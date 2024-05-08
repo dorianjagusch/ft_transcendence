@@ -43,6 +43,8 @@ services:
        postgres:
          condition: service_healthy
     restart: always
+    volumes:
+      - ./backend:/app
     networks:
      - ft_transcendence_network
 
