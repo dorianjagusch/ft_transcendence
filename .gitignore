@@ -147,3 +147,7 @@ GitHub.sublime-settings
 
 # MAC #
 *.DS_Store
+
+# Ignore all files except __init__.py in migrations directories
+**/migrations/*
+!**/migrations/__init__.py
