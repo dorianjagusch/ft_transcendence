@@ -242,6 +242,15 @@ nav img {
 	width: 2em
 }
 
+.notification{
+	position: absolute;
+	font-weight: 700;
+	top: var(--fs-medium);
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: transparent;
+}
+
 /* Containers */
 
 .flex-row{
@@ -325,6 +334,16 @@ nav img {
 	z-index: 1000;
 	right: 0;
 	height: 100%;
+}
+
+/* Notifications */
+
+.error{
+	color: var(--decline-color);
+}
+
+.success{
+	color: var(--accept-color);
 }
 
 /* Leaderboard */

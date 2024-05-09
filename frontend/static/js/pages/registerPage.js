@@ -19,12 +19,12 @@ export default class extends AView {
 		const repeatPassword = document.getElementById('password').value;
 
 		if (username === '' || password === '' || repeatPassword === '') {
-			alert('Please enter all fields');
+			this.notify('Please enter all fields', "error");
 			return;
 		}
 
 		if (password !== repeatPassword) {
-			alert('Passwords do not match');
+			this.notify('Passwords do not match', 'error');
 			return;
 		}
 
@@ -41,11 +41,11 @@ export default class extends AView {
 		userService
 			.postRequest(data)
 			.then(() => {
-				alert('User created successfully. Please login.');
+				this.notify('User created successfully. Please login.');
 				this.navigateTo('/login');
 			})
 			.catch((error) => {
-				console.log("Custom Error:" + error);
+				this.notify(error);
 			});
 	};
 
@@ -53,7 +53,6 @@ export default class extends AView {
 		const registerButton = document.querySelector('.primary-btn');
 		registerButton.addEventListener('click', this.registerHandler);
 		const loginButton = document.querySelector('.secondary-btn');
-		console.log(loginButton);
 		loginButton.addEventListener('click', () => {
 			this.navigateTo('/login');
 		});
