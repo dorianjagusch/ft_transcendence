@@ -7,6 +7,7 @@ export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Register');
+		this.linkClicked = false;
 		this.registerHandler = this.registerHandler.bind(this);
 	}
 
@@ -27,6 +28,10 @@ export default class extends AView {
 			return;
 		}
 
+		if (this.linkClicked == false) {
+			alert('Please click the link to agree to the Privacy Policy before registering.');
+			return;
+		}
 		const data = {
 			username: username,
 			password: password,
@@ -47,11 +52,14 @@ export default class extends AView {
 	appendEventListeners() {
 		const registerButton = document.querySelector('.primary-btn');
 		registerButton.addEventListener('click', this.registerHandler);
-
 		const loginButton = document.querySelector('.secondary-btn');
 		console.log(loginButton);
 		loginButton.addEventListener('click', () => {
 			this.navigateTo('/login');
+		});
+		const linkElement = formElement.linkElement;
+		linkElement.addEventListener('click', () => {
+		this.linkClicked = true;
 		});
 	}
 
