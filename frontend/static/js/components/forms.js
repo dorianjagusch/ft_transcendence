@@ -17,6 +17,10 @@ const RegisterForm = () => {
 		'password'
 	);
 
+	const textElement = document.createElement('p');
+	textElement.innerHTML = 'Read our privacy policy <a href="https://example.com/privacy-policy" target="_blank" rel="noopener noreferrer">HERE</a>.'
+
+
 	const registerButton = document.createElement('button');
 	registerButton.classList.add('primary-btn');
 	registerButton.textContent = 'Sign up';
@@ -24,6 +28,7 @@ const RegisterForm = () => {
 	form.appendChild(userNameField);
 	form.appendChild(passwordField);
 	form.appendChild(repeatPasswordField);
+	form.appendChild(textElement);
 	form.appendChild(registerButton);
 
 	return form;
