@@ -19,7 +19,7 @@ const RegisterForm = () => {
 
 	const linkElement = document.createElement('a');
 	linkElement.id = 'privacyPolicy';
-	linkElement.href = 'https://example.com/privacy-policy';
+	linkElement.href = '../../privacypolicy.html';
 	linkElement.textContent = 'Privacy Policy';
 	linkElement.target = '_blank';
 	linkElement.rel = 'noopener noreferrer';
