@@ -18,6 +18,7 @@ const RegisterForm = () => {
 	);
 
 	const linkElement = document.createElement('a');
+	linkElement.id = 'privacyPolicy';
     linkElement.href = 'https://example.com/privacy-policy';
     linkElement.textContent = 'Privacy Policy';
     linkElement.target = '_blank';
@@ -31,7 +32,8 @@ const RegisterForm = () => {
 	form.appendChild(passwordField);
 	form.appendChild(repeatPasswordField);
 	form.appendChild(linkElement);
-	form.linkElement = linkElement;
+	form.linkElement = false;
+	// form.linkElement = linkElement;
 	form.appendChild(registerButton);
 
 	return form;
