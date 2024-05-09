@@ -29,7 +29,7 @@ export default class extends AView {
 		}
 
 		if (this.linkClicked == false) {
-			alert('Please click the link to agree to the Privacy Policy before registering.');
+			this.notify('Please click the link to agree to the Privacy Policy before registering.', 'error');
 			return;
 		}
 		const data = {
