@@ -10,41 +10,37 @@ export default class extends AView {
 		this.setTitle('Friends');
 	}
 
+	createFriendScroller(friendsArray, card, tokens, identifier) {
+		const scroller = scrollContainer(friendsArray, card);
+		scroller.classList.add(tokens, identifier);
+		return scroller;
+	}
+
 	async getHTML() {
-		// TODO: Use the actual response
-		// var friendService = new FriendService();
-		//var friendResponse = friendService.getAllRequest()
-		//.catch((error) => {
-		//	console.error(error);
-		//});
+		var friendService = new FriendService();
+		var friends = [];
+		friendService.getAllRequest()
+		.then(friendsResponse => {
+			friendsResponse.forEach(element => {
+				let status = 'offline';
+				if (element.is_online) {
+					status = 'online';
+				}
 
-		const fakeFriendsResponse = [
-			{ id: 1, username: "meri", is_online: true },
-			{ id: 2, username: "azar", is_online: false },
-			{ id: 3, username: "jose", is_online: true }
-		  ];
+				friends.push({
+					id: element.id,
+					username: element.username,
+					img: 'https://unsplash.it/200/200',
+					status: status
+				});
+			});
 
-		const friends = [];
-		fakeFriendsResponse.forEach(element => {
-			let friend = {
-				id: element.id,
-				username: element.username,
-				img: 'https://unsplash.it/200/200',
-				status: 'offline'
-			};
+			console.log(friends);
 
-			if (element.is_online)
-				friend.status = 'online';
-			friends.push(friend);
-		});
-		// const friends = Call friendsAPI	to	get	friends in a json array
-
-		const friendScroller = scrollContainer(friends, friendCard);
-		friendScroller.classList.add('friends', 'bg-secondary');
-
-		const requestScroller = scrollContainer(friends, requestCard);
-		requestScroller.classList.add('friend-request', 'bg-secondary');
-
-		this.updateMain(friendScroller, requestScroller);
+			var friendScroller = this.createFriendScroller(friends, friendCard, 'friends', 'bg-secondary');
+			// TODO: Add functionality for pending / possible friendships
+			var requestScroller = this.createFriendScroller(friends, requestCard, 'friend-request', 'bg-secondary');
+			this.updateMain(friendScroller, requestScroller);
+		})
 	}
 }
