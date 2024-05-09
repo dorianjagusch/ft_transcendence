@@ -19,10 +19,10 @@ const RegisterForm = () => {
 
 	const linkElement = document.createElement('a');
 	linkElement.id = 'privacyPolicy';
-    linkElement.href = 'https://example.com/privacy-policy';
-    linkElement.textContent = 'Privacy Policy';
-    linkElement.target = '_blank';
-    linkElement.rel = 'noopener noreferrer';
+	linkElement.href = 'https://example.com/privacy-policy';
+	linkElement.textContent = 'Privacy Policy';
+	linkElement.target = '_blank';
+	linkElement.rel = 'noopener noreferrer';
 
 	const registerButton = document.createElement('button');
 	registerButton.classList.add('primary-btn');
@@ -33,7 +33,6 @@ const RegisterForm = () => {
 	form.appendChild(repeatPasswordField);
 	form.appendChild(linkElement);
 	form.linkElement = false;
-	// form.linkElement = linkElement;
 	form.appendChild(registerButton);
 
 	return form;

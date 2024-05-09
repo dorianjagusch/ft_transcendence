@@ -57,10 +57,8 @@ export default class extends AView {
 		loginButton.addEventListener('click', () => {
 			this.navigateTo('/login');
 		});
-		// const linkElement = formElement.linkElement;
 		const linkElement = document.getElementById('privacyPolicy');
 		linkElement.addEventListener('click', () => {
-			// console.log('privacyPolicy');
 			this.linkClicked = true;
 		});
 	}
