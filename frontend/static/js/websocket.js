@@ -12,7 +12,7 @@ const ChatSocket = () => {
 
 	chatSocket.addEventListener('message', (e) => {
 		const data = JSON.parse(e.data);
-		document.querySelector('#received').value += data.message + '\n';
+		document.querySelector('#received').innerText += data.message + '\n';
 	});
 
 	chatSocket.addEventListener('close', (e) => {
@@ -25,7 +25,7 @@ const ChatSocket = () => {
 
 	document
 		.querySelector('#key-pressed')
-		.addEventListener('click', (e) => {
+		.addEventListener('keyup', (e) => {
 			const keyPressed = document.querySelector('#key-pressed');
 			const key = keyPressed.value;
 			chatSocket.send(

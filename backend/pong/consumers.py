@@ -10,10 +10,10 @@ class PongConsumer(AsyncWebsocketConsumer):
         pass
 
     async def receive(self, text_data):
-        key = text_data.strip()
+        message = json.loads(text_data)['message']
+        key = message.strip()
         response_data = {}
 
-        # Check for certain keypresses
         if key == 's':
             response_data['message'] = 'S key pressed'
         elif key == 'w':
