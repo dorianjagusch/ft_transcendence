@@ -11,18 +11,18 @@ export default class extends AView {
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
-		const scroller = scrollContainer(friendsArray, card);
+		let scroller = scrollContainer(friendsArray, card);
 		scroller.classList.add(tokens, identifier);
 		return scroller;
 	}
 
 	async getHTML() {
 		const friendService = new FriendService();
-		const friends = [];
+		let friends = [];
 		friendService.getAllRequest()
 		.then(friendsResponse => {
 			friendsResponse.forEach(element => {
-				const status = 'offline';
+				let status = 'offline';
 				if (element.is_online) {
 					status = 'online';
 				}
