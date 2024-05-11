@@ -1,6 +1,6 @@
-import { Modal } from '../components/modal.js';
+import {Modal} from '../components/modal.js';
 import AView from './AView.js';
-import { RegisterForm } from '../components/forms.js';
+import {RegisterForm} from '../components/formComponents/forms.js';
 import UserService from '../services/userService.js';
 
 export default class extends AView {
@@ -18,7 +18,7 @@ export default class extends AView {
 		const repeatPassword = document.getElementById('password').value;
 
 		if (username === '' || password === '' || repeatPassword === '') {
-			this.notify('Please enter all fields', "error");
+			this.notify('Please enter all fields', 'error');
 			return;
 		}
 
