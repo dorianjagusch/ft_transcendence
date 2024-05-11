@@ -13,8 +13,8 @@ from .serializers import FriendsSerializer
 
 class FriendsListView(APIView):
     def get(self, request):
-        # if not request.user.is_authenticated:
-        #     return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
+        if not request.user.is_authenticated:
+            return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
         user_id = request.user.id
         friends = Friends.objects.get_user_friends(user_id)
         serializer = UserOutputSerializer(friends, many=True)
