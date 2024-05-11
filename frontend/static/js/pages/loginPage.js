@@ -1,6 +1,7 @@
 import loginService from '../services/loginService.js';
-import {LoginForm, ProfileForm} from '../components/formComponents/forms.js';
-import {Modal} from '../components/modal.js';
+import LoginForm from '../components/formComponents/loginForm.js';
+import ProfileForm from '../components/formComponents/completeProfileForm.js';
+import Modal from '../components/modal.js';
 import AView from './AView.js';
 
 export default class extends AView {

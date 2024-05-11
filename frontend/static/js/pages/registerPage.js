@@ -1,6 +1,6 @@
-import {Modal} from '../components/modal.js';
+import Modal from '../components/modal.js';
 import AView from './AView.js';
-import {RegisterForm} from '../components/formComponents/forms.js';
+import RegisterForm from '../components/formComponents/registerForm.js';
 import UserService from '../services/userService.js';
 
 export default class extends AView {

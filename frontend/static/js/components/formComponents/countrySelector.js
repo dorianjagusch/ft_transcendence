@@ -272,4 +272,4 @@ const CountrySelector = () => {
 	return countryContainer;
 };
 
-export { CountrySelector };
+export default CountrySelector;
