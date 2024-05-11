@@ -39,16 +39,14 @@ const router = async () => {
 		};
 	}
 
-	const isLoggedIn = localStorage.getItem('isLoggedIn');
+	const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
 	const allowedPaths = ['/login', '/register', '/'];
 
 	if (!isLoggedIn && !allowedPaths.includes(match.route.path)) {
 		navigateTo('/login');
-		return;
 	}
 	else if (isLoggedIn && allowedPaths.includes(match.route.path)) {
-			navigateTo('/dashboard');
-			return;
+		navigateTo('/dashboard');
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
