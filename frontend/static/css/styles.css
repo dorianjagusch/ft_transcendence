@@ -796,3 +796,56 @@ button:is(:focus, :hover)
 	transform: translateY(-3rem) translateZ(2rem);
 }
 
+
+.profile
+{
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	justify-content: center;
+	align-content: center;
+	gap: 1em;
+}
+
+.profile > *:not(.button-bar){
+	padding: 1em;
+	background-color: var(--fg-color);
+	border-radius: 2em;
+}
+
+.profile .profile-name{
+	text-align: center;
+	font-weight: 700;
+	border-radius: 1em;
+}
+
+.profile .profile-img{
+	border-radius: 2em;
+	padding: 2em;
+}
+
+.profile .user-img{
+	border-radius: var(--fs-medium);
+	width: 100%;
+}
+
+.button-bar{
+	display: flex;
+	justify-content: space-around;
+}
+
+.user-placement{
+	display: grid;
+	gap: 1em;
+}
+
+.small-placement-card{
+	padding: var(--fs-medium);
+	border-radius: 1em;
+	background-color: var(--bg-color);
+	display: flex;
+	justify-content: space-around;
+}
+
+.small-placement-card .placement:after{
+	content: " Place";
+}

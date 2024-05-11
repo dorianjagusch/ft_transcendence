@@ -7,8 +7,8 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		const leaderBoardTitle = '<h2>Dis yo friend?</h2>';
+		
 
-		this.updateMain(leaderBoardTitle);
+		this.updateMain();
 	}
 }
