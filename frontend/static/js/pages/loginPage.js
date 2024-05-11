@@ -15,8 +15,7 @@ export default class extends AView {
 		navPartitions.forEach((partition) => {
 			const visibility = partition.getAttribute('data-visible');
 			partition.setAttribute('data-visible', visibility === 'true' ? 'false' : 'true');
-
-			document.querySelector('#user').innerHTML = document.getElementById('username').value;
+			document.querySelector('#user').innerHTML = localStorage.getItem('username');
 		});
 	}
 
@@ -32,7 +31,10 @@ export default class extends AView {
 		await loginService
 			.postLogin(toSend)
 			.then(() => {
+				localStorage.setItem('username', username);
 				this.setNavbar();
+				
+				localStorage.setItem('isLoggedIn', true);
 				this.navigateTo('/friends');
 			})
 			.catch((error) => {

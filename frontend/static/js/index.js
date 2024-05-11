@@ -1,6 +1,6 @@
 import { router, navigateTo } from './router.js';
 
-sessionStorage.setItem('isLoggedIn', true);
+sessionStorage.setItem('isLoggedIn', false);
 
 window.addEventListener('popstate', router);
 
