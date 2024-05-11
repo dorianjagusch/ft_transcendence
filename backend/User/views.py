@@ -6,8 +6,10 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login
 from .models import User
 from .serializers import UserOutputSerializer, UserInputSerializer
+from django.utils.decorators import method_decorator
+from shared_utilities.decorators import must_be_url_user, valid_serializer_in_body
 
-#  rm later
+# rm later
 import sys
 
 class UserListView(APIView):
@@ -16,7 +18,11 @@ class UserListView(APIView):
 		serializer = UserOutputSerializer(users, many=True)
 		return JsonResponse({"users": serializer.data})
 
+	@method_decorator(valid_serializer_in_body(UserInputSerializer))
 	def post(self, request):
+
+		print("in UserListView POST", file=sys.stderr)
+
 		inputSerializer = UserInputSerializer(data=request.data)
 		if not inputSerializer.is_valid():
 			errors = inputSerializer.errors
@@ -40,6 +46,7 @@ class UserDetailView(APIView):
 		serializer = UserOutputSerializer(user)
 		return Response(serializer.data)
 
+	@must_be_url_user
 	def put(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -54,6 +61,7 @@ class UserDetailView(APIView):
 		else:
 			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+	@must_be_url_user
 	def delete(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)

@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import status
 
 from User.models import User
 
@@ -20,3 +22,13 @@ class FriendsManager(models.Manager):
     def create_friendship(self, user_id, friend_id):
         return self.create(user_id=user_id, friend_id=friend_id)
 
+    def delete_friendship(self, user_id, friend_id):
+        try:
+            friendship = self.get(user_id=user_id, friend_id=friend_id)
+            friendship.delete()
+            return True
+        except ObjectDoesNotExist:
+            return False
+
+
+        
