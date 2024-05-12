@@ -19,28 +19,28 @@ export default class extends AView {
 	async getHTML() {
 		const friendService = new FriendService();
 		let friends = [];
-		// friendService.getAllRequest()
-		// .then(friendsResponse => {
-		// 	friendsResponse.forEach(element => {
-		// 		let status = 'offline';
-		// 		if (element.is_online) {
-		// 			status = 'online';
-		// 		}
+		friendService.getAllRequest()
+		.then(friendsResponse => {
+			friendsResponse.forEach(element => {
+				let status = 'offline';
+				if (element.is_online) {
+					status = 'online';
+				}
 
-		// 		friends.push({
-		// 			id: element.id,
-		// 			username: element.username,
-		// 			img: 'https://unsplash.it/200/200',
-		// 			status: status
-		// 		});
-		// 	});
+				friends.push({
+					id: element.id,
+					username: element.username,
+					img: 'https://unsplash.it/200/200',
+					status: status
+				});
+			});
 
-		// 	console.log(friends);
+			console.log(friends);
 
-		// })
 			const friendScroller = this.createFriendScroller(friends, friendCard, 'friends', 'bg-secondary');
 			// TODO: Add functionality for pending / possible friendships
 			const requestScroller = this.createFriendScroller(friends, requestCard, 'friend-request', 'bg-secondary');
 			this.updateMain(friendScroller, requestScroller);
+		})
 	}
 }
