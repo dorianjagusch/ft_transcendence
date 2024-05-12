@@ -4,6 +4,10 @@ import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import profileDescription from '../components/profileComponents/profileDescription.js';
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
+import profileStats from '../components/profileComponents/profileStats.js';
+import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
+import { scrollContainer } from '../components/scrollContainer.js';
+
 
 export default class extends AView {
 	constructor(params) {
@@ -120,18 +124,26 @@ export default class extends AView {
 		const buttons = this.selectButtons(userData.friendship);
 		const actionBar = buttonBar(buttons);
 
-		// Create user placement element
-		const userPlacement = document.createElement('div');
+		const userStats = scrollContainer(
+			userData.stats,
+			profileStats, "row");
+		userStats.classList.add('play-stats');
+		const userHistory = scrollContainer(
+			userData.playHistory,
+			profilePlayHistory, "col");
+		userHistory.classList.add('play-history');
+		const userPlacement = scrollContainer(userData.placements, smallPlacementCard, "col");
 		userPlacement.classList.add('user-placement');
-
-		userData.placements.forEach((placement) => {
-			const smallPlacementCardElement = smallPlacementCard(placement);
-			userPlacement.appendChild(smallPlacementCardElement);
-		});
-
-		// Create user description element
 		const userDescription = profileDescription(userData.user.description);
 
-		this.updateMain(userName, userImg, actionBar, userPlacement, userDescription);
+		this.updateMain(
+			userName,
+			userImg,
+			actionBar,
+			userStats,
+			userHistory,
+			userPlacement,
+			userDescription
+		);
 	}
 }
