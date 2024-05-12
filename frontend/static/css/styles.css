@@ -861,6 +861,7 @@ button:is(:focus, :hover)
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	gap: var(--fs-medium);
 	grid-area: buttons;
 }
 
