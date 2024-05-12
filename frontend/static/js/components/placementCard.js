@@ -74,4 +74,4 @@ function PlacementCard(entry) {
 	return placementCard;
 }
 
-export { PlacementCard };
+export { PlacementCard, createPlacement };

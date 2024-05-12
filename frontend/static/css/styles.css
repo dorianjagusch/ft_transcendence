@@ -798,11 +798,37 @@ button:is(:focus, :hover)
 
 .profile
 {
+	margin: 0 auto;
+	padding-top: 2em;
 	display: grid;
-	grid-template-columns: 1fr 2fr;
 	justify-content: center;
 	align-content: center;
 	gap: 1em;
+	width: calc(100% - 2em);
+}
+
+.profile *:not(button, .profile-description){
+	font-size: var(--fs-medium);
+	align-items: center;;
+}
+
+.profile.friends {
+	grid-template-areas:
+    "username placement play-history"
+    "profile-img placement play-history"
+    "profile-img play-stats play-stats"
+    "about play-stats play-stats"
+    "about play-stats play-stats";
+	grid-template-rows: 1fr 2r 2fr 2fr 2fr;
+}
+
+.profile:not(.friends) {
+  grid-template-areas:
+    "username placement placement"
+    "profile-img placement placement"
+    "profile-img about about"
+    "buttons about about";
+  grid-template-rows: 1fr 2fr 2fr 2fr;
 }
 
 .profile > *:not(.button-bar){
@@ -811,15 +837,19 @@ button:is(:focus, :hover)
 	border-radius: 2em;
 }
 
-.profile .profile-name{
-	text-align: center;
+.profile .profile-title{
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	font-weight: 700;
 	border-radius: 1em;
+	grid-area: username;
 }
 
 .profile .profile-img{
 	border-radius: 2em;
 	padding: 2em;
+	grid-area: profile-img;
 }
 
 .profile .user-img{
@@ -830,21 +860,39 @@ button:is(:focus, :hover)
 .button-bar{
 	display: flex;
 	justify-content: space-around;
+	align-items: center;
+	grid-area: buttons;
 }
 
-.user-placement{
-	display: grid;
-	gap: 1em;
+.profile .user-placement{
+	grid-area: placement;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	gap: var(--fs-medium);
+
+	padding: var(--fs-medium) calc(2 * var(--fs-medium));
 }
 
 .small-placement-card{
-	padding: var(--fs-medium);
-	border-radius: 1em;
 	background-color: var(--bg-color);
+	border-radius: var(--fs-medium);
+	width: 100%;
 	display: flex;
 	justify-content: space-around;
+	align-items: center;
+	padding: var(--fs-medium);
+
 }
 
-.small-placement-card .placement:after{
-	content: " Place";
+.profile .user-description{
+	grid-area: about;
+	padding: var(--fs-large);
+}
+
+.user-description .description-title{
+	margin-bottom: var(--fs-medium);
 }
