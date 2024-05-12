@@ -803,7 +803,8 @@ button:is(:focus, :hover)
 	display: grid;
 	justify-content: center;
 	align-content: center;
-	gap: 1em;
+	row-gap: var(--fs-medium);
+	column-gap: calc(2 * var(--fs-medium));
 	width: calc(100% - 2em);
 }
 
