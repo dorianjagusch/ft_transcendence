@@ -5,7 +5,7 @@ const Button = (className, textContent) => {
 	return buttonElement;
 };
 
-const buttonBar = (...buttons) => {
+const buttonBar = (buttons) => {
 	const buttonBar = document.createElement('div');
 	buttonBar.classList.add('button-bar');
 

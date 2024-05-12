@@ -14,7 +14,7 @@ export default class extends AView {
 		const user = {
 			id: 1,
 			username: 'Username',
-			img: '../../assets/img/default-user.png',
+			img: './static/assets/img/default-user.png',
 			description:
 				'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, aliquid! Reiciendis nobis, dolores optio eaque tempora debitis nulla vel magnam nam soluta quas doloribus sit odit eligendi architecto distinctio voluptas recusandae quos necessitatibus tenetur nisi po',
 		};
@@ -72,10 +72,8 @@ export default class extends AView {
 			score: 100,
 		};
 
-		userData = {
-			user: {
-				user,
-			},
+		const userData = {
+			user,
 			friendship: 'pending', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
 			placements: [
 				//[placementObj, ...] | null
@@ -97,11 +95,12 @@ export default class extends AView {
 			],
 		};
 
+		console.log(userData);
 		const main = document.querySelector('main');
-		main.classList.add('profile', userData.friendship);-
-		this.setTitle(`${userData.username}'s Profile`);
-		const userName = profileTitle(userData.username);
-		const userImg = profileImg(userData.img);
+		main.classList.add('profile', userData.friendship);
+		this.setTitle(`${userData.user.username}'s Profile`);
+		const userName = profileTitle(userData.user.username);
+		const userImg = profileImg(userData.user.img);
 
 		const buttons = [
 			{className: 'decline-btn', textContent: 'Decline'},
@@ -115,15 +114,14 @@ export default class extends AView {
 		userPlacement.classList.add('user-placement');
 
 		userData.placements.forEach((placement) => {
-			const smallPlacementCardElement = smallPlacementCard(
-				placement.game + ':',
-				placement.place.toString()
-			);
+			const smallPlacementCardElement = smallPlacementCard(placement);
 			userPlacement.appendChild(smallPlacementCardElement);
 		});
 
 		// Create user description element
-		const userDescription = profileDescription(userData.description);
+		const userDescription = profileDescription(userData.user.description);
+
+		console.log(userName, userImg, actionBar, userPlacement, userDescription);
 
 		this.updateMain(userName, userImg, actionBar, userPlacement, userDescription);
 	}

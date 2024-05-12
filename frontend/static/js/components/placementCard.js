@@ -20,7 +20,7 @@ const createCardImg = ({ img, place }) => {
 const createPlacement = ({ place }) => {
 	const placement = document.createElement('h3');
 	placement.classList.add('placement');
-	if (place % 10 == 1 && place % 100 !== 11) {
+	if (place % 10 === 1 && place % 100 !== 11) {
 		placement.textContent = `${place}st Place`;
 	} else if (place % 10 === 2 && place % 100 !== 12) {
 		placement.textContent = `${place}nd Place`;

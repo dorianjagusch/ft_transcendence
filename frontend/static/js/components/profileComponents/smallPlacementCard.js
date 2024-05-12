@@ -1,16 +1,21 @@
 import { createPlacement } from "../placementCard.js";
 
-const smallPlacementCard = (placement) => {
-	const smallPlacementCard1 = document.createElement('div');
-	smallPlacementCard1.classList.add('small-placement-card');
-	const game1 = document.createElement('div');
-	game1.classList.add('game');
-	game1.textContent = 'Pong:';
-	const placement1 = document.createElement('div');
-	placement1.classList.add('placement');
-	placement1.textContent = createPlacement(placement);
-	smallPlacementCard1.appendChild(game1);
-	smallPlacementCard1.appendChild(placement1);
+const smallPlacementCard = (placementData) => {
+	const smallPlacementCard = document.createElement('div');
+	smallPlacementCard.classList.add('small-placement-card');
+
+	const gameName = document.createElement('div');
+	gameName.classList.add('game');
+	gameName.textContent = placementData.game + ':';
+
+	const placementField = document.createElement('div');
+	placementField.classList.add('placement');
+	placementField.textContent = createPlacement(placementData).textContent;
+
+	smallPlacementCard.appendChild(gameName);
+	smallPlacementCard.appendChild(placementField);
+
+	return smallPlacementCard;
 };
 
 export default smallPlacementCard;
