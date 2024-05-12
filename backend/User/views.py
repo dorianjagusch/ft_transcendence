@@ -1,7 +1,6 @@
 from functools import partial
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth import authenticate, login
 from .models import User
@@ -14,7 +13,7 @@ class UserListView(APIView):
 	def get(self, request):
 		users = User.objects.all()
 		serializer = UserOutputSerializer(users, many=True)
-		return JsonResponse({"users": serializer.data})
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
 		inputSerializer = UserInputSerializer(data=request.data)
@@ -84,7 +83,7 @@ class UserAdminDetailsView(APIView):
 	def get(self, request):
 		admins = User.objects.filter(is_superuser=True)
 		serializer = UserOutputSerializer(admins, many=True)
-		return JsonResponse({"admins": serializer.data})
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
 		inputSerializer = UserInputSerializer(data=request.data)
