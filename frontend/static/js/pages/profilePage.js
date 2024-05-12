@@ -90,7 +90,7 @@ export default class extends AView {
 
 		const userData = {
 			user,
-			friendship: 'not-friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
+			friendship: 'friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
 			placements: [
 				//[placementObj, ...] | null
 				placementObj1,
