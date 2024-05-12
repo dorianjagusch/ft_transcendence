@@ -19,10 +19,86 @@ export default class extends AView {
 				'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, aliquid! Reiciendis nobis, dolores optio eaque tempora debitis nulla vel magnam nam soluta quas doloribus sit odit eligendi architecto distinctio voluptas recusandae quos necessitatibus tenetur nisi po',
 		};
 
+		const statObj1 = {
+			game: 'Pong',
+			stats: {
+				highscore: 100,
+				gamesPlayed: 10,
+				gamesWon: 5,
+			},
+		};
+		const statObj2 = {
+			game: 'Game2',
+			stats: {
+				highscore: 100,
+				gamesPlayed: 10,
+				gamesWon: 5,
+			},
+		};
+
+		const placementObj1 = {
+			game: 'Pong',
+			place: 1,
+		};
+
+		const placementObj2 = {
+			game: 'Game2',
+			place: 101,
+		};
+
+		const historyObj1 = {
+			game: 'Pong',
+			date: '2021-01-01',
+			score: 100,
+		};
+		const historyObj2 = {
+			game: 'Pong',
+			date: '2021-01-02',
+			score: 100,
+		};
+		const historyObj3 = {
+			game: 'Game2',
+			date: '2021-01-03',
+			score: 100,
+		};
+		const historyObj4 = {
+			game: 'Pong',
+			date: '2021-01-04',
+			score: 100,
+		};
+		const historyObj5 = {
+			game: 'Game2',
+			date: '2021-01-05',
+			score: 100,
+		};
+
+		userData = {
+			user: {
+				user,
+			},
+			friendship: 'pending', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
+			placements: [
+				//[placementObj, ...] | null
+				placementObj1,
+				placementObj2,
+			],
+			stats: [
+				// [statObj, ...] | null
+				statObj1,
+				statObj2,
+			],
+			playHistory: [
+				//[historyObj, ...] | null
+				historyObj1,
+				historyObj2,
+				historyObj3,
+				historyObj4,
+				historyObj5,
+			],
+		};
 
 		const main = document.querySelector('main');
-		main.classList.add('profile', userData.friendship);
-
+		main.classList.add('profile', userData.friendship);-
 		this.setTitle(`${userData.username}'s Profile`);
 		const userName = profileTitle(userData.username);
 		const userImg = profileImg(userData.img);
