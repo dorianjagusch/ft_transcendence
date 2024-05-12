@@ -8,7 +8,7 @@ const createStatLine = (className, label, value, afterText = '') => {
 	span.textContent = value;
 	line.appendChild(span);
 	line.textContent += afterText;
-	
+
 	return line;
 };
 

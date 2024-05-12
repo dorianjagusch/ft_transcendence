@@ -1,4 +1,9 @@
 const scrollContainer = (elements, callback, orientation = 'row') => {
+
+	if (!elements) {
+		return;
+	}
+
 	const outerScroller = document.createElement('section');
 	outerScroller.classList.add('scroll-container');
 

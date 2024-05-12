@@ -1,4 +1,5 @@
 import AView from './AView.js';
+import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
 import buttonBar from '../components/profileComponents/buttonBar.js';
 import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
@@ -94,7 +95,7 @@ export default class extends AView {
 
 		const userData = {
 			user,
-			friendship: 'friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
+			friendship: 'not-friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
 			placements: [
 				//[placementObj, ...] | null
 				placementObj1,
@@ -125,15 +126,17 @@ export default class extends AView {
 		const actionBar = buttonBar(buttons);
 
 		const userStats = scrollContainer(
-			userData.stats,
+			null, // userData.stats,
 			profileStats, "row");
-		userStats.classList.add('play-stats');
+		userStats?.classList.add('play-stats');
+
 		const userHistory = scrollContainer(
-			userData.playHistory,
+			null, // userData.playHistory,
 			profilePlayHistory, "col");
-		userHistory.classList.add('play-history');
-		const userPlacement = scrollContainer(userData.placements, smallPlacementCard, "col");
-		userPlacement.classList.add('user-placement');
+		userHistory?.classList.add('play-history');
+
+		const userPlacement = arrayToElementsList(userData.placements, smallPlacementCard, "col");
+		userPlacement?.classList.add('user-placement');
 		const userDescription = profileDescription(userData.user.description);
 
 		this.updateMain(
@@ -147,3 +150,17 @@ export default class extends AView {
 		);
 	}
 }
+
+
+
+// TODO: Implement the profile page view
+//	Current issue is that the arraytoElementsList function is not working as expected
+//		- The function is having issues with some weird HTML compatibility thing
+
+// 1. fix that
+// 2. The friend view is not applaying the right styling when history and stuff are added.
+// 3. Set up event handler for friend request buttons
+// 4. Set up event handler for accept/decline friend request buttons
+// 5. Set up event handler for cancel friend request buttons
+// 6. Set up event handler for unfriend buttons
+// 7. Set up event handler for invite to game buttons

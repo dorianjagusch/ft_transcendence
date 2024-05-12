@@ -910,7 +910,6 @@ button:is(:focus, :hover)
 	margin-bottom: var(--fs-medium);
 }
 
-
 .stat-list{
 	grid-auto-columns: 48%;
 }
