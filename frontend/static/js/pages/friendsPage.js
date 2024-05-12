@@ -19,7 +19,7 @@ export default class extends AView {
 	async getHTML() {
 		const friendService = new FriendService();
 		let friends = [];
-		friendService.getAllRequest()
+		friendService.getAllRequest('Accepted')
 		.then(friendsResponse => {
 			friendsResponse.forEach(element => {
 				let status = 'offline';
