@@ -95,7 +95,6 @@ export default class extends AView {
 			],
 		};
 
-		console.log(userData);
 		const main = document.querySelector('main');
 		main.classList.add('profile', userData.friendship);
 		this.setTitle(`${userData.user.username}'s Profile`);
@@ -120,8 +119,6 @@ export default class extends AView {
 
 		// Create user description element
 		const userDescription = profileDescription(userData.user.description);
-
-		console.log(userName, userImg, actionBar, userPlacement, userDescription);
 
 		this.updateMain(userName, userImg, actionBar, userPlacement, userDescription);
 	}
