@@ -16,7 +16,7 @@ async function postLogin({ username, password }) {
 			const newData = response.json();
 			return newData;
 		} else {
-			throw new Error(`${response.status}`);
+			throw new Error(response.statusText);
 		}
 	})
 }

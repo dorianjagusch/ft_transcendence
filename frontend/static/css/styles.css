@@ -796,7 +796,6 @@ button:is(:focus, :hover)
 	transform: translateY(-3rem) translateZ(2rem);
 }
 
-
 .profile
 {
 	display: grid;
