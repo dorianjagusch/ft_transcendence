@@ -32,7 +32,6 @@ const RegisterForm = () => {
 	form.appendChild(passwordField);
 	form.appendChild(repeatPasswordField);
 	form.appendChild(linkElement);
-	form.linkElement = false;
 	form.appendChild(registerButton);
 
 	return form;
