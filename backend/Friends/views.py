@@ -3,6 +3,7 @@ from functools import partial
 from urllib import request
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import status
 from django.http import JsonResponse
 
@@ -15,12 +16,6 @@ from User.serializers import UserOutputSerializer
 from .models import Friends
 from .serializers import FriendsSerializer
 
-# rm later
-import sys
-
-from django.utils.decorators import method_decorator
-from shared_utilities.decorators import must_be_authenticated, must_be_body_user_id
-
 class FriendsListView(APIView):
     @method_decorator(must_be_authenticated)
     def get(self, request):
@@ -29,9 +24,10 @@ class FriendsListView(APIView):
         serializer = UserOutputSerializer(friends, many=True)
         return JsonResponse({"friends" : serializer.data})
 
+    @method_decorator(must_be_authenticated)
     @method_decorator(must_be_body_user_id)
+    @method_decorator(valid_serializer_in_body(FriendsSerializer, partial=True))
     def post(self, request):
-        print("in VIEW FriendsListView", file=sys.stderr)
         serializer = FriendsSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -39,7 +35,9 @@ class FriendsListView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @method_decorator(must_be_authenticated)
     @method_decorator(must_be_body_user_id)
+    @method_decorator(valid_serializer_in_body(FriendsSerializer, partial=True))
     def delete(self, request):
         user_id = request.data.get('user_id')
         friend_id = request.data.get('friend_id')
