@@ -28,7 +28,7 @@ export default class extends AView {
 		const username = document.getElementById('username').value;
 		const password = document.getElementById('current-password').value;
 		if (username === '' || password === '') {
-			alert('Please enter both username and password');
+			this.notify('Please enter both username and password', "error");
 			return;
 		}
 		const toSend = { username, password };

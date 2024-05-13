@@ -25,11 +25,7 @@ all: up
 
 up:
 	${DOCKER_COMPOSE} up --build --detach
-	@echo "${GREEN}${NAME} is up!${C_RESET}"
-
-down:
-	${DOCKER_COMPOSE} down --rmi all -v
-	@echo "${GREEN}${NAME} is down!${C_RESET}"
+	@echo "${GREEN}${NAME} is up!${C_RESET}"-
 
 start:
 	${DOCKER_COMPOSE} start
@@ -39,11 +35,12 @@ stop:
 	${DOCKER_COMPOSE} stop
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
-clean: down
+clean: stop
+	${DOCKER_COMPOSE} down -v
+	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
 
-# change "docker system prune" later to something that only affects the stuff involving the project
 fclean: clean
-	docker system prune
+	${DOCKER_COMPOSE} down --rmi all --volumes --remove-orphans
 
 re: fclean all
 
