@@ -4,16 +4,13 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth import authenticate, login
+from django.utils.decorators import method_decorator
+
 from .models import User
 from .serializers import UserOutputSerializer, UserInputSerializer
-
-from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated, \
 	 								must_be_url_user, \
 									valid_serializer_in_body
-
-# rm later
-import sys
 
 class UserListView(APIView):
 	def get(self, request):

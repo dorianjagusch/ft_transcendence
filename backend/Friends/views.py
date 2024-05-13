@@ -6,15 +6,15 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from django.http import JsonResponse
-
 from django.utils.decorators import method_decorator
+
+from User.serializers import UserOutputSerializer
+from .models import Friends
+from .serializers import FriendsSerializer
 from shared_utilities.decorators import must_be_authenticated, \
                                     must_be_body_user_id, \
                                     valid_serializer_in_body
-from User.serializers import UserOutputSerializer
 
-from .models import Friends
-from .serializers import FriendsSerializer
 
 class FriendsListView(APIView):
     @method_decorator(must_be_authenticated)
