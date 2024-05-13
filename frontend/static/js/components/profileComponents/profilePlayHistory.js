@@ -1,7 +1,13 @@
 const profilePlayHistory = (history) => {
 
+	if (!history){
+		return null;
+	}
+	if (history.length === 0){
+		return document.createElement('p').textContent = 'No play history to display';
+	}
 	const playHistoryItem = document.createElement('li');
-	playHistoryItem.classList.add('play-history-item');
+	playHistoryItem.classList.add('play-history-item', 'bg-primary');
 
 	const dateObj = new Date(history.date);
 	const dateString = dateObj.toDateString();

@@ -6,6 +6,9 @@ const Button = (className, textContent) => {
 };
 
 const buttonBar = (buttons) => {
+	if (!buttons){
+		return;
+	}
 	const buttonBar = document.createElement('div');
 	buttonBar.classList.add('button-bar');
 

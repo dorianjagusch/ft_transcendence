@@ -162,13 +162,31 @@ h1{
 	margin: 0;
 }
 
+.col-split-container:first-child{
+	flex: 1;
+}
+
+.row-scroll,
 .col-scroll{
 	display: grid;
 	grid-gap: 1.5em;
+	margin: 0;
+}
+
+.col-scroll{
+	grid-auto-flow: row;
 	grid-auto-rows: 28%;
 
 	overflow-y: scroll;
 	overscroll-behavior-block: contain;
+}
+
+.row-scroll{
+	grid-auto-flow: column;
+	grid-auto-columns: 28%;
+
+	overflow-x: scroll;
+	overscroll-behavior-inline: contain;
 }
 
 .snaps-block {
@@ -179,22 +197,6 @@ h1{
 .snaps-block > * {
 	scroll-snap-align: start;;
 }
-
-
-.col-split-container:first-child{
-	flex: 1;
-}
-
-.row-scroll{
-	display: grid;
-	grid-gap: 1.5em;
-	grid-auto-flow: column;
-	grid-auto-columns: 28%;
-
-	overflow-x: scroll;
-	overscroll-behavior-inline: contain;
-}
-
 
 .snaps-inline {
 	scroll-snap-type: inline mandatory;
@@ -799,13 +801,14 @@ button:is(:focus, :hover)
 .profile
 {
 	margin: 0 auto;
-	padding-top: 2em;
 	display: grid;
 	justify-content: center;
 	align-content: center;
 	row-gap: var(--fs-medium);
 	column-gap: calc(2 * var(--fs-medium));
 	width: calc(100% - 2em);
+	margin-bottom: var(--fs-large);
+	grid-template-columns: 1fr 1fr 1fr;
 }
 
 .profile *:not(button, .profile-description){
@@ -813,14 +816,13 @@ button:is(:focus, :hover)
 	align-items: center;;
 }
 
-.profile.friends {
+.profile.friend {
 	grid-template-areas:
     "username placement play-history"
     "profile-img placement play-history"
     "profile-img play-stats play-stats"
     "about play-stats play-stats"
     "about play-stats play-stats";
-	grid-template-rows: 1fr 2r 2fr 2fr 2fr;
 }
 
 .profile:not(.friend) {
@@ -829,13 +831,13 @@ button:is(:focus, :hover)
     "profile-img placement placement"
     "profile-img about about"
     "buttons about about";
-  grid-template-rows: 1fr 2fr 2fr 2fr;
 }
 
 .profile > *:not(.button-bar){
 	padding: 1em;
 	background-color: var(--fg-color);
 	border-radius: 2em;
+	margin-inline: 0;
 }
 
 .profile .profile-title{
@@ -887,7 +889,6 @@ button:is(:focus, :hover)
 	justify-content: space-around;
 	align-items: center;
 	padding: var(--fs-medium);
-
 }
 
 .profile .user-description{
@@ -899,49 +900,77 @@ button:is(:focus, :hover)
 	margin-bottom: var(--fs-medium);
 }
 
+.profile .play-history{
+	grid-area: play-history;
+	display: grid;
+	align-items: center;
+	height: 100%;
 
-.play-stats{
+}
+
+.profile .history-list{
+    grid-auto-rows: 21%;
+    gap: var(--fs-small);
+    display: grid;
+}
+
+.profile .play-history-item{
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    grid-template-rows: subgrid;
+    justify-content: space-around;
+    align-items: center;
+    gap: calc(0.5 * var(--fs-medium));
+
+    border-radius: var(--fs-small);
+    padding: var(--fs-small);
+}
+
+.profile .play-history-item > *{
+	font-size: var(--fs-small);
+}
+
+.profile .play-stats{
 	grid-area: play-stats;
 	gap: var(--fs-medium);
 }
 
-.play-stats h3{
+.profile .play-stats h3{
 	text-align: center;
 	margin-bottom: var(--fs-medium);
 }
 
-.stat-list{
+.profile .stat-list{
 	grid-auto-columns: 48%;
+	height: 100%;
 }
 
-.stat-item{
+.profile .stat-item{
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr 1fr 2fr;
 	align-items: center;
 	justify-content: center;
+	height: 100%;
 	gap: var(--fs-medium);
 
 	border-radius: var(--fs-medium);
 	padding: var(--fs-medium);
 }
 
-.game-name{
+.profile .game-name{
 	grid-column: span 2;
 }
 
-.highscore{
+.profile .highscore{
 	grid-column: span 2;
 }
 
-.play-history{
-	grid-area: play-history;
-}
 
-.highscore,
-.wins,
-.games-played{
-	border: 1px solid white;
+.profile .highscore,
+.profile .wins,
+.profile .games-played{
+	border: 2px solid white;
 	padding: var(--fs-medium) calc(1.5 * var(--fs-medium));
 	border-radius: var(--fs-medium);
 }

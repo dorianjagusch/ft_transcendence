@@ -1,4 +1,4 @@
-const scrollContainer = (elements, callback, orientation = 'row') => {
+const scrollContainer = (elements, callback, orientation = 'row', ...classNames) => {
 
 	if (!elements) {
 		return;
@@ -7,8 +7,10 @@ const scrollContainer = (elements, callback, orientation = 'row') => {
 	const outerScroller = document.createElement('section');
 	outerScroller.classList.add('scroll-container');
 
-	const innerScroller = document.createElement('div');
-	innerScroller.classList.add('snaps-inline', `${orientation}-scroll`);
+	const innerScroller = document.createElement('ul');
+	innerScroller.classList.add('snaps-inline',
+		`${orientation}-scroll`,
+		...classNames);
 
 	elements.forEach((element) => {
 		const currentCard = callback(element);

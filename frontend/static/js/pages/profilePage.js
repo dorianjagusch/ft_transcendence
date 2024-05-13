@@ -18,7 +18,7 @@ export default class extends AView {
 	selectButtons(relationship) {
 		switch (relationship) {
 			case 'friend':
-				return [];
+				return null;
 			case 'not-friend':
 				return [{className: 'accept-btn', textContent: 'Add Friend'}];
 			case 'pending-sent':
@@ -50,6 +50,15 @@ export default class extends AView {
 		};
 		const statObj2 = {
 			game: 'Game2',
+			stats: {
+				highscore: 100,
+				gamesPlayed: 10,
+				gamesWon: 5,
+			},
+		};
+
+		const statObj3 = {
+			game: 'Game3',
 			stats: {
 				highscore: 100,
 				gamesPlayed: 10,
@@ -95,7 +104,7 @@ export default class extends AView {
 
 		const userData = {
 			user,
-			friendship: 'not-friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
+			friendship: 'friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
 			placements: [
 				//[placementObj, ...] | null
 				placementObj1,
@@ -105,6 +114,7 @@ export default class extends AView {
 				// [statObj, ...] | null
 				statObj1,
 				statObj2,
+				statObj3,
 			],
 			playHistory: [
 				//[historyObj, ...] | null
@@ -116,27 +126,32 @@ export default class extends AView {
 			],
 		};
 
+		const friendship = userData.friendship;
+
 		const main = document.querySelector('main');
-		main.classList.add('profile', userData.friendship);
+		main.classList.add('profile', friendship);
 		this.setTitle(`${userData.user.username}'s Profile`);
 		const userName = profileTitle(userData.user.username);
 		const userImg = profileImg(userData.user.img);
 
-		const buttons = this.selectButtons(userData.friendship);
+		const buttons = this.selectButtons(friendship);
 		const actionBar = buttonBar(buttons);
-
-		const userStats = scrollContainer(
-			null, // userData.stats,
-			profileStats, "row");
-		userStats?.classList.add('play-stats');
-
-		const userHistory = scrollContainer(
-			null, // userData.playHistory,
-			profilePlayHistory, "col");
-		userHistory?.classList.add('play-history');
-
 		const userPlacement = arrayToElementsList(userData.placements, 'user-placement', smallPlacementCard);
 		const userDescription = profileDescription(userData.user.description);
+
+		const userStats = friendship === "friend"
+			? scrollContainer(
+				userData.stats,
+				profileStats, "row", "stat-list")
+			: null;
+		userStats?.classList.add('play-stats');
+
+		const userHistory = friendship === "friend"
+			? scrollContainer(
+				userData.playHistory,
+				profilePlayHistory, "col", "history-list")
+			: null;
+		userHistory?.classList.add('play-history');
 
 		this.updateMain(
 			userName,
@@ -153,11 +168,7 @@ export default class extends AView {
 
 
 // TODO: Implement the profile page view
-//	Current issue is that the arraytoElementsList function is not working as expected
-//		- The function is having issues with some weird HTML compatibility thing
 
-// 1. fix that
-// 2. The friend view is not applaying the right styling when history and stuff are added.
 // 3. Set up event handler for friend request buttons
 // 4. Set up event handler for accept/decline friend request buttons
 // 5. Set up event handler for cancel friend request buttons
