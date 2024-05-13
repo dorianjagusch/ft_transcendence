@@ -135,8 +135,7 @@ export default class extends AView {
 			profilePlayHistory, "col");
 		userHistory?.classList.add('play-history');
 
-		const userPlacement = arrayToElementsList(userData.placements, smallPlacementCard, "col");
-		userPlacement?.classList.add('user-placement');
+		const userPlacement = arrayToElementsList(userData.placements, 'user-placement', smallPlacementCard);
 		const userDescription = profileDescription(userData.user.description);
 
 		this.updateMain(
