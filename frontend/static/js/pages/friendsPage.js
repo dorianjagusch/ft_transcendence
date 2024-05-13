@@ -10,37 +10,37 @@ export default class extends AView {
 		this.setTitle('Friends');
 	}
 
+	createFriendScroller(friendsArray, card, tokens, identifier) {
+		let scroller = scrollContainer(friendsArray, card);
+		scroller.classList.add(tokens, identifier);
+		return scroller;
+	}
+
 	async getHTML() {
-		// TODO: Use the actual response
-		// var friendService = new FriendService();
-		//var friendResponse = friendService.getAllRequest()
-		//.catch((error) => {
-		//	console.error(error);
-		//});
+		const friendService = new FriendService();
+		let friends = [];
+		friendService.getAllRequest()
+		.then(friendsResponse => {
+			friendsResponse.forEach(element => {
+				let status = 'offline';
+				if (element.is_online) {
+					status = 'online';
+				}
 
-		const fakeFriendsResponse = [
-			{ id: 1, username: "meri" },
-			{ id: 2, username: "azar" },
-			{ id: 3, username: "jose" }
-		  ];
-
-		const friends = [];
-		fakeFriendsResponse.forEach(element => {
-			friends.push({
-				id: element.id,
-				username: element.username,
-				img: "https://unsplash.it/200/200",
-				status: "online"
+				friends.push({
+					id: element.id,
+					username: element.username,
+					img: 'https://unsplash.it/200/200',
+					status: status
+				});
 			});
-		});
-		// const friends = Call friendsAPI	to	get	friends in a json array
 
-		const friendScroller = scrollContainer(friends, friendCard);
-		friendScroller.classList.add('friends', 'bg-secondary');
+			console.log(friends);
 
-		const requestScroller = scrollContainer(friends, requestCard);
-		requestScroller.classList.add('friend-request', 'bg-secondary');
-
-		this.updateMain(friendScroller, requestScroller);
+			const friendScroller = this.createFriendScroller(friends, friendCard, 'friends', 'bg-secondary');
+			// TODO: Add functionality for pending / possible friendships
+			const requestScroller = this.createFriendScroller(friends, requestCard, 'friend-request', 'bg-secondary');
+			this.updateMain(friendScroller, requestScroller);
+		})
 	}
 }
