@@ -13,12 +13,22 @@ export default class extends AForm {
 		const registerButton = document.createElement('button');
 		registerButton.classList.add('primary-btn');
 		registerButton.textContent = 'Sign up';
+
+		const linkElement = document.createElement('a');
+		linkElement.id = 'privacyPolicy';
+		linkElement.href = 'https://example.com/privacy-policy';
+		linkElement.textContent = 'Privacy Policy';
+		linkElement.target = '_blank';
+		linkElement.rel = 'noopener noreferrer';
+
 		this.appendToForm(
 			userNameField,
 			passwordField,
 			repeatPasswordField,
+			linkElement,
 			registerButton
 		);
+
 		return this.getForm();
 	}
 }
