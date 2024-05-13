@@ -21,8 +21,6 @@ class UserListView(APIView):
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
 	def post(self, request):
 
-		print("in UserListView POST", file=sys.stderr)
-
 		inputSerializer = UserInputSerializer(data=request.data)
 		if not inputSerializer.is_valid():
 			errors = inputSerializer.errors
