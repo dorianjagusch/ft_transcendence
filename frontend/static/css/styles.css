@@ -937,3 +937,11 @@ button:is(:focus, :hover)
 .play-history{
 	grid-area: play-history;
 }
+
+.highscore,
+.wins,
+.games-played{
+	border: 1px solid white;
+	padding: var(--fs-medium) calc(1.5 * var(--fs-medium));
+	border-radius: var(--fs-medium);
+}
