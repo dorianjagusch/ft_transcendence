@@ -16,7 +16,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 									valid_serializer_in_body
 
 class FriendsListView(APIView):
-	# @method_decorator(must_be_authenticated)
+	@method_decorator(must_be_authenticated)
 	def get(self, request):
 		friendship_status = request.query_params.get('friendship_status')
 		if not friendship_status or friendship_status == FriendShipStatus.NONE.value:
@@ -26,9 +26,9 @@ class FriendsListView(APIView):
 		serializer = UserOutputSerializer(friends, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
-	#@method_decorator(must_be_authenticated)
-	#@method_decorator(must_be_body_user_id)
-	#@method_decorator(valid_serializer_in_body(FriendsSerializer, partial=True))
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_body_user_id)
+	@method_decorator(valid_serializer_in_body(FriendsSerializer, partial=True))
 	def post(self, request):
 		serializer = FriendsSerializer(data=request.data, partial=True)
 		if not serializer.is_valid():
