@@ -14,7 +14,7 @@ export default class {
 		navigateTo(path);
 	}
 
-	async getHTML() {
+	getHTML() {
 		return;
 	}
 

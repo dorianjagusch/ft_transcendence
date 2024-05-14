@@ -13,7 +13,7 @@ class FriendsListView(APIView):
     def get(self, request):
         #if not request.user.is_authenticated:
         #    return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
-        friendship_status = request.GET.get('friendship_status')
+        friendship_status = request.query_params.get('friendship_status')
         if not friendship_status or friendship_status == FriendShipStatus.NONE.value:
             return Response({"message": "Expected to get parameter 'friendship_status'"},status=status.HTTP_400_BAD_REQUEST)
         user_id = 1

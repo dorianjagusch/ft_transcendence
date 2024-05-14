@@ -5,14 +5,17 @@ from User.models import User
 class FriendsManager(models.Manager):
     def get_user_friends(self, user_id, friendship_status):
         user_friends = self.filter(user_id=user_id).values_list('friend_id', flat=True)
-        print(user_friends)
         friends_of_user = self.filter(friend_id=user_id).values_list('user_id', flat=True)
-        if friendship_status == FriendShipStatus.REQUESTPENDING.value:
+        friends_to_get = []
+        if friendship_status == FriendShipStatus.PENDINGSENT.value:
             friends_to_get = set(user_friends) - set(friends_of_user)
-        elif friendship_status == FriendShipStatus.WAITINGFORYOUACCEPTANCE.value:
+        elif friendship_status == FriendShipStatus.PENDINGRECEIVED.value:
             friends_to_get = set(friends_of_user) - set(user_friends)
-        elif friendship_status == FriendShipStatus.ACCEPTED.value:
+        elif friendship_status == FriendShipStatus.FRIEND.value:
             friends_to_get = set(friends_of_user) & set(user_friends)
+        else:
+            all_users = User.objects.exclude(id=user_id)
+            friends_to_get = set(all_users.values_list('id', flat=True)) - (set(user_friends) | set(friends_of_user))
         friends = User.objects.filter(id__in=friends_to_get)
         return friends
 

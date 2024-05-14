@@ -2,6 +2,7 @@ import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
 import { scrollContainer } from '../components/scrollContainer.js';
 import FriendService from '../services/friendService.js';
+import FRIENDSHIPSTATUS from '../constants.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -16,31 +17,36 @@ export default class extends AView {
 		return scroller;
 	}
 
-	async getHTML() {
+	getHTML() {
 		const friendService = new FriendService();
-		let friends = [];
-		friendService.getAllRequest('Accepted')
-		.then(friendsResponse => {
-			friendsResponse.forEach(element => {
-				let status = 'offline';
-				if (element.is_online) {
-					status = 'online';
-				}
 
-				friends.push({
-					id: element.id,
-					username: element.username,
-					img: 'https://unsplash.it/200/200',
-					status: status
-				});
-			});
+		Promise.all([
+			friendService.getAllRequest(FRIENDSHIPSTATUS.FRIEND),
+			friendService.getAllRequest(FRIENDSHIPSTATUS.PENDINGRECEIVED)
+		])
+		.then(([acceptedResponse, pendingResponse]) => {
+			let acceptedFriends = acceptedResponse.map(element => ({
+				id: element.id,
+				username: element.username,
+				img: 'https://unsplash.it/200/200',
+				status: element.is_online ? 'online' : 'offline'
+			}));
+			let pendingFriends = pendingResponse.map(element => ({
+				id: element.id,
+				username: element.username,
+				img: 'https://unsplash.it/200/200',
+				status: element.is_online ? 'online' : 'offline'
+			}));
 
-			console.log(friends);
+			// Create friend and request scrollers
+			const friendScroller = this.createFriendScroller(acceptedFriends, friendCard, 'friends', 'bg-secondary');
+			const requestScroller = this.createFriendScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
 
-			const friendScroller = this.createFriendScroller(friends, friendCard, 'friends', 'bg-secondary');
-			// TODO: Add functionality for pending / possible friendships
-			const requestScroller = this.createFriendScroller(friends, requestCard, 'friend-request', 'bg-secondary');
+			// Update main with friend and request scrollers
 			this.updateMain(friendScroller, requestScroller);
+		})
+		.catch(error => {
+			console.error('Error:', error);
 		})
 	}
 }
