@@ -1,5 +1,7 @@
 import { router, navigateTo } from './router.js';
 
+sessionStorage.setItem('isLoggedIn', false);
+
 window.addEventListener('popstate', router);
 
 document.addEventListener('DOMContentLoaded', () => {

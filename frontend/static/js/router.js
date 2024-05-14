@@ -32,12 +32,21 @@ const router = async () => {
 	let match = potentialMatches.find(
 		(potentialMatch) => potentialMatch.result !== null
 	);
-	console.log(match);
 	if (!match) {
 		match = {
 			route: routes[0],
 			result: [location.pathname],
 		};
+	}
+
+	const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
+	const allowedPaths = ['/login', '/register', '/'];
+
+	if (!isLoggedIn && !allowedPaths.includes(match.route.path)) {
+		navigateTo('/login');
+	}
+	else if (isLoggedIn && allowedPaths.includes(match.route.path)) {
+		navigateTo('/dashboard');
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
