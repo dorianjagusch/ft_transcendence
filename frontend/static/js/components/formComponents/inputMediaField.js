@@ -19,4 +19,4 @@ const InputMediaField = (type, label, id) => {
 	return mediaItem;
 };
 
-export { InputMediaField };
+export default InputMediaField;
