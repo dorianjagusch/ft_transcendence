@@ -8,9 +8,6 @@ from rest_framework.views import APIView
 
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
-# rm later
-import sys
-
 def must_be_authenticated(view_func):
     @wraps(view_func)
     def wrapper(*args, **kwargs):
@@ -19,7 +16,6 @@ def must_be_authenticated(view_func):
         if not request.user.is_authenticated:
             return HttpResponseForbidden("You must be logged in to access this resource.")
 
-        # Call the original view function if the checks pass
         return view_func(*args, **kwargs)
     return wrapper
 
@@ -28,16 +24,13 @@ def must_be_url_user(view_func):
     def wrapper(*args, **kwargs):
         request = args[0] if args else None
     
-        # Allow superusers to bypass the ownership check
         if request.user.is_superuser:
             return view_func(*args, **kwargs)
 
         object_owner_id = kwargs.get('user_id')  # URL parameter
         if request.user.id != object_owner_id:
-
             return HttpResponseForbidden("You are not authorized to modify this resource.")
 
-        # Call the original view function if the checks pass
         return view_func(*args, **kwargs)
     return wrapper
 
@@ -52,7 +45,6 @@ def must_be_body_user_id(view_func):
         except KeyError:
             return HttpResponseForbidden("Missing 'user_id' in request data.")
 
-		# Allow superusers to bypass the ownership check
         if request.user.is_superuser:
             return view_func(*args, **kwargs)
 
@@ -69,7 +61,6 @@ def valid_serializer_in_body(serializer_class, **kwargs):
         def wrapper(*args, **kwargs):
             request = args[0] if args else None
 
-           # Dynamically create a subclass of the serializer that ignores unique and unique together constraints
             class IgnoreUniqueConstraintsSerializer(serializer_class):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
