@@ -8,7 +8,7 @@ class FriendsManager(models.Manager):
     def get_user_friends(self, user_id):
         user_friends = self.filter(user_id=user_id).values_list('friend_id', flat=True)
         friends_of_user = self.filter(friend_id=user_id).values_list('user_id', flat=True)
-        actual_user_friends = set(user_friends) & set(friends_of_user)
+        actual_user_friends = set(user_friends) | set(friends_of_user)
 
         friends = User.objects.filter(id__in=actual_user_friends)
         return friends
