@@ -29,7 +29,9 @@ export default class {
 		const main = document.querySelector('main');
 		main.innerHTML = '';
 		elements.forEach((element) => {
-			main.appendChild(element);
+			if (element){
+				main.appendChild(element);
+			}
 		});
 	}
 }
