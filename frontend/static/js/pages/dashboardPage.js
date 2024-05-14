@@ -11,6 +11,8 @@ export default class extends AView {
 	async getHTML() {
 		const modalContainer = Modal("completeProfile", "bg-secondary", completeProfileForm);
 
-		return modalContainer;
+		this.updateMain(
+			modalContainer
+		);
 	}
 }

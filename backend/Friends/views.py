@@ -4,17 +4,23 @@ from urllib import request
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.request import Request
 from django.http import JsonResponse
 
 from User.serializers import UserOutputSerializer
 
 from .models import Friends
 from .serializers import FriendsSerializer
+import sys
 
 class FriendsListView(APIView):
     def get(self, request):
+        print("Entering get", file=sys.stderr)
+        print(request.user, file=sys.stderr)
         if not request.user.is_authenticated:
+            print("Auth error", file=sys.stderr)
             return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
+        print("Passed authentication", file=sys.stderr)
         user_id = request.user.id
         friends = Friends.objects.get_user_friends(user_id)
         serializer = UserOutputSerializer(friends, many=True)
