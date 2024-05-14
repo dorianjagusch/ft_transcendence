@@ -1,7 +1,7 @@
 import { createPlacement } from "../placementCard.js";
 
 const smallPlacementCard = (placementData) => {
-	const smallPlacementCard = document.createElement('div');
+	const smallPlacementCard = document.createElement('li');
 	smallPlacementCard.classList.add('small-placement-card');
 
 	const gameName = document.createElement('div');
