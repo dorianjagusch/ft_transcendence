@@ -10,6 +10,22 @@ export default class extends AView {
 		super(params);
 	}
 
+	selectButtons(relationship) {
+		switch (relationship) {
+			case 'friend':
+				return [];
+			case 'not-friend':
+				return [{className: 'accept-btn', textContent: 'Add Friend'}];
+			case 'pending-sent':
+				return [{className: 'decline-btn', textContent: 'Cancel Request'}];
+			case 'pending-received':
+				return [
+					{className: 'decline-btn', textContent: 'Decline'},
+					{className: 'accept-btn', textContent: 'Accept'},
+				];
+		}
+	}
+
 	async getHTML() {
 		const user = {
 			id: 1,
@@ -74,7 +90,7 @@ export default class extends AView {
 
 		const userData = {
 			user,
-			friendship: 'pending', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
+			friendship: 'not-friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
 			placements: [
 				//[placementObj, ...] | null
 				placementObj1,
@@ -101,11 +117,7 @@ export default class extends AView {
 		const userName = profileTitle(userData.user.username);
 		const userImg = profileImg(userData.user.img);
 
-		const buttons = [
-			{className: 'decline-btn', textContent: 'Decline'},
-			{className: 'accept-btn', textContent: 'Accept'},
-		];
-
+		const buttons = this.selectButtons(userData.friendship);
 		const actionBar = buttonBar(buttons);
 
 		// Create user placement element
