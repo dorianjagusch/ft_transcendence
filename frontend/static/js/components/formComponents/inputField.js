@@ -17,4 +17,4 @@ function InputField(type, label, id) {
 	return container;
 }
 
-export { InputField };
+export default InputField;

@@ -1,4 +1,4 @@
-const Modal = (type, background, formCallBack) => {
+const Modal = (type, background, Form) => {
 	const modalContainer = document.createElement('div');
 	modalContainer.classList.add('modal-container');
 
@@ -9,12 +9,13 @@ const Modal = (type, background, formCallBack) => {
 	header.classList.add('modal-title');
 	header.textContent = type;
 
-	const form = formCallBack();
+	const form = new Form();
+	const formElement = form.generateForm();
 
 	innerModal.appendChild(header);
-	innerModal.appendChild(form);
+	innerModal.appendChild(formElement);
 	modalContainer.appendChild(innerModal);
 	return modalContainer;
 };
 
-export { Modal };
+export default Modal;

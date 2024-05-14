@@ -12,6 +12,7 @@ class FriendService extends RequestService {
 	}
 
 	async getAllRequest(friendship_status) {
+		console.log(friendship_status)
 		return super.getAllRequest(`${backendURL.friendURL}?friendship_status=${friendship_status}`);
 	}
 

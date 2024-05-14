@@ -2,7 +2,7 @@ import { friendCard } from '../components/friendCard.js';
 import { requestCard } from '../components/requestCard.js';
 import { scrollContainer } from '../components/scrollContainer.js';
 import FriendService from '../services/friendService.js';
-import FRIENDSHIPSTATUS from '../constants.js';
+import constants from '../constants.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -21,8 +21,8 @@ export default class extends AView {
 		const friendService = new FriendService();
 
 		Promise.all([
-			friendService.getAllRequest(FRIENDSHIPSTATUS.FRIEND),
-			friendService.getAllRequest(FRIENDSHIPSTATUS.PENDINGRECEIVED)
+			friendService.getAllRequest(constants.FRIENDSHIPSTATUS.FRIEND),
+			friendService.getAllRequest(constants.FRIENDSHIPSTATUS.PENDINGRECEIVED)
 		])
 		.then(([acceptedResponse, pendingResponse]) => {
 			let acceptedFriends = acceptedResponse.map(element => ({

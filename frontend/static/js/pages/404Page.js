@@ -7,7 +7,8 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		const title404 = '<h2>Page not found</h2>';
+		const title404 = document.createElement('h2');
+		title404.innerText = 'Page not found';
 
 		this.updateMain(title404);
 	}
