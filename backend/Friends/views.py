@@ -3,28 +3,31 @@ from functools import partial
 from urllib import request
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import status
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 
 from User.serializers import UserOutputSerializer
-
 from .models import Friends
 from .serializers import FriendsSerializer
+from shared_utilities.decorators import must_be_authenticated, \
+                                    must_be_body_user_id, \
+                                    valid_serializer_in_body
+
 
 class FriendsListView(APIView):
+    @method_decorator(must_be_authenticated)
     def get(self, request):
-        if not request.user.is_authenticated:
-            return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
         user_id = request.user.id
         friends = Friends.objects.get_user_friends(user_id)
         serializer = UserOutputSerializer(friends, many=True)
         return JsonResponse({"friends" : serializer.data})
 
+    @method_decorator(must_be_authenticated)
+    @method_decorator(must_be_body_user_id)
+    @method_decorator(valid_serializer_in_body(FriendsSerializer, partial=True))
     def post(self, request):
-        if not request.user.is_authenticated:
-            return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
-        if request.user.id != request.data.get('user_id'):
-            return Response({"message": "Cannot access other user's data"},status=status.HTTP_403_FORBIDDEN)
         serializer = FriendsSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -32,12 +35,10 @@ class FriendsListView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @method_decorator(must_be_authenticated)
+    @method_decorator(must_be_body_user_id)
+    @method_decorator(valid_serializer_in_body(FriendsSerializer, partial=True))
     def delete(self, request):
-        if not request.user.is_authenticated:
-            return Response({"message": "User is not authenticated"},status=status.HTTP_401_UNAUTHORIZED)
-        if request.user.id != request.data.get('user_id'):
-            return Response({"message": "Cannot access other user's data"},status=status.HTTP_403_FORBIDDEN)
-
         user_id = request.data.get('user_id')
         friend_id = request.data.get('friend_id')
 
