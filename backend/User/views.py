@@ -91,6 +91,13 @@ class UserLoginView(APIView):
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
+class UserLogoutView(APIView):
+	@method_decorator(must_be_authenticated)
+	def post(self, request):
+		rotate_token(request)
+		logout(request)
+		return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
+
 # admin stuff, for debugging
 class UserAdminDetailsView(APIView):
 	def get(self, request):

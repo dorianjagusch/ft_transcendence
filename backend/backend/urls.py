@@ -21,6 +21,7 @@ from django.urls import path
 from User.views import UserDetailView, \
                         UserListView, \
                         UserLoginView, \
+                        UserLogoutView, \
                         UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
@@ -33,6 +34,7 @@ urlpatterns = [
 	path('users/', UserListView.as_view()),
 	path('users/<int:user_id>', UserDetailView.as_view()),
     path('login/', UserLoginView.as_view()),
+    path('login/', UserLogoutView.as_view()),
     path('admins/', UserAdminDetailsView.as_view()),
 
 
