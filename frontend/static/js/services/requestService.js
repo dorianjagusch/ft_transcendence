@@ -24,12 +24,16 @@ class RequestService {
 	}
 
 	async getRequest(url, id) {
-		const request = fetch(`${url}${id}`);
+		const request = fetch(`${url}${id}`, {
+			credentials: 'include',
+		});
 		return this.checkResponse(request);
 	}
 
 	async getAllRequest(url) {
-		const request = fetch(`${url}`);
+		const request = fetch(`${url}`, {
+			credentials: 'include',
+		});
 		return this.checkResponse(request);
 	}
 
@@ -38,6 +42,7 @@ class RequestService {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: jsonBody,
+			credentials: 'include',
 		});
 
 		return this.checkResponse(request);
@@ -48,6 +53,7 @@ class RequestService {
 			method: 'PUT',
 			headers: {'Content-Type': 'application/json'},
 			body: jsonBody,
+			credentials: 'include',
 		});
 
 		return this.checkResponse(request);
@@ -57,6 +63,7 @@ class RequestService {
 		const request = fetch(`${url}${id}`, {
 			method: 'DELETE',
 			headers: {'Content-Type': 'application/json'},
+			credentials: 'include',
 		});
 
 		return this.checkResponse(request);
