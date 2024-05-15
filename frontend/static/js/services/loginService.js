@@ -10,6 +10,7 @@ async function postLogin({ username, password }) {
 				username: username,
 				password: password,
 			}),
+			credentials: "include",
 		})
 	return request.then((response) => {
 		if (response.ok) {
