@@ -1,6 +1,7 @@
 import loginService from '../services/loginService.js';
-import { LoginForm, ProfileForm } from '../components/forms.js';
-import { Modal } from '../components/modal.js';
+import LoginForm from '../components/formComponents/loginForm.js';
+import ProfileForm from '../components/formComponents/completeProfileForm.js';
+import Modal from '../components/modal.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -13,13 +14,8 @@ export default class extends AView {
 		const navPartitions = document.querySelectorAll('.nav-partition');
 		navPartitions.forEach((partition) => {
 			const visibility = partition.getAttribute('data-visible');
-			partition.setAttribute(
-				'data-visible',
-				visibility === 'true' ? 'false' : 'true'
-			);
-
-			document.querySelector('#user').innerHTML =
-				document.getElementById('username').value;
+			partition.setAttribute('data-visible', visibility === 'true' ? 'false' : 'true');
+			document.querySelector('#user').innerHTML = localStorage.getItem('username');
 		});
 	}
 
@@ -28,21 +24,21 @@ export default class extends AView {
 		const username = document.getElementById('username').value;
 		const password = document.getElementById('current-password').value;
 		if (username === '' || password === '') {
-			this.notify('Please enter both username and password', "error");
+			this.notify('Please enter both username and password', 'error');
 			return;
 		}
-		const toSend = { username, password };
+		const toSend = {username, password};
 		await loginService
 			.postLogin(toSend)
 			.then(() => {
+				localStorage.setItem('username', username);
 				this.setNavbar();
+				
+				localStorage.setItem('isLoggedIn', true);
 				this.navigateTo('/friends');
 			})
 			.catch((error) => {
-				console.error(
-					'There has been a problem with your fetch operation:',
-					error
-				);
+				console.error('There has been a problem with your fetch operation:', error);
 			});
 	};
 

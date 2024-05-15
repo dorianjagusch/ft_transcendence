@@ -2,7 +2,7 @@ import landingPage from './pages/landingPage.js';
 import loginPage from './pages/loginPage.js';
 import registerPage from './pages/registerPage.js';
 import friendsPage from './pages/friendsPage.js';
-import friendPage from './pages/friendPage.js';
+import profilePage from './pages/profilePage.js';
 import playPage from './pages/playPage.js';
 import pongPage from './pages/pongPage.js';
 import leaderBoard from './pages/leaderboardPage.js';
@@ -17,5 +17,5 @@ export default [
 	{ path: '/play', view: playPage },
 	{ path: '/pong', view: pongPage },
 	{ path: '/leaderboard', view: leaderBoard },
-	{ path: '/friends/:id', view: friendPage },
+	{ path: '/profile', view: profilePage },
 ];

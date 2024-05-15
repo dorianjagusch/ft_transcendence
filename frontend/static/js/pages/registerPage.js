@@ -1,12 +1,13 @@
-import { Modal } from '../components/modal.js';
+import Modal from '../components/modal.js';
 import AView from './AView.js';
-import { RegisterForm } from '../components/forms.js';
+import RegisterForm from '../components/formComponents/registerForm.js';
 import UserService from '../services/userService.js';
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Register');
+		this.linkClicked = false;
 		this.registerHandler = this.registerHandler.bind(this);
 	}
 
@@ -18,7 +19,7 @@ export default class extends AView {
 		const repeatPassword = document.getElementById('password').value;
 
 		if (username === '' || password === '' || repeatPassword === '') {
-			this.notify('Please enter all fields', "error");
+			this.notify('Please enter all fields', 'error');
 			return;
 		}
 
@@ -27,6 +28,10 @@ export default class extends AView {
 			return;
 		}
 
+		if (this.linkClicked == false) {
+			this.notify('Please click the link to agree to the Privacy Policy before registering.', 'error');
+			return;
+		}
 		const data = {
 			username: username,
 			password: password,
@@ -47,10 +52,13 @@ export default class extends AView {
 	appendEventListeners() {
 		const registerButton = document.querySelector('.primary-btn');
 		registerButton.addEventListener('click', this.registerHandler);
-
 		const loginButton = document.querySelector('.secondary-btn');
 		loginButton.addEventListener('click', () => {
 			this.navigateTo('/login');
+		});
+		const linkElement = document.getElementById('privacyPolicy');
+		linkElement.addEventListener('click', () => {
+			this.linkClicked = true;
 		});
 	}
 

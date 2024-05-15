@@ -8,6 +8,7 @@ const CountrySelector = () => {
 	countryContainer.appendChild(countryLabel);
 
 	const countrySelect = document.createElement('select');
+	countrySelect.setAttribute('id', 'country');
 	countryContainer.appendChild(countrySelect);
 
 	const countries = [
@@ -272,4 +273,4 @@ const CountrySelector = () => {
 	return countryContainer;
 };
 
-export { CountrySelector };
+export default CountrySelector;
