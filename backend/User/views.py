@@ -20,6 +20,7 @@ class UserListView(APIView):
 		serializer = UserOutputSerializer(users, many=True)
 		return JsonResponse({"users": serializer.data})
 
+	@method_decorator(csrf_exempt)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
 	def post(self, request):
 
@@ -74,6 +75,7 @@ class UserDetailView(APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserLoginView(APIView):
+	@method_decorator(csrf_exempt)
 	def post(self, request):
 		username_input = request.data.get('username')
 		password_input = request.data.get('password')

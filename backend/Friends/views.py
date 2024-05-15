@@ -15,7 +15,6 @@ from shared_utilities.decorators import must_be_authenticated, \
                                     must_be_body_user_id, \
                                     valid_serializer_in_body
 
-
 class FriendsListView(APIView):
     @method_decorator(must_be_authenticated)
     def get(self, request):
