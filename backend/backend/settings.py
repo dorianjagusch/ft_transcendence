@@ -103,6 +103,9 @@ DATABASES = {
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
+SESSION_COOKIE_HTTPONLY = False # Set to True in production
+SESSION_COOKIE_SECURE = False  # Set to True in production
+SESSION_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
 
 # our custom User model
 AUTH_USER_MODEL = 'User.User'
@@ -156,3 +159,28 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#CSRF settings
+
+CSRF_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
+CSRF_COOKIE_HTTPONLY = False #set to true in production
+CSRF_COOKIE_SECURE = False #set to true in production
+
+
+CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-sessionid", "x-requested-with"]
+# CORS_EXPOSE_HEADERS = ['Set-Cookie']
+CORS_ALLOW_ALL_ORIGINS = True  # For development
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGINS = [
+# 		'http://localhost:80',
+# 		'http://127.0.0.1:80',
+# 		'https://localhost',
+# 		'https://127.0.0.1',
+# 		'https://localhost:443',
+# 		'https://127.0.0.1:443'
+# ]
+
+
+# SSL Settings
+
+# SECURE_SSL_REDIRECT = True # uncomment in production
