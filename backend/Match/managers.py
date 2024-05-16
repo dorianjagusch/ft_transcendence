@@ -1,29 +1,53 @@
 from django.db import models
+from django.db.models import Q
 
 from .models import Match
-from Team.models import Team
+from .MatchStatus import MatchStatus
+from User.models import User
 
 class MatchManager(models.Manager):
-	def get_match_teams(self, match_id):
+	def get_match_players(self, match_id):
 		try:
 			match = self.get(pk=match_id)
 		except Match.DoesNotExist:
 			raise ValueError("Match with id '{}' does not exist.".format(match_id))
 		
-		team_1 = Team.objects.get(pk=match.team_1_id)
-		team_2 = Team.objects.get(pk=match.team_2_id)
+		player1 = User.objects.get(pk=match.player1_id)
+		player2 = User.objects.get(pk=match.player2_id)
 
-		return team_1, team_2
+		return player1, player2
 	
-	def get_matches_with_team(self, team_id):
-		matches_with_team = self.filter(
-            models.Q(team_1_id__in=team_id) | models.Q(team_2_id__in=team_id)
-        )
-		return matches_with_team
+	def get_match_winner(self, match_id):
+		try:
+			match = self.get(pk=match_id)
+		except Match.DoesNotExist:
+			raise ValueError("Match with id '{}' does not exist.".format(match_id))
+		
+		if match.player1_score > match.player2_score:
+			winner = User.objects.get(pk=match.player1_id)
+		else:
+			winner = User.objects.get(pk=match.player2_id)
+		return winner
 
-	def get_matches_with_user(self, user_id):
-		teams_with_user = Team.objects.get_teams_with_user(user_id)
-		matches_with_player_teams = self.filter(
-            models.Q(team_1_id__in=teams_with_user) | models.Q(team_2_id__in=teams_with_user)
+	def get_matches_with_user(self, user_id, match_status):
+		try:
+			user = User.objects.get(pk=user_id)
+		except Match.DoesNotExist:
+			raise ValueError("User with id '{}' does not exist.".format(user_id))
+		matches_with_user = self.filter(
+            models.Q(player1_id__in=user_id) | models.Q(player2_id__in=user_id)
         )
-		return matches_with_player_teams
+		matches_to_get = []
+		if match_status == MatchStatus.WINS.value:
+			matches_to_get = matches_with_user.filter(
+					Q(player1_id=user_id, player1_score__gt=models.F('player2_score')) |
+					Q(player2_id=user_id, player2_score__gt=models.F('player1_score'))
+				)
+		elif match_status == MatchStatus.LOSSES.value:
+			matches_to_get = matches_with_user.filter(
+					Q(player1_id=user_id, player1_score__lt=models.F('player2_score')) |
+					Q(player2_id=user_id, player2_score__lt=models.F('player1_score'))
+				)
+		else:
+			matches_to_get = matches_with_user
+		return matches_to_get
