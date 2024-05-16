@@ -179,16 +179,17 @@ CSRF_TRUSTED_ORIGINS = [
 #CORS settings
 
 CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "X-CSRFToken", "x-sessionid", "x-requested-with"]
-CORS_ALLOW_ALL_ORIGINS = True  # For development
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOWED_ORIGINS = [
-# 		'http://localhost:80',
-# 		'http://127.0.0.1:80',
-# 		'https://localhost',
-# 		'https://127.0.0.1',
-# 		'https://localhost:443',
-# 		'https://127.0.0.1:443'
-# ]
+CORS_ALLOWED_ORIGINS = [
+		'http://localhost:80',
+		'http://127.0.0.1:80',
+		'http://localhost',
+		'http://127.0.0.1',
+		'https://localhost',
+		'https://127.0.0.1',
+		'https://localhost:443',
+		'https://127.0.0.1:443'
+]
 
 
 # SSL Settings

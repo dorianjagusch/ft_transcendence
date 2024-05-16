@@ -17,7 +17,7 @@ class RequestService {
 			return response.json();
 		} catch (error) {
 			if (error instanceof TypeError) {
-				console.err(constants.problemWithFetchMsg, error);
+				console.error(constants.problemWithFetchMsg, error);
 			} else {
 				throw error;
 			}
