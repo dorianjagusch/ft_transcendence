@@ -9,4 +9,4 @@ BALL_WIDTH = 1
 BALL_HEIGHT = 1
 WALL_MARGIN = 2
 BALL_SPEED = 1 
-BOUNCE_ANGLE = 45  # Bounce angle in degrees
+BOUNCE_ANGLE = -90  # Bounce angle in degrees
