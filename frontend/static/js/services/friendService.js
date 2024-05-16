@@ -16,7 +16,6 @@ class FriendService extends RequestService {
 	}
 
 	async postRequest({ user_id, friend_id }) {
-		console.log(username);
 		return super.postRequest(
 			`${backendURL.friendURL}`,
 			JSON.stringify({

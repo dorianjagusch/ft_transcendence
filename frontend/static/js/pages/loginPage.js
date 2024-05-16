@@ -1,4 +1,4 @@
-import loginService from '../services/loginService.js';
+import LoginService from '../services/loginService.js';
 import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';

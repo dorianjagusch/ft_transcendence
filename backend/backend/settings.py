@@ -56,12 +56,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', #Has to be before CommonMiddleware
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -166,9 +165,20 @@ CSRF_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
 CSRF_COOKIE_HTTPONLY = False #set to true in production
 CSRF_COOKIE_SECURE = False #set to true in production
 
+CSRF_TRUSTED_ORIGINS = [
+		'http://localhost:80',
+		'http://127.0.0.1:80',
+		'http://localhost',
+		'http://127.0.0.1',
+		'https://localhost',
+		'https://127.0.0.1',
+		'https://localhost:443',
+		'https://127.0.0.1:443'
+]
 
-CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-sessionid", "x-requested-with"]
-# CORS_EXPOSE_HEADERS = ['Set-Cookie']
+#CORS settings
+
+CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "X-CSRFToken", "x-sessionid", "x-requested-with"]
 CORS_ALLOW_ALL_ORIGINS = True  # For development
 CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOWED_ORIGINS = [

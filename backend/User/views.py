@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import rotate_token
 
+
 from .models import User
 from .serializers import UserOutputSerializer, UserInputSerializer
 from shared_utilities.decorators import must_be_authenticated, \
