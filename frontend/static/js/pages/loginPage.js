@@ -27,13 +27,12 @@ export default class extends AView {
 			this.notify('Please enter both username and password', 'error');
 			return;
 		}
-		const toSend = {username, password};
-		await loginService
-			.postLogin(toSend)
+		const loginService = new LoginService();
+		await loginService.postRequest({username, password})
 			.then(() => {
 				localStorage.setItem('username', username);
 				this.setNavbar();
-				
+
 				localStorage.setItem('isLoggedIn', true);
 				this.navigateTo('/friends');
 			})

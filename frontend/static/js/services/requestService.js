@@ -1,4 +1,5 @@
 import constants from '../constants.js';
+import getCookie from '../utils/getCookie.js';
 
 class RequestService {
 	constructor() {
@@ -38,9 +39,12 @@ class RequestService {
 	}
 
 	async postRequest(url, jsonBody) {
+		const cookies = getCookie('csrftoken')
 		const request = fetch(`${url}`, {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json'},
 			body: jsonBody,
 			credentials: 'include',
 		});
@@ -51,7 +55,9 @@ class RequestService {
 	async putRequest(url, id, jsonBody) {
 		const request = fetch(`${url}${id}`, {
 			method: 'PUT',
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json'},
 			body: jsonBody,
 			credentials: 'include',
 		});
@@ -62,9 +68,11 @@ class RequestService {
 	async deleteRequest(url, id) {
 		const request = fetch(`${url}${id}`, {
 			method: 'DELETE',
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json'},
 			credentials: 'include',
-		});
+			});
 
 		return this.checkResponse(request);
 	}
