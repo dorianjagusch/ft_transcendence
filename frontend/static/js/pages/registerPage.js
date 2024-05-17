@@ -1,6 +1,6 @@
-import { Modal } from '../components/modal.js';
+import Modal from '../components/modal.js';
 import AView from './AView.js';
-import { RegisterForm } from '../components/forms.js';
+import RegisterForm from '../components/formComponents/registerForm.js';
 import UserService from '../services/userService.js';
 
 export default class extends AView {
@@ -19,7 +19,7 @@ export default class extends AView {
 		const repeatPassword = document.getElementById('password').value;
 
 		if (username === '' || password === '' || repeatPassword === '') {
-			this.notify('Please enter all fields', "error");
+			this.notify('Please enter all fields', 'error');
 			return;
 		}
 
@@ -29,7 +29,7 @@ export default class extends AView {
 		}
 
 		if (this.linkClicked == false) {
-			alert('Please click the link to agree to the Privacy Policy before registering.');
+			this.notify('Please click the link to agree to the Privacy Policy before registering.', 'error');
 			return;
 		}
 		const data = {
