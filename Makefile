@@ -25,7 +25,7 @@ all: up
 
 up:
 	${DOCKER_COMPOSE} up --build --detach
-	@echo "${GREEN}${NAME} is up!${C_RESET}"-
+	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
 start:
 	${DOCKER_COMPOSE} start

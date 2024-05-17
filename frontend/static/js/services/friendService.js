@@ -11,8 +11,8 @@ class FriendService extends RequestService {
 		throw new NotImplementedError("GET method not implemented for FriendService");
 	}
 
-	async getAllRequest() {
-		return super.getAllRequest(`${backendURL.friendURL}`);
+	async getAllRequest(friendship_status) {
+		return super.getAllRequest(`${backendURL.friendURL}?friendship_status=${friendship_status}`);
 	}
 
 	async postRequest({ user_id, friend_id }) {
