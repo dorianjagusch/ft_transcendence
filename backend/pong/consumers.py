@@ -22,9 +22,13 @@ class PongConsumer(AsyncWebsocketConsumer):
         # Receive key press messages from the client
         key_press = text_data.strip()
         # Update player positions based on key press
-        self.game.update_player_positions(key_press)
+        self.game.update_positions(key_press)
         # Send updated positions to client
         await self.send_positions()
+        # Check if the game is over and disconnect if it is       
+        if self.game.get_game_state()['game-over']:
+            await self.close()
+
 
     async def send_positions(self):
         # Send positions to clients
@@ -33,5 +37,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def send_positions_loop(self):
         while True:
+            self.game.update_ball_position()  # Update ball position
             await self.send_positions()  # Send positions to the client
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)   # Wait for the specified interval before sending the next message
