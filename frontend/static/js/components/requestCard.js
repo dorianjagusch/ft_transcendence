@@ -1,17 +1,21 @@
-const requestOptions = () => {
+const requestOptions = (acceptRequest, declineRequest) => {
 	const options = document.createElement('div');
 	options.classList.add('request-options');
+
 	const acceptButton = document.createElement('button');
 	acceptButton.classList.add('check-btn');
+	acceptButton.addEventListener('click', acceptRequest);
+
 	const declineButton = document.createElement('button');
 	declineButton.classList.add('x-btn');
+	declineButton.addEventListener('click', declineRequest);
 
 	options.appendChild(acceptButton);
 	options.appendChild(declineButton);
 	return options;
 };
 
-const requestCard = ({ img, username }) => {
+const requestCard = ({ img, username }, acceptRequest, declineRequest) => {
 	const card = document.createElement('div');
 	card.className = 'scroll-element request-card';
 
@@ -26,7 +30,7 @@ const requestCard = ({ img, username }) => {
 
 	userCardText.appendChild(userName);
 
-	card.append(imgElement, userCardText, requestOptions());
+	card.append(imgElement, userCardText, requestOptions(acceptRequest, declineRequest));
 	return card;
 };
 

@@ -19,6 +19,8 @@ export default class AForm {
 	}
 
 	generateForm() {
-		throw new NotImplementedError('generateForm method must be implemented by child classes');
+		if (this.constructor == AForm) {
+			throw new Error("generateForm method must be implemented by child classes.");
+		}
 	}
 }
