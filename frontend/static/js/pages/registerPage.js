@@ -37,7 +37,7 @@ export default class extends AView {
 			password: password,
 		};
 
-		var userService = new UserService();
+		const userService = new UserService();
 		userService
 			.postRequest(data)
 			.then(() => {

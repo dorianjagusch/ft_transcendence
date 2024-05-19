@@ -11,12 +11,27 @@ export default class extends AView {
 		this.setTitle('Friends');
 	}
 
-	acceptHandler = () => {
-		console.log("Accepted friend");
+	acceptHandler(friend) {
+		const data = {
+			friend_id: friend.id
+		}
+
+		console.log(data.friend_id)
+		const friendService = new FriendService();
+		friendService
+			.postRequest(data)
+			.then(() => {
+				super.notify('Friendship created successfully.');
+				super.navigateTo('/friends');
+			})
+			.catch((error) => {
+				super.notify(error);
+			});
 	}
 
-	declineHandler = () => {
-		console.log("Decline friend");
+	declineHandler(friend) {
+		console.log("Decline friend ");
+		console.log(friend.id)
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
@@ -25,8 +40,8 @@ export default class extends AView {
 		return scroller;
 	}
 
-	createRequestScroller(friendsArray, card, tokens, identifier, acceptHandler, declineHandler) {
-		let scroller = scrollContainer(friendsArray, (friend) => card(friend, acceptHandler, declineHandler));
+	createRequestScroller(friendsArray, card, tokens, identifier) {
+		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.acceptHandler, this.declineHandler));
 		scroller.classList.add(tokens, identifier);
 		return scroller;
 	}
@@ -58,7 +73,7 @@ export default class extends AView {
 				status: element.is_online ? 'online' : 'offline'
 			}));
 			console.log(pendingFriends);
-			const requestScroller = this.createRequestScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary', this.acceptHandler, this.declineHandler);
+			const requestScroller = this.createRequestScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
 
 			this.updateMain(friendScroller, requestScroller);
 		} catch (error) {
