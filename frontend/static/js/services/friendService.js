@@ -27,8 +27,9 @@ class FriendService extends RequestService {
 		throw new NotImplementedError("PUT method not implemented for FriendService");
 	}
 
-	async deleteRequest(id) {
-		return super.deleteRequest(`${backendURL.friendURL}${id}`, id);
+	async deleteRequest(friend_id) {
+		console.log(friend_id)
+		return super.deleteRequest(`${backendURL.friendURL}${friend_id}`);
 	}
 }
 

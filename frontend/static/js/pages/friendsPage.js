@@ -6,9 +6,13 @@ import constants from '../constants.js';
 import AView from './AView.js';
 
 export default class extends AView {
+
 	constructor(params) {
 		super(params);
 		this.setTitle('Friends');
+		this.friendService = new FriendService();
+		this.acceptHandler = this.acceptHandler.bind(this);
+		this.declineHandler = this.declineHandler.bind(this);
 	}
 
 	acceptHandler(friend) {
@@ -17,8 +21,7 @@ export default class extends AView {
 		}
 
 		console.log(data.friend_id)
-		const friendService = new FriendService();
-		friendService
+		this.friendService
 			.postRequest(data)
 			.then(() => {
 				super.notify('Friendship created successfully.');
@@ -30,8 +33,15 @@ export default class extends AView {
 	}
 
 	declineHandler(friend) {
-		console.log("Decline friend ");
-		console.log(friend.id)
+		this.friendService
+			.deleteRequest(friend.id)
+			.then(() => {
+				super.notify('Friendship declined successfully.');
+				super.navigateTo('/friends');
+			})
+			.catch((error) => {
+				super.notify(error);
+			});
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
@@ -47,37 +57,36 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		const friendService = new FriendService();
+		let acceptedFriends = [];
+		let pendingFriends = [];
 
 		try {
-			const acceptedPromise = friendService.getAllRequest(constants.FRIENDSHIPSTATUS.FRIEND);
-			const pendingPromise = friendService.getAllRequest(constants.FRIENDSHIPSTATUS.PENDINGRECEIVED);
+			const acceptedPromise = this.friendService.getAllRequest(constants.FRIENDSHIPSTATUS.FRIEND);
+			const pendingPromise = this.friendService.getAllRequest(constants.FRIENDSHIPSTATUS.PENDINGRECEIVED);
 
 			const acceptedResponse = await acceptedPromise;
-			console.log(acceptedResponse);
-			const acceptedFriends = acceptedResponse.map(element => ({
+			acceptedFriends = acceptedResponse.map(element => ({
 				id: element.id,
 				username: element.username,
 				img: 'https://unsplash.it/200/200',
 				status: element.is_online ? 'online' : 'offline'
 			}));
-			console.log(acceptedFriends);
-			const friendScroller = this.createFriendScroller(acceptedFriends, friendCard, 'friends', 'bg-secondary');
 
 			const pendingResponse = await pendingPromise;
-			console.log(pendingResponse);
-			const pendingFriends = pendingResponse.map(element => ({
+			pendingFriends = pendingResponse.map(element => ({
 				id: element.id,
 				username: element.username,
 				img: 'https://unsplash.it/200/200',
 				status: element.is_online ? 'online' : 'offline'
 			}));
 			console.log(pendingFriends);
-			const requestScroller = this.createRequestScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
 
-			this.updateMain(friendScroller, requestScroller);
 		} catch (error) {
 			console.error('Error:', error);
 		}
+
+		const friendScroller = this.createFriendScroller(acceptedFriends, friendCard, 'friends', 'bg-secondary');
+		const requestScroller = this.createRequestScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
+		this.updateMain(friendScroller, requestScroller);
 	}
 }
