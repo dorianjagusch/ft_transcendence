@@ -50,7 +50,7 @@ const router = async () => {
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
-	await view.getHTML();
+	view.getHTML();
 };
 
 export { navigateTo, router };
