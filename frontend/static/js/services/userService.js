@@ -15,7 +15,6 @@ class UserService extends RequestService {
 	}
 
 	async postRequest({username, password}) {
-		console.log(username);
 		return super.postRequest(
 			`${backendURL.userURL}`,
 			JSON.stringify({

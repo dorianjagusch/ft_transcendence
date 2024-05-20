@@ -19,9 +19,10 @@ from django.urls import path
 
 # add app views here
 from User.views import UserDetailView, \
-						UserListView, \
-						UserLoginView, \
-						UserAdminDetailsView
+                        UserListView, \
+                        UserLoginView, \
+                        UserLogoutView, \
+                        UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
@@ -32,8 +33,9 @@ urlpatterns = [
 	# User views
 	path('users/', UserListView.as_view()),
 	path('users/<int:user_id>', UserDetailView.as_view()),
-	path('login/', UserLoginView.as_view()),
-	path('admins/', UserAdminDetailsView.as_view()),
+    path('login/', UserLoginView.as_view()),
+    path('logout/', UserLogoutView.as_view()),
+    path('admins/', UserAdminDetailsView.as_view()),
 
 
 	# Friends views

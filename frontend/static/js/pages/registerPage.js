@@ -12,7 +12,6 @@ export default class extends AView {
 	}
 
 	registerHandler = async (e) => {
-		console.log('registerHandler');
 		e.preventDefault();
 		const username = document.getElementById('username').value;
 		const password = document.getElementById('current-password').value;

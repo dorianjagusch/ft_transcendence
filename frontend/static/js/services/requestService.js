@@ -1,4 +1,5 @@
 import constants from '../constants.js';
+import getCookie from '../utils/getCookie.js';
 
 class RequestService {
 	constructor() {
@@ -16,7 +17,7 @@ class RequestService {
 			return response.json();
 		} catch (error) {
 			if (error instanceof TypeError) {
-				console.log(constants.problemWithFetchMsg, error);
+				console.error(constants.problemWithFetchMsg, error);
 			} else {
 				throw error;
 			}
@@ -24,20 +25,28 @@ class RequestService {
 	}
 
 	async getRequest(url, id) {
-		const request = fetch(`${url}${id}`);
+		const request = fetch(`${url}${id}`, {
+			credentials: 'include',
+		});
 		return this.checkResponse(request);
 	}
 
 	async getAllRequest(url) {
-		const request = fetch(`${url}`);
+		const request = fetch(`${url}`, {
+			credentials: 'include',
+		});
 		return this.checkResponse(request);
 	}
 
 	async postRequest(url, jsonBody) {
+		const cookies = getCookie('csrftoken')
 		const request = fetch(`${url}`, {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json'},
 			body: jsonBody,
+			credentials: 'include',
 		});
 
 		return this.checkResponse(request);
@@ -46,8 +55,11 @@ class RequestService {
 	async putRequest(url, id, jsonBody) {
 		const request = fetch(`${url}${id}`, {
 			method: 'PUT',
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json'},
 			body: jsonBody,
+			credentials: 'include',
 		});
 
 		return this.checkResponse(request);
@@ -56,8 +68,11 @@ class RequestService {
 	async deleteRequest(url, id) {
 		const request = fetch(`${url}${id}`, {
 			method: 'DELETE',
-			headers: {'Content-Type': 'application/json'},
-		});
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json'},
+			credentials: 'include',
+			});
 
 		return this.checkResponse(request);
 	}
