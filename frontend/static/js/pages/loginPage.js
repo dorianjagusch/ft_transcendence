@@ -33,9 +33,9 @@ export default class extends AView {
 			.then(() => {
 				localStorage.setItem('username', username);
 				this.setNavbar();
-				
+
 				localStorage.setItem('isLoggedIn', true);
-				this.navigateTo('/friends');
+				this.navigateTo('/dashboard');
 			})
 			.catch((error) => {
 				console.error('There has been a problem with your fetch operation:', error);
