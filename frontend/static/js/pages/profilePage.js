@@ -8,8 +8,8 @@ import smallPlacementCard from '../components/profileComponents/smallPlacementCa
 import { scrollContainer } from '../components/scrollContainer.js';
 import profileStats from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
-import { scrollContainer } from '../components/scrollContainer.js';
 
+import userAPIFriends from '../userAPIData/userAPIFriends.js';
 
 export default class extends AView {
 	constructor(params) {
