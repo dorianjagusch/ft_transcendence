@@ -974,3 +974,55 @@ button:is(:focus, :hover)
 	padding: var(--fs-medium) calc(1.5 * var(--fs-medium));
 	border-radius: var(--fs-medium);
 }
+
+.profile.dashboard{
+	grid-template-areas:
+		"title title title title title title title"
+		"profile-img profile-img placements placements placements summary summary"
+		"about about about stats-1 stats-1 stats-2 stats-2"
+		"history history history graph-1 graph-1 graph-1 graph-1 "
+		"history history history graph-2 graph-2 graph-2 graph-2 ";
+
+	grid-template-rows: 0.1fr repeat(4, 1fr);
+}
+
+.dashboard .profile-title{
+	grid-area: title;
+	gap: var(--fs-medium);
+}
+
+.dashboard .profile-img{
+	grid-area: profile-img;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dashboard .placements{
+	grid-area: placements;
+}
+
+.dashboard .summary{
+	grid-area: summary;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--fs-medium);
+}
+
+.dashboard .about{
+	grid-area: about;
+}
+
+.dashboard .play-history{
+	grid-area: history;
+}
+
+.dashboard .stats:first-child{
+	grid-area: stats-1;
+}
+
+.dashboard .stats-2:last-child{
+	grid-area: stats-2;
+}
