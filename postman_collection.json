@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e273f010-ce97-453e-afcc-c9fc0db2d085",
+		"_postman_id": "3b021b9f-7ffe-44ae-b2e8-31dd13624273",
 		"name": "Rest API tests",
 		"description": "A collection of REST API tests for the backend.\n\nBefore running the tests, make sure that the database is empty, as the tests might give the incorrect results if there is anything in the database prior to running the tests.  \nTo do this, go to the backend container shell and write \\`python manage.py flush --no-input\\`\n\nBe aware that the tests need to be run in order, so always run the User app tests -folder before the Friends app tests -folder, for example.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -39,7 +39,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"login\": \"djaguschiii\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -47,14 +47,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -96,14 +92,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -145,14 +137,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -195,14 +183,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -218,8 +202,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Response body is correct\", function () {\r",
@@ -244,14 +228,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -301,14 +281,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -328,12 +304,12 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Response body is an object with id and username properties\", function () {",
-									"    pm.expect(pm.response.json()).to.be.an('object').that.has.all.keys('id', 'username');",
+									"pm.test(\"Response body is an object with id, username and is_online properties\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object').that.has.all.keys('id', 'username', 'is_online');",
 									"});",
-									"pm.test(\"Response body is { 'id': 1, 'username': 'tester' }\", function () {",
+									"pm.test(\"Response body is { 'id': 1, 'username': 'tester', 'is_online': false }\", function () {",
 									"    var responseBody = pm.response.json();",
-									"    pm.expect(responseBody).to.eql({ id: 1, username: 'tester' });",
+									"    pm.expect(responseBody).to.eql({ id: 1, username: 'tester', 'is_online': false });",
 									"});"
 								],
 								"type": "text/javascript",
@@ -357,14 +333,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/1",
+							"raw": "{{baseurl}}/users/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"1"
@@ -411,12 +383,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/login/",
-							"protocol": "http",
+							"raw": "{{baseurl}}/login/",
 							"host": [
-								"localhost"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"login",
 								""
@@ -442,7 +412,12 @@
 									"    var setCookieHeaders = pm.response.headers.all().filter(header => header.key === 'Set-Cookie');",
 									"    var cookieValues = setCookieHeaders.map(header => header.value);",
 									"    pm.expect(cookieValues.join()).to.include('csrftoken').and.to.include('sessionid');",
-									"});"
+									"});",
+									"",
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"user1_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"user1_sessionid\", sessionIdCookie.value);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -462,12 +437,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/login/",
-							"protocol": "http",
+							"raw": "{{baseurl}}/login/",
 							"host": [
-								"localhost"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"login",
 								""
@@ -477,7 +450,7 @@
 					"response": []
 				},
 				{
-					"name": "PUT update user 1 username",
+					"name": "update user 1 username (valid)",
 					"event": [
 						{
 							"listen": "test",
@@ -491,7 +464,7 @@
 									"// Test to check the response body structure and values",
 									"pm.test(\"Response body matches the current values\", function () {",
 									"  var responseJSON = pm.response.json();",
-									"  pm.expect(responseJSON).to.deep.include({ id: 1, username: \"newtester\" });",
+									"  pm.expect(responseJSON).to.deep.include({ id: 1, username: \"newtester\", is_online: true });",
 									"});"
 								],
 								"type": "text/javascript",
@@ -501,7 +474,18 @@
 					],
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{user1_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user1_sessionid}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"username\": \"newtester\"\n}",
@@ -512,14 +496,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/1",
+							"raw": "{{baseurl}}/users/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"1"
@@ -556,16 +536,23 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{user1_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user1_sessionid}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "127.0.0.1:8080/users/1",
+							"raw": "{{baseurl}}/users/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"1"
@@ -608,14 +595,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/admins/",
+							"raw": "{{baseurl}}/admins/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"admins",
 								""
@@ -664,14 +647,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/users/",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -714,12 +693,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/",
-							"protocol": "http",
+							"raw": "{{baseurl}}/users/",
 							"host": [
-								"localhost"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								""
@@ -735,13 +712,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response status code is 401\", function () {",
-									"  pm.response.to.have.status(401);",
+									"pm.test(\"Response status code is 403\", function () {",
+									"  pm.response.to.have.status(403);",
 									"});",
-									"",
-									"pm.test(\"Response body contains the word 'message'\", function () {",
-									"    pm.expect(pm.response.text()).to.include('message');",
-									"});"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -752,14 +726,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/friends/",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								""
@@ -775,13 +745,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response status code is 401\", function () {",
-									"  pm.response.to.have.status(401);",
+									"pm.test(\"Response status code is 403\", function () {",
+									"  pm.response.to.have.status(403);",
 									"});",
-									"",
-									"pm.test(\"Response body contains the word 'message'\", function () {",
-									"    pm.expect(pm.response.text()).to.include('message');",
-									"});"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -801,12 +768,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/friends/",
-							"protocol": "http",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"localhost"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								""
@@ -858,14 +823,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/login/",
+							"raw": "{{baseurl}}/login/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"login",
 								""
@@ -918,14 +879,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/friends/",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								""
@@ -944,10 +901,7 @@
 									"pm.test(\"Response status code is 403\", function () {",
 									"    pm.expect(pm.response.code).to.equal(403);",
 									"});",
-									"",
-									"pm.test(\"Response body contains the word 'message'\", function () {",
-									"    pm.expect(pm.response.text()).to.include('message');",
-									"});"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -978,14 +932,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/friends/",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								""
@@ -1005,8 +955,8 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Response body has correct values\", function () {",
-									"    pm.expect(pm.response.json()).to.eql({\"friends\":[{\"id\":1,\"user_id\":3,\"friend_id\":4}]});",
+									"pm.test(\"Friends response is empty\", function () {",
+									"    pm.expect(pm.response.json()).to.eql({\"friends\":[]});",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1029,14 +979,10 @@
 							}
 						],
 						"url": {
-							"raw": "127.0.0.1:8080/friends/",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								""
@@ -1069,14 +1015,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/friends/1",
+							"raw": "{{baseurl}}/friends/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								"1"
@@ -1114,14 +1056,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/friends/2",
+							"raw": "{{baseurl}}/friends/2",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"friends",
 								"2"
@@ -1141,17 +1079,12 @@
 									"    pm.expect(pm.response.code).to.equal(202);",
 									"});",
 									"",
-									"if (pm.response.code === 202) {",
-									"    console.log(\"a\")",
-									"    var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
-									"    console.log(\"b\")",
-									"    pm.collectionVariables.set(\"user4_csrftoken\", xsrfCookie.value);",
-									"    console.log(\"c\")",
-									"    var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
-									"    console.log(\"d\")",
-									"    pm.collectionVariables.set(\"user4_sessionid\", sessionIdCookie.value);",
-									"    console.log(\"e\")",
-									"}"
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"user4_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"user4_sessionid\", sessionIdCookie.value);",
+									"",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1161,11 +1094,12 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"// const jar = pm.cookies.jar();",
+									"const jar = pm.cookies.jar();",
 									"",
-									"// jar.clear(pm.request.url, function (error) {",
-									"//   // error - <Error>",
-									"// });"
+									"jar.clear('localhost', function (error) {",
+									"  console.log(\"error when clearing cookie jar\");",
+									"  console.log(error);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1201,14 +1135,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/login/",
+							"raw": "{{baseurl}}/login/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
 							"path": [
 								"login",
 								""
@@ -1261,14 +1191,57 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/friends/",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
+							"path": [
+								"friends",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Friends as 4 (user 3 friendship)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response body has 3 as friend\", function () {",
+									"    pm.expect(pm.response.json()).to.eql({\"friends\":[{ id: 3, username: \"user3\", is_online: true }]});",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRFToken",
+								"value": "{{user4_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user4_sessionid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/friends/",
+							"host": [
+								"{{baseurl}}"
+							],
 							"path": [
 								"friends",
 								""
@@ -1323,65 +1296,10 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/friends/",
+							"raw": "{{baseurl}}/friends/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{baseurl}}"
 							],
-							"port": "8080",
-							"path": [
-								"friends",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Friends as 3 (now empty)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Response status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"Response body is empty\", function () {",
-									"    pm.expect(pm.response.json()).to.eql({\"friends\":[]});",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-CSRFToken",
-								"value": "{{user3_csrftoken}}",
-								"type": "text"
-							},
-							{
-								"key": "sessionid",
-								"value": "{{user3_sessionid}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "127.0.0.1:8080/friends/",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8080",
 							"path": [
 								"friends",
 								""
@@ -1392,6 +1310,155 @@
 				}
 			],
 			"description": "This folder is a collection of requests with tests for the backend's Friends application.\n\nBe aware that the tests have to be run at the start of the program because if you make your own changes to the backend database it will cause issues for some of the tests!  \n  \nRun this folder's tests after running the User app folder's tests!"
+		},
+		{
+			"name": "individual requests",
+			"item": [
+				{
+					"name": "GET users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 123",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"123\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login 123",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"user123_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"user123_sessionid\", sessionIdCookie.value);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"123\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/login/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view 123 friends",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"user123_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"user123_sessionid\", sessionIdCookie.value);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRFToken",
+								"value": "{{user123_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user123_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"123\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/friends/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"friends",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "These are individual requests without any tests."
 		}
 	],
 	"event": [
@@ -1418,6 +1485,21 @@
 	],
 	"variable": [
 		{
+			"key": "baseurl",
+			"value": "localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "user1_csrftoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user1_sessionid",
+			"value": "",
+			"type": "string"
+		},
+		{
 			"key": "user3_csrftoken",
 			"value": "",
 			"type": "string"
@@ -1429,12 +1511,22 @@
 		},
 		{
 			"key": "user4_csrftoken",
-			"value": "m6mvepITD7XhhJYorKEWubz2GtoToNpf",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "user4_sessionid",
-			"value": "gbwsfig58rswa9lakp165r0z53jvj33r",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user123_csrftoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user123_sessionid",
+			"value": "",
 			"type": "string"
 		}
 	]
