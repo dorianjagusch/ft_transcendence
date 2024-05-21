@@ -14,6 +14,7 @@ import { scrollContainer } from '../components/scrollContainer.js';
 export default class extends AView {
 	constructor(params) {
 		super(params);
+		this.friendId = params.id
 	}
 
 	selectButtons(relationship) {

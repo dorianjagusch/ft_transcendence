@@ -17,5 +17,5 @@ export default [
 	{ path: '/friends', view: friendsPage },
 	{ path: '/play', view: playPage },
 	{ path: '/leaderboard', view: leaderBoard },
-	{ path: '/profile', view: profilePage },
+	{ path: '/profile/:id', view: profilePage },
 ];
