@@ -7,6 +7,7 @@ import profileDescription from '../components/profileComponents/profileDescripti
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 import profileStats from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
+import constants from '../constants.js';
 import { scrollContainer } from '../components/scrollContainer.js';
 
 
@@ -17,13 +18,13 @@ export default class extends AView {
 
 	selectButtons(relationship) {
 		switch (relationship) {
-			case 'friend':
+			case constants.FRIENDSHIPSTATUS.FRIEND:
 				return null;
-			case 'not-friend':
+			case constants.FRIENDSHIPSTATUS.NOTFRIEND:
 				return [{className: 'accept-btn', textContent: 'Add Friend'}];
-			case 'pending-sent':
+			case constants.FRIENDSHIPSTATUS.PENDINGSENT:
 				return [{className: 'decline-btn', textContent: 'Cancel Request'}];
-			case 'pending-received':
+			case constants.FRIENDSHIPSTATUS.PENDINGRECEIVED:
 				return [
 					{className: 'decline-btn', textContent: 'Decline'},
 					{className: 'accept-btn', textContent: 'Accept'},
