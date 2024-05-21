@@ -20,6 +20,18 @@ class FriendsManager(models.Manager):
 		friends = User.objects.filter(id__in=friends_to_get)
 		return friends
 
+	def get_friendship_status(self, user_id, friend_id):
+		user_friend = self.filter(user_id=user_id, friend_id=friend_id)
+		friend_user = self.filter(user_id=friend_id, friend_id=user_id)
+		if user_friend.exists() and friend_user.exists():
+			return FriendShipStatus.FRIEND.value
+		elif user_friend.exists():
+			return FriendShipStatus.PENDINGSENT.value
+		elif friend_user.exists():
+			return FriendShipStatus.PENDINGRECEIVED.value
+		else:
+			return FriendShipStatus.NOTFRIEND.value
+
 	def get_friendship_by_user_and_friend_id(self, user_id, friend_id):
 		return self.get(user_id=user_id, friend_id=friend_id)
 
