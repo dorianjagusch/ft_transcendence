@@ -58,7 +58,7 @@ export default class extends AView {
 	}
 
 	createRequestScroller(friendsArray, card, tokens, identifier) {
-		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.acceptHandler, this.declineHandler));
+		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.acceptHandler, this.declineHandler, this.profileHandler));
 		scroller.classList.add(tokens, identifier);
 		return scroller;
 	}

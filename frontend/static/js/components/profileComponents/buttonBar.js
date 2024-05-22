@@ -1,7 +1,8 @@
-const Button = (className, textContent) => {
+const Button = (className, textContent, handler) => {
 	const buttonElement = document.createElement('button');
 	buttonElement.classList.add(className);
 	buttonElement.textContent = textContent;
+	buttonElement.addEventListener('click', handler);
 	return buttonElement;
 };
 
@@ -12,8 +13,8 @@ const buttonBar = (buttons) => {
 	const buttonBar = document.createElement('div');
 	buttonBar.classList.add('button-bar');
 
-	buttons.forEach(({ className, textContent }) => {
-		const button = Button(className, textContent);
+	buttons.forEach(({ className, textContent, handler }) => {
+		let button = Button(className, textContent, handler);
 		buttonBar.appendChild(button);
 	});
 
