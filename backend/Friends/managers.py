@@ -1,7 +1,7 @@
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 from .friendShipStatus import FriendShipStatus
 from User.models import User
+from django.db import transaction
 
 class FriendsManager(models.Manager):
 	def get_user_friends(self, user_id, friendship_status):
@@ -30,11 +30,13 @@ class FriendsManager(models.Manager):
 		return self.create(user_id=user_id, friend_id=friend_id)
 
 	def delete_friendship(self, user_id, friend_id):
-		try:
-			friendship = self.get(user_id=user_id, friend_id=friend_id)
-			friendship.delete()
-			return True
-		except ObjectDoesNotExist:
-			return False
+		user_friend = self.filter(user_id=user_id, friend_id=friend_id)
+		friend_user = self.filter(user_id=friend_id, friend_id=user_id)
+
+		with transaction.atomic():
+			if user_friend.exists():
+				user_friend.delete()
+			if friend_user.exists():
+				friend_user.delete()
 
 
