@@ -22,6 +22,8 @@ from User.views import UserDetailView, \
                         UserListView, \
                         UserLoginView, \
                         UserLogoutView, \
+                        GuestUserAuthenticationView, \
+                        InvalidateGuestTokenView, \
                         UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
@@ -35,6 +37,8 @@ urlpatterns = [
 	path('users/<int:user_id>', UserDetailView.as_view()),
     path('login/', UserLoginView.as_view()),
     path('logout/', UserLogoutView.as_view()),
+	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
+	path('invalidate-guest-user-token/', InvalidateGuestTokenView.as_view()),
     path('admins/', UserAdminDetailsView.as_view()),
 
 

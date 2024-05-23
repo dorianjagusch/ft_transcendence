@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Match
-from User.models import User
 
 class MatchSerializer(serializers.ModelSerializer):
 	state_display = serializers.CharField(source='get_state_display', read_only=True)

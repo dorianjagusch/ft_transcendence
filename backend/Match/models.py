@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime
 
+from .managers import MatchManager
+
 # Question to Meri: put into separate file?
 class MatchState(models.IntegerChoices):
 	LOBBY = 0, 'lobby'
@@ -16,6 +18,8 @@ class Match(models.Model):
 	end_time = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	objects = MatchManager()
 
 	def start_match(self):
 		if self.state == MatchState.LOBBY.value:

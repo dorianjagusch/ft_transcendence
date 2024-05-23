@@ -2,14 +2,16 @@ from django.db import models
 from django.db.models import Q
 from django.db import DatabaseError
 from django.db import transaction
+from datetime import datetime
 
-from .models import Match
 from .PlayerMatchStatus import PlayerMatchStatus
 from Player.models import Player
 from User.models import User
 
+from .models import Match
+
 class MatchManager(models.Manager):
-	def create_single_match(self, player_home_user_id, player_visiting_user_id):
+	def create_match(self, player_home_user_id, player_visiting_user_id):
 		
 		with transaction.atomic():
 			match = Match.objects.create()
@@ -65,5 +67,3 @@ class MatchManager(models.Manager):
 			)
 
 		return matches_with_user
-	
-
