@@ -11,6 +11,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.game = PongGame()
 
     async def connect(self):
+
+        # SSALMI validate the user/player/requests here, but how?
+
         await self.accept()
         # Start sending positions immediately after connection is established
         asyncio.create_task(self.send_positions_loop())
@@ -26,6 +29,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         # Check if the game is over and disconnect if it is       
         if self.game.game_over == True:
             await self.send_positions()
+
+            # SSALMI save the scores here, but how?
+
             await self.close()
         
         # Send updated positions to client
