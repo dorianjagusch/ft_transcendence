@@ -1,7 +1,7 @@
 # pong/routing.py
-from django.urls import re_path
+from django.urls import path
 from . import consumers
 
 websocket_urlpatterns = [
-    re_path(r'^pong/$', consumers.PongConsumer.as_asgi()),
+    path('pong/<int:match_id>', consumers.PongConsumer.as_asgi()),
 ]

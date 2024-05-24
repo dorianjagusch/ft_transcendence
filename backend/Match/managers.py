@@ -11,7 +11,7 @@ from User.models import User
 from .models import Match
 
 class MatchManager(models.Manager):
-	def create_match(self, player_home_user_id, player_visiting_user_id):
+	def create_match_and_its_players(self, player_home_user_id, player_visiting_user_id):
 		
 		with transaction.atomic():
 			match = Match.objects.create()

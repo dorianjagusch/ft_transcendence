@@ -5,14 +5,21 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from .game_logic import PongGame
 from .constants import *
 
+from channels.db import database_sync_to_async
+from User.models import AuthenticatedGuestUserToken
+from Match.models import Match
+from Player.models import Player
+
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game = PongGame()
 
-    async def connect(self):
-
-        # SSALMI validate the user/player/requests here, but how?
+    async def connect(self): # SSALMI validate the user/player/requests here, but how?
+        # Extract the token from the URL query string
+        self.match_id = self.scope['url_route']['kwargs']['match_id']
+        query_string = self.scope['query_string'].decode('utf-8')
+        token = query_string.split('=')[1] if 'token=' in query_string else None
 
         await self.accept()
         # Start sending positions immediately after connection is established
@@ -50,3 +57,16 @@ class PongConsumer(AsyncWebsocketConsumer):
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)   # Wait for the specified interval before sending the next message
             if self.game.game_over == True:
                 break
+    
+    @database_sync_to_async
+    def authenticate_token(self, token):
+        try:
+            token = AuthenticatedGuestUserToken.objects.get(token=token)
+            if token.is_active == False or token.is_expired():
+                return None
+            
+            token.is_active = False
+
+            return token.user
+        except AuthenticatedGuestUserToken.DoesNotExist:
+            return None
