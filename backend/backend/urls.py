@@ -27,6 +27,9 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
+from Tokens.views import GuestUserAuthenticationView, \
+							DeactivateGuestUserTokenView
+
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
@@ -41,4 +44,8 @@ urlpatterns = [
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
+
+	# Tokens views
+	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
+	path('remove-guest-user/', DeactivateGuestUserTokenView.as_view()),
 ]
