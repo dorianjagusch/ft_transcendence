@@ -82,7 +82,6 @@ def valid_serializer_in_body(serializer_class, **kwargs):
 		return wrapper
 	return decorator
 
-
 # Used with GuestUserAuthenticationView to prevent the host user from authenticating themself
 def must_not_be_username(view_func):
 	@wraps(view_func)

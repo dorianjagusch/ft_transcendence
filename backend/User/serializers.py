@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import User, \
-						AuthenticatedGuestUserToken
+from .models import User
 
 class UserInputSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(write_only=True)
@@ -14,10 +13,4 @@ class UserOutputSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'username', 'is_online']
 
-
-class AuthenticatedGuestUserTokenSerializer(serializers.ModelSerializer):
-	
-	class Meta:
-		model = AuthenticatedGuestUserToken
-		fields = ['token']
 

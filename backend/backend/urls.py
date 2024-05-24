@@ -22,12 +22,13 @@ from User.views import UserDetailView, \
                         UserListView, \
                         UserLoginView, \
                         UserLogoutView, \
-                        GuestUserAuthenticationView, \
-                        InvalidateGuestTokenView, \
                         UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
+
+from Tokens.views import GuestUserAuthenticationView, \
+							DeactivateGuestUserTokenView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -37,12 +38,14 @@ urlpatterns = [
 	path('users/<int:user_id>', UserDetailView.as_view()),
     path('login/', UserLoginView.as_view()),
     path('logout/', UserLogoutView.as_view()),
-	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
-	path('invalidate-guest-user-token/', InvalidateGuestTokenView.as_view()),
     path('admins/', UserAdminDetailsView.as_view()),
 
 
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
+
+	# Tokens views
+	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
+	path('remove-guest-user/', DeactivateGuestUserTokenView.as_view()),
 ]

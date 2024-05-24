@@ -1,12 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
-from datetime import datetime, timedelta
-from django.db import IntegrityError
-import uuid
 
-from .managers import UserManager, \
-						AuthenticatedGuestUserTokenManager
+from .managers import UserManager
 
 # Create your models here.
 class User(AbstractBaseUser):
@@ -29,24 +25,3 @@ class User(AbstractBaseUser):
 
 	def __str__(self):
 		return self.username
-
-
-class AuthenticatedGuestUserToken(models.Model):
-	host_user = models.ForeignKey(User, on_delete=models.CASCADE)
-	guest_user = models.ForeignKey(User, on_delete=models.CASCADE)
-	token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-	created_at = models.DateTimeField(auto_now_add=True)
-	is_active = models.BooleanField(default=True)
-
-	objects = AuthenticatedGuestUserTokenManager()
-
-	def save(self, *args, **kwargs):
-		if self.host_user == self.guest_user:
-			raise IntegrityError("host_user and guest_user cannot be the same.")
-		super().save(*args, **kwargs)
-
-	def is_expired(self):
-		return self.created_at < datetime.now() - timedelta(minutes=5)
-
-	def __str__(self):
-		return str(self.token)
