@@ -27,7 +27,7 @@ class PongGame:
         if not self.game_started and key_press in ('o', 'l'):
             # If player 2 moves, start the game
             self.kick_start_game(key_press)
-        elif key_press == 'w':
+        if key_press == 'w':
             self.player1_y -= PLAYER_MOVEMENT_UNIT  # Move player 1 up
         elif key_press == 's':
             self.player1_y += PLAYER_MOVEMENT_UNIT  # Move player 1 down
@@ -95,6 +95,8 @@ class PongGame:
     def get_game_state(self):
         # Construct JSON message with player and ball positions
         game_state = {
+            'ball_x': self.ball_x,
+            'ball_y': self.ball_y,
             'player-width' : PLAYER_WIDTH,
             'player-height' : PLAYER_HEIGHT,
             'player1_mid_y': self.player1_y,
@@ -103,8 +105,6 @@ class PongGame:
             'player2_start_x': self.player2_x,
             'ball-width' : BALL_WIDTH,
             'ball-height' : BALL_HEIGHT,
-            'ball_x': self.ball_x,
-            'ball_y': self.ball_y,
             'wall-margin' : WALL_MARGIN,
             'game-over': self.game_over,
             'winner': self.winner,
