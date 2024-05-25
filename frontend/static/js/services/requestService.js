@@ -8,7 +8,7 @@ class RequestService {
 		}
 	}
 
-	async checkResponse(request) {
+	async checkResponseWithBody(request) {
 		try {
 			const response = await request;
 			if (!response.ok) {
@@ -24,18 +24,34 @@ class RequestService {
 		}
 	}
 
+	async checkResponseNoBody(request) {
+		try {
+			const response = await request;
+			if (!response.ok) {
+				throw new Error('Error: ' + response.status);
+			}
+			return '';
+		} catch (error) {
+			if (error instanceof TypeError) {
+				console.error(constants.problemWithFetchMsg, error);
+			} else {
+				throw error;
+			}
+		}
+	}
+
 	async getRequest(url, id) {
 		const request = fetch(`${url}${id}`, {
 			credentials: 'include',
 		});
-		return this.checkResponse(request);
+		return this.checkResponseWithBody(request);
 	}
 
 	async getAllRequest(url) {
 		const request = fetch(`${url}`, {
 			credentials: 'include',
 		});
-		return this.checkResponse(request);
+		return this.checkResponseWithBody(request);
 	}
 
 	async postRequest(url, jsonBody) {
@@ -49,7 +65,7 @@ class RequestService {
 			credentials: 'include',
 		});
 
-		return this.checkResponse(request);
+		return this.checkResponseWithBody(request);
 	}
 
 	async putRequest(url, id, jsonBody) {
@@ -62,11 +78,11 @@ class RequestService {
 			credentials: 'include',
 		});
 
-		return this.checkResponse(request);
+		return this.checkResponseWithBody(request);
 	}
 
-	async deleteRequest(url, id) {
-		const request = fetch(`${url}${id}`, {
+	async deleteRequest(url) {
+		const request = fetch(`${url}`, {
 			method: 'DELETE',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
@@ -74,7 +90,7 @@ class RequestService {
 			credentials: 'include',
 			});
 
-		return this.checkResponse(request);
+		return this.checkResponseNoBody(request);
 	}
 }
 
