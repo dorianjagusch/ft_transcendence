@@ -6,10 +6,10 @@ import math
 class PongGame:
     def __init__(self):
         # Initialize game state
-        self.left_player_y = PLAYGROUND_HEIGHT // 2  # Initial position for player 1 (midpoint)
+        self.left_player_y = PLAYGROUND_HEIGHT // 2  # Initial position for left player (midpoint)
         self.right_player_x = PLAYGROUND_WIDTH - WALL_MARGIN
         self.left_player_x = WALL_MARGIN
-        self.right_player_y = PLAYGROUND_HEIGHT // 2  # Initial position for player 2 (midpoint)
+        self.right_player_y = PLAYGROUND_HEIGHT // 2  # Initial position for right player (midpoint)
         self.ball_x = PLAYGROUND_WIDTH - WALL_MARGIN - PLAYER_WIDTH   # Initial position for ball (x-coordinate)
         self.ball_y = PLAYGROUND_HEIGHT // 2     # Initial position for ball (y-coordinate)
         self.ball_angle = 0  # Initial angle of the ball's movement
@@ -104,19 +104,19 @@ class PongGame:
         game_state = {
             'ball_x': self.ball_x,
             'ball_y': self.ball_y,
-            'player-width' : PLAYER_WIDTH,
-            'player-height' : PLAYER_HEIGHT,
+            'player-width': PLAYER_WIDTH,
+            'player-height': PLAYER_HEIGHT,
             'left_player_mid_y': self.left_player_y,
             'left_player_start_x': self.left_player_x,
             'right_player_mid_y': self.right_player_y,
             'right_player_start_x': self.right_player_x,
-            'ball-width' : BALL_WIDTH,
-            'ball-height' : BALL_HEIGHT,
-            'wall-margin' : WALL_MARGIN,
+            'ball-width': BALL_WIDTH,
+            'ball-height': BALL_HEIGHT,
+            'wall-margin': WALL_MARGIN,
             'game-over': self.game_over,
             'winner': self.winner,
             'loser': self.loser,
-            'right_player_score' : self.right_player_score,
-            'left_player_score' : self.left_player_score
+            'right_player_score': self.right_player_score,
+            'left_player_score': self.left_player_score
         }
         return game_state
