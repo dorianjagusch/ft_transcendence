@@ -1,4 +1,5 @@
-const baseURL = 'http://localhost:8080/';
+// const baseURL = 'http://localhost:8080/';
+const baseURL = 'http://localhost/';
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const logoutURL = `${baseURL}logout/`;
