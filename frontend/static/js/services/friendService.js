@@ -15,13 +15,11 @@ class FriendService extends RequestService {
 		return super.getAllRequest(`${backendURL.friendURL}?friendship_status=${friendship_status}`);
 	}
 
-	async postRequest({ user_id, friend_id }) {
-		console.log(username);
+	async postRequest({ friend_id }) {
 		return super.postRequest(
 			`${backendURL.friendURL}`,
 			JSON.stringify({
-				user_id: user_id,
-				friend_id: friend_id,
+				friend_id: friend_id
 		}));
 	}
 
@@ -29,8 +27,9 @@ class FriendService extends RequestService {
 		throw new NotImplementedError("PUT method not implemented for FriendService");
 	}
 
-	async deleteRequest(id) {
-		return super.deleteRequest(`${backendURL.friendURL}${id}`, id);
+	async deleteRequest(friend_id) {
+		console.log(friend_id)
+		return super.deleteRequest(`${backendURL.friendURL}${friend_id}`);
 	}
 }
 

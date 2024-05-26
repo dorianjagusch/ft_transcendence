@@ -19,6 +19,5 @@ export default class AForm {
 	}
 
 	generateForm() {
-		throw new NotImplementedError('generateForm method must be implemented by child classes');
 	}
 }
