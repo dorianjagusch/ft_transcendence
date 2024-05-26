@@ -7,7 +7,7 @@ from rest_framework import status
 from django.shortcuts import redirect
 
 from User.models import User
-from User.serializers import AuthenticatedGuestUserToken
+from Tokens.serializers import AuthenticatedGuestUserToken
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated, \
 											valid_serializer_in_body
@@ -21,7 +21,7 @@ class LaunchSingleMatchView(APIView):
 		try:
 			token = AuthenticatedGuestUserToken.objects.get(data=request.data.get('token'))
 		except AuthenticatedGuestUserToken.DoesNotExist:
-			return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 		if token.is_active == False or token.is_expired():
 			return Response({'error': 'Expired token'}, status=status.HTTP_403_FORBIDDEN)
 		if token.host_user != request.user.id:

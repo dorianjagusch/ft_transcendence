@@ -1,36 +1,37 @@
-from django.db import models
+from django.db import models, transaction, IntegrityError
 from django.db.models import Q
-from django.db import DatabaseError
-from django.db import transaction
-from datetime import datetime
 
 from .PlayerMatchStatus import PlayerMatchStatus
 from Player.models import Player
 from User.models import User
 
-from .models import Match
-
 class MatchManager(models.Manager):
 	def create_match_and_its_players(self, player_home_user_id, player_visiting_user_id):
-		
-		with transaction.atomic():
-			match = Match.objects.create()
+		try:
+			with transaction.atomic():
+				match = self.create()
+				
+				player_home = Player.objects.create(
+					user_id_id=player_home_user_id,
+					match_id=match,
+					score=0,
+					match_winner=False
+				)
+				
+				player_visiting = Player.objects.create(
+					user_id_id=player_visiting_user_id,
+					match_id=match,
+					score=0,
+					match_winner=False
+				)
 			
-			player_home = Player.objects.create(
-				user_id_id=player_home_user_id,
-				match_id=match,
-				score=0,
-				match_winner=False
-			)
-			
-			player_visiting = Player.objects.create(
-				user_id_id=player_visiting_user_id,
-				match_id=match,
-				score=0,
-				match_winner=False
-			)
+			return match, player_home, player_visiting
 		
-		return match, player_home, player_visiting
+		except IntegrityError:
+			return None, None, None
+		except Exception as e:
+			print(f"An error occurred: {e}")
+			return None, None, None
 
 
 	def get_match_players(self, match_id):
