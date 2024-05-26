@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from pong.consumers import PongConsumer
+
 # add app views here
 from User.views import UserDetailView, \
                         UserListView, \
@@ -41,4 +43,8 @@ urlpatterns = [
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
+]
+
+websocket_urlpatterns = [
+    path('pong/<int:match_id>', PongConsumer.as_asgi()),
 ]
