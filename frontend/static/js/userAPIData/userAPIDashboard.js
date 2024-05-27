@@ -79,7 +79,6 @@ const userData = {
 		// [statObj, ...] | null
 		statObj1,
 		statObj2,
-		statObj3,
 	],
 	playHistory: [
 		//[historyObj, ...] | null

@@ -8,9 +8,11 @@ import profileDescription from "../components/profileComponents/profileDescripti
 import smallPlacementCard from "../components/profileComponents/smallPlacementCard.js";
 import { scrollContainer } from "../components/scrollContainer.js";
 import profilePlayHistory from "../components/profileComponents/profilePlayHistory.js";
+import profileStatsByGame from "../components/profileComponents/profileStatsByGame.js"
 import profileSummaryStats from "../components/profileComponents/profileSummaryStats.js";
 
 import userData from "../userAPIData/userAPIDashboard.js";
+import { profileStats } from "../components/profileComponents/profileStats.js";
 
 export default class extends AView {
 	constructor(params) {
