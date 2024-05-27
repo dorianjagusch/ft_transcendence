@@ -19,6 +19,12 @@ export default class extends AView {
 			'<h2>Welcome</h2><h3>to the great pong tournament</h3>';
 		welcomeSection.innerHTML = welcomeHtml;
 
-		this.updateMain(leaderBoard, welcomeSection);
+		const pongButton = document.createElement('button');
+		pongButton.textContent = 'Play Pong';
+		pongButton.addEventListener('click', () => {
+			this.navigateTo('/pong');
+		});
+
+		this.updateMain(leaderBoard, welcomeSection, pongButton);
 	}
 }

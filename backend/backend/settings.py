@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'corsheaders', #Added for CORS header configuration
     'rest_framework',
     'backend',
+	'channels',
+	'daphne',
+	'pong',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
     # Backend apps here
     'User',
     'Friends',
+	'Tokens'
 ]
 
 MIDDLEWARE = [
@@ -83,8 +87,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
-
+#WSGI_APPLICATION = 'backend.wsgi.application'
+ASGI_APPLICATION = 'backend.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
