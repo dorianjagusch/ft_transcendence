@@ -82,5 +82,23 @@ def valid_serializer_in_body(serializer_class, **kwargs):
 		return wrapper
 	return decorator
 
+# Used with GuestUserAuthenticationView to prevent the host user from authenticating themself
+def must_not_be_username(view_func):
+	@wraps(view_func)
+	def wrapper(*args, **kwargs):
+		request = args[0] if args else None
 
+		try:
+			username = request.data.get('username')
+		except KeyError:
+			return HttpResponseForbidden("Missing 'username' in request data.")
+
+		if request.user.is_superuser:
+			return view_func(*args, **kwargs)
+
+		if request.user.username == username:
+			return HttpResponseForbidden("request data username has to be different from the logged in user's username.")
+
+		return view_func(*args, **kwargs)
+	return wrapper
 
