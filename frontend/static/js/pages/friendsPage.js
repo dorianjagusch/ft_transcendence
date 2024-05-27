@@ -6,9 +6,42 @@ import constants from '../constants.js';
 import AView from './AView.js';
 
 export default class extends AView {
+
 	constructor(params) {
 		super(params);
 		this.setTitle('Friends');
+		this.friendService = new FriendService();
+		this.acceptHandler = this.acceptHandler.bind(this);
+		this.declineHandler = this.declineHandler.bind(this);
+	}
+
+	acceptHandler(friend) {
+		const data = {
+			friend_id: friend.id
+		}
+
+		console.log(data.friend_id)
+		this.friendService
+			.postRequest(data)
+			.then(() => {
+				super.notify('Friendship created successfully.');
+				super.navigateTo('/friends');
+			})
+			.catch((error) => {
+				super.notify(error);
+			});
+	}
+
+	declineHandler(friend) {
+		this.friendService
+			.deleteRequest(friend.id)
+			.then(() => {
+				super.notify('Friendship declined successfully.');
+				super.navigateTo('/friends');
+			})
+			.catch((error) => {
+				super.notify(error);
+			});
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
@@ -17,36 +50,43 @@ export default class extends AView {
 		return scroller;
 	}
 
-	getHTML() {
-		const friendService = new FriendService();
+	createRequestScroller(friendsArray, card, tokens, identifier) {
+		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.acceptHandler, this.declineHandler));
+		scroller.classList.add(tokens, identifier);
+		return scroller;
+	}
 
-		Promise.all([
-			friendService.getAllRequest(constants.FRIENDSHIPSTATUS.FRIEND),
-			friendService.getAllRequest(constants.FRIENDSHIPSTATUS.PENDINGRECEIVED)
-		])
-		.then(([acceptedResponse, pendingResponse]) => {
-			let acceptedFriends = acceptedResponse.map(element => ({
+	async getHTML() {
+		let acceptedFriends = [];
+		let pendingFriends = [];
+
+		try {
+			const acceptedPromise = this.friendService.getAllRequest(constants.FRIENDSHIPSTATUS.FRIEND);
+			const pendingPromise = this.friendService.getAllRequest(constants.FRIENDSHIPSTATUS.PENDINGRECEIVED);
+
+			const acceptedResponse = await acceptedPromise;
+			acceptedFriends = acceptedResponse.map(element => ({
 				id: element.id,
 				username: element.username,
 				img: 'https://unsplash.it/200/200',
 				status: element.is_online ? 'online' : 'offline'
 			}));
-			let pendingFriends = pendingResponse.map(element => ({
+
+			const pendingResponse = await pendingPromise;
+			pendingFriends = pendingResponse.map(element => ({
 				id: element.id,
 				username: element.username,
 				img: 'https://unsplash.it/200/200',
 				status: element.is_online ? 'online' : 'offline'
 			}));
+			console.log(pendingFriends);
 
-			// Create friend and request scrollers
-			const friendScroller = this.createFriendScroller(acceptedFriends, friendCard, 'friends', 'bg-secondary');
-			const requestScroller = this.createFriendScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
-
-			// Update main with friend and request scrollers
-			this.updateMain(friendScroller, requestScroller);
-		})
-		.catch(error => {
+		} catch (error) {
 			console.error('Error:', error);
-		})
+		}
+
+		const friendScroller = this.createFriendScroller(acceptedFriends, friendCard, 'friends', 'bg-secondary');
+		const requestScroller = this.createRequestScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
+		this.updateMain(friendScroller, requestScroller);
 	}
 }

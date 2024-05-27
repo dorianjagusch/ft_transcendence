@@ -2,8 +2,11 @@ from functools import partial
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import rotate_token
+
 
 from .models import User
 from .serializers import UserOutputSerializer, UserInputSerializer
@@ -17,6 +20,7 @@ class UserListView(APIView):
 		serializer = UserOutputSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
+	@method_decorator(csrf_exempt)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
 	def post(self, request):
 
@@ -71,6 +75,7 @@ class UserDetailView(APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserLoginView(APIView):
+	@method_decorator(csrf_exempt)
 	def post(self, request):
 		username_input = request.data.get('username')
 		password_input = request.data.get('password')
@@ -85,6 +90,12 @@ class UserLoginView(APIView):
 			return Response({"message": "User login successful"}, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UserLogoutView(APIView):
+	@method_decorator(must_be_authenticated)
+	def post(self, request):
+		logout(request)
+		return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
 
 # admin stuff, for debugging
 class UserAdminDetailsView(APIView):

@@ -1,6 +1,7 @@
-const baseURL = 'http://127.0.0.1:8080/';
+const baseURL = 'http://localhost:8080/';
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
+const logoutURL = `${baseURL}logout/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
@@ -24,6 +25,7 @@ export default {
 	baseURL,
 	userURL,
 	loginURL,
+	logoutURL,
 	leaderboardURL,
 	settingsURL,
 	friendURL,

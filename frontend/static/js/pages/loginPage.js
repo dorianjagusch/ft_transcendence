@@ -1,4 +1,4 @@
-import loginService from '../services/loginService.js';
+import LoginService from '../services/loginService.js';
 import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
@@ -27,9 +27,8 @@ export default class extends AView {
 			this.notify('Please enter both username and password', 'error');
 			return;
 		}
-		const toSend = {username, password};
-		await loginService
-			.postLogin(toSend)
+		const loginService = new LoginService();
+		await loginService.postRequest({username, password})
 			.then(() => {
 				localStorage.setItem('username', username);
 				this.setNavbar();
