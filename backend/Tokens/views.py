@@ -50,7 +50,7 @@ class DeactivateGuestUserTokenView(APIView):
 			else:
 				token.is_active = False
 				token.save()
-				return Response({'message': 'Token has expired'}, status=status.HTTP_200_OK)
+				return Response({'message': 'Token is now expired'}, status=status.HTTP_200_OK)
 
 		except AuthenticatedGuestUserToken.DoesNotExist:
 			return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)

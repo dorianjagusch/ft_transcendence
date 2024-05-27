@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from pong.consumers import PongConsumer
+
 # add app views here
 from User.views import UserDetailView, \
                         UserListView, \
@@ -29,6 +31,8 @@ from Friends.views import FriendsListView, \
 
 from Tokens.views import GuestUserAuthenticationView, \
 							DeactivateGuestUserTokenView
+
+from Match.views import LaunchSingleMatchView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -48,4 +52,11 @@ urlpatterns = [
 	# Tokens views
 	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
 	path('remove-guest-user/', DeactivateGuestUserTokenView.as_view()),
+
+	# Match Views
+	path('start-single-match/', LaunchSingleMatchView.as_view()),
+]
+
+websocket_urlpatterns = [
+    path('pong/<int:match_id>', PongConsumer.as_asgi()),
 ]

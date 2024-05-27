@@ -5,6 +5,8 @@ from .PlayerMatchStatus import PlayerMatchStatus
 from Player.models import Player
 from User.models import User
 
+import sys
+
 class MatchManager(models.Manager):
 	def create_match_and_its_players(self, player_home_user_id, player_visiting_user_id):
 		try:
@@ -24,14 +26,15 @@ class MatchManager(models.Manager):
 					score=0,
 					match_winner=False
 				)
-			
-			return match, player_home, player_visiting
 		
-		except IntegrityError:
+		except IntegrityError as e:
+			print(f"integrity error: An error occurred: {e}", file=sys.stderr)
 			return None, None, None
 		except Exception as e:
-			print(f"An error occurred: {e}")
+			print(f"An error occurred: {e}", file=sys.stderr)
 			return None, None, None
+		
+		return match, player_home, player_visiting
 
 
 	def get_match_players(self, match_id):

@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Q
 from rest_framework.serializers import ValidationError
 
-from .models import Player
 from .serializers import PlayerSerializer
 
 class PlayerManager(models.Manager):
@@ -19,10 +18,10 @@ class PlayerManager(models.Manager):
 	def get_player_match_opponent(self, player_id):
 		try:
 			player = self.get(pk=player_id)
-		except Player.DoesNotExist:
+		except models.DoesNotExist:
 			raise ValueError("Player with id '{}' does not exist.".format(player_id))
 		
 		match = player.match_id
-		opponent = Player.objects.filter(match_id=match).exclude(id=player_id)
+		opponent = self.filter(match_id=match).exclude(id=player_id)
 
 		return opponent

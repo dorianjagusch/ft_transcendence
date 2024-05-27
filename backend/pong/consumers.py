@@ -46,7 +46,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.game.game_over == True:
             await self.send_positions()
 
-            # SSALMI save the scores here, but how?
+            # save the final results of the match
+            await self.save_match_final_results()
 
             await self.close()
         

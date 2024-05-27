@@ -20,7 +20,7 @@ class AuthenticatedGuestUserTokenManager(models.Manager):
 					guest_user=guest_user
 				)
 			else:
-				# If the latest token has not expired and is still active, update creation time, else create a new token
+				# If the latest token has not expired and is still active, update expires_at time, else create a new token
 				if guest_token.is_active == True:
 					guest_token.expires_at = timezone.now() + timedelta(minutes=5) 
 					guest_token.save()
