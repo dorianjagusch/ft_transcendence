@@ -21,10 +21,41 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		const modalContainer = Modal("completeProfile", "bg-secondary", completeProfileForm);
 
+		const title = profileTitle("Your Stats");
+		const userImg = profileImg(userData.user.img);
+
+		const userPlacement = arrayToElementsList(userData.placements, "placements", smallPlacementCard);
+		userPlacement.classList.add('flex-col')
+		const userDescription = profileDescription(userData.user.description);
+
+		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, "column");
+		userHistory.classList.add('play-history');
+
+		const userStats = userData.stats.map((game, index) => {
+			const statsEntry = profileStatsByGame(game, index + 1);
+			return statsEntry;
+		});
+
+		const userSummary = profileSummaryStats(userData.stats);
+
+		const main = document.querySelector("main");
+		main.classList.add("profile", "dashboard");
 		this.updateMain(
-			modalContainer
+			title,
+			userImg,
+			userPlacement,
+			userDescription,
+			userSummary,
+			...userStats,
+			// gameGraph1,
+			// gameGraph2,
+			userHistory
 		);
 	}
 }
+
+// TODO:
+
+//	Implement stats sections
+// implement graph sections
