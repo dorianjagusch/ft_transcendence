@@ -17,8 +17,6 @@ export default class extends AView {
 	}
 
 	profileHandler(friend)	{
-		console.log(friend.id);
-		console.log('here!');
 		super.navigateTo(`/profile/${friend.id}`);
 	}
 

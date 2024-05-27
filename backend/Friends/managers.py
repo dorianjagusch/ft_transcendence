@@ -14,9 +14,12 @@ class FriendsManager(models.Manager):
 			friends_to_get = set(friends_of_user) - set(user_friends)
 		elif friendship_status == FriendShipStatus.FRIEND.value:
 			friends_to_get = set(friends_of_user) & set(user_friends)
+		elif friendship_status == FriendShipStatus.NOTFRIEND.value:
+			all_users = User.objects.exclude(id=user_id).values_list('id', flat=True)
+			all_friends_and_pending = set(user_friends) | set(friends_of_user)
+			friends_to_get = set(all_users) - all_friends_and_pending
 		else:
-			all_users = User.objects.exclude(id=user_id)
-			friends_to_get = set(all_users.values_list('id', flat=True)) - (set(user_friends) | set(friends_of_user))
+			friends_to_get = set()
 		friends = User.objects.filter(id__in=friends_to_get)
 		return friends
 

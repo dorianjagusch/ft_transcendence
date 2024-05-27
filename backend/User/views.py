@@ -38,6 +38,7 @@ class UserListView(APIView):
 
 class UserDetailView(APIView):
 	def get(self, request, user_id):
+		login_user_id = request.user.id
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
