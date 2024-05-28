@@ -14,7 +14,7 @@ const buttonBar = (buttons) => {
 	buttonBar.classList.add('button-bar');
 
 	buttons.forEach(({ className, textContent, handler }) => {
-		let button = Button(className, textContent, handler);
+		const button = Button(className, textContent, handler);
 		buttonBar.appendChild(button);
 	});
 
