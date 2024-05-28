@@ -3,7 +3,6 @@ import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
 import AView from './AView.js';
-import setNavbar from '../components/navbar.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -23,8 +22,6 @@ export default class extends AView {
 		await loginService.postRequest({username, password})
 			.then(() => {
 				localStorage.setItem('username', username);
-				setNavbar();
-
 				localStorage.setItem('isLoggedIn', true);
 				this.navigateTo('/friends');
 			})
