@@ -41,8 +41,10 @@ const router = async () => {
 
 	if (isLoggedOut && !allowedPaths.includes(match.route.path)) {
 		navigateTo('/login');
+		return;
 	} else if (!isLoggedOut && allowedPaths.includes(match.route.path)) {
 		navigateTo('/dashboard');
+		return;
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
