@@ -6,13 +6,12 @@ from User.serializers import UserOutputSerializer
 from .models import Friend
 from .serializers import FriendInputSerializer, FriendOutputSerializer
 from .friendShipStatus import FriendShipStatus
-
 from shared_utilities.decorators import must_be_authenticated, \
 									must_be_body_user_id, \
 									valid_serializer_in_body
 
 class FriendsListView(APIView):
-	# @method_decorator(must_be_authenticated)
+	@method_decorator(must_be_authenticated)
 	def get(self, request):
 		friendship_status = request.query_params.get('friendship_status')
 		if not friendship_status or friendship_status == FriendShipStatus.NONE.value:
