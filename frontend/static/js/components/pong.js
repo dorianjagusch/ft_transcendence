@@ -12,7 +12,6 @@ const PongContainer = () => {
 	pongContainer.id = 'pong-container';
 
 	const pongOptions = [
-		// {text: 'Room name', id: 'room-name'}, // ADD ROOM NAME
 		{text: 'Player 1', id: 'player-one-position'},
 		{text: 'Player 2', id: 'player-two-position'},
 		{text: 'Ball', id: 'ball-position'},

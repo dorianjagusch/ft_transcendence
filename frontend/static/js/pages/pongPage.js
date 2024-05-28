@@ -25,7 +25,6 @@ export default class extends AView {
 
 		const pong = Pong();
 		this.updateMain(pong);
-		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME
 		this.appendEventListeners();
 	}
 }
