@@ -1,4 +1,5 @@
 import routes from './route.js';
+import setNavbar from './components/navbar.js';
 
 const pathToRegex = (path) =>
 	new RegExp('^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$');
@@ -50,6 +51,7 @@ const router = async () => {
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
+	setNavbar();
 	view.getHTML();
 };
 

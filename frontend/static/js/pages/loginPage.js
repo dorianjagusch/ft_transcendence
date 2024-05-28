@@ -3,20 +3,12 @@ import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
 import AView from './AView.js';
+import setNavbar from '../components/navbar.js';
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Login');
-	}
-
-	setNavbar() {
-		const navPartitions = document.querySelectorAll('.nav-partition');
-		navPartitions.forEach((partition) => {
-			const visibility = partition.getAttribute('data-visible');
-			partition.setAttribute('data-visible', visibility === 'true' ? 'false' : 'true');
-			document.querySelector('#user').innerHTML = localStorage.getItem('username');
-		});
 	}
 
 	loginHandler = async (e) => {
@@ -31,7 +23,7 @@ export default class extends AView {
 		await loginService.postRequest({username, password})
 			.then(() => {
 				localStorage.setItem('username', username);
-				this.setNavbar();
+				setNavbar();
 
 				localStorage.setItem('isLoggedIn', true);
 				this.navigateTo('/friends');
