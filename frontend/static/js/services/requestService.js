@@ -40,8 +40,8 @@ class RequestService {
 		}
 	}
 
-	async getRequest(url, id) {
-		const request = fetch(`${url}${id}`, {
+	async getRequest(url) {
+		const request = fetch(`${url}`, {
 			credentials: 'include',
 		});
 		return this.checkResponseWithBody(request);
