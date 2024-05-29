@@ -14,7 +14,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 											valid_serializer_in_body
 
 
-class LaunchLocalSingleMatchView(APIView):
+class LaunchSingleMatchView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(MatchTokenSerializer))
 	def post(self, request):
@@ -40,9 +40,9 @@ class LaunchLocalSingleMatchView(APIView):
 class LaunchTestMatchView(APIView):
 	@method_decorator(must_be_authenticated)
 	def get(self, request):
-		token = MatchToken.objects.create_test_match_token(request.user)
-		match, host_player, guest_player = Match.objects.create_match_and_its_players(token.user_left_side.id, token.user_right_side.id)
-		if not all([match, host_player, guest_player]):
+		token = MatchToken.objects.create_single_match_token(request.user, request.user)
+		match, player_left_side, player_right_side = Match.objects.create_match_and_its_players(token.user_left_side.id, token.user_right_side.id)
+		if not all([match, player_left_side, player_right_side]):
 			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 		
 		pong_match_url = f'http://localhost:80/pong/{match.id}?token={token.token}'

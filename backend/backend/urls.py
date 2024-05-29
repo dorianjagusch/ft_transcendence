@@ -29,10 +29,10 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
-from Tokens.views import LocalGuestUserAuthenticationView, \
+from Tokens.views import SingleMatchGuestUserAuthenticationView, \
 							DeactivateMatchTokenView
 
-from Match.views import LaunchLocalSingleMatchView, \
+from Match.views import LaunchSingleMatchView, \
 							LaunchTestMatchView
 
 urlpatterns = [
@@ -51,11 +51,11 @@ urlpatterns = [
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
 
 	# Tokens views
-	path('authenticate-guest-user/', LocalGuestUserAuthenticationView.as_view()),
+	path('authenticate-guest-user-for-single-match/', SingleMatchGuestUserAuthenticationView.as_view()),
 	path('deactivate-match-token/', DeactivateMatchTokenView.as_view()),
 
 	# Match Views
-	path('start-local-single-match/', LaunchLocalSingleMatchView.as_view()),
+	path('start-single-match/', LaunchSingleMatchView.as_view()),
 	path('start-test-match/', LaunchTestMatchView.as_view()),
 ]
 

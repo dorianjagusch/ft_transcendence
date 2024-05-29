@@ -13,14 +13,14 @@ class MatchManager(models.Manager):
 			with transaction.atomic():
 				match = self.create()
 				
-				player_home = Player.objects.create(
+				player_left_side = Player.objects.create(
 					user_id=left_side_user_id,
 					match=match,
 					score=0,
 					match_winner=False
 				)
 				
-				player_visiting = Player.objects.create(
+				player_right_side = Player.objects.create(
 					user_id=right_side_user_id,
 					match=match,
 					score=0,
@@ -34,12 +34,12 @@ class MatchManager(models.Manager):
 			print(f"An error occurred: {e}", file=sys.stderr)
 			return None, None, None
 		
-		return match, player_home, player_visiting
+		return match, player_left_side, player_right_side
 
 
 	def get_match_players(self, match_id):
 		try:
-			players = Player.objects.filter(pk=match_id)
+			players = Player.objects.filter(match_id=match_id)
 		except Player.DoesNotExist:
 			raise ValueError("No players found for Match with id '{}'.".format(match_id))
 		

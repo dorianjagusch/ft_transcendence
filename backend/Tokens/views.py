@@ -16,7 +16,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 											valid_serializer_in_body
 
 # Create your views here.
-class LocalGuestUserAuthenticationView(APIView):
+class SingleMatchGuestUserAuthenticationView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
@@ -25,11 +25,11 @@ class LocalGuestUserAuthenticationView(APIView):
 		username = request.data.get('username')
 		password = request.data.get('password')
 
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			token = MatchToken.objects.create_local_single_match_token(host_user=host_user, guest_user=user)
+		guest_user = authenticate(username=username, password=password)
+		if guest_user is not None:
+			token = MatchToken.objects.create_single_match_token(host_user, guest_user)
 			token_serializer = MatchTokenSerializer(token)
-			user_serializer = UserOutputSerializer(user)
+			user_serializer = UserOutputSerializer(guest_user)
 			return Response({
                 'token': token_serializer.data,
                 'guest_user': user_serializer.data
