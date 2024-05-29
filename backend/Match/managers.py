@@ -8,21 +8,21 @@ from User.models import User
 import sys
 
 class MatchManager(models.Manager):
-	def create_match_and_its_players(self, player_home_user_id, player_visiting_user_id):
+	def create_match_and_its_players(self, left_side_user_id, right_side_user_id):
 		try:
 			with transaction.atomic():
 				match = self.create()
 				
 				player_home = Player.objects.create(
-					user_id_id=player_home_user_id,
-					match_id=match,
+					user_id=left_side_user_id,
+					match=match,
 					score=0,
 					match_winner=False
 				)
 				
 				player_visiting = Player.objects.create(
-					user_id_id=player_visiting_user_id,
-					match_id=match,
+					user_id=right_side_user_id,
+					match=match,
 					score=0,
 					match_winner=False
 				)

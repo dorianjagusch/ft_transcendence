@@ -29,10 +29,11 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
-from Tokens.views import GuestUserAuthenticationView, \
-							DeactivateGuestUserTokenView
+from Tokens.views import LocalGuestUserAuthenticationView, \
+							DeactivateMatchTokenView
 
-from Match.views import LaunchSingleMatchView
+from Match.views import LaunchLocalSingleMatchView, \
+							LaunchTestMatchView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -50,11 +51,12 @@ urlpatterns = [
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
 
 	# Tokens views
-	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
-	path('remove-guest-user/', DeactivateGuestUserTokenView.as_view()),
+	path('authenticate-guest-user/', LocalGuestUserAuthenticationView.as_view()),
+	path('deactivate-match-token/', DeactivateMatchTokenView.as_view()),
 
 	# Match Views
-	path('start-single-match/', LaunchSingleMatchView.as_view()),
+	path('start-local-single-match/', LaunchLocalSingleMatchView.as_view()),
+	path('start-test-match/', LaunchTestMatchView.as_view()),
 ]
 
 websocket_urlpatterns = [

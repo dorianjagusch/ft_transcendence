@@ -21,7 +21,7 @@ class PlayerManager(models.Manager):
 		except models.DoesNotExist:
 			raise ValueError("Player with id '{}' does not exist.".format(player_id))
 		
-		match = player.match_id
-		opponent = self.filter(match_id=match).exclude(id=player_id)
+		match = player.match
+		opponent = self.filter(match=match).exclude(id=player_id)
 
 		return opponent

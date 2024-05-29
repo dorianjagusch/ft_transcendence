@@ -4,9 +4,9 @@ from Match.models import Match
 from User.models import User
 
 class PlayerSerializer(serializers.ModelSerializer):
-	user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-	match_id = serializers.PrimaryKeyRelatedField(queryset=Match.objects.all())
+	user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+	match = serializers.PrimaryKeyRelatedField(queryset=Match.objects.all())
 
 	class Meta:
 		model = Player
-		fields = ['id', 'user_id', 'match_id', 'score', 'match_winner']
+		fields = ['id', 'user', 'match', 'score', 'match_winner']

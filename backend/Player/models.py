@@ -4,8 +4,8 @@ from User.models import User
 
 # Create your models here.
 class Player(models.Model):
-	user_id = models.ForeignKey(User, related_name='players', null=False, blank=False, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, related_name='players', null=False, blank=False, on_delete=models.CASCADE)
 	# lazy reference used for match model to avoid dependency issues
-	match_id = models.ForeignKey('Match.Match', related_name='players', null=False, blank=False, on_delete=models.CASCADE)
+	match = models.ForeignKey('Match.Match', related_name='players', null=False, blank=False, on_delete=models.CASCADE)
 	score = models.PositiveIntegerField(default=0)
 	match_winner = models.BooleanField(default=False)

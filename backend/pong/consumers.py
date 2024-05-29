@@ -6,7 +6,7 @@ from .game_logic import PongGame
 from .constants import *
 
 from channels.db import database_sync_to_async
-from Tokens.models import AuthenticatedGuestUserToken
+from Tokens.models import MatchToken
 from Match.models import Match
 from Player.models import Player
 
@@ -15,8 +15,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.game = PongGame()
         self.match = None
-        self.player_one = None
-        self.player_two = None
+        self.token = None
+        self.player_left = None
+        self.player_right = None
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
@@ -24,15 +25,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         query_string = self.scope['query_string'].decode('utf-8')
         token = query_string.split('=')[1] if 'token=' in query_string else None
 
-        result = await self.authenticate_and_fetch(token, match_id)
-        if not result:
+        self.token = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
+        if token:
+            self.start_match(self.match)
+            await self.accept()
+            asyncio.create_task(self.send_positions_loop())
+        else:
             await self.close()
             return
-
-        # Authenticate token and fetch match and players
-        await self.accept()
-        # Start sending positions immediately after connection is established
-        asyncio.create_task(self.send_positions_loop())
 
     async def disconnect(self, close_code):
         pass
@@ -69,35 +69,39 @@ class PongConsumer(AsyncWebsocketConsumer):
                 break
     
     @database_sync_to_async
-    def authenticate_and_fetch(self, token, match_id):
+    def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
-            guest_token = AuthenticatedGuestUserToken.objects.get(token=token)
+            match_token = MatchToken.objects.get(token=token)
             if not token.is_active or token.is_expired():
-                return False
+                return None
             
-            guest_token.is_active = False
-            guest_token.save()
+            match_token.is_active = False
+            match_token.save()
 
-            self.match = Match.objects.get(id=match_id)
-            self.player_one = Player.objects.get(match=self.match, user_id=guest_token.host_user)
-            self.player_two = Player.objects.get(match=self.match, user_id=guest_token.guest_user)
+            self.match = Match.objects.get(pk=match_id)
+            self.player_left = Player.objects.get(match=self.match, user_id=match_token.user_left_side)
+            self.player_right = Player.objects.get(match=self.match, user_id=match_token.user_right_side)
 
-            return True
+            return match_token
             
-        except (AuthenticatedGuestUserToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
-            return False
+        except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
+            return None
     
     @database_sync_to_async
     def save_match_final_results(self):
         # Save scores when the game is over
-        self.player_one.score = self.game.player_one_score
-        self.player_two.score = self.game.player_two_score
+        self.player_left.score = self.game.player_left_score
+        self.player_right.score = self.game.player_right_score
 
         # Determine and save the winner
-        if self.game.player_one_score > self.game.player_two_score:
-            self.player_one.match_winner = True
+        if self.game.player_left_score > self.game.player_right_score:
+            self.player_left.match_winner = True
         else:
-            self.player_two.match_winner = True
+            self.player_right.match_winner = True
 
-        self.player_one.save()
-        self.player_two.save()
+        self.player_left.save()
+        self.player_right.save()
+        
+    @database_sync_to_async
+    def start_match(self, match):
+        match.start_match()

@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.utils import timezone
 
 from User.models import User
-from .managers import AuthenticatedGuestUserTokenManager
+from .managers import MatchTokenManager
 
 class AbstractToken(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -26,15 +26,14 @@ class AbstractToken(models.Model):
     def __str__(self):
         return str(self.token)
 
+class MatchToken(AbstractToken):
+    user_left_side = models.ForeignKey(User, related_name='match_token_left', on_delete=models.CASCADE)
+    user_right_side = models.ForeignKey(User, related_name='match_token_right', on_delete=models.CASCADE)
 
-class AuthenticatedGuestUserToken(AbstractToken):
-	host_user = models.ForeignKey(User, related_name='host_tokens', on_delete=models.CASCADE)
-	guest_user = models.ForeignKey(User, related_name='guest_tokens', on_delete=models.CASCADE)
-	
+    # for the development of the pong game, will be removed later
+    test_match = models.BooleanField(default=False)
 
-	objects = AuthenticatedGuestUserTokenManager()
+    # tournament = models.ForeignKey()
+    # tournament_match = models.ForeignKey()
 
-	class Meta:
-		constraints = [
-			models.CheckConstraint(check=~models.Q(host_user=models.F('guest_user')), name='host_guest_not_same')
-		]
+    objects = MatchTokenManager()
