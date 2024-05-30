@@ -9,6 +9,7 @@ from User.models import User
 from .models import Match
 from Tokens.models import MatchToken
 from Tokens.serializers import MatchTokenSerializer
+from shared_utilities.GameSetupManager import GameSetupManager
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated, \
 											valid_serializer_in_body
@@ -28,7 +29,7 @@ class LaunchSingleMatchView(APIView):
 		if token.user_left_side.id != request.user.id:
 			return Response({'error': 'You are not the host user in the token'}, status=status.HTTP_403_FORBIDDEN)
 		
-		match, host_player, guest_player = Match.objects.create_match_and_its_players(token.user_left_side.id, token.user_right_side.id)
+		match, host_player, guest_player = GameSetupManager.create_match_and_its_players(token)
 
 		if not all([match, host_player, guest_player]):
 			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -41,9 +42,9 @@ class LaunchTestMatchView(APIView):
 	@method_decorator(must_be_authenticated)
 	def get(self, request):
 		token = MatchToken.objects.create_single_match_token(request.user, request.user)
-		match, player_left_side, player_right_side = Match.objects.create_match_and_its_players(token.user_left_side.id, token.user_right_side.id)
+		match, player_left_side, player_right_side = GameSetupManager.create_match_and_its_players(token)
 		if not all([match, player_left_side, player_right_side]):
 			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 		
 		pong_match_url = f'http://localhost:80/pong/{match.id}?token={token.token}'
-		return redirect(pong_match_url) # this is prob not correct as this is a single-page app...
+		return redirect(pong_match_url)
