@@ -42,7 +42,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(game_consts))
 
     async def send_positions_loop(self):
-        self.send_consts()
+        await self.send_consts()
         while True:
             self.game.update_ball_position()
             await self.send_positions()

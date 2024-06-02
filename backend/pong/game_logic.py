@@ -18,8 +18,8 @@ class PongGame:
             pong_stat.player_right_y += PLAYER_MOVEMENT_UNIT
         
         # Ensure player positions stay within the bounds of the play area
-        pong_stat.player_left_y = max(min(pong_stat.player_left_y, ( PLAYGROUND_HEIGHT / 2 ) - PLAYER_HEIGHT), 0)  # Bound lfet side player between 0 and (playground height / 2  - player height)
-        pong_stat.player_right_y = max(min(pong_stat.player_right_y, ( PLAYGROUND_HEIGHT / 2 )  - PLAYER_HEIGHT), 0)  # Bound right side player between 0 and (playground height / 2 - player height)
+        pong_stat.player_left_y = max(min(pong_stat.player_left_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)  # Bound lfet side player between 0 and (playground height / 2  - player height)
+        pong_stat.player_right_y = max(min(pong_stat.player_right_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)  # Bound right side player between 0 and (playground height / 2 - player height)
     
     def kick_start_game(self, pong_stat, key_press):
         # Kick start the game based on right side player's movement
@@ -29,10 +29,11 @@ class PongGame:
         elif key_press == 'l':
             # right side Player  moves downward, set ball angle to 240 degrees
             pong_stat.ball_angle = 240
-        
         pong_stat.game_started = True
-    
-    # Update ball position based on angle
+
+
+
+   # Update ball position based on angle
     def update_ball_position(self, pong_stat):
         if pong_stat.game_started:
             pong_stat.ball_x += BALL_SPEED * math.cos(math.radians(pong_stat.ball_angle))
