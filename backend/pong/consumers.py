@@ -2,13 +2,13 @@
 import json
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .game_logic import PongGame
+from .game_status import PongStatus
 from .constants import *
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.game = PongGame()
+        self.game = PongStatus()
 
     async def connect(self):
         await self.accept()
