@@ -28,18 +28,52 @@ class PongStatus:
     def update_ball_position(self):
         self.game.update_ball_position(self)
 
+    def get_consts(self):
+        game_consts = {
+            'players': {
+                'player-width': PLAYER_WIDTH,
+                'player-height': PLAYER_HEIGHT,
+            },
+            'ball': {
+                'ball-width': BALL_WIDTH,
+                'ball-height': BALL_HEIGHT,
+                'ball-speed': BALL_SPEED
+            },
+            'game': {
+                'wall-margin': WALL_MARGIN,
+                'playground-width': PLAYGROUND_WIDTH,
+                'playground-hight': PLAYGROUND_HEIGHT
+            }
+        }
+
     def get_game_state(self):
         game_state = {
-            'ball_x': self.ball_x,
-            'ball_y': self.ball_y,
-            'player_left_mid_y': self.player_left_y,
-            'player_left_start_x': self.player_left_x,
-            'player_right_mid_y': self.player_right_y,
-            'player_right_start_x': self.player_right_x,
-            'game-over': self.game_over,
-            'winner': self.winner,
-            'loser': self.loser,
-            'player_right_score': self.player_right_score,
-            'player_left_score': self.player_left_score
+            'ball': {
+                'position': {
+                'x': self.ball_x,
+                'y': self.ball_y
+                },
+            },
+            'players': {
+                'left': {
+                    'position': {
+                        'x': self.player_left_x,
+                        'y': self.player_left_y
+                    },
+                    'score': self.player_left_score
+                },
+                'right': {
+                    'position': {
+                        'x': self.player_right_x,
+                        'y': self.player_right_y
+                    },
+                    'score': self.player_right_score
+                }
+            },
+            'game': {
+                'over': self.game_over,
+                'winner': self.winner,
+                'loser': self.loser
+            }
         }
         return game_state
