@@ -45,6 +45,7 @@ class PongStatus:
                 'playground-hight': PLAYGROUND_HEIGHT
             }
         }
+        return game_consts
 
     def get_game_state(self):
         game_state = {
