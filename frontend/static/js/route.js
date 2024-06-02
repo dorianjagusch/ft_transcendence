@@ -19,5 +19,5 @@ export default [
 	{ path: '/play', view: playPage },
 	{ path: '/pong', view: pongPage },
 	{ path: '/leaderboard', view: leaderBoard },
-	{ path: '/profile', view: profilePage },
+	{ path: '/profile/:id', view: profilePage },
 ];

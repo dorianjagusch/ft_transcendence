@@ -5,11 +5,9 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.middleware.csrf import rotate_token
-
-
 from .models import User
-from .serializers import UserOutputSerializer, UserInputSerializer
+from Friends.models import Friend
+from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 from shared_utilities.decorators import must_be_authenticated, \
 	 								must_be_url_user, \
 									valid_serializer_in_body
@@ -40,11 +38,16 @@ class UserListView(APIView):
 
 class UserDetailView(APIView):
 	def get(self, request, user_id):
+		login_user_id = request.user.id
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-		serializer = UserOutputSerializer(user)
+		if user.id == login_user_id:
+			serializer = UserOutputSerializer(user)
+			return Response(serializer.data)
+		friendship = Friend.objects.get_friendship_status(login_user_id, user.id)
+		serializer = UserFriendOutputSerializer(user, friendship=friendship)
 		return Response(serializer.data)
 
 	@method_decorator(must_be_authenticated)
