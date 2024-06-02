@@ -12,6 +12,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         await self.accept()
+        self.send_consts()
         # Start sending positions immediately after connection is established
         asyncio.create_task(self.send_positions_loop())
 
@@ -44,3 +45,13 @@ class PongConsumer(AsyncWebsocketConsumer):
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)   # Wait for the specified interval before sending the next message
             if self.game.game_over == True:
                 break
+
+    async def send_consts(self):
+        game_consts = {
+            'player-width': PLAYER_WIDTH,
+            'player-height': PLAYER_HEIGHT,
+            'ball-width': BALL_WIDTH,
+            'ball-height': BALL_HEIGHT,
+            'wall-margin': WALL_MARGIN,
+        }
+        await self.send(text_data=json.dumps(game_consts))
