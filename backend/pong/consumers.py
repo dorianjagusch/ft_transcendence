@@ -19,21 +19,15 @@ class PongConsumer(AsyncWebsocketConsumer):
         pass
 
     async def receive(self, text_data):
-        # Receive key press messages from the client
         key_press = text_data.strip()
-        # Update player positions based on key press
-        self.game.update_positions(key_press)
-        # Check if the game is over and disconnect if it is       
+        self.game.update_positions(key_press)      
         if self.game.game_over == True:
             await self.send_positions()
             await self.close()
-        
-        # Send updated positions to client
         await self.send_positions()
 
 
     async def send_positions(self):
-        # Send positions to clients
         game_state = self.game.get_game_state()
         await self.send(text_data=json.dumps(game_state))
 

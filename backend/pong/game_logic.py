@@ -18,8 +18,8 @@ class PongGame:
             pong_stat.player_right_y += PLAYER_MOVEMENT_UNIT
         
         # Ensure player positions stay within the bounds of the play area
-        pong_stat.player_left_y = max(min(pong_stat.player_left_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)  # Bound lfet side player between 0 and (playground height / 2  - player height)
-        pong_stat.player_right_y = max(min(pong_stat.player_right_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)  # Bound right side player between 0 and (playground height / 2 - player height)
+        pong_stat.player_left_y = max(min(pong_stat.player_left_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)  
+        pong_stat.player_right_y = max(min(pong_stat.player_right_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
     
     def kick_start_game(self, pong_stat, key_press):
         # Kick start the game based on right side player's movement
@@ -38,7 +38,7 @@ class PongGame:
         if pong_stat.game_started:
             pong_stat.ball_x += BALL_SPEED * math.cos(math.radians(pong_stat.ball_angle))
             pong_stat.ball_y += BALL_SPEED * math.sin(math.radians(pong_stat.ball_angle))
-            self.check_collisions(pong_stat)  # Check for collisions
+            self.check_collisions(pong_stat)
 
     def check_collisions(self, pong_stat):
         # Check for collisions with players
