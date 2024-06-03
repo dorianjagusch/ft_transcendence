@@ -29,8 +29,7 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
-from Tokens.views import SingleMatchGuestUserAuthenticationView, \
-							DeactivateMatchTokenView
+from Tokens.views import SingleMatchGuestTokenView
 
 from Match.views import LaunchSingleMatchView, \
 							LaunchTestMatchView
@@ -51,8 +50,7 @@ urlpatterns = [
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
 
 	# Tokens views
-	path('authenticate-guest-user-for-single-match/', SingleMatchGuestUserAuthenticationView.as_view()),
-	path('deactivate-match-token/', DeactivateMatchTokenView.as_view()),
+	path('tokens/guest/match/', SingleMatchGuestTokenView.as_view()),
 
 	# Match Views
 	path('start-single-match/', LaunchSingleMatchView.as_view()),

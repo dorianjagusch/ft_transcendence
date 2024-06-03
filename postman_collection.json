@@ -1561,12 +1561,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseurl}}/authenticate-guest-user-for-single-match/",
+							"raw": "{{baseurl}}/tokens/guest/match/",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
-								"authenticate-guest-user-for-single-match",
+								"tokens",
+								"guest",
+								"match",
 								""
 							]
 						}
@@ -1590,7 +1592,7 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "x-csrftoken",
@@ -1613,12 +1615,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseurl}}/deactivate-match-token/",
+							"raw": "{{baseurl}}/tokens/guest/match/",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
-								"deactivate-match-token",
+								"tokens",
+								"guest",
+								"match",
 								""
 							]
 						}
