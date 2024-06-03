@@ -4,7 +4,6 @@ from django.http import HttpResponseForbidden
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.views import APIView
 
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 

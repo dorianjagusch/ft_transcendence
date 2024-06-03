@@ -1,12 +1,15 @@
 from rest_framework import serializers
-from .models import AbstractToken, AuthenticatedGuestUserToken
+from .models import AbstractToken, MatchToken, TournamentGuestToken
 
 class AbstractTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbstractToken
         fields = ['token']
 
-
-class AuthenticatedGuestUserTokenSerializer(AbstractTokenSerializer):
+class MatchTokenSerializer(AbstractTokenSerializer):
     class Meta(AbstractTokenSerializer.Meta):
-        model = AuthenticatedGuestUserToken
+        model = MatchToken
+
+class TournamentGuestTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TournamentGuestToken
