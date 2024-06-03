@@ -31,12 +31,12 @@ class GuestUserAuthenticationView(APIView):
 			token_serializer = AuthenticatedGuestUserTokenSerializer(token)
 			user_serializer = UserOutputSerializer(user)
 			return Response({
-                'token': token_serializer.data,
-                'guest_user': user_serializer.data
-            }, status=status.HTTP_201_CREATED)
+				'token': token_serializer.data,
+				'guest_user': user_serializer.data
+			}, status=status.HTTP_201_CREATED)
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-		
+
 class DeactivateGuestUserTokenView(APIView):
 	@method_decorator(valid_serializer_in_body(AuthenticatedGuestUserTokenSerializer))
 	@method_decorator(must_be_authenticated)

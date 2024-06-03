@@ -70,10 +70,12 @@ class UserDetailView(APIView):
 	@method_decorator(must_be_url_user)
 	def delete(self, request, user_id):
 		try:
+			logout(request)
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-
+		except:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 		user.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
