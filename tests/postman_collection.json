@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "d68fcdc8-4b27-42e5-b4e5-ad0094f847d6",
 		"name": "Rest API tests",
-		"description": "A collection of REST API tests for the backend.\n\nBefore running the tests, make sure that the database is empty, as the tests might give the incorrect results if there is anything in the database prior to running the tests.  \nTo do this, go to the backend container shell and write \\`python manage.py flush --no-input\\`\n\nBe aware that the tests need to be run in order, so always run the User app tests -folder before the Friends app tests -folder, for example.",
+		"description": "A collection of REST API tests for the backend.\n\nBe aware that the tests need to be run in order, so always run the User requests -folders before creating friendships, for example.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33991974"
 	},
