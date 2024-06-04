@@ -13,6 +13,11 @@ export default class extends AView {
 		this.friendService = new FriendService();
 		this.acceptHandler = this.acceptHandler.bind(this);
 		this.declineHandler = this.declineHandler.bind(this);
+		this.profileHandler = this.profileHandler.bind(this);
+	}
+
+	profileHandler(friend)	{
+		super.navigateTo(`/profile/${friend.id}`);
 	}
 
 	acceptHandler(friend) {
@@ -45,13 +50,13 @@ export default class extends AView {
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
-		let scroller = scrollContainer(friendsArray, card);
+		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.profileHandler));
 		scroller.classList.add(tokens, identifier);
 		return scroller;
 	}
 
 	createRequestScroller(friendsArray, card, tokens, identifier) {
-		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.acceptHandler, this.declineHandler));
+		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.acceptHandler, this.declineHandler, this.profileHandler));
 		scroller.classList.add(tokens, identifier);
 		return scroller;
 	}
@@ -79,8 +84,6 @@ export default class extends AView {
 				img: 'https://unsplash.it/200/200',
 				status: element.is_online ? 'online' : 'offline'
 			}));
-			console.log(pendingFriends);
-
 		} catch (error) {
 			console.error('Error:', error);
 		}

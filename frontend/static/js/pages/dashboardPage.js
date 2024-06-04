@@ -54,8 +54,3 @@ export default class extends AView {
 		);
 	}
 }
-
-// TODO:
-
-//	Implement stats sections
-// implement graph sections
