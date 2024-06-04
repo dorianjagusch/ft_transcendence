@@ -15,7 +15,7 @@ const requestOptions = (user, acceptRequest, declineRequest) => {
 	return options;
 };
 
-const requestCard = (request, acceptRequest, declineRequest) => {
+const requestCard = (request, acceptRequest, declineRequest, profileHandler) => {
 	const card = document.createElement('div');
 	card.className = 'scroll-element request-card';
 
@@ -31,6 +31,8 @@ const requestCard = (request, acceptRequest, declineRequest) => {
 	userCardText.appendChild(userName);
 
 	card.append(imgElement, userCardText, requestOptions(request, acceptRequest, declineRequest));
+	card.addEventListener('click', () => profileHandler(request));
+
 	return card;
 };
 

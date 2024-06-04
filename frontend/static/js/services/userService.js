@@ -7,7 +7,7 @@ class UserService extends RequestService {
 	}
 
 	async getRequest(id) {
-		return super.getRequest(`${backendURL.userURL}${id}`, id);
+		return super.getRequest(`${backendURL.userURL}${id}`);
 	}
 
 	async getAllRequest() {
@@ -34,7 +34,7 @@ class UserService extends RequestService {
 	}
 
 	async deleteRequest(id) {
-		return super.deleteRequest(`${backendURL.userURL}${id}`, id);
+		return super.deleteRequest(`${backendURL.userURL}${id}`);
 	}
 }
 

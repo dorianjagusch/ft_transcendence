@@ -1,5 +1,5 @@
 
-const createStatLine = (className, label, value, afterText = '') => {
+const StatLine = (className, label, value, afterText = '') => {
 	const line = document.createElement('div');
 	line.classList.add(className);
 	line.textContent = label;
@@ -21,9 +21,9 @@ const profileStats = ({game, stats}) => {
 	const stat = document.createElement('li');
 	stat.classList.add('stat-item', 'bg-primary');
 
-	const highscore = createStatLine('highscore', 'Highscore: ', stats.highscore);
-	const wins = createStatLine('wins', 'Won ', stats.wins, ' times');
-	const gamesPlayed = createStatLine('games-played', 'Played ', stats.gamesPlayed, ' times');
+	const highscore = StatLine('highscore', 'Highscore: ', stats.highscore);
+	const wins = StatLine('wins', 'Won ', stats.gamesWon, ' times');
+	const gamesPlayed = StatLine('games-played', 'Played ', stats.gamesPlayed, ' times');
 
 	stat.appendChild(gameName);
 	stat.appendChild(highscore);
@@ -32,4 +32,7 @@ const profileStats = ({game, stats}) => {
 	return stat;
 };
 
-export default profileStats;
+export {
+	profileStats,
+	StatLine
+};
