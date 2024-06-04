@@ -10,7 +10,7 @@ from shared_utilities.GameSetupManager import GameSetupManager
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated
 
-class LaunchMatchView(APIView):
+class MatchView(APIView):
     @method_decorator(must_be_authenticated)
     def get(self, request):
         token_str = request.query_params.get('token')
