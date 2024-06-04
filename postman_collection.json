@@ -1927,62 +1927,6 @@
 					"response": []
 				},
 				{
-					"name": "view 123 friends",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
-									"pm.collectionVariables.set(\"user123_csrftoken\", xsrfCookie.value);",
-									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
-									"pm.collectionVariables.set(\"user123_sessionid\", sessionIdCookie.value);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-CSRFToken",
-								"value": "{{user123_csrftoken}}",
-								"type": "text"
-							},
-							{
-								"key": "sessionid",
-								"value": "{{user123_sessionid}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"123\",\n    \"password\": \"123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseurl}}/friends/",
-							"host": [
-								"{{baseurl}}"
-							],
-							"path": [
-								"friends",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "authenticate guest2",
 					"event": [
 						{
@@ -2024,12 +1968,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseurl}}/authenticate-guest-user-for-single-match/",
+							"raw": "{{baseurl}}/tokens/match/",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
-								"authenticate-guest-user-for-single-match",
+								"tokens",
+								"match",
 								""
 							]
 						}
@@ -2076,8 +2021,11 @@
 				},
 				{
 					"name": "launch single match against guest2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "x-csrftoken",
@@ -2092,7 +2040,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"token\": \"{{guest2_token}}\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2100,13 +2048,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseurl}}/start-single-match/",
+							"raw": "{{baseurl}}/match/?token={{guest2_token}}",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
-								"start-single-match",
+								"match",
 								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{guest2_token}}"
+								}
 							]
 						}
 					},
@@ -2129,12 +2083,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseurl}}/start-test-match/",
+							"raw": "{{baseurl}}/match/test/",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
-								"start-test-match",
+								"match",
+								"test",
 								""
 							]
 						}
