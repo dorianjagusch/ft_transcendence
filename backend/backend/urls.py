@@ -29,8 +29,10 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
-from Tokens.views import GuestUserAuthenticationView, \
-							DeactivateGuestUserTokenView
+from Tokens.views import SingleMatchGuestTokenView
+
+from Match.views import LaunchSingleMatchView, \
+							LaunchTestMatchView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -48,8 +50,15 @@ urlpatterns = [
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
 
 	# Tokens views
-	path('authenticate-guest-user/', GuestUserAuthenticationView.as_view()),
-	path('remove-guest-user/', DeactivateGuestUserTokenView.as_view()),
+	path('tokens/guest/match/', SingleMatchGuestTokenView.as_view()),
+
+	# Match Views
+	path('start-single-match/', LaunchSingleMatchView.as_view()),
+	path('start-test-match/', LaunchTestMatchView.as_view()),
+]
+
+websocket_urlpatterns = [
+    path('pong/<int:match_id>', PongConsumer.as_asgi()),
 ]
 
 websocket_urlpatterns = [

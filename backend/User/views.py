@@ -1,13 +1,16 @@
 from functools import partial
+from urllib import request
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+
 from .models import User
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
+
 from shared_utilities.decorators import must_be_authenticated, \
 	 								must_be_url_user, \
 									valid_serializer_in_body
