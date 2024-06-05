@@ -1,7 +1,7 @@
 from django.db import models, transaction, IntegrityError
 from django.db.models import Q
 
-from .PlayerMatchStatus import PlayerMatchStatus
+from .playerMatchStatus import PlayerMatchStatus
 from Player.models import Player
 from User.models import User
 

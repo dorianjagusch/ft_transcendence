@@ -16,6 +16,11 @@ const FRIENDSHIPSTATUS = {
 	PENDINGRECEIVED: 'pending-received'
 };
 
+const GAMES = {
+	"Pong": 0,
+	"Game2": 1,
+}
+
 export default {
 	baseURL,
 	userURL,
@@ -24,5 +29,6 @@ export default {
 	leaderboardURL,
 	settingsURL,
 	friendURL,
-	FRIENDSHIPSTATUS
+	FRIENDSHIPSTATUS,
+	GAMES
 };

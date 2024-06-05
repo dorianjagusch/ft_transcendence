@@ -6,5 +6,6 @@
   "proseWrap": "always",
   "bracketSpacing": false,
   "trailingComma": "es5",
-  "semi": true
+  "semi": true,
+  "htmlWhitespaceSensitivity": "ignore"
 }

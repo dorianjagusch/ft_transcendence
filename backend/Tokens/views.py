@@ -15,7 +15,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 											valid_serializer_in_body
 
 # Create your views here.
-class SingleMatchGuestUserAuthenticationView(APIView):
+class SingleMatchGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
@@ -36,10 +36,9 @@ class SingleMatchGuestUserAuthenticationView(APIView):
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-class DeactivateMatchTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(MatchTokenSerializer))
-	def post(self, request):
+	def put(self, request):
 		try:
 			token = MatchToken.objects.get(token=request.data.get('token'))
 			if token.is_active == False or token.is_expired():

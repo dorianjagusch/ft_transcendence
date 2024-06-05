@@ -13,6 +13,7 @@ class UserOutputSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'username', 'is_online']
 
+
 class UserFriendOutputSerializer(serializers.ModelSerializer):
 	friendship = serializers.SerializerMethodField()
 
