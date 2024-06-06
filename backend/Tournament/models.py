@@ -14,7 +14,7 @@ class Tournament(models.Model):
 	host_user = models.ForeignKey(User, related_name='tournament_hosts', on_delete=models.CASCADE)
 	custom_name = models.CharField(max_length=30, null=True, blank=True, default=None)
 	state = models.IntegerField(choices=TournamentState.choices, default=TournamentState.IN_PROGRESS)
-	current_match = models.IntegerField(default=0)
+	next_match = models.IntegerField(default=0)
 	player_amount = models.IntegerField(null=True, blank=True)
 	winner = models.ForeignKey(User, related_name='tournament_winners', on_delete=models.CASCADE, null=True, blank=True, default=None)
 

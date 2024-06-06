@@ -61,8 +61,9 @@ urlpatterns = [
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 
 	# Tournament Views
-	path('tournament/', StartTournamentView.as_view()),
-	# path('tournament/<int:tournament_id>')
+	path('tournaments/', StartTournamentView.as_view()),
+	# path('tournaments/<int:tournament_id>', ),
+	# path('tournaments/<int:tournament_id>/<int:current_match>/', ),
 ]
 
 websocket_urlpatterns = [

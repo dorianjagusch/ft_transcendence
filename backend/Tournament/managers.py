@@ -64,7 +64,7 @@ class TournamentInProgressManager:
         except Tournament.DoesNotExist:
             raise TournamentInProgressException("Tournament does not exist.")
         
-        if tournament.state != TournamentState.IN_PROGRESS or tournament.current_match != 0:
+        if tournament.state != TournamentState.IN_PROGRESS or tournament.next_match != 0:
             raise TournamentInProgressException("Tournament is not in a valid state to set up matchups.")
         
         participants = list(tournament.participants.all())

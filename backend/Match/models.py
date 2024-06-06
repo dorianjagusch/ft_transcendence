@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 
 from .managers import MatchManager
+from Tournament.models import TournamentMatchup
 
 # Question to Meri: put into separate file?
 class MatchState(models.IntegerChoices):
@@ -18,6 +19,8 @@ class Match(models.Model):
 	end_time = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	tournament_matchup = models.ForeignKey(TournamentMatchup, related_name='match', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
 	objects = MatchManager()
 
@@ -43,7 +46,4 @@ class Match(models.Model):
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
 		return f'Match {self.pk} - {self.get_state_display()}'
 
-	# for later
-	# tournament_id = models.ForeignKey(Tournament, related_name='tournament_id', null=True, blank=True, on_delete=models.SET_NULL)
-	# tournament_phase_id = models.ForeignKey(TournamentPhase, related_name='tournament_phase_id', null=True, blank=True, on_delete=models.SET_NULL)
 

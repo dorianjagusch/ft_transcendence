@@ -36,10 +36,7 @@ class TournamentDetailView(APIView):
 		if login_user_id == tournament.host_user.id and tournament.state == TournamentState.IN_PROGRESS:
 			if tournament.current_match == 0:
 				TournamentInProgressManager.setup_matchups(tournament_id)
-				pass
-			else:
-				pass
-		else:
-			serializer = TournamentOutputSerializer(tournament)
-			return Response(serializer.data)
+
+		serializer = TournamentOutputSerializer(tournament)
+		return Response(serializer.data)
 

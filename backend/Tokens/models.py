@@ -3,9 +3,10 @@ import uuid
 from datetime import timedelta
 from django.utils import timezone
 
-from User.models import User
 from .managers import MatchTokenManager, \
                         TournamentGuestTokenManager
+from User.models import User
+from Tournament.models import TournamentMatchup
 
 class AbstractToken(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -31,9 +32,7 @@ class MatchToken(AbstractToken):
     user_left_side = models.ForeignKey(User, related_name='match_token_left', on_delete=models.CASCADE)
     user_right_side = models.ForeignKey(User, related_name='match_token_right', on_delete=models.CASCADE)
 
-    # FOR TOURNAMENTS
-    # tournament = models.ForeignKey()
-    # tournament_match = models.ForeignKey()
+    tournament_matchup = models.ForeignKey(TournamentMatchup, related_name='match_token', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
     objects = MatchTokenManager()
 
