@@ -1,28 +1,33 @@
 from .constants import *
 import math
 from .game_logic import PongGame
-
+from .player import Player
+from .ball import Ball
+from .game_stats import GameStats
 
 class PongStatus:
     def __init__(self):
         # Initialize game state
-        self.player_left_y = PLAYGROUND_HEIGHT // 2 
-        self.player_right_x = PLAYGROUND_WIDTH - WALL_MARGIN
-        self.player_left_x = WALL_MARGIN
-        self.player_right_y = PLAYGROUND_HEIGHT // 2
-        self.ball_x = PLAYGROUND_WIDTH - WALL_MARGIN - PLAYER_WIDTH
-        self.ball_y = PLAYGROUND_HEIGHT // 2
-        self.ball_angle = 0 
-        self.game_started = False
-        self.game_over = False
-        self.winner = None
-        self.loser = None
-        self.player_left_score = 0
-        self.player_right_score = 0
+        self.player_left = Player()
+        self.player_right = Player()
+        self.player_right.x = PLAYGROUND_WIDTH - WALL_MARGIN
+        self.player_left.x = WALL_MARGIN
+        self.ball = Ball()
+        self.game_stats = GameStats()
         self.game = PongGame()
+        
 
     def update_positions(self, key_press):
-        self.game.update_player_positions(self, key_press)
+        if not self.game_started and key_press in ('o', 'l'):
+            self.game.kick_start_game(self, key_press)
+        if key_press == 'w':
+            self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
+        elif key_press == 's':
+            self.player_left.y = self.game.move_player(self.player_left.y, -PLAYER_MOVEMENT_UNIT)
+        elif key_press == 'o':
+            self.player_right.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
+        elif key_press == 'l':
+            self.player_right.y = self.game.move_player(self.player_left.y, -PLAYER_MOVEMENT_UNIT)
         self.game.update_ball_position(self)
 
     def update_ball_position(self):
