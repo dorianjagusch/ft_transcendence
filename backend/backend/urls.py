@@ -27,12 +27,15 @@ from User.views import UserDetailView, \
                         UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
-						FriendshipDetailView
+							FriendshipDetailView
 
-from Tokens.views import SingleMatchGuestTokenView
+from Tokens.views import SingleMatchGuestTokenView, \
+							TournamentGuestTokenView
 
 from Match.views import MatchView, \
 							LaunchTestMatchView
+
+from Tournament.views import StartTournamentView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -51,14 +54,15 @@ urlpatterns = [
 
 	# Tokens views
 	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
+	path('tokens/tournament/', TournamentGuestTokenView.as_view()),
 
 	# Match Views
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
-]
 
-websocket_urlpatterns = [
-    path('pong/<int:match_id>', PongConsumer.as_asgi()),
+	# Tournament Views
+	path('tournament/', StartTournamentView.as_view()),
+	# path('tournament/<int:tournament_id>')
 ]
 
 websocket_urlpatterns = [

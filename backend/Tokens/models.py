@@ -42,5 +42,4 @@ class TournamentGuestToken(AbstractToken):
     guest_user = models.ForeignKey(User, related_name='Tournament_token_guest', on_delete=models.CASCADE)
     custom_name = models.CharField(max_length=30, null=True, blank=True, default=None)
 
-
     objects = TournamentGuestTokenManager()

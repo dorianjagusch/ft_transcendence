@@ -53,7 +53,7 @@ class SingleMatchGuestTokenView(APIView):
 		except MatchToken.DoesNotExist:
 			return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 		
-class TournamentGuestUserAuthenticationView(APIView):
+class TournamentGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
@@ -74,10 +74,9 @@ class TournamentGuestUserAuthenticationView(APIView):
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 		
-class DeactivateTournamentGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(TournamentGuestTokenSerializer))
-	def post(self, request):
+	def put(self, request):
 		try:
 			token = TournamentGuestToken.objects.get(token=request.data.get('token'))
 			if token.is_active == False or token.is_expired():
