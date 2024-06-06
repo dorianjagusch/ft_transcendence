@@ -1,4 +1,4 @@
-import animate from './lines.js';
+import {animate} from './lines.js';
 
 const acceptMessage = (e) => {
 	const data = JSON.parse(e.data);
@@ -28,7 +28,7 @@ const ChatSocket = () => {
 	// );
 
 	const chatSocket = new WebSocket(
-		'ws://' + window.location.host + ':8080/ws/pong/' // + roomName + '/' //ADD ROOM NAME
+		'ws://' + window.location.host + ':8080/pong/' // + roomName + '/' //ADD ROOM NAME
 	);
 
 	chatSocket.addEventListener('message', acceptMessage);

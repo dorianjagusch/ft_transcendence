@@ -1052,3 +1052,11 @@ button:is(:focus, :hover)
 	text-align: center;
 	border-radius: 1em;
 }
+
+.pong {
+	position: relative;
+}
+
+.pong > *{
+	position: absolute;
+}

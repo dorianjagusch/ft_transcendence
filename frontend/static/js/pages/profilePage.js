@@ -5,7 +5,7 @@ import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import profileDescription from '../components/profileComponents/profileDescription.js';
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
-import profileStats from '../components/profileComponents/profileStats.js';
+import {profileStats} from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import constants from '../constants.js';
 import { scrollContainer } from '../components/scrollContainer.js';
