@@ -1,5 +1,5 @@
-import ChatSocket from '../websocket.js';
-import { Pong } from '../components/pong.js';
+import ChatSocket from '../pongwebsocket.js';
+import { Pong } from '../pong/pong.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -10,15 +10,6 @@ export default class extends AView {
 
 	appendEventListeners() {
 		const chatSocket = ChatSocket();
-		document.addEventListener('keydown', (event) => {
-			const key = event.key;
-			document.getElementById('key-pressed').textContent = key;
-			chatSocket.send(
-				JSON.stringify({
-					message: key,
-				})
-			);
-		});
 	}
 
 	async getHTML() {
