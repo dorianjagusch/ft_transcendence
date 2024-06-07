@@ -31,7 +31,7 @@ from Friends.views import FriendsListView, \
 
 from Tokens.views import SingleMatchGuestTokenView
 
-from Match.views import LaunchSingleMatchView, \
+from Match.views import MatchView, \
 							LaunchTestMatchView
 
 urlpatterns = [
@@ -50,11 +50,11 @@ urlpatterns = [
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
 
 	# Tokens views
-	path('tokens/guest/match/', SingleMatchGuestTokenView.as_view()),
+	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
 
 	# Match Views
-	path('start-single-match/', LaunchSingleMatchView.as_view()),
-	path('start-test-match/', LaunchTestMatchView.as_view()),
+	path('match/', MatchView.as_view()),
+	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 ]
 
 websocket_urlpatterns = [
