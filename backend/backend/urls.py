@@ -21,10 +21,10 @@ from pong.consumers import PongConsumer
 
 # add app views here
 from User.views import UserDetailView, \
-                        UserListView, \
-                        UserLoginView, \
-                        UserLogoutView, \
-                        UserAdminDetailsView
+						UserListView, \
+						UserLoginView, \
+						UserLogoutView, \
+						UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
@@ -40,9 +40,9 @@ urlpatterns = [
 	# User views
 	path('users/', UserListView.as_view()),
 	path('users/<int:user_id>', UserDetailView.as_view()),
-    path('login/', UserLoginView.as_view()),
-    path('logout/', UserLogoutView.as_view()),
-    path('admins/', UserAdminDetailsView.as_view()),
+	path('login/', UserLoginView.as_view()),
+	path('logout/', UserLogoutView.as_view()),
+	path('admins/', UserAdminDetailsView.as_view()),
 
 
 	# Friends views
@@ -62,5 +62,5 @@ websocket_urlpatterns = [
 ]
 
 websocket_urlpatterns = [
-    path('pong/<int:match_id>', PongConsumer.as_asgi()),
+	path('pong/<int:match_id>', PongConsumer.as_asgi()),
 ]
