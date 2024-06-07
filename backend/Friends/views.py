@@ -22,7 +22,6 @@ class FriendsListView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(must_be_body_user_id)
 	@method_decorator(valid_serializer_in_body(FriendInputSerializer, partial=True))
 	def post(self, request):
 		user_id = request.user.id
