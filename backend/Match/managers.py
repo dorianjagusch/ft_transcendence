@@ -43,14 +43,14 @@ class MatchSetupManager:
 					tournament_matchup=match_token.tournament_matchup
 				)
 				
-				player_left_side = Player.objects.create(
+				Player.objects.create(
 					user_id=match_token.user_left_side.id,
 					match=match,
 					score=0,
 					match_winner=False
 				)
 				
-				player_right_side = Player.objects.create(
+				Player.objects.create(
 					user_id=match_token.user_right_side.id,
 					match=match,
 					score=0,

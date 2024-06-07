@@ -63,7 +63,7 @@ urlpatterns = [
 	# Tournament Views
 	path('tournaments/', StartTournamentView.as_view()),
 	# path('tournaments/<int:tournament_id>', ),
-	# path('tournaments/<int:tournament_id>/<int:current_match>/', ),
+	# path('tournaments/<int:tournament_id>/<int:next_match>/', ),
 ]
 
 websocket_urlpatterns = [
