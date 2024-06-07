@@ -14,7 +14,13 @@ class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.token = None
+        self.match = None
+        self.player_left = None
+        self.player_right = None
         self.game = PongStatus()
+
+
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
@@ -23,7 +29,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         token = query_string.split('=')[1] if 'token=' in query_string else None
 
         self.token = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
-        if token:
+        if self.token:
             self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
@@ -68,15 +74,15 @@ class PongConsumer(AsyncWebsocketConsumer):
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             match_token = MatchToken.objects.get(token=token)
-            if not token.is_active or token.is_expired():
+            if not match_token.is_active or match_token.is_expired():
                 return None
             
             match_token.is_active = False
             match_token.save()
 
             self.match = Match.objects.get(pk=match_id)
-            self.player_left = Player.objects.get(match=self.match, user_id=match_token.user_left_side)
-            self.player_right = Player.objects.get(match=self.match, user_id=match_token.user_right_side)
+            self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+            self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
 
             return match_token
             
