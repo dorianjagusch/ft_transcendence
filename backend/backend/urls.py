@@ -60,7 +60,3 @@ urlpatterns = [
 websocket_urlpatterns = [
     path('pong/<int:match_id>', PongConsumer.as_asgi()),
 ]
-
-websocket_urlpatterns = [
-	path('pong/<int:match_id>', PongConsumer.as_asgi()),
-]
