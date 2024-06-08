@@ -1312,6 +1312,489 @@
 			"description": "This folder is a collection of requests with tests for the backend's Friends application.\n\nBe aware that the tests have to be run at the start of the program because if you make your own changes to the backend database it will cause issues for some of the tests!  \n  \nRun this folder's tests after running the User app folder's tests!"
 		},
 		{
+			"name": "Tokens, Match tests",
+			"item": [
+				{
+					"name": "create host",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const jar = pm.cookies.jar();",
+									"",
+									"jar.clear('localhost', function (error) {",
+									"  console.log(\"error when clearing cookie jar\");",
+									"  console.log(error);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"host\",\n    \"password\": \"host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create guest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"guest\",\n    \"password\": \"guest\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login host",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									"",
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"host_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"host_sessionid\", sessionIdCookie.value);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const jar = pm.cookies.jar();",
+									"",
+									"jar.clear('localhost', function (error) {",
+									"  console.log(\"error when clearing cookie jar\");",
+									"  console.log(error);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"host\",\n    \"password\": \"host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/login/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "launch test match",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/start-test-match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"start-test-match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authenticate guest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"guest_token\", jsonData.token.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"guest\",\n    \"password\": \"guest\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/guest/match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"guest",
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deactivate guest token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{guest_token}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/guest/match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"guest",
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "launch single match (invalid, token not active)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{guest_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/start-single-match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"start-single-match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authenticate guest again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"guest_token\", jsonData.token.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"guest\",\n    \"password\": \"guest\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/authenticate-guest-user-for-single-match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"authenticate-guest-user-for-single-match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "launch single match (valid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{guest_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/start-single-match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"start-single-match",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder is a collection of requests with tests for the backend's Tokens and Match features.\n\nBe aware that the tests have to be run at the start of the program because if you make your own changes to the backend database it will cause issues for some of the tests!"
+		},
+		{
 			"name": "individual requests",
 			"item": [
 				{
@@ -1360,6 +1843,33 @@
 					"response": []
 				},
 				{
+					"name": "create guest2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"guest2\",\n    \"password\": \"guest2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "login 123",
 					"event": [
 						{
@@ -1370,6 +1880,21 @@
 									"pm.collectionVariables.set(\"user123_csrftoken\", xsrfCookie.value);",
 									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
 									"pm.collectionVariables.set(\"user123_sessionid\", sessionIdCookie.value);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const jar = pm.cookies.jar();",
+									"",
+									"jar.clear('localhost', function (error) {",
+									"  console.log(\"error when clearing cookie jar\");",
+									"  console.log(error);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1402,30 +1927,28 @@
 					"response": []
 				},
 				{
-					"name": "view 123 friends",
+					"name": "authenticate guest2",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
-									"pm.collectionVariables.set(\"user123_csrftoken\", xsrfCookie.value);",
-									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
-									"pm.collectionVariables.set(\"user123_sessionid\", sessionIdCookie.value);"
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"guest2_token\", jsonData.token.token);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
-								"key": "X-CSRFToken",
+								"key": "x-csrftoken",
 								"value": "{{user123_csrftoken}}",
 								"type": "text"
 							},
@@ -1437,7 +1960,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"123\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"username\": \"guest2\",\n    \"password\": \"guest2\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1445,12 +1968,128 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseurl}}/friends/",
+							"raw": "{{baseurl}}/tokens/match/",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
-								"friends",
+								"tokens",
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deactivate guest2 token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{user123_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user123_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{guest2_token}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/deactivate-match-token/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"deactivate-match-token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "launch single match against guest2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{user123_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user123_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/match/?token={{guest2_token}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{guest2_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "launch test match",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{user123_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user123_sessionid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/match/test/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								"test",
 								""
 							]
 						}
@@ -1520,12 +2159,32 @@
 			"type": "string"
 		},
 		{
+			"key": "host_csrftoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "host_sessionid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "guest_token",
+			"value": "",
+			"type": "string"
+		},
+		{
 			"key": "user123_csrftoken",
 			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "user123_sessionid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "guest2_token",
 			"value": "",
 			"type": "string"
 		}
