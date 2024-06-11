@@ -1,8 +1,8 @@
-from django.db import models, transaction, IntegrityError
-from django.db.models import Q
+from django.db import models, transaction
 
 from .playerMatchStatus import PlayerMatchStatus
-from .exceptions import MatchAndPlayersCreationException
+from .exceptions import MatchAndPlayersCreationException, \
+							MatchPlayersException
 from Player.models import Player
 from User.models import User
 
@@ -13,7 +13,7 @@ class MatchManager(models.Manager):
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
-			raise ValueError("User with id '{}' does not exist.".format(user_id))
+			raise ValueError("User with id '{user_id}' does not exist.".format(user_id))
 
 		matches_with_user = self.filter(players__user_id=user_id)
 
@@ -35,7 +35,7 @@ class MatchSetupManager:
 		from .models import Match
 
 		if not isinstance(match_token, MatchToken):
-			raise TypeError((f'match_token must be an MatchToken, not {type(match_token).__name__}'))
+			raise TypeError((f'function input must be MatchToken, not {type(match_token).__name__}'))
 		
 		try:
 			with transaction.atomic():
@@ -61,3 +61,16 @@ class MatchSetupManager:
 			raise MatchAndPlayersCreationException(f"An error occurred while creating match and/or players: {e}")
 		
 		return match
+
+	@staticmethod
+	def make_sure_users_in_match_are_still_active(match):
+		from Match.models import Match
+
+		if not isinstance(match, Match):
+			raise TypeError((f'function input must be Match, not {type(match).__name__}'))
+		
+		players = Match.players.filter(match=match)
+		inactive_users = players.filter(user__is_active=False)
+		if inactive_users.exists():
+			match.abort_match()
+			raise MatchPlayersException(f"An user in Match has deleted their account; match aborted")

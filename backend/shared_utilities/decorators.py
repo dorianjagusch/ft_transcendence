@@ -7,6 +7,9 @@ from rest_framework.request import Request
 
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
+from Tokens.models import MatchToken
+from Tokens.serializers import MatchTokenSerializer
+
 def must_be_authenticated(view_func):
 	@wraps(view_func)
 	def wrapper(*args, **kwargs):
@@ -101,3 +104,24 @@ def must_not_be_username(view_func):
 		return view_func(*args, **kwargs)
 	return wrapper
 
+# def make_sure_users_in_ongoing_match_still_exist(view_func):
+# 	@wraps(view_func)
+# 	def wrapper(*args, **kwargs):
+# 		request = args[0] if args else None
+
+# 		try:
+# 			MatchTokenSerializer()
+
+# 		return view_func(*args, **kwargs)
+# 	return wrapper
+
+# def make_sure_users_in_ongoing_tournament_still_exist():
+# 	def decorator(view_func):
+# 		@wraps(view_func)
+# 		def wrapper(*args, **kwargs):
+			
+
+			
+
+# 		return wrapper
+# 	return decorator

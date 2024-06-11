@@ -8,6 +8,6 @@ class TournamentCreationException(APIException):
     default_code = 'tournament_creation_error'
 
 class TournamentInProgressException(APIException):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    status_code = status.HTTP_403_FORBIDDEN
     default_detail = 'An error occured in the ongoing tournament.'
     default_code = 'tournament_in_progress_error'

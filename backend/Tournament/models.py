@@ -3,11 +3,7 @@ from datetime import datetime
 
 from User.models import User
 from .managers import TournamentManager
-
-class TournamentState(models.IntegerChoices):
-	IN_PROGRESS = 0, 'in_progress'
-	FINISHED = 1, 'finished'
-	ABORTED = 2, 'aborted'
+from .tournamentState import TournamentState
 
 # Create your models here.
 class Tournament(models.Model):
@@ -61,7 +57,7 @@ class TournamentMatchup(models.Model):
 
 
 	def __str__(self):
-		return f'Round {self.tournament_match_id}: {self.participant_left_side.name_in_tournament} vs {self.participant_right_side.name_in_tournament}'
+		return f'Match {self.tournament_match_id}: {self.participant_left_side.name_in_tournament} vs {self.participant_right_side.name_in_tournament}'
 
 	class Meta:
 		unique_together = ('tournament', 'tournament_match_id')

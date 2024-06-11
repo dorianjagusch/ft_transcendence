@@ -13,7 +13,7 @@ class TournamentParticipantSerializer(serializers.ModelSerializer):
 class TournamentMatchupSerializer(serializers.ModelSerializer):
     class Meta:
         model = TournamentMatchup
-        fields = ['id', 'tournament_match_id', 'player1', 'player2', 'winner']
+        fields = ['id', 'tournament_match_id', 'participant_left_side', 'participant_right_side', 'winner']
 
 class TournamentOutputSerializer(serializers.ModelSerializer):
     state_display = serializers.CharField(source='get_state_display', read_only=True)
@@ -44,7 +44,7 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
         child=serializers.UUIDField(),
         write_only=True
     )
-    host_user_custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True) # this name stuff is a bit sus...
+    host_user_custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
@@ -108,4 +108,31 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 
         return data
 
+class TournamentInProgressSerializer(serializers.ModelSerializer):
+    state_display = serializers.CharField(source='get_state_display', read_only=True)
+    participants = TournamentParticipantSerializer(many=True, read_only=True)
+    matchups = TournamentMatchupSerializer(many=True, read_only=True)
+    next_matchup = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Tournament
+        fields = [
+            'id',
+            'host_user',
+            'custom_name',
+            'state',
+            'state_display',
+            'player_amount',
+            'participants',
+            'matchups',
+            'next_matchup',
+            'next_match'
+        ]
+        
+    def get_next_matchup(self, obj):
+        next_match = obj.next_match
+        try:
+            next_matchup = TournamentMatchup.objects.get(tournament=obj, tournament_match_id=next_match)
+            return TournamentMatchupSerializer(next_matchup).data
+        except TournamentMatchup.DoesNotExist:
+            return None

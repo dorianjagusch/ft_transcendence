@@ -3,22 +3,15 @@ from datetime import datetime
 
 from .managers import MatchManager
 from Tournament.models import TournamentMatchup
-
-# Question to Meri: put into separate file?
-class MatchState(models.IntegerChoices):
-	LOBBY = 0, 'lobby'
-	IN_PROGRESS = 1, 'in_progress'
-	FINISHED = 2, 'finished'
-	ABORTED = 3, 'aborted'
-
+from .matchState import MatchState
 
 # Create your models here.
 class Match(models.Model):
 	state = models.IntegerField(choices=MatchState.choices, default=MatchState.LOBBY)
-	start_time = models.DateTimeField(null=True, blank=True)
-	end_time = models.DateTimeField(null=True, blank=True)
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+	start_ts = models.DateTimeField(null=True, blank=True)
+	end_ts = models.DateTimeField(null=True, blank=True)
+	insert_ts = models.DateTimeField(auto_now_add=True)
+	updated_ts = models.DateTimeField(auto_now=True)
 
 	tournament_matchup = models.ForeignKey(TournamentMatchup, related_name='match', null=True, blank=True, default=None, on_delete=models.CASCADE)
 

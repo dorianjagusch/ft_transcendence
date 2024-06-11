@@ -7,7 +7,8 @@ from .models import Tournament, \
 						TournamentMatchup, \
 						TournamentState
 from .serializers import TournamentOutputSerializer, \
-							TournamentCreationSerializer
+							TournamentCreationSerializer, \
+							TournamentInProgressSerializer
 from .managers import TournamentSetupManager, \
 						TournamentInProgressManager
 from .exceptions import TournamentCreationException
@@ -24,7 +25,7 @@ class StartTournamentView(APIView):
 		if serializer.is_valid():
 			validated_data = serializer.validated_data
 			try:
-				tournament = TournamentSetupManager.create_tournament_and_its_players(validated_data)
+				tournament = TournamentSetupManager.create_tournament_and_its_participants(validated_data)
 				return Response({'tournament_id': tournament.id}, status=status.HTTP_201_CREATED)
 			except TournamentCreationException as e:
 				return Response({'error': str(e)}, status=e.status_code)
@@ -41,6 +42,8 @@ class TournamentDetailView(APIView):
 		if login_user_id == tournament.host_user.id and tournament.state == TournamentState.IN_PROGRESS:
 			if tournament.current_match == 0:
 				TournamentInProgressManager.setup_matchups(tournament_id)
+			serializer = TournamentInProgressSerializer(tournament)
+			return Response(serializer.data) 
 
 		serializer = TournamentOutputSerializer(tournament)
 		return Response(serializer.data)
@@ -72,7 +75,7 @@ class LaunchTournamentMatchView(APIView):
 			return Response({'error': f'{e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 		
 		pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
-		return Response({'match_url': pong_match_url}, status=status.HTTP_200_OK)
+		return Response(pong_match_url, status=status.HTTP_200_OK)
 			
 
 

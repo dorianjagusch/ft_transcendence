@@ -38,19 +38,18 @@ class TournamentSetupManager:
                 )
 
 				for token_data in tournament_creation_serializer_validated_data['tokens']:
-					guest_token = TournamentGuestToken.objects.get(token=token_data)
-					if guest_token.custom_name is not None:
-						guest_name_in_tournament = guest_token.custom_name
+					if token_data.custom_name is not None:
+						guest_name_in_tournament = token_data.custom_name
 					else:
-						guest_name_in_tournament = guest_token.guest_user.username
+						guest_name_in_tournament = token_data.guest_user.username
 						
 					TournamentParticipant.objects.create(
 						tournament = tournament,
-						user = guest_token.guest_user,
+						user = token_data.guest_user,
 						name_in_tournament = guest_name_in_tournament
 					)
 
-				return tournament
+				return tournament.id
 				
 		except Exception as e:
 			raise TournamentCreationException(f"An error occurred while creating tournament and its participants: {e}")
@@ -71,12 +70,13 @@ class TournamentInProgressManager:
         if len(participants) != tournament.player_amount:
             raise TournamentInProgressException("The number of participants does not match the expected player amount.")
         
-        # Calculate the total number of matchups
         total_matchups = tournament.player_amount - 1
 
         try:
             with transaction.atomic():
-                # Setup initial matchups with participants
+
+                # SETUP OF INITIAL MATCHUPS ARE DONE BASED ON THE ORDER OF PARTICIPANTS
+                # IF YOU WANT TO TO SET UP MATCHUPS BASED ON SOME OTHER ALGORITHM, PUT IT HERE
                 for i in range(0, len(participants), 2):
                     TournamentMatchup.objects.create(
                         tournament=tournament,
@@ -84,8 +84,9 @@ class TournamentInProgressManager:
                         player2=participants[i + 1],
                         tournament_match_id=i // 2
                     )
-                
-                # Create empty matchups for the subsequent rounds
+
+                # CREATE EMPTY MATCHUPS FOR THE SUBSEQUENT MATCHES IN THE TOURNAMENT
+                # THE MATCH WINNERS WILL BE ASSIGNED TO THEM LATER ON
                 for matchup_id in range(len(participants) // 2, total_matchups):
                     TournamentMatchup.objects.create(
                         tournament=tournament,
@@ -96,4 +97,18 @@ class TournamentInProgressManager:
                 tournament.save()
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while setting up matchups: {e}")
-
+        
+    
+    @staticmethod
+    def make_sure_users_in_ongoing_tournament_are_still_active(tournament):
+        if not isinstance(tournament, Tournament):
+            raise TypeError((f'function input must be a Tournament, not {type(tournament).__name__}'))
+        
+        participants = TournamentParticipant.objects.filter(tournament=tournament)
+        inactive_users = participants.filter(user__is_active=False)
+        if inactive_users.exists():
+            tournament.abort_tournament()
+            raise TournamentInProgressException(f"An user in ongoing tournament has deleted their account; tournament aborted")
+        
+        return True
+        
