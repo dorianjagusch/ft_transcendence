@@ -6,13 +6,13 @@ from .game_logic import PongGame
 class PongStatus:
     def __init__(self):
         # Initialize game state
-        self.player_left_y = PLAYGROUND_HEIGHT // 2
+        self.player_left_y = PLAYGROUND_HEIGHT // 2 
         self.player_right_x = PLAYGROUND_WIDTH - WALL_MARGIN
         self.player_left_x = WALL_MARGIN
         self.player_right_y = PLAYGROUND_HEIGHT // 2
         self.ball_x = PLAYGROUND_WIDTH - WALL_MARGIN - PLAYER_WIDTH
         self.ball_y = PLAYGROUND_HEIGHT // 2
-        self.ball_angle = 0
+        self.ball_angle = 0 
         self.game_started = False
         self.game_over = False
         self.winner = None
@@ -31,19 +31,18 @@ class PongStatus:
     def get_consts(self):
         game_consts = {
             'players': {
-                'playerWidth': PLAYER_WIDTH,
-                'playerHeight': PLAYER_HEIGHT,
-                'playerMovementUnit': PLAYER_MOVEMENT_UNIT,
-
+                'player-width': PLAYER_WIDTH,
+                'player-height': PLAYER_HEIGHT,
             },
             'ball': {
-                'ballSize': BALL_SIZE,
-                'ballSpeed': BALL_SPEED
+                'ball-width': BALL_WIDTH,
+                'ball-height': BALL_HEIGHT,
+                'ball-speed': BALL_SPEED
             },
             'game': {
-                'wallMargin': WALL_MARGIN,
-                'playgroundWidth': PLAYGROUND_WIDTH,
-                'playgroundHeight': PLAYGROUND_HEIGHT
+                'wall-margin': WALL_MARGIN,
+                'playground-width': PLAYGROUND_WIDTH,
+                'playground-hight': PLAYGROUND_HEIGHT
             }
         }
         return game_consts

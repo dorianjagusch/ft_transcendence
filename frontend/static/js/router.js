@@ -37,7 +37,7 @@ const router = async () => {
 	}
 
 	const isLoggedOut = localStorage.getItem('isLoggedIn') !== 'true';
-	const allowedPaths = ['/login', '/register', '/', '/pong'];
+	const allowedPaths = ['/login', '/register', '/'];
 
 	if (isLoggedOut && !allowedPaths.includes(match.route.path)) {
 		navigateTo('/login');
