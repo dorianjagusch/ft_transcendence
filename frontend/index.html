@@ -1,56 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Pong Tournament</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Pong Tournament</title>
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap"
+			rel="stylesheet"
+		/>
 
-	<script type="module" src="./static/js/index.js" defer></script>
-	<link rel="stylesheet" href="./static/css/styles.css">
-</head>
-<body>
-	<header>
-		<nav>
-			<ul>
-				<div class="nav-partition logged-in" data-visible="true">
-					<li class="nav-item">
-						<a href="/leaderboard" data-link>Leaderboard</a>
-					</li>
-					<li class="nav-item">
-						<a href="/play" data-link>Play</a>
-					</li>
-					<li class="nav-item">
-						<a href="/friends" data-link>Friends</a>
-					</li>
-				</div>
-				<div class="nav-partition logged-in" data-visible="true">
-					<li class="nav-item">
-						<img src="./static/assets/img/default-user.png">
-					</li>
-					<li class="nav-item">
-						<a id="user" href="/user" data-link></a>
-					</li>
-					<li class="nav-item">
-						<a href="/logout" data-link><img src="./static/assets/img/gear.png"></a>
-					</li>
-				</div>
-				<div class="nav-partition logged-out" data-visible="false">
-					<li class="nav_item">
-						<a id ="login" href="/login" data-link>Login</a>
-					</li>
-					<li class="nav_item">
-						<a id="register" href="/register" data-link>Register</a>
-					</li>
-				</div>
-			</ul>
-		</nav>
-	</header>
-	<h1>Transcendence</h1>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+					"jsm/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+				}
+			}
+		</script>
+		<script type="module" src="./static/js/index.js" defer></script>
+		<link rel="stylesheet" href="./static/css/styles.css" />
+	</head>
+	<body>
+		<header>
+			<nav>
+				<ul>
+					<div class="nav-partition logged-in" data-visible="true">
+						<li class="nav-item">
+							<a href="/leaderboard" data-link>Leaderboard</a>
+						</li>
+						<li class="nav-item">
+							<a href="/play" data-link>Play</a>
+						</li>
+						<li class="nav-item">
+							<a href="/friends" data-link>Friends</a>
+						</li>
+					</div>
+					<div class="nav-partition logged-in" data-visible="true">
+						<li class="nav-item">
+							<img src="./static/assets/img/default-user.png" />
+						</li>
+						<li class="nav-item">
+							<a id="user" href="/user" data-link></a>
+						</li>
+						<li class="nav-item">
+							<a href="/logout" data-link>
+								<img src="./static/assets/img/gear.png" />
+							</a>
+						</li>
+					</div>
+					<div class="nav-partition logged-out" data-visible="false">
+						<li class="nav_item">
+							<a id="login" href="/login" data-link>Login</a>
+						</li>
+						<li class="nav_item">
+							<a id="register" href="/register" data-link>Register</a>
+						</li>
+					</div>
+				</ul>
+			</nav>
+		</header>
+		<h1>Transcendence</h1>
 
-	<main id="content-container"></main>
-</body>
+		<main id="content-container"></main>
+	</body>
 </html>
