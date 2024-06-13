@@ -1053,10 +1053,10 @@ button:is(:focus, :hover)
 	border-radius: 1em;
 }
 
-.pong {
+#pong {
 	position: relative;
 }
 
-.pong > *{
+#pong > *{
 	position: absolute;
 }

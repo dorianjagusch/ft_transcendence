@@ -32,19 +32,17 @@ class ChatSocket {
 	}
 
 	connect() {
-		const chatSocket = new WebSocket(
-			'ws://' + window.location.host + ':8080/pong/' // + roomName + '/' //ADD ROOM NAME
+		this.chatSocket = new WebSocket(
+			'ws://' + window.location.host + ':8080/pong/match/test' // + roomName + '/' //ADD ROOM NAME
 		);
 
-		chatSocket.addEventListener('message', acceptMessage);
+		this.chatSocket.addEventListener('message', this.acceptMessage);
 
-		chatSocket.addEventListener('close', handleClose);
+		this.chatSocket.addEventListener('close', this.handleClose);
 
-		chatSocket.addEventListener('error', handleError);
+		this.chatSocket.addEventListener('error', this.handleError);
 
-		document.body.addEventListener('keyUp', sendKey);
-
-		return chatSocket;
+		document.body.addEventListener('keyUp', this.sendKey);
 	}
 }
 

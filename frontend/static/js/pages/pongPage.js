@@ -1,30 +1,22 @@
-import ChatSocket from '../pong/websocket.js';
+import ChatSocket from '../pong/ChatSocket.js';
 import PongContainer from '../pong/pong.js';
 import AView from './AView.js';
+import {setupGame} from '../pong/pongGame.js';
+
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Pong');
-	}
-
-	appendEventListeners() {
-		const chatSocket = ChatSocket();
-		document.addEventListener('keydown', (event) => {
-			const key = event.key;
-			document.getElementById('key-pressed').textContent = key;
-			chatSocket.send(
-				JSON.stringify({
-					message: key,
-				})
-			);
-		});
+		this.chatSocket = null;
 	}
 
 	async getHTML() {
 		const pong = PongContainer();
+		this.chatSocket = new ChatSocket();
+		this.chatSocket.connect();
 		this.updateMain(pong);
-		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME
-		this.appendEventListeners();
+		setupGame();
+		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME	}
 	}
 }
