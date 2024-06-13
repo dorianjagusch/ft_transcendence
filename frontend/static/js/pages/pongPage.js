@@ -1,6 +1,5 @@
-import ChatSocket from '../components/pong/ChatSocket.js';
-import {Pong} from '../components/pong/pong.js';
-import pongGame from '../components/pong/pongGame.js';
+import ChatSocket from '../websocket.js';
+import { Pong } from '../components/pong.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -9,12 +8,24 @@ export default class extends AView {
 		this.setTitle('Pong');
 	}
 
+	appendEventListeners() {
+		const chatSocket = ChatSocket();
+		document.addEventListener('keydown', (event) => {
+			const key = event.key;
+			document.getElementById('key-pressed').textContent = key;
+			chatSocket.send(
+				JSON.stringify({
+					message: key,
+				})
+			);
+		});
+	}
+
 	async getHTML() {
+
 		const pong = Pong();
 		this.updateMain(pong);
-		pongGame.initialiseGame();
 		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME
-		const chatSocket = new ChatSocket();
-		chatSocket.connect();
+		this.appendEventListeners();
 	}
 }
