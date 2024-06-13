@@ -1,6 +1,13 @@
 import * as THREE from 'three';
-import {createBall, createPlayer} from './setupSceneElements.js';
+import elements from './setupSceneElements.js';
 
+const createGameBoard  = () => {
+	const points = elements.createScoreBoard();
+	const instructions = elements.createIntructions();
+	const pong = document.querySelector('#pong');
+	pong.appendChild(points);
+	pong.appendChild(instructions);
+}
 
 const setupGame = () => {
 
@@ -19,22 +26,23 @@ const setupGame = () => {
 		MIN_BOUNCE_ANGLE: -90,
 	};
 
+	const canvasSizing = 0.8;
 	const renderer = new THREE.WebGLRenderer();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	document.querySelector('main').appendChild(renderer.domElement);
+	renderer.setSize(Math.floor(window.innerWidth * 0.8), Math.floor(window.innerHeight * 0.8));
+	document.querySelector('#pong').appendChild(renderer.domElement);
 
 	const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
 	camera.position.set(90, 50, 200);
 	camera.lookAt(90, 50, 0);
 
 	const scene = new THREE.Scene();
-	const playerLeft = createPlayer(constants, true);
+	const playerLeft = elements.createPlayer(constants, true);
 	scene.add(playerLeft);
 
-	const playerRight = createPlayer(constants, false);
+	const playerRight = elements.createPlayer(constants, false);
 	scene.add(playerRight);
 
-	const ball = createBall(constants);
+	const ball = elements.createBall(constants);
 	scene.add(ball);
 
 	renderer.render(scene, camera);
@@ -70,6 +78,7 @@ const animate = (data) => {
 };
 
 export {
+	createGameBoard,
 	setupGame,
 	animate,
 	displayGameOver,

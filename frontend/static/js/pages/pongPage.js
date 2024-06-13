@@ -1,7 +1,7 @@
 import ChatSocket from '../pong/ChatSocket.js';
 import PongContainer from '../pong/pong.js';
 import AView from './AView.js';
-import {setupGame} from '../pong/pongGame.js';
+import {createGameBoard, setupGame} from '../pong/pongGame.js';
 
 
 export default class extends AView {
@@ -14,8 +14,9 @@ export default class extends AView {
 	async getHTML() {
 		const pong = PongContainer();
 		this.chatSocket = new ChatSocket();
-		this.chatSocket.connect();
+		// this.chatSocket.connect();
 		this.updateMain(pong);
+		createGameBoard();
 		setupGame();
 		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME	}
 	}
