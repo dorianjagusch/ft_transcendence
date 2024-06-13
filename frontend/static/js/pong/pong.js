@@ -1,24 +1,22 @@
-import {setupGame} from './lines.js';
+import {setupGame} from './pongGame.js';
 
-
-const PongContainer = () => {
+const Pong = () => {
 	const pongContainer = document.createElement('div');
 	pongContainer.id = 'pong-container';
 
 	setupGame();
 
-
 	return pongContainer;
 };
 
-const Pong = () => {
+const PongContainer = () => {
 	const pong = document.createElement('div');
 	pong.id = 'pong';
 
-	const pongContainer = PongContainer();
+	const pongContainer = Pong();
 	pong.appendChild(pongContainer);
 
 	return pong;
 };
 
-export {Pong};
+export default PongContainer;

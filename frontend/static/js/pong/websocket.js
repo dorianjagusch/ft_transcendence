@@ -1,45 +1,51 @@
-import {animate} from './lines.js';
+import {animate} from './pongGame.js';
 
-const acceptMessage = (e) => {
-	const data = JSON.parse(e.data);
-};
-
-const handleClose = (e) => {
-	console.error('Chat socket closed unexpectedly');
-};
-
-const handleError = (e) => {
-	console.error('Chat socket error:', e);
-};
-
-const sendKey = (chatSocket, key) => {
-	//TODO: Handle esc or whatever other quit key
-	chatSocket.send(
-		JSON.stringify({
-			message: key,
-		})
-	);
-};
-
-const ChatSocket = () => {
+class ChatSocket {
 	// const roomName = document.getElementById('room-name').textContent // ADD ROOM NAME
 	// JSON.parse(
 	// 	document.getElementById('room-name').textContent;
 	// );
 
-	const chatSocket = new WebSocket(
-		'ws://' + window.location.host + ':8080/pong/' // + roomName + '/' //ADD ROOM NAME
-	);
+	constructor() {
+		this.chatSocket = null; // + roomName + '/' //ADD ROOM NAME
+	}
 
-	chatSocket.addEventListener('message', acceptMessage);
+	acceptMessage(e) {
+		const data = JSON.parse(e.data);
+	}
 
-	chatSocket.addEventListener('close', handleClose);
+	handleClose(e) {
+		console.error('Chat socket closed unexpectedly');
+	}
 
-	chatSocket.addEventListener('error', handleError);
+	handleError(e) {
+		console.error('Chat socket error:', e);
+	}
 
-	document.body.addEventListener("keyUp", sendKey);
+	sendKey(chatSocket, key) {
+		//TODO: Handle esc or whatever other quit key
+		chatSocket.send(
+			JSON.stringify({
+				message: key,
+			})
+		);
+	}
 
-	return chatSocket;
-};
+	connect() {
+		const chatSocket = new WebSocket(
+			'ws://' + window.location.host + ':8080/pong/' // + roomName + '/' //ADD ROOM NAME
+		);
+
+		chatSocket.addEventListener('message', acceptMessage);
+
+		chatSocket.addEventListener('close', handleClose);
+
+		chatSocket.addEventListener('error', handleError);
+
+		document.body.addEventListener('keyUp', sendKey);
+
+		return chatSocket;
+	}
+}
 
 export default ChatSocket;

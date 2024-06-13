@@ -1,5 +1,5 @@
-import ChatSocket from '../websocket.js';
-import { Pong } from '../components/pong.js';
+import ChatSocket from '../pong/websocket.js';
+import PongContainer from '../pong/pong.js';
 import AView from './AView.js';
 
 export default class extends AView {
@@ -22,8 +22,7 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-
-		const pong = Pong();
+		const pong = PongContainer();
 		this.updateMain(pong);
 		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME
 		this.appendEventListeners();
