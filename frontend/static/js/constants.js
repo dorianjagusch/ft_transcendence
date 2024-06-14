@@ -5,7 +5,8 @@ const logoutURL = `${baseURL}logout/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
-const pongURL = `${baseURL}pong/match/test`;
+const pongURL = `${baseURL}pong/match`;
+
 
 const problemWithFetchMsg = "There was a problem with the fetch operation: ";
 
