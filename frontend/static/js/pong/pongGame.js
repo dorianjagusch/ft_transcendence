@@ -58,22 +58,30 @@ const removeSocket = (data) => {
 	chatSocket.removeEventListener('message');
 }
 
-const displayGameOver = (data) => {
+const displayGameOver = ({game}) => {
 	document.getElementById('game-over').textContent = 'Game Over';
-	document.getElementById('winner').textContent = data.game.winner;
-	document.getElementById('loser').textContent = data.game.loser;
+	document.getElementById('winner').textContent = game.winner;
+	document.getElementById('loser').textContent = game.loser;
 	return;
 };
 
-const animate = (data) => {
+const updateScore = ({left, right}) => {
+	const leftScore = document.querySelector('#left-score')
+	leftScore.textContent = String(players.left.score);
+	const rightScore = document.querySelector('#right-score')
+	rightScore.textContent = String(players.left.score);
+}
+
+const animate = ({players, ball, game}) => {
 	requestAnimationFrame(animate);
-	if (data.game.over == true) {
+	if (game.over == true) {
 		removeSocket()
 		displayGameOver(data);
 	}
-	playerLeft.position.set(data.players.left.position.x, data.players.left.position.y, 0);
-	playerRight.position.set(data.players.right.position.x, data.players.right.position.y, 0);
-	ball.position.set(data.ball.position.x, data.ball.position.y, 0);
+	playerLeft.position.set(players.left.position.x, players.left.position.y, 0);
+	playerRight.position.set(players.right.position.x, players.right.position.y, 0);
+	ball.position.set(ball.position.x, ball.position.y, 0);
+	updateScore(players);
 	renderer.render(scene, camera);
 };
 
