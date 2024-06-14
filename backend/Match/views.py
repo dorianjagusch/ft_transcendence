@@ -43,6 +43,6 @@ class LaunchTestMatchView(APIView):
 		match, player_left_side, player_right_side = GameSetupManager.create_match_and_its_players(token)
 		if not all([match, player_left_side, player_right_side]):
 			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-		
+
 		pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
 		return Response(pong_match_url, status=status.HTTP_200_OK)
