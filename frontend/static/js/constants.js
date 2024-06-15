@@ -1,4 +1,5 @@
 const baseURL = 'http://localhost:8080/';
+// remember to remove /8080 moving in to production
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const logoutURL = `${baseURL}logout/`;
@@ -16,6 +17,11 @@ const FRIENDSHIPSTATUS = {
 	PENDINGRECEIVED: 'pending-received'
 };
 
+const GAMES = {
+	"Pong": 0,
+	"Game2": 1,
+}
+
 export default {
 	baseURL,
 	userURL,
@@ -24,5 +30,6 @@ export default {
 	leaderboardURL,
 	settingsURL,
 	friendURL,
-	FRIENDSHIPSTATUS
+	FRIENDSHIPSTATUS,
+	GAMES
 };

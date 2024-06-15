@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     # Backend apps here
     'User',
     'Friends',
+	'Tokens',
+	'Match',
+	'Player',
 ]
 
 MIDDLEWARE = [

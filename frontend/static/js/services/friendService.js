@@ -28,7 +28,6 @@ class FriendService extends RequestService {
 	}
 
 	async deleteRequest(friend_id) {
-		console.log(friend_id)
 		return super.deleteRequest(`${backendURL.friendURL}${friend_id}`);
 	}
 }

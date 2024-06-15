@@ -811,7 +811,7 @@ button:is(:focus, :hover)
 	grid-template-columns: 1fr 1fr 1fr;
 }
 
-.profile *:not(button, .profile-description){
+.profile *:not(button):not(.profile-description){
 	font-size: var(--fs-medium);
 	align-items: center;;
 }
@@ -973,4 +973,82 @@ button:is(:focus, :hover)
 	border: 2px solid white;
 	padding: var(--fs-medium) calc(1.5 * var(--fs-medium));
 	border-radius: var(--fs-medium);
+}
+
+.profile.dashboard{
+	grid-template-areas:
+		"title title title title title title title"
+		"profile-img profile-img placements placements placements summary summary"
+		"about about about stats-1 stats-1 stats-2 stats-2"
+		"history history history graph-1 graph-1 graph-1 graph-1 "
+		"history history history graph-2 graph-2 graph-2 graph-2 ";
+
+	grid-template-rows: 0.1fr repeat(4, 1fr);
+	grid-template-columns: repeat(7, min(1fr, 150px));
+}
+
+.dashboard .profile-title{
+	grid-area: title;
+	gap: var(--fs-medium);
+}
+
+
+.dashboard .profile-img{
+	grid-area: profile-img;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dashboard .placements{
+	grid-area: placements;
+	height: 100%;
+}
+
+.dashboard .summary{
+	background-color: transparent;
+	padding: 0;
+
+	grid-area: summary;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--fs-medium);
+}
+
+.dashboard .summary > *{
+	width: 100%;
+	border-radius: var(--fs-medium);
+	padding: var(--fs-medium);
+	text-align: center;
+}
+
+.dashboard .about{
+	grid-area: about;
+}
+
+.dashboard .play-history{
+	grid-area: history;
+}
+
+.dashboard .play-history ul{
+	gap: var(--fs-medium);
+	display: grid;
+}
+
+.profile.dashboard .stats-1{
+	grid-area: stats-1;
+}
+
+.profile.dashboard .stats-2{
+	grid-area: stats-2;
+}
+
+.dashboard .stat-entry{
+	background-color: var(--bg-color);
+	padding: 0.6em 1em;
+	width: 100%;
+	text-align: center;
+	border-radius: 1em;
 }

@@ -10,15 +10,6 @@ export default class extends AView {
 		this.setTitle('Login');
 	}
 
-	setNavbar() {
-		const navPartitions = document.querySelectorAll('.nav-partition');
-		navPartitions.forEach((partition) => {
-			const visibility = partition.getAttribute('data-visible');
-			partition.setAttribute('data-visible', visibility === 'true' ? 'false' : 'true');
-			document.querySelector('#user').innerHTML = localStorage.getItem('username');
-		});
-	}
-
 	loginHandler = async (e) => {
 		e.preventDefault();
 		const username = document.getElementById('username').value;
@@ -31,10 +22,8 @@ export default class extends AView {
 		await loginService.postRequest({username, password})
 			.then(() => {
 				localStorage.setItem('username', username);
-				this.setNavbar();
-
 				localStorage.setItem('isLoggedIn', true);
-				this.navigateTo('/friends');
+				this.navigateTo('/dashboard');
 			})
 			.catch((error) => {
 				console.error('There has been a problem with your fetch operation:', error);
