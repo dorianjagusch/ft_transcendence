@@ -18,6 +18,7 @@ export default class extends AForm {
 		linkElement.setAttribute('href', '../../../privacypolicy.html');
 		linkElement.setAttribute('target', '_blank');
 		linkElement.setAttribute('rel', 'noopener noreferrer');
+		linkElement.setAttribute('id', 'privacyPolicy');
 		linkElement.innerHTML = '<span>By clicking here, you agree to our Privacy Policy.</span>';
 		
 		this.appendToForm(
