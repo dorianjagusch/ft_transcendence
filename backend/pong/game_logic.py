@@ -3,10 +3,10 @@ from .constants import *
 import math
 
 class PongGame:
-    def move_player(player_y , move_units):
+    def move_player(self, player_y , move_units):
         player_y += move_units
         return player_y
-    def check_boundery(player_y):
+    def check_boundery(self, player_y):
         player_y = max(min(player_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
         return player_y 
     def kick_start_game(self, pong_stat, key_press):
@@ -17,13 +17,13 @@ class PongGame:
         elif key_press == 'l':
             # right side Player  moves downward, set ball angle to 240 degrees
             pong_stat.ball.angle = 240
-        pong_stat.game_started = True
+        pong_stat.game_stats.game_started = True
 
 
 
    # Update ball position based on angle
     def update_ball_position(self, pong_stat):
-        if pong_stat.game_started:
+        if pong_stat.game_stats.game_started:
             pong_stat.ball.x += BALL_SPEED * math.cos(math.radians(pong_stat.ball.angle))
             pong_stat.ball.y += BALL_SPEED * math.sin(math.radians(pong_stat.ball.angle))
             self.check_collisions(pong_stat)
@@ -55,16 +55,16 @@ class PongGame:
 
     def handle_wall_collision(self, pong_stat, wall):       
         if wall == 'left':
-            pong_stat.player_right_score += 1
+            pong_stat.player_right.score += 1
         elif wall == 'right':
-            pong_stat.player_left_score += 1
+            pong_stat.player_left.score += 1
             
-        if pong_stat.player_left_score == 5:
-            pong_stat.game_over = True
-            pong_stat.winner = 'player_left'
-            pong_stat.loser = 'player_right'
-        elif pong_stat.player_right_score == 5:
-            pong_stat.game_over = True
-            pong_stat.winner = 'player_right'
-            pong_stat.loser = 'player_left'
+        if pong_stat.player_left.score == 5:
+            pong_stat.game_stats.game_over = True
+            pong_stat.game_stats.winner = 'player_left'
+            pong_stat.game_stats.loser = 'player_right'
+        elif pong_stat.player_right.score == 5:
+            pong_stat.game_stats.game_over = True
+            pong_stat.game_stats.winner = 'player_right'
+            pong_stat.game_stats.loser = 'player_left'
 

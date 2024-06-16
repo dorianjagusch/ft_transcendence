@@ -42,8 +42,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         key_press = text_data.strip()
+        #move = get_move(key_press)
         self.game.update_positions(key_press)      
-        if self.game.game_over == True:
+        if self.game.game_stats.game_over == True:
             await self.send_positions()
 
             # save the final results of the match
@@ -67,7 +68,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.game.update_ball_position()
             await self.send_positions()
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)   # Wait for the specified interval before sending the next message
-            if self.game.game_over == True:
+            if self.game.game_stats.game_over == True:
                 break
     
     @database_sync_to_async
@@ -92,11 +93,11 @@ class PongConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_match_final_results(self):
         # Save scores when the game is over
-        self.player_left.score = self.game.player_left_score
-        self.player_right.score = self.game.player_right_score
+        self.player_left.score = self.game.player_left.score
+        self.player_right.score = self.game.player_right.score
 
         # Determine and save the winner
-        if self.game.player_left_score > self.game.player_right_score:
+        if self.game.player_left.score > self.game.player_right.score:
             self.player_left.match_winner = True
         else:
             self.player_right.match_winner = True

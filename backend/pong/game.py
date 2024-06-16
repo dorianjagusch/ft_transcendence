@@ -16,7 +16,7 @@ class PongStatus:
         
 
     def update_positions(self, key_press):
-        if not self.game_started and key_press in ('o', 'l'):
+        if not self.game_stats.game_started and key_press in ('o', 'l'):
             self.game.kick_start_game(self, key_press)
         if key_press == 'w':
             self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
@@ -56,30 +56,30 @@ class PongStatus:
         game_state = {
             'ball': {
                 'position': {
-                'x': self.ball_x,
-                'y': self.ball_y
+                'x': self.ball.x,
+                'y': self.ball.y
                 },
             },
             'players': {
                 'left': {
                     'position': {
-                        'x': self.player_left_x,
-                        'y': self.player_left_y
+                        'x': self.player_left.x,
+                        'y': self.player_left.y
                     },
-                    'score': self.player_left_score
+                    'score': self.player_left.score
                 },
                 'right': {
                     'position': {
-                        'x': self.player_right_x,
-                        'y': self.player_right_y
+                        'x': self.player_right.x,
+                        'y': self.player_right.y
                     },
-                    'score': self.player_right_score
+                    'score': self.player_right.score
                 }
             },
             'game': {
-                'over': self.game_over,
-                'winner': self.winner,
-                'loser': self.loser
+                'over': self.game_stats.game_over,
+                'winner': self.game_stats.winner,
+                'loser': self.game_stats.loser
             }
         }
         return game_state
