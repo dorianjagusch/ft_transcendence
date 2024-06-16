@@ -15,16 +15,16 @@ class PongStatus:
         self.game = PongGame()
         
 
-    def update_positions(self, key_press):
-        if not self.game_stats.game_started and key_press in ('o', 'l'):
-            self.game.kick_start_game(self, key_press)
-        if key_press == 'w':
+    def update_positions(self, move):
+        if not self.game_stats.game_started and move in (PLAYER_RIGHT_UP, PLAYER_RIGHT_DOWN):
+            self.game.kick_start_game(self, move)
+        if move == PLAYER_LEFT_UP:
             self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
-        elif key_press == 's':
+        elif move == PLAYER_LEFT_DOWN:
             self.player_left.y = self.game.move_player(self.player_left.y, -PLAYER_MOVEMENT_UNIT)
-        elif key_press == 'o':
+        elif move == PLAYER_RIGHT_UP:
             self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
-        elif key_press == 'l':
+        elif move == PLAYER_RIGHT_DOWN:
             self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
         self.player_right.y = self.game.check_boundery(self.player_right.y)
         self.player_left.y = self.game.check_boundery(self.player_left.y)

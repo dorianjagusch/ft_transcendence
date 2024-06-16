@@ -9,12 +9,12 @@ class PongGame:
     def check_boundery(self, player_y):
         player_y = max(min(player_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
         return player_y 
-    def kick_start_game(self, pong_stat, key_press):
+    def kick_start_game(self, pong_stat, move):
         # Kick start the game based on right side player's movement
-        if key_press == 'o':
+        if move == PLAYER_RIGHT_UP:
             # right side Player moves upward, set ball angle to 120 degrees
             pong_stat.ball.angle = 120
-        elif key_press == 'l':
+        elif move == PLAYER_RIGHT_DOWN:
             # right side Player  moves downward, set ball angle to 240 degrees
             pong_stat.ball.angle = 240
         pong_stat.game_stats.game_started = True
