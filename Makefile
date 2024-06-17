@@ -7,11 +7,15 @@ FRONTEND_DIR			= ./frontend
 FRONTEND_ENV			= ./frontend/.env
 
 DOCKER_COMPOSE_FILE		= ./docker-compose.yaml
+DOCKER_COMPOSE_PROD_FILE= ./production.yaml
 
 # add later '--env-file ${FRONTEND_ENV}' to DOCKER_COMPOSE below
 DOCKER_COMPOSE			= docker compose \
 							--env-file ${BACKEND_ENV} \
 							-f ${DOCKER_COMPOSE_FILE}
+DOCKER_COMPOSE_PROD		= docker compose \
+							--env-file ${BACKEND_ENV} \
+							-f ${DOCKER_COMPOSE_PROD_FILE}
 
 # Colors
 C_RESET = \033[0;39m
@@ -26,6 +30,10 @@ all: up
 up:
 	${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
+
+prod:
+	${DOCKER_COMPOSE_PROD} up --build --detach
+	@echo "${GREEN}${NAME} deployed to production!${C_RESET}"
 
 start:
 	${DOCKER_COMPOSE} start

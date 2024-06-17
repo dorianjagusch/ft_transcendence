@@ -154,3 +154,6 @@ GitHub.sublime-settings
 
 # Ignore local patchfiles
 *.patch
+
+#Ignore personal notes
+notes.txt

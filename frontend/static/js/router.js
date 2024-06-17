@@ -1,3 +1,4 @@
+import setNavbar from './components/navbar.js';
 import routes from './route.js';
 
 const pathToRegex = (path) =>
@@ -5,9 +6,7 @@ const pathToRegex = (path) =>
 
 const getParams = (match) => {
 	const values = match.result.slice(1);
-	const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
-		(result) => result[1]
-	);
+	const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map((result) => result[1]);
 
 	return Object.fromEntries(
 		keys.map((key, i) => {
@@ -29,9 +28,7 @@ const router = async () => {
 		};
 	});
 
-	let match = potentialMatches.find(
-		(potentialMatch) => potentialMatch.result !== null
-	);
+	let match = potentialMatches.find((potentialMatch) => potentialMatch.result !== null);
 	if (!match) {
 		match = {
 			route: routes[0],
@@ -39,18 +36,20 @@ const router = async () => {
 		};
 	}
 
-	const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
+	const isLoggedOut = localStorage.getItem('isLoggedIn') !== 'true';
 	const allowedPaths = ['/login', '/register', '/'];
 
-	if (!isLoggedIn && !allowedPaths.includes(match.route.path)) {
+	if (isLoggedOut && !allowedPaths.includes(match.route.path)) {
 		navigateTo('/login');
-	}
-	else if (isLoggedIn && allowedPaths.includes(match.route.path)) {
+		return;
+	} else if (!isLoggedOut && allowedPaths.includes(match.route.path)) {
 		navigateTo('/dashboard');
+		return;
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
+	setNavbar(isLoggedOut);
 	view.getHTML();
 };
 
-export { navigateTo, router };
+export {navigateTo, router};

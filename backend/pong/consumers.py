@@ -23,6 +23,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         self.game = PongStatus()
 
+
+
     async def connect(self):
         # Extract the match id and the token from the URL query string
         match_id = self.scope['url_route']['kwargs']['match_id']
@@ -82,8 +84,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             match_token.save()
 
             self.match = Match.objects.get(pk=match_id)
-            self.player_left = Player.objects.get(match=self.match, user_id=match_token.user_left_side)
-            self.player_right = Player.objects.get(match=self.match, user_id=match_token.user_right_side)
+            self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+            self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
 
             return True
             

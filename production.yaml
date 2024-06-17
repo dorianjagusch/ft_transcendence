@@ -1,0 +1,57 @@
+networks:
+  ft_transcendence_network:
+    name: ft_transcendence_network
+    driver: bridge
+
+volumes:
+  database:
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres_c
+    user: postgres
+    env_file:
+      ./backend/.env
+    volumes:
+      - database:/var/lib/postgresql/data/
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 80s
+    networks:
+     - ft_transcendence_network
+
+  backend:
+    image: backend:42
+    container_name: gunicorn
+    build:
+      context: ./backend
+    env_file:
+      ./backend/.env
+    entrypoint: ./entrypoint.sh
+    command: bash -c "python manage.py runserver 0.0.0.0:8080"
+    depends_on:
+       postgres:
+         condition: service_healthy
+    restart: always
+    volumes:
+      - ./backend:/app
+    networks:
+     - ft_transcendence_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.production
+    image: frontend_production:42
+    container_name: frontend_c
+    ports:
+      - 443:443
+    depends_on:
+      - backend
+    restart: on-failure
+    networks:
+      - ft_transcendence_network

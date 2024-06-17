@@ -1,8 +1,5 @@
-import { router, navigateTo } from './router.js';
+import {router, navigateTo} from './router.js';
 import logoutService from './services/logoutService.js';
-
-
-sessionStorage.setItem('isLoggedIn', false);
 
 window.addEventListener('popstate', router);
 

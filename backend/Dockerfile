@@ -10,7 +10,6 @@ RUN apt-get update && \
 RUN apt-get install libpq-dev
 COPY requirements.txt app/
 COPY entrypoint.sh app/
-# COPY . app/
 
 WORKDIR /app
 
@@ -19,4 +18,3 @@ RUN pip install --upgrade pip \
 	&& chmod 755 entrypoint.sh
 
 EXPOSE 8080
- 
