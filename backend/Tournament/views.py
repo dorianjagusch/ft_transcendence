@@ -25,8 +25,8 @@ class StartTournamentView(APIView):
 		if serializer.is_valid():
 			validated_data = serializer.validated_data
 			try:
-				tournament = TournamentSetupManager.create_tournament_and_its_participants(validated_data)
-				return Response({'tournament_id': tournament.id}, status=status.HTTP_201_CREATED)
+				tournament_id = TournamentSetupManager.create_tournament_and_its_participants(validated_data)
+				return Response({'tournament_id': tournament_id}, status=status.HTTP_201_CREATED)
 			except TournamentCreationException as e:
 				return Response({'error': str(e)}, status=e.status_code)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -40,8 +40,6 @@ class TournamentDetailView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		
 		if login_user_id == tournament.host_user.id and tournament.state == TournamentState.IN_PROGRESS:
-			if tournament.current_match == 0:
-				TournamentInProgressManager.setup_matchups(tournament_id)
 			serializer = TournamentInProgressSerializer(tournament)
 			return Response(serializer.data) 
 

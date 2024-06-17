@@ -49,7 +49,7 @@ class TournamentMatchup(models.Model):
 	tournament = models.ForeignKey(Tournament, related_name='matchups', on_delete=models.CASCADE)
 	participant_left_side = models.ForeignKey(TournamentParticipant, related_name='matchups_as_participant_left_side', null=True, blank=True, on_delete=models.CASCADE)
 	participant_right_side = models.ForeignKey(TournamentParticipant, related_name='matchups_as_participant_right_side', null=True, blank=True, on_delete=models.CASCADE)
-	tournament_match_id = models.PositiveIntegerField() # do not mixup with Match model's id!
+	tournament_match_id = models.PositiveIntegerField() # do not mixup with Match model's id; this is used for ordering tournament's matches.
 	winner = models.ForeignKey(TournamentParticipant, related_name='won_matchups', on_delete=models.CASCADE, null=True, blank=True)
 
 	insert_ts = models.DateTimeField(auto_now_add=True)

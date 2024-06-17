@@ -2,11 +2,11 @@ from django.db import models, transaction, IntegrityError
 from django.core.exceptions import ValidationError
 from datetime import datetime
 from .models import Tournament, \
-      					TournamentParticipant, \
+                          TournamentParticipant, \
                         TournamentMatchup, \
                         TournamentState
 from .exceptions import TournamentCreationException, \
-      						TournamentInProgressException
+                              TournamentInProgressException
 from Tokens.models import TournamentGuestToken
 from User.models import User
 from Player.models import Player
@@ -15,47 +15,47 @@ import sys
 
 
 class TournamentSetupManager:
-	@staticmethod
-	def create_tournament_and_its_participants(tournament_creation_serializer_validated_data):
-		try:
-			with transaction.atomic:
+    @staticmethod
+    def create_tournament_and_its_participants(tournament_creation_serializer_validated_data):
+        try:
+            with transaction.atomic:
 
-				tournament = Tournament.objects.create(
-					host_user = tournament_creation_serializer_validated_data['host_user'],
-					custom_name = tournament_creation_serializer_validated_data['custom_name'],
-					player_amount = len(tournament_creation_serializer_validated_data['tokens']) + 1
-				)
-
-				if tournament_creation_serializer_validated_data['host_user_custom_name'] is not None:
-					host_name_in_tournament = tournament_creation_serializer_validated_data['host_user_custom_name']
-				else:
-					host_name_in_tournament = tournament_creation_serializer_validated_data['host_user'].username
-
-				TournamentParticipant.objects.create(
-                    tournament = tournament,
-                    user = tournament.host_user,
-					name_in_tournament = host_name_in_tournament
+                tournament = Tournament.objects.create(
+                    host_user = tournament_creation_serializer_validated_data['host_user'],
+                    custom_name = tournament_creation_serializer_validated_data['custom_name'],
+                    player_amount = len(tournament_creation_serializer_validated_data['tokens']) + 1
                 )
 
-				for token_data in tournament_creation_serializer_validated_data['tokens']:
-					if token_data.custom_name is not None:
-						guest_name_in_tournament = token_data.custom_name
-					else:
-						guest_name_in_tournament = token_data.guest_user.username
-						
-					TournamentParticipant.objects.create(
-						tournament = tournament,
-						user = token_data.guest_user,
-						name_in_tournament = guest_name_in_tournament
-					)
+                if tournament_creation_serializer_validated_data['host_user_custom_name'] is not None:
+                    host_name_in_tournament = tournament_creation_serializer_validated_data['host_user_custom_name']
+                else:
+                    host_name_in_tournament = tournament_creation_serializer_validated_data['host_user'].username
 
-				return tournament.id
-				
-		except Exception as e:
-			raise TournamentCreationException(f"An error occurred while creating tournament and its participants: {e}")
+                TournamentParticipant.objects.create(
+                    tournament = tournament,
+                    user = tournament.host_user,
+                    name_in_tournament = host_name_in_tournament
+                )
 
+                for token_data in tournament_creation_serializer_validated_data['tokens']:
+                    if token_data.custom_name is not None:
+                        guest_name_in_tournament = token_data.custom_name
+                    else:
+                        guest_name_in_tournament = token_data.guest_user.username
+                        
+                    TournamentParticipant.objects.create(
+                        tournament = tournament,
+                        user = token_data.guest_user,
+                        name_in_tournament = guest_name_in_tournament
+                    )
+                
+                TournamentSetupManager.setup_matchups(tournament.id)
 
-class TournamentInProgressManager:
+                return tournament.id
+                
+        except Exception as e:
+            raise TournamentCreationException(f"An error occurred while creating tournament and its participants: {e}")
+
     @staticmethod
     def setup_matchups(tournament_id):
         try:
@@ -76,7 +76,7 @@ class TournamentInProgressManager:
             with transaction.atomic():
 
                 # SETUP OF INITIAL MATCHUPS ARE DONE BASED ON THE ORDER OF PARTICIPANTS
-                # IF YOU WANT TO TO SET UP MATCHUPS BASED ON SOME OTHER ALGORITHM, PUT IT HERE
+                # IF YOU WANT TO TO SET UP INITIAL MATCHUPS BASED ON SOME OTHER ALGORITHM, PUT IT HERE
                 for i in range(0, len(participants), 2):
                     TournamentMatchup.objects.create(
                         tournament=tournament,
@@ -97,8 +97,9 @@ class TournamentInProgressManager:
                 tournament.save()
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while setting up matchups: {e}")
-        
-    
+
+
+class TournamentInProgressManager:
     @staticmethod
     def make_sure_users_in_ongoing_tournament_are_still_active(tournament):
         if not isinstance(tournament, Tournament):
@@ -109,6 +110,6 @@ class TournamentInProgressManager:
         if inactive_users.exists():
             tournament.abort_tournament()
             raise TournamentInProgressException(f"An user in ongoing tournament has deleted their account; tournament aborted")
-        
+
         return True
         
