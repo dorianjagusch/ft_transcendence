@@ -15,12 +15,12 @@ export default class extends AForm {
 		registerButton.textContent = 'Sign up';
 
 		const linkElement = document.createElement('a');
-		linkElement.id = 'privacyPolicy';
-		linkElement.href = 'https://example.com/privacy-policy';
-		linkElement.textContent = 'Privacy Policy';
-		linkElement.target = '_blank';
-		linkElement.rel = 'noopener noreferrer';
-
+		linkElement.setAttribute('href', '../../../privacypolicy.html');
+		linkElement.setAttribute('target', '_blank');
+		linkElement.setAttribute('rel', 'noopener noreferrer');
+		linkElement.setAttribute('id', 'privacyPolicy');
+		linkElement.innerHTML = '<span>By clicking here, you agree to our Privacy Policy.</span>';
+		
 		this.appendToForm(
 			userNameField,
 			passwordField,
