@@ -7,6 +7,7 @@ from .models import Tournament, \
                         TournamentState
 from .exceptions import TournamentCreationException, \
                               TournamentInProgressException
+from Match.models import Match
 from Tokens.models import TournamentGuestToken
 from User.models import User
 from Player.models import Player
@@ -95,13 +96,14 @@ class TournamentSetupManager:
                     
                 tournament.start_ts = datetime.now()
                 tournament.save()
+
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while setting up matchups: {e}")
 
 
 class TournamentInProgressManager:
     @staticmethod
-    def make_sure_users_in_ongoing_tournament_are_still_active(tournament):
+    def make_sure_users_in_ongoing_tournament_are_still_active(tournament) -> None:
         if not isinstance(tournament, Tournament):
             raise TypeError((f'function input must be a Tournament, not {type(tournament).__name__}'))
         
@@ -112,4 +114,62 @@ class TournamentInProgressManager:
             raise TournamentInProgressException(f"An user in ongoing tournament has deleted their account; tournament aborted")
 
         return True
+    
+from django.db import transaction
+
+class TournamentInProgressManager:
+    @staticmethod
+    def assign_winning_participant_to_next_matchup_with_empty_participant_slot(winning_participant: TournamentParticipant) -> None:
+        try:
+            with transaction.atomic():
+                tournament = winning_participant.tournament
+                try:
+                    coming_matchups = TournamentMatchup.objects.filter(
+                        tournament=tournament,
+                        tournament_match_id__gte=tournament.next_match
+                    ).order_by('tournament_match_id')
+
+                except TournamentMatchup.DoesNotExist:
+                    raise TournamentInProgressException("No future matchup with empty participant slot")
+                
+                for matchup in coming_matchups:
+                    if matchup.participant_left_side is None:
+                        matchup.participant_left_side = winning_participant
+                        matchup.save()
+                        return
+                    elif matchup.participant_right_side is None:
+                        matchup.participant_right_side = winning_participant
+                        matchup.save()
+                        return
+                    
+                raise TournamentInProgressException("No future matchup with empty participant slot")
+
+        except Exception as e:
+            raise TournamentInProgressException(f"An error occurred while assigning the winning participant to future matchup: {e}")
+        
+    @staticmethod
+    def update_tournament_with_winning_participant(winning_participant: TournamentParticipant) -> None:
+        try:
+            with transaction.atomic():
+                tournament = winning_participant.tournament
+                next_matchup_id = tournament.next_match
+                
+                try:
+                    next_matchup = TournamentMatchup.objects.get(
+                        tournament=tournament,
+                        tournament_match_id=next_matchup_id
+                    )
+                except TournamentMatchup.DoesNotExist:
+                    tournament.winner = winning_participant.user
+                    tournament.state = TournamentState.FINISHED
+                    tournament.save()
+                    return
+                
+                TournamentInProgressManager.assign_winning_participant_to_next_matchup_with_empty_participant_slot(winning_participant)
+
+        except Exception as e:
+            raise TournamentInProgressException(f"An error occurred while updating tournament data after finished match: {e}")
+
+
+
         

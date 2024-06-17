@@ -11,6 +11,11 @@ from Tokens.models import MatchToken
 from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
+from Tournament.models import TournamentMatchup, \
+                         TournamentParticipant
+from Tournament.managers import TournamentInProgressManager
+
+import sys
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -119,5 +124,38 @@ class PongConsumer(AsyncWebsocketConsumer):
         match.start_match()
 
     @database_sync_to_async
-    def abort_match(self, match):
+    def abort_match(self, match: Match):
         match.abort_match()
+        if match.tournament_matchup:
+            match.tournament_matchup.tournament.abort_tournament()
+
+    @database_sync_to_async
+    def update_tournament_data_with_match_results(self, match: Match):
+        try:
+            if not match.tournament_matchup:
+                return
+            
+            winning_player = match.players.filter(match_winner=True).first()
+            if not winning_player:
+                return
+            
+            with transaction.atomic():
+            
+                tournament_participant = TournamentParticipant.objects.get(
+                    tournament=match.tournament_matchup.tournament,
+                    user=winning_player.user
+                )
+
+                match.tournament_matchup.winner = tournament_participant
+                match.tournament_matchup.save()
+
+                match.tournament_matchup.tournament.next_match += 1
+                match.tournament_matchup.tournament.save()
+
+                TournamentInProgressManager.update_tournament_with_winning_participant(tournament_participant)
+        
+        except Exception as e:
+            print(f"An error occurred while updating match results: {e}", file=sys.stderr)
+            match.tournament_matchup.tournament.abort_tournament()
+
+            

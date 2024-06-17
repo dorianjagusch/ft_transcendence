@@ -56,11 +56,11 @@ class MatchSetupManager:
 					score=0,
 					match_winner=False
 				)
+
+			return match.id
 		
 		except Exception as e:
 			raise MatchAndPlayersCreationException(f"An error occurred while creating match and/or players: {e}")
-		
-		return match
 
 	@staticmethod
 	def make_sure_users_in_match_are_still_active(match):

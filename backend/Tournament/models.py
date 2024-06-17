@@ -2,7 +2,6 @@ from django.db import models
 from datetime import datetime
 
 from User.models import User
-from .managers import TournamentManager
 from .tournamentState import TournamentState
 
 # Create your models here.
@@ -18,8 +17,6 @@ class Tournament(models.Model):
 	start_ts = models.DateTimeField(null=True, blank=True)
 	end_ts = models.DateTimeField(null=True, blank=True)
 	updated_ts = models.DateTimeField(auto_now=True)
-
-	objects = TournamentManager()
 
 	def finish_tournament(self):
 		if self.state == TournamentState.IN_PROGRESS.value:
@@ -49,7 +46,7 @@ class TournamentMatchup(models.Model):
 	tournament = models.ForeignKey(Tournament, related_name='matchups', on_delete=models.CASCADE)
 	participant_left_side = models.ForeignKey(TournamentParticipant, related_name='matchups_as_participant_left_side', null=True, blank=True, on_delete=models.CASCADE)
 	participant_right_side = models.ForeignKey(TournamentParticipant, related_name='matchups_as_participant_right_side', null=True, blank=True, on_delete=models.CASCADE)
-	tournament_match_id = models.PositiveIntegerField() # do not mixup with Match model's id; this is used for ordering tournament's matches.
+	tournament_match_id = models.PositiveIntegerField() # do not mix up with Match model's id; this is used for ordering tournament's matches.
 	winner = models.ForeignKey(TournamentParticipant, related_name='won_matchups', on_delete=models.CASCADE, null=True, blank=True)
 
 	insert_ts = models.DateTimeField(auto_now_add=True)

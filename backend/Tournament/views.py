@@ -18,8 +18,8 @@ from Match.exceptions import MatchAndPlayersCreationException
 
 from shared_utilities.decorators import must_be_authenticated
 
-@method_decorator(must_be_authenticated)
 class StartTournamentView(APIView):
+	@method_decorator(must_be_authenticated)
 	def post(self, request):
 		serializer = TournamentCreationSerializer(data=request.data, context={'request': request})
 		if serializer.is_valid():
