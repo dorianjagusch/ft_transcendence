@@ -9,7 +9,9 @@ from User.models import User
 from User.serializers import UserInputSerializer, UserOutputSerializer
 
 from .models import MatchToken, TournamentGuestToken
-from .serializers import MatchTokenSerializer, TournamentGuestTokenSerializer
+from .serializers import MatchTokenSerializer, \
+							TournamentGuestTokenSerializer, \
+							GuestUserAuthSerializer
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											valid_serializer_in_body
@@ -55,25 +57,22 @@ class SingleMatchGuestTokenView(APIView):
 class TournamentGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
-	@method_decorator(valid_serializer_in_body(UserInputSerializer))
+	@method_decorator(valid_serializer_in_body(GuestUserAuthSerializer))
 	def post(self, request):
-		host_user = request.user
-		username = request.data.get('username')
-		password = request.data.get('password')
-
-		guest_user = authenticate(username=username, password=password)
-		if guest_user is not None:
-			token = TournamentGuestToken.objects.create_tournament_guest_token(host_user, guest_user)
+		serializer = GuestUserAuthSerializer(data=request.data, context={'host_user': request.user})
+		if serializer.is_valid():
+			token = serializer.save()
 			token_serializer = TournamentGuestTokenSerializer(token)
-			user_serializer = UserOutputSerializer(guest_user)
+			user_serializer = UserOutputSerializer(serializer.validated_data['user'])
 			return Response({
-                'token': token_serializer.data,
-                'guest_user': user_serializer.data
-            }, status=status.HTTP_201_CREATED)
+				'token': token_serializer.data,
+				'guest_user': user_serializer.data
+			}, status=status.HTTP_201_CREATED)
 		else:
-			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		
 	@method_decorator(must_be_authenticated)
+	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(TournamentGuestTokenSerializer))
 	def put(self, request):
 		try:

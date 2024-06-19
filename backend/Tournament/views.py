@@ -11,12 +11,15 @@ from .serializers import TournamentOutputSerializer, \
 							TournamentInProgressSerializer
 from .managers import TournamentSetupManager, \
 						TournamentInProgressManager
-from .exceptions import TournamentCreationException
+from .exceptions import TournamentCreationException, \
+							TournamentInProgressException
 from Tokens.managers import MatchTokenManager
 from Match.managers import MatchSetupManager
 from Match.exceptions import MatchAndPlayersCreationException
 
 from shared_utilities.decorators import must_be_authenticated
+
+import sys
 
 class StartTournamentView(APIView):
 	@method_decorator(must_be_authenticated)
@@ -26,7 +29,8 @@ class StartTournamentView(APIView):
 			validated_data = serializer.validated_data
 			try:
 				tournament_id = TournamentSetupManager.create_tournament_and_its_participants(validated_data)
-				return Response({'tournament_id': tournament_id}, status=status.HTTP_201_CREATED)
+				tournament_url = f"http://localhost:8080/tournaments/{tournament_id}"
+				return Response(tournament_url, status=status.HTTP_201_CREATED)
 			except TournamentCreationException as e:
 				return Response({'error': str(e)}, status=e.status_code)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -40,6 +44,10 @@ class TournamentDetailView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		
 		if login_user_id == tournament.host_user.id and tournament.state == TournamentState.IN_PROGRESS:
+			try:
+				TournamentInProgressManager.make_sure_users_in_ongoing_tournament_are_still_active(tournament)
+			except TournamentInProgressException as e:
+				return Response({'error': f'{e}'}, status=status.HTTP_403_FORBIDDEN)
 			serializer = TournamentInProgressSerializer(tournament)
 			return Response(serializer.data) 
 
@@ -60,6 +68,11 @@ class LaunchTournamentMatchView(APIView):
 			return Response({'error': 'Tournament is not in progress'}, status=status.HTTP_403_FORBIDDEN)
 		if tournament.next_match != next_match:
 			return Response({'error': f'The next tournament match is not {next_match}'}, status=status.HTTP_403_FORBIDDEN)
+		
+		try:
+			TournamentInProgressManager.make_sure_users_in_ongoing_tournament_are_still_active(tournament)
+		except TournamentInProgressException as e:
+			return Response({'error': f'{e}'}, status=status.HTTP_403_FORBIDDEN)
 		
 		try:
 			matchup = TournamentMatchup.objects.get(tournament_id=tournament_id, tournament_match_id=next_match)

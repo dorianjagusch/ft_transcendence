@@ -19,43 +19,38 @@ class TournamentSetupManager:
     @staticmethod
     def create_tournament_and_its_participants(tournament_creation_serializer_validated_data):
         try:
-            with transaction.atomic:
+            tournament = Tournament.objects.create(
+                host_user = tournament_creation_serializer_validated_data['host_user'],
+                custom_name = tournament_creation_serializer_validated_data.get('custom_name', None),
+                player_amount = len(tournament_creation_serializer_validated_data['tokens']) + 1
+            )
 
-                tournament = Tournament.objects.create(
-                    host_user = tournament_creation_serializer_validated_data['host_user'],
-                    custom_name = tournament_creation_serializer_validated_data['custom_name'],
-                    player_amount = len(tournament_creation_serializer_validated_data['tokens']) + 1
-                )
+            with transaction.atomic():
 
-                if tournament_creation_serializer_validated_data['host_user_custom_name'] is not None:
+                if tournament_creation_serializer_validated_data.get('host_user_custom_name', None):
                     host_name_in_tournament = tournament_creation_serializer_validated_data['host_user_custom_name']
                 else:
                     host_name_in_tournament = tournament_creation_serializer_validated_data['host_user'].username
-
                 TournamentParticipant.objects.create(
-                    tournament = tournament,
-                    user = tournament.host_user,
-                    name_in_tournament = host_name_in_tournament
+                    tournament=tournament,
+                    user=tournament.host_user,
+                    name_in_tournament=host_name_in_tournament
                 )
 
                 for token_data in tournament_creation_serializer_validated_data['tokens']:
-                    if token_data.custom_name is not None:
-                        guest_name_in_tournament = token_data.custom_name
-                    else:
-                        guest_name_in_tournament = token_data.guest_user.username
-                        
+                    guest_name_in_tournament = token_data.custom_name if token_data.custom_name else token_data.guest_user.username
                     TournamentParticipant.objects.create(
-                        tournament = tournament,
-                        user = token_data.guest_user,
-                        name_in_tournament = guest_name_in_tournament
+                        tournament=tournament,
+                        user=token_data.guest_user,
+                        name_in_tournament=guest_name_in_tournament
                     )
-                
-                TournamentSetupManager.setup_matchups(tournament.id)
 
-                return tournament.id
+            TournamentSetupManager.setup_matchups(tournament.id)
+            return tournament.id
                 
         except Exception as e:
             raise TournamentCreationException(f"An error occurred while creating tournament and its participants: {e}")
+
 
     @staticmethod
     def setup_matchups(tournament_id):
@@ -81,8 +76,8 @@ class TournamentSetupManager:
                 for i in range(0, len(participants), 2):
                     TournamentMatchup.objects.create(
                         tournament=tournament,
-                        player1=participants[i],
-                        player2=participants[i + 1],
+                        participant_left_side=participants[i],
+                        participant_right_side=participants[i + 1],
                         tournament_match_id=i // 2
                     )
 
@@ -114,10 +109,7 @@ class TournamentInProgressManager:
             raise TournamentInProgressException(f"An user in ongoing tournament has deleted their account; tournament aborted")
 
         return True
-    
-from django.db import transaction
 
-class TournamentInProgressManager:
     @staticmethod
     def assign_winning_participant_to_next_matchup_with_empty_participant_slot(winning_participant: TournamentParticipant) -> None:
         try:
