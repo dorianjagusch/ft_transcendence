@@ -11,8 +11,7 @@ from Tokens.models import MatchToken
 from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
-from Tournament.models import TournamentMatchup, \
-                         TournamentParticipant
+from Tournament.models import TournamentPlayer
 from Tournament.managers import TournamentInProgressManager
 
 import sys
@@ -81,16 +80,16 @@ class PongConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
-            match_token = MatchToken.objects.get(token=token)
-            if not token.is_active or token.is_expired():
+            self.match_token = MatchToken.objects.get(token=token)
+            if not self.match_token.is_active or self.match_token.is_expired():
                 return False
             
-            match_token.is_active = False
-            match_token.save()
+            self.match_token.is_active = False
+            self.match_token.save()
 
             self.match = Match.objects.get(pk=match_id)
-            self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
-            self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+            self.player_left = Player.objects.filter(match=self.match, user_id=self.match_token.user_left_side).first()
+            self.player_right = Player.objects.filter(match=self.match, user_id=self.match_token.user_right_side).first()
 
             return True
             
@@ -141,7 +140,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             
             with transaction.atomic():
             
-                tournament_participant = TournamentParticipant.objects.get(
+                tournament_participant = TournamentPlayer.objects.get(
                     tournament=match.tournament_matchup.tournament,
                     user=winning_player.user
                 )

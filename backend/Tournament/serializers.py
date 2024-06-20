@@ -1,24 +1,49 @@
 from rest_framework import serializers
 
 from .models import Tournament, \
-                        TournamentParticipant, \
-                        TournamentMatchup
+                        TournamentPlayer
 from Tokens.models import TournamentGuestToken
+from Match.models import Match
+from Player.models import Player
 
-class TournamentParticipantSerializer(serializers.ModelSerializer):
+class TournamentPlayerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TournamentParticipant
-        fields = ['id', 'user', 'name_in_tournament']
+        model = TournamentPlayer
+        fields = ['user', 'name_in_tournament']
 
-class TournamentMatchupSerializer(serializers.ModelSerializer):
+
+class TournamentMatchSerializer(serializers.ModelSerializer):
+    first_tournament_player = serializers.SerializerMethodField()
+    second_tournament_player = serializers.SerializerMethodField()
     class Meta:
-        model = TournamentMatchup
-        fields = ['id', 'tournament_match_id', 'participant_left_side', 'participant_right_side', 'winner']
+        model = Match
+        fields = ['id', 'tournament_match_id', 'first_tournament_player', 'second_tournament_player']
+
+    def get_first_tournament_player(self, obj):
+        first_player = obj.players.first()
+        if first_player:
+            tournament_player = TournamentPlayer.objects.filter(
+                tournament=obj.tournament,
+                user=first_player.user
+            ).first()
+            return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
+        return None
+
+    def get_second_tournament_player(self, obj):
+        second_player = obj.players.all()[1] if obj.players.count() > 1 else None
+        if second_player:
+            tournament_player = TournamentPlayer.objects.filter(
+                tournament=obj.tournament,
+                user=second_player.user
+            ).first()
+            return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
+        return None
+
 
 class TournamentOutputSerializer(serializers.ModelSerializer):
     state_display = serializers.CharField(source='get_state_display', read_only=True)
-    participants = TournamentParticipantSerializer(many=True, read_only=True)
-    matchups = TournamentMatchupSerializer(many=True, read_only=True)
+    tournament_players = TournamentPlayerSerializer(many=True, read_only=True)
+    matches = TournamentMatchSerializer(many=True, read_only=True)
 
     class Meta:
         model = Tournament
@@ -30,13 +55,14 @@ class TournamentOutputSerializer(serializers.ModelSerializer):
             'state_display',
             'next_match',
             'player_amount',
-            'tournament_winner',
+            'winner',
             'insert_ts',
             'start_ts',
             'end_ts',
             'updated_ts',
-            'participants',
-            'matchups'
+            'expires_ts',
+            'tournament_players',
+            'matches'
             ]
 
 class TournamentCreationSerializer(serializers.ModelSerializer):
@@ -110,9 +136,9 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 
 class TournamentInProgressSerializer(serializers.ModelSerializer):
     state_display = serializers.CharField(source='get_state_display', read_only=True)
-    participants = TournamentParticipantSerializer(many=True, read_only=True)
-    matchups = TournamentMatchupSerializer(many=True, read_only=True)
-    next_matchup = serializers.SerializerMethodField()
+    participants = TournamentPlayerSerializer(many=True, read_only=True)
+    matches = TournamentMatchSerializer(many=True, read_only=True)
+    next_match = serializers.SerializerMethodField()
 
     class Meta:
         model = Tournament
@@ -122,17 +148,17 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
             'custom_name',
             'state',
             'state_display',
+            'expires_ts',
             'player_amount',
             'participants',
-            'matchups',
-            'next_matchup',
-            'next_match'
+            'matches',
+            'next_match',
         ]
         
-    def get_next_matchup(self, obj):
+    def get_next_match(self, obj):
         next_match = obj.next_match
         try:
-            next_matchup = TournamentMatchup.objects.get(tournament=obj, tournament_match_id=next_match)
-            return TournamentMatchupSerializer(next_matchup).data
-        except TournamentMatchup.DoesNotExist:
+            next_match = Match.objects.get(tournament=obj, tournament_match_id=next_match)
+            return TournamentMatchSerializer(next_match).data
+        except Match.DoesNotExist:
             return None

@@ -2,7 +2,7 @@ from django.db import models
 from datetime import datetime
 
 from .managers import MatchManager
-from Tournament.models import TournamentMatchup
+from Tournament.models import Tournament
 from .matchState import MatchState
 
 # Create your models here.
@@ -13,7 +13,8 @@ class Match(models.Model):
 	insert_ts = models.DateTimeField(auto_now_add=True)
 	updated_ts = models.DateTimeField(auto_now=True)
 
-	tournament_matchup = models.ForeignKey(TournamentMatchup, related_name='match', null=True, blank=True, default=None, on_delete=models.CASCADE)
+	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
+	tournament_match_id = models.PositiveIntegerField()
 
 	objects = MatchManager()
 

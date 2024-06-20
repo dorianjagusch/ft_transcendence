@@ -3,6 +3,7 @@ from django.db import models, transaction
 from .playerMatchStatus import PlayerMatchStatus
 from .exceptions import MatchAndPlayersCreationException, \
 							MatchPlayersException
+from .matchState import MatchState
 from Player.models import Player
 from User.models import User
 
@@ -13,7 +14,7 @@ class MatchManager(models.Manager):
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
-			raise ValueError("User with id '{user_id}' does not exist.".format(user_id))
+			raise ValueError(f"User with id '{user_id}' does not exist.")
 
 		matches_with_user = self.filter(players__user_id=user_id)
 
@@ -27,6 +28,17 @@ class MatchManager(models.Manager):
 			)
 
 		return matches_with_user
+	
+	@staticmethod
+	def abort_tournament_matches(self, tournament_id: int):
+		tournament_matches = self.filter(
+			tournament_id=tournament_id
+		).order_by('tournament_match_id')
+
+		for match in tournament_matches:
+			if match.state in [MatchState.LOBBY, MatchState.IN_PROGRESS]:
+				match.state = MatchState.ABORTED
+				match.save()
 
 class MatchSetupManager:
 	@staticmethod

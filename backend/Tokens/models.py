@@ -5,8 +5,8 @@ from django.utils import timezone
 
 from .managers import MatchTokenManager, \
                         TournamentGuestTokenManager
+from .tokensMacros import TOKEN_EXPIRERY_TIME_SECONDS
 from User.models import User
-from Tournament.models import TournamentMatchup
 
 class AbstractToken(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -19,7 +19,7 @@ class AbstractToken(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.expires_at:
-            self.expires_at = timezone.now() + timedelta(minutes=5)
+            self.expires_at = timezone.now() + timedelta(seconds=TOKEN_EXPIRERY_TIME_SECONDS)
         super().save(*args, **kwargs)
 
     def is_expired(self):
@@ -31,8 +31,6 @@ class AbstractToken(models.Model):
 class MatchToken(AbstractToken):
     user_left_side = models.ForeignKey(User, related_name='match_token_left', on_delete=models.CASCADE)
     user_right_side = models.ForeignKey(User, related_name='match_token_right', on_delete=models.CASCADE)
-
-    tournament_matchup = models.ForeignKey(TournamentMatchup, related_name='match_token', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
     objects = MatchTokenManager()
 

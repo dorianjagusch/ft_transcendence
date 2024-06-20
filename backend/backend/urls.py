@@ -35,7 +35,7 @@ from Tokens.views import SingleMatchGuestTokenView, \
 from Match.views import MatchView, \
 							LaunchTestMatchView
 
-from Tournament.views import StartTournamentView, \
+from Tournament.views import TournamentListView, \
 								TournamentDetailView, \
 								LaunchTournamentMatchView
 
@@ -63,9 +63,8 @@ urlpatterns = [
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 
 	# Tournament Views
-	path('tournaments/', StartTournamentView.as_view()),
+	path('tournaments/', TournamentListView.as_view()),
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
-	path('tournaments/<int:tournament_id>/<int:tournament_match_id>/', LaunchTournamentMatchView.as_view()),
 ]
 
 websocket_urlpatterns = [

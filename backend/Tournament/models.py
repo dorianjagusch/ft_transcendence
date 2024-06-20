@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 from User.models import User
 from .tournamentState import TournamentState
@@ -18,44 +18,29 @@ class Tournament(models.Model):
 	end_ts = models.DateTimeField(null=True, blank=True)
 	updated_ts = models.DateTimeField(auto_now=True)
 
+	expires_ts = models.DateTimeField(null=True, blank=True)
+
 	def finish_tournament(self):
 		if self.state == TournamentState.IN_PROGRESS.value:
 			self.state = TournamentState.FINISHED.value
-			self.end_ts = datetime.now()
+			self.end_ts = timezone.now()
 			self.save()
 
 	def abort_tournament(self):
 		if self.state == TournamentState.IN_PROGRESS.value:
 			self.state = TournamentState.ABORTED.value
-			self.end_ts = datetime.now()
+			self.end_ts = timezone.now()
 			self.save()
 
 	def __str__(self):
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
 		return f'Tournament {self.pk} - {self.get_state_display()}'
 	
-class TournamentParticipant(models.Model):
-	tournament = models.ForeignKey(Tournament, related_name='participants', on_delete=models.CASCADE)
-	user = models.ForeignKey(User, related_name='tournament_participants', on_delete=models.CASCADE)
+class TournamentPlayer(models.Model):
+	tournament = models.ForeignKey(Tournament, related_name='players', on_delete=models.CASCADE)
+	user = models.ForeignKey(User, related_name='tournament_players', on_delete=models.CASCADE)
 	name_in_tournament = models.CharField(max_length=30, null=False, blank=False)
 
 	class Meta:
 		unique_together = ('tournament', 'user')
 
-class TournamentMatchup(models.Model):
-	tournament = models.ForeignKey(Tournament, related_name='matchups', on_delete=models.CASCADE)
-	participant_left_side = models.ForeignKey(TournamentParticipant, related_name='matchups_as_participant_left_side', null=True, blank=True, on_delete=models.CASCADE)
-	participant_right_side = models.ForeignKey(TournamentParticipant, related_name='matchups_as_participant_right_side', null=True, blank=True, on_delete=models.CASCADE)
-	tournament_match_id = models.PositiveIntegerField() # do not mix up with Match model's id; this is used for ordering tournament's matches.
-	winner = models.ForeignKey(TournamentParticipant, related_name='won_matchups', on_delete=models.CASCADE, null=True, blank=True)
-
-	insert_ts = models.DateTimeField(auto_now_add=True)
-	updated_ts = models.DateTimeField(auto_now=True)
-
-
-	def __str__(self):
-		return f'Match {self.tournament_match_id}: {self.participant_left_side.name_in_tournament} vs {self.participant_right_side.name_in_tournament}'
-
-	class Meta:
-		unique_together = ('tournament', 'tournament_match_id')
-		ordering = ['tournament_match_id']

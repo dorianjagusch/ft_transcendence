@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 from .exceptions import MatchAndPlayersCreationException
 from .managers import MatchSetupManager
 from Tokens.models import MatchToken
-from Tournament.models import Tournament, TournamentMatchup
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated
 
