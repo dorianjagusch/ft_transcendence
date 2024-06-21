@@ -31,9 +31,9 @@ class SingleMatchGuestTokenView(APIView):
 			token_serializer = MatchTokenSerializer(token)
 			user_serializer = UserOutputSerializer(guest_user)
 			return Response({
-                'token': token_serializer.data,
-                'guest_user': user_serializer.data
-            }, status=status.HTTP_201_CREATED)
+				'token': token_serializer.data,
+				'guest_user': user_serializer.data
+			}, status=status.HTTP_201_CREATED)
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -50,6 +50,5 @@ class SingleMatchGuestTokenView(APIView):
 				token.is_active = False
 				token.save()
 				return Response({'message': 'Token is now expired'}, status=status.HTTP_200_OK)
-
 		except MatchToken.DoesNotExist:
 			return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
