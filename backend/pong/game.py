@@ -8,26 +8,26 @@ from .game_stats import GameStats
 class PongStatus:
     def __init__(self):
         # Initialize game state
-        self.player_left = Player()
-        self.player_right = Player()
-        self.player_right.x = PLAYGROUND_WIDTH - WALL_MARGIN
-        self.player_left.x = WALL_MARGIN
+        self.player_left = Player(WALL_MARGIN)
+        self.player_right = Player(PLAYGROUND_WIDTH - WALL_MARGIN)
         self.ball = Ball()
         self.game_stats = GameStats()
         self.game = PongGame()
         
 
-    def update_positions(self, key_press):
-        if not self.game_started and key_press in ('o', 'l'):
-            self.game.kick_start_game(self, key_press)
-        if key_press == 'w':
+    def update_positions(self, move):
+        if not self.game_stats.game_started and move in (PLAYER_RIGHT_UP, PLAYER_RIGHT_DOWN):
+            self.game.kick_start_game(self, move)
+        if move == PLAYER_LEFT_UP:
             self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
-        elif key_press == 's':
+        elif move == PLAYER_LEFT_DOWN:
             self.player_left.y = self.game.move_player(self.player_left.y, -PLAYER_MOVEMENT_UNIT)
-        elif key_press == 'o':
-            self.player_right.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
-        elif key_press == 'l':
-            self.player_right.y = self.game.move_player(self.player_left.y, -PLAYER_MOVEMENT_UNIT)
+        elif move == PLAYER_RIGHT_UP:
+            self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
+        elif move == PLAYER_RIGHT_DOWN:
+            self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+        self.player_right.y = self.game.check_boundery(self.player_right.y)
+        self.player_left.y = self.game.check_boundery(self.player_left.y)
         self.game.update_ball_position(self)
 
     def update_ball_position(self):
@@ -56,30 +56,30 @@ class PongStatus:
         game_state = {
             'ball': {
                 'position': {
-                'x': self.ball_x,
-                'y': self.ball_y
+                'x': self.ball.x,
+                'y': self.ball.y
                 },
             },
             'players': {
                 'left': {
                     'position': {
-                        'x': self.player_left_x,
-                        'y': self.player_left_y
+                        'x': self.player_left.x,
+                        'y': self.player_left.y
                     },
-                    'score': self.player_left_score
+                    'score': self.player_left.score
                 },
                 'right': {
                     'position': {
-                        'x': self.player_right_x,
-                        'y': self.player_right_y
+                        'x': self.player_right.x,
+                        'y': self.player_right.y
                     },
-                    'score': self.player_right_score
+                    'score': self.player_right.score
                 }
             },
             'game': {
-                'over': self.game_over,
-                'winner': self.winner,
-                'loser': self.loser
+                'over': self.game_stats.game_over,
+                'winner': self.game_stats.winner,
+                'loser': self.game_stats.loser
             }
         }
         return game_state
