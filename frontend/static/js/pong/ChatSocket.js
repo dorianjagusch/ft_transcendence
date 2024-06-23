@@ -1,48 +1,54 @@
-import {animate} from './pongGame.js';
+import PongGame from './pongGame.js';
 
 class ChatSocket {
-	// const roomName = document.getElementById('room-name').textContent // ADD ROOM NAME
-	// JSON.parse(
-	// 	document.getElementById('room-name').textContent;
-	// );
-
-	constructor() {
-		this.chatSocket = null; // + roomName + '/' //ADD ROOM NAME
+	constructor(url) {
+		this.chatSocket = new WebSocket(url);
+		this.acceptMessage = this.acceptMessage.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+		this.handleError = this.handleError.bind(this);
+		this.sendKey = this.sendKey.bind(this);
+		this.removeEventListeners = this.removeEventListeners.bind(this);
+		this.connect = this.connect.bind(this);
+		this.game = null;
 	}
 
 	acceptMessage(e) {
 		const data = JSON.parse(e.data);
+		if (this.game === null) {
+			this.game = new PongGame(data);
+		}
+		this.game.animate(data);
 	}
 
 	handleClose(e) {
 		console.error('Chat socket closed unexpectedly');
+		this.removeEventListeners();
 	}
 
 	handleError(e) {
 		console.error('Chat socket error:', e);
+		if (chatSocket.readyState == WebSocket.OPEN) {
+			chatSocket.close();
+		}
+		this.removeEventListeners();
 	}
 
-	sendKey(chatSocket, key) {
-		//TODO: Handle esc or whatever other quit key
-		chatSocket.send(
-			JSON.stringify({
-				message: key,
-			})
-		);
+	sendKey(e) {
+		this.chatSocket.send(e.key);
+	}
+
+	removeEventListeners() {
+		this.chatSocket.removeEventListener('close');
+		this.chatSocket.removeEventListener('error');
+		this.chatSocket.removeEventListener('message');
+		window.removeEventListener.sendKey('keyup');
 	}
 
 	connect() {
-		this.chatSocket = new WebSocket(
-			'ws://' + window.location.host + ':8080/pong/match/test' // + roomName + '/' //ADD ROOM NAME
-		);
-
 		this.chatSocket.addEventListener('message', this.acceptMessage);
-
 		this.chatSocket.addEventListener('close', this.handleClose);
-
 		this.chatSocket.addEventListener('error', this.handleError);
-
-		document.body.addEventListener('keyUp', this.sendKey);
+		window.addEventListener('keyup', this.sendKey);
 	}
 }
 

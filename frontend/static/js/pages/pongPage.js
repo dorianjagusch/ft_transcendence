@@ -1,8 +1,8 @@
-import ChatSocket from '../websocket.js';
+import ChatSocket from '../pong/ChatSocket.js';
 import PongService from '../services/pongService.js';
 import Pong from '../pong/pong.js';
 import AView from './AView.js';
-import {createGameBoard, setupGame} from '../pong/pongGame.js';
+import PongGame from '../pong/pongGame.js';
 
 
 export default class extends AView {
@@ -17,15 +17,14 @@ export default class extends AView {
 		let matchUrl = null;
 		try {
 			matchUrl = await this.pongService.getRequest();
-			console.log(matchUrl);
+			this.chatSocket = new ChatSocket(matchUrl);
+			this.chatSocket.connect();
 		} catch (error) {
 			console.log(error);
 		}
 
-		const pong = Pong();
+		const pong = Pong.PongContainer();
 		this.updateMain(pong);
-		createGameBoard();
-		setupGame();
 		// document.getElementById('room-name').textContent = 'room'; //ADD ROOM NAME	}
 	}
 }
