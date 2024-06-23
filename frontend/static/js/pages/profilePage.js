@@ -61,7 +61,6 @@ export default class extends AView {
 		const data = {
 			friend_id: this.friendId,
 		};
-		console.log(data.friend_id);
 
 		this.friendService
 			.postRequest(data)

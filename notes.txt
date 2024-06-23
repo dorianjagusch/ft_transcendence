@@ -1,3 +1,2 @@
 When navigating away from game page. Websocket remains open
-Players are invisible (like dafuq)
 make game 3D
