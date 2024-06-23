@@ -15,7 +15,7 @@ Including another URLconf
 	2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
 from pong.consumers import PongConsumer
 
@@ -33,6 +33,8 @@ from Tokens.views import SingleMatchGuestTokenView
 
 from Match.views import MatchView, \
 							LaunchTestMatchView
+
+from stats.views import StatsView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -57,7 +59,7 @@ urlpatterns = [
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 
 	# Stats Views
-	path("", include("stats.urls")),
+	path('stats/', StatsView.as_view()),
 ]
 
 websocket_urlpatterns = [
