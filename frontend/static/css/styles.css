@@ -1063,12 +1063,11 @@ button:is(:focus, :hover)
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	/* justify-content: center; */
 	align-items: center;
 }
 
 #pong > *{
-	width: 100%;
+	width: 80%;
 }
 
 #pong > #score-board{
@@ -1081,6 +1080,25 @@ button:is(:focus, :hover)
 
 #pong > canvas {
 	margin-bottom: 2em;
+	order: 2;
+}
+
+#pong > #game-over{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	order: 2;
+	font-size: var(--fs-large);
+	align-items: center;
+	justify-content: center;
+}
+
+#pong > #game-over > :first-child{
+	border-radius: 1em;
+	color: red;
+	text-align: center;
+	padding: 1;
 }
 
 #pong > #instructions{

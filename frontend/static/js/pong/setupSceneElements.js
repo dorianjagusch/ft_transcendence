@@ -39,13 +39,12 @@ const createIntructions = () => {
 const createGameOver = () => {
 	const gameOver = document.createElement('article');
 	gameOver.setAttribute('id', 'game-over');
+	const gameOverText = document.createElement('p');
 	const winner = document.createElement('p');
 	winner.setAttribute('id', 'winner');
-	const loser = document.createElement('p');
-	loser.setAttribute('id', 'loser');
+	gameOver.appendChild(gameOverText);
 	gameOver.appendChild(winner);
-	gameOver.appendChild(loser);
-	// gameOver.style.display = 'none';
+	gameOver.style.display = 'none';
 	return gameOver;
 };
 

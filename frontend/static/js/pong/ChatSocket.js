@@ -38,10 +38,10 @@ class ChatSocket {
 	}
 
 	removeEventListeners() {
-		this.chatSocket.removeEventListener('close');
-		this.chatSocket.removeEventListener('error');
-		this.chatSocket.removeEventListener('message');
-		window.removeEventListener.sendKey('keyup');
+		this.chatSocket.removeEventListener('close', this.handleClose);
+		this.chatSocket.removeEventListener('error', this.handleError);
+		this.chatSocket.removeEventListener('message', this.acceptMessage);
+		window.removeEventListener('keyup', this.sendKey);
 	}
 
 	connect() {

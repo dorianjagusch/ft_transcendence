@@ -48,10 +48,10 @@ class PongGame {
 	}
 
 	displayGameOver(game) {
-		document.getElementById('game-over').prepend('Game Over');
+		const gameOver = document.getElementById('game-over')
+		gameOver.querySelector('p').textContent = 'Game Over';
 		document.getElementById('winner').textContent = `${game.winner} won!`;
-		document.getElementById('loser').textContent = `${game.loser} lost!`;
-		document.getElementById('game-over').style.display = 'block';
+		gameOver.style.display = 'grid';
 		return;
 	}
 
