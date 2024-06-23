@@ -18,8 +18,7 @@ const FRIENDSHIPSTATUS = {
 };
 
 const GAMES = {
-	"Pong": 0,
-	"Game2": 1,
+	"Pong": 0
 }
 
 export default {

@@ -42,7 +42,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         key_press = text_data.strip()
-        self.game.update_positions(key_press)      
+        self.game.update_positions(key_press)
         if self.game.game_over == True:
             await self.send_positions()
 
@@ -69,14 +69,14 @@ class PongConsumer(AsyncWebsocketConsumer):
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)   # Wait for the specified interval before sending the next message
             if self.game.game_over == True:
                 break
-    
+
     @database_sync_to_async
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             match_token = MatchToken.objects.get(token=token)
             if not match_token.is_active or match_token.is_expired():
                 return None
-            
+
             match_token.is_active = False
             match_token.save()
 
@@ -85,10 +85,10 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
 
             return match_token
-            
+
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
             return None
-    
+
     @database_sync_to_async
     def save_match_final_results(self):
         # Save scores when the game is over
@@ -103,7 +103,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         self.player_left.save()
         self.player_right.save()
-        
+
     @database_sync_to_async
     def start_match(self, match):
         match.start_match()

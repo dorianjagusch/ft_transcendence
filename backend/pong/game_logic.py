@@ -2,6 +2,7 @@
 from .constants import *
 import math
 
+
 class PongGame:
     def update_player_positions(self, pong_stat, key_press):
         # Update player positions based on key press
