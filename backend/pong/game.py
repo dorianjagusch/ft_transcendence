@@ -45,7 +45,7 @@ class PongStatus:
                 'speed': BALL_SPEED
             },
             'game': {
-                'wall-margin': WALL_MARGIN,
+                'margin': WALL_MARGIN,
                 'width': PLAYGROUND_WIDTH,
                 'height': PLAYGROUND_HEIGHT
             }

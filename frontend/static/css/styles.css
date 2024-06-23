@@ -1091,13 +1091,14 @@ button:is(:focus, :hover)
 	order: 2;
 	font-size: var(--fs-large);
 	align-items: center;
+	gap: var(--fs-medium);
 	justify-content: center;
 }
 
 #pong > #game-over > :first-child{
 	border-radius: 1em;
 	color: red;
-	text-align: center;
+	text-align: center;;
 	padding: 1;
 }
 

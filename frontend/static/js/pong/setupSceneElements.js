@@ -40,10 +40,21 @@ const createGameOver = () => {
 	const gameOver = document.createElement('article');
 	gameOver.setAttribute('id', 'game-over');
 	const gameOverText = document.createElement('p');
+
 	const winner = document.createElement('p');
 	winner.setAttribute('id', 'winner');
+
+	const newGameButton = document.createElement('button');
+	newGameButton.textContent = 'New Game';
+	newGameButton.classList.add('new-game-button');
+	
+	newGameButton.addEventListener('click', () => {
+		window.location.reload();
+	});
+
 	gameOver.appendChild(gameOverText);
 	gameOver.appendChild(winner);
+	gameOver.appendChild(newGameButton);
 	gameOver.style.display = 'none';
 	return gameOver;
 };

@@ -48,10 +48,10 @@ class PongGame {
 	}
 
 	displayGameOver(game) {
-		const gameOver = document.getElementById('game-over')
+		const gameOver = document.getElementById('game-over');
 		gameOver.querySelector('p').textContent = 'Game Over';
-		document.getElementById('winner').textContent = `${game.winner} won!`;
 		gameOver.style.display = 'grid';
+		document.getElementById('winner').textContent = `${game.winner} won!`;
 		return;
 	}
 
@@ -70,8 +70,8 @@ class PongGame {
 		if (game.over === true) {
 			this.displayGameOver(game);
 		}
-		this.PlayerLeft.player.position.set(players.left.position.x, this.playgroundHeight - players.left.position.y, 0);
-		this.PlayerRight.player.position.set(players.right.position.x, this.playgroundHeight - players.right.position.y, 0);
+		this.PlayerLeft.player.position.setY(players.left.position.y);
+		this.PlayerRight.player.position.setY(players.right.position.y);
 		this.GameBall.ball.position.set(ball.position.x, ball.position.y, 0);
 		this.updateScore(players);
 		this.renderer.render(this.scene, this.camera);
