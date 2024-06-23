@@ -7,7 +7,6 @@ class PongService extends RequestService {
 	}
 
 	async getRequest() {
-		console.log(backendURL.pongURL)
 		return super.getRequest(backendURL.pongURL);
 	}
 }
