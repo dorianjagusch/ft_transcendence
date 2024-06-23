@@ -41,6 +41,7 @@ clean: stop
 
 fclean: clean
 	${DOCKER_COMPOSE} down --rmi all --volumes --remove-orphans
+	python3 ./clear_migrations.py
 
 re: fclean all
 
