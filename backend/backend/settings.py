@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'backend',
 	'channels',
 	'daphne',
-	'pong',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,6 +57,8 @@ INSTALLED_APPS = [
 	'Tokens',
 	'Match',
 	'Player',
+	'pong',
+	'stats',
 ]
 
 MIDDLEWARE = [

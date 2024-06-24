@@ -30,9 +30,9 @@ class PongGame:
 
     def check_collisions(self, pong_stat):
         # Check for collisions with players
-        if pong_stat.ball.x <= pong_stat.player_left.x + PLAYER_WIDTH and pong_stat.player_left.y <= pong_stat.ball.y <= pong_stat.player_left.y + PLAYER_HEIGHT:
+        if pong_stat.ball.x <= pong_stat.player_left.x + PLAYER_WIDTH and pong_stat.player_left.y - PLAYER_HEIGHT / 2 <= pong_stat.ball.y <= pong_stat.player_left.y + PLAYER_HEIGHT / 2:
             self.handle_player_collision(pong_stat, pong_stat.player_left.y)
-        elif pong_stat.ball.x >= pong_stat.player_right.x - BALL_WIDTH and pong_stat.player_right.y <= pong_stat.ball.y <= pong_stat.player_right.y + PLAYER_HEIGHT:
+        elif pong_stat.ball.x >= pong_stat.player_right.x - BALL_WIDTH and pong_stat.player_right.y - PLAYER_HEIGHT / 2 <= pong_stat.ball.y <= pong_stat.player_right.y + PLAYER_HEIGHT / 2:
             self.handle_player_collision(pong_stat, pong_stat.player_right.y)
         
         # Check for collisions with top and bottom walls
@@ -59,11 +59,11 @@ class PongGame:
         elif wall == 'right':
             pong_stat.player_left.score += 1
             
-        if pong_stat.player_left.score == 5:
+        if pong_stat.player_left.score == WINING_SCORE:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_left'
             pong_stat.game_stats.loser = 'player_right'
-        elif pong_stat.player_right.score == 5:
+        elif pong_stat.player_right.score == WINING_SCORE:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_right'
             pong_stat.game_stats.loser = 'player_left'
