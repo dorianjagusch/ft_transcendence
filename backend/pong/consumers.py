@@ -10,6 +10,8 @@ from Tokens.models import MatchToken
 from Match.models import Match
 from Player.models import Player
 
+import sys
+
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -74,10 +76,18 @@ class PongConsumer(AsyncWebsocketConsumer):
         try:
             self.match = Match.objects.get(pk=match_id)
             players = Player.objects.filter(match=self.match)
-            if players.count() is not 2:
+            if players.count() != 2:
                 return False
             self.player_left = players[0]
             self.player_right = players[1]
+
+            print(f"user: {self.scope['user']}", file=sys.stderr)
+            print(f"left side player user: {self.player_left.user}", file=sys.stderr)
+            print(f"right side player user: {self.player_right.user}", file=sys.stderr)
+
+            # Verify that the authenticated user is the left-side player
+            if self.scope['user'] != self.player_left.user:
+                return False
 
             return True
             
