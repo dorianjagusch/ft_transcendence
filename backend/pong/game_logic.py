@@ -59,11 +59,11 @@ class PongGame:
         elif wall == 'right':
             pong_stat.player_left.score += 1
             
-        if pong_stat.player_left.score == 5:
+        if pong_stat.player_left.score == WINING_SCORE:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_left'
             pong_stat.game_stats.loser = 'player_right'
-        elif pong_stat.player_right.score == 5:
+        elif pong_stat.player_right.score == WINING_SCORE:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_right'
             pong_stat.game_stats.loser = 'player_left'
