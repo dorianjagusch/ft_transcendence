@@ -25,11 +25,9 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Extract the match id and the token from the URL query string
         match_id = self.scope['url_route']['kwargs']['match_id']
-        query_string = self.scope['query_string'].decode('utf-8')
-        token = query_string.split('=')[1] if 'token=' in query_string else None
 
-        self.token = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
-        if self.token:
+        authenticated = await self.fetch_match_and_players(match_id)
+        if authenticated:
             self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
@@ -72,23 +70,19 @@ class PongConsumer(AsyncWebsocketConsumer):
                 break
     
     @database_sync_to_async
-    def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
+    def fetch_match_and_players(self, match_id):
         try:
-            match_token = MatchToken.objects.get(token=token)
-            if not match_token.is_active or match_token.is_expired():
-                return None
-            
-            match_token.is_active = False
-            match_token.save()
-
             self.match = Match.objects.get(pk=match_id)
-            self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
-            self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+            players = Player.objects.filter(match=self.match)
+            if players.count() is not 2:
+                return False
+            self.player_left = players[0]
+            self.player_right = players[1]
 
-            return match_token
+            return True
             
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
-            return None
+            return False
     
     @database_sync_to_async
     def save_match_final_results(self):
