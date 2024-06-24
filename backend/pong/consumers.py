@@ -10,8 +10,6 @@ from Tokens.models import MatchToken
 from Match.models import Match
 from Player.models import Player
 
-import sys
-
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
