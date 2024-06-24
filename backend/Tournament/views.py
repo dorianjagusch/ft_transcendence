@@ -26,7 +26,7 @@ class TournamentListView(APIView):
 		if serializer.is_valid():
 			validated_data = serializer.validated_data
 			try:
-				tournament_id = TournamentSetupManager.create_tournament_and_its_participants(validated_data)
+				tournament_id = TournamentSetupManager.create_tournament_and_its_tournament_players(validated_data)
 				tournament_url = f"http://localhost:8080/tournaments/{tournament_id}"
 				return Response(tournament_url, status=status.HTTP_201_CREATED)
 			except TournamentCreationException as e:
@@ -98,4 +98,5 @@ class TournamentDetailView(APIView):
 		
 		TournamentInProgressManager.abort_tournament(tournament)
 		serializer = TournamentOutputSerializer(tournament)
+		return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 

@@ -51,9 +51,7 @@ class MatchSetupManager:
 		
 		try:
 			with transaction.atomic():
-				match = Match.objects.create(
-					tournament_matchup=match_token.tournament_matchup
-				)
+				match = Match.objects.create()
 				
 				Player.objects.create(
 					user_id=match_token.user_left_side.id,

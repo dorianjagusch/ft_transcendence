@@ -14,7 +14,7 @@ class Match(models.Model):
 	updated_ts = models.DateTimeField(auto_now=True)
 
 	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
-	tournament_match_id = models.PositiveIntegerField()
+	tournament_match_id = models.PositiveIntegerField(default=0)
 
 	objects = MatchManager()
 

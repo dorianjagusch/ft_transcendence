@@ -51,10 +51,11 @@ class PongConsumer(AsyncWebsocketConsumer):
         key_press = text_data.strip()
         self.game.update_positions(key_press)      
         if self.game.game_over == True:
+            print("\tGAME OVER", file=sys.stderr)
             await self.send_positions()
 
             # save the final results of the match
-            await self.save_match_results()
+            # await self.save_match_results()
 
             await self.close()
         await self.send_positions()
@@ -98,6 +99,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def save_match_results(self):
+        print("\tin save_match_results", file=sys.stderr)
         self.match.state = MatchState.FINISHED
 
         # Save scores when the game is over
@@ -115,6 +117,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.match.save()
                 self.player_left.save()
                 self.player_right.save()
+                # self.update_tournament_data_with_match_results(self.match)
         except Exception as e:
             self.abort_match(self.match)
         
@@ -125,33 +128,35 @@ class PongConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def abort_match(self, match: Match):
         match.abort_match()
-        if match.tournament_matchup:
-            match.tournament_matchup.tournament.abort_tournament()
+        if match.tournament:
+            TournamentInProgressManager.abort_tournament(match.tournament)
 
     @database_sync_to_async
     def update_tournament_data_with_match_results(self, match: Match):
+        print("in update_tournament_data_with_match_results", file=sys.stderr)
         try:
-            if not match.tournament_matchup:
+            if not match.tournament:
                 return
             
             winning_player = match.players.filter(match_winner=True).first()
             if not winning_player:
-                return
+                # this shouldn't happen, abort tournament
+                TournamentInProgressManager.abort_tournament(match.tournament)
             
             with transaction.atomic():
             
-                tournament_participant = TournamentPlayer.objects.get(
+                tournament_player = TournamentPlayer.objects.get(
                     tournament=match.tournament_matchup.tournament,
                     user=winning_player.user
                 )
 
-                match.tournament_matchup.winner = tournament_participant
+                match.tournament_matchup.winner = tournament_player
                 match.tournament_matchup.save()
 
                 match.tournament_matchup.tournament.next_match += 1
                 match.tournament_matchup.tournament.save()
 
-                TournamentInProgressManager.update_tournament_with_winning_participant(tournament_participant)
+                TournamentInProgressManager.update_tournament_with_winning_participant(tournament_player)
         
         except Exception as e:
             print(f"An error occurred while updating match results: {e}", file=sys.stderr)

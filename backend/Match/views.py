@@ -25,16 +25,16 @@ class MatchView(APIView):
 
 		if not token.is_active or token.is_expired():
 			return Response({'error': 'Expired token'}, status=status.HTTP_403_FORBIDDEN)
-		if token.tournament_matchup:
-			if token.tournament_matchup.tournament.host_user != request.user:
-				return Response({'error': 'You are not the host of the tournament'}, status=status.HTTP_403_FORBIDDEN)
+		# if token.tournament_matchup:
+		# 	if token.tournament_matchup.tournament.host_user != request.user:
+		# 		return Response({'error': 'You are not the host of the tournament'}, status=status.HTTP_403_FORBIDDEN)
 		else:
 			if token.user_left_side.id != request.user.id:
 				return Response({'error': 'You are not the player_left_side (i.e. host user) in the token'}, status=status.HTTP_403_FORBIDDEN)
 
 		try:
-			match = MatchSetupManager.create_match_and_its_players(token)
-			pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
+			match_id = MatchSetupManager.create_match_and_its_players(token)
+			pong_match_url = f'ws://localhost:8080/pong/{match_id}?token={token.token}'
 
 			return Response(pong_match_url, status=status.HTTP_200_OK)
 

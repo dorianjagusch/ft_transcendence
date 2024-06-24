@@ -36,8 +36,7 @@ from Match.views import MatchView, \
 							LaunchTestMatchView
 
 from Tournament.views import TournamentListView, \
-								TournamentDetailView, \
-								LaunchTournamentMatchView
+								TournamentDetailView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),

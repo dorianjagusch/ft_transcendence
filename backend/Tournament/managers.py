@@ -17,7 +17,7 @@ import sys
 
 class TournamentSetupManager:
     @staticmethod
-    def create_tournament_and_its_participants(tournament_creation_serializer_validated_data):
+    def create_tournament_and_its_tournament_players(tournament_creation_serializer_validated_data):
         try:
             with transaction.atomic():
 
@@ -49,7 +49,7 @@ class TournamentSetupManager:
                 return tournament.id
                 
         except Exception as e:
-            raise TournamentCreationException(f"An error occurred while creating tournament and its participants: {e}")
+            raise TournamentCreationException(f"An error occurred while creating tournament and its tournament players: {e}")
 
 
     @staticmethod
@@ -139,7 +139,7 @@ class TournamentInProgressManager:
                         return
 
                 # something went wrong if we got here
-                raise TournamentInProgressException("No future matchup with empty participant slot")
+                raise TournamentInProgressException("No future tournament match with empty players")
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while assigning the match winner to future match: {e}")
