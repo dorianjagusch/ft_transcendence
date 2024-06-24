@@ -30,9 +30,9 @@ class PongGame:
 
     def check_collisions(self, pong_stat):
         # Check for collisions with players
-        if pong_stat.ball.x <= pong_stat.player_left.x + PLAYER_WIDTH and pong_stat.player_left.y <= pong_stat.ball.y <= pong_stat.player_left.y + PLAYER_HEIGHT:
+        if pong_stat.ball.x <= pong_stat.player_left.x + PLAYER_WIDTH and pong_stat.player_left.y - PLAYER_HEIGHT / 2 <= pong_stat.ball.y <= pong_stat.player_left.y + PLAYER_HEIGHT / 2:
             self.handle_player_collision(pong_stat, pong_stat.player_left.y)
-        elif pong_stat.ball.x >= pong_stat.player_right.x - BALL_WIDTH and pong_stat.player_right.y <= pong_stat.ball.y <= pong_stat.player_right.y + PLAYER_HEIGHT:
+        elif pong_stat.ball.x >= pong_stat.player_right.x - BALL_WIDTH and pong_stat.player_right.y - PLAYER_HEIGHT / 2 <= pong_stat.ball.y <= pong_stat.player_right.y + PLAYER_HEIGHT / 2:
             self.handle_player_collision(pong_stat, pong_stat.player_right.y)
         
         # Check for collisions with top and bottom walls
