@@ -1,4 +1,5 @@
 from django.db import models, transaction, IntegrityError
+from django.db.models.query import QuerySet
 from django.db.models import Q
 
 from .playerMatchStatus import PlayerMatchStatus
@@ -8,7 +9,7 @@ from User.models import User
 import sys
 
 class MatchManager(models.Manager):
-	def get_matches_with_user(self, user_id, match_status):
+	def get_matches_with_user(self, user_id: int, match_status: int) -> QuerySet['Match']:
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:

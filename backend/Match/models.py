@@ -21,25 +21,25 @@ class Match(models.Model):
 
 	objects = MatchManager()
 
-	def start_match(self):
+	def start_match(self) -> None:
 		if self.state == MatchState.LOBBY.value:
 			self.state = MatchState.IN_PROGRESS.value
 			self.start_time = datetime.now()
 			self.save()
 
-	def finish_match(self):
+	def finish_match(self) -> None:
 		if self.state == MatchState.IN_PROGRESS.value:
 			self.state = MatchState.FINISHED.value
 			self.end_time = datetime.now()
 			self.save()
 
-	def abort_match(self):
+	def abort_match(self) -> None:
 		if self.state in [MatchState.LOBBY.value, MatchState.IN_PROGRESS.value]:
 			self.state = MatchState.ABORTED.value
 			self.end_time = datetime.now()
 			self.save()
 
-	def __str__(self):
+	def __str__(self) -> None:
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
 		return f'Match {self.pk} - {self.get_state_display()}'
 

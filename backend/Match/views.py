@@ -12,7 +12,7 @@ from shared_utilities.decorators import must_be_authenticated
 
 class MatchView(APIView):
     @method_decorator(must_be_authenticated)
-    def get(self, request):
+    def get(self, request: Request) -> Response:
         token_str = request.query_params.get('token')
         if not token_str:
             return Response({'error': 'Token parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -38,7 +38,7 @@ class MatchView(APIView):
 
 class LaunchTestMatchView(APIView):
 	@method_decorator(must_be_authenticated)
-	def get(self, request):
+	def get(self, request: Request) -> Response:
 		token = MatchToken.objects.create_single_match_token(request.user, request.user)
 		match, player_left_side, player_right_side = GameSetupManager.create_match_and_its_players(token)
 		if not all([match, player_left_side, player_right_side]):
