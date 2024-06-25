@@ -66,4 +66,9 @@ class PongGame:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_right'
             pong_stat.game_stats.loser = 'player_left'
+        pong_stat.ball.x = PLAYGROUND_WIDTH / 2
+        pong_stat.ball.y = PLAYGROUND_HEIGHT / 2
+        pong_stat.ball.angle = self.generate_random_angle()
+        pong_stat.ball.speed *= SLOW_DOWN_FACTOR
+        self.collision_tolerance *= SLOW_DOWN_FACTOR
 

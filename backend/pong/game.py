@@ -16,8 +16,8 @@ class PongStatus:
 
 
     def update_positions(self, move):
-        if not self.game_stats.game_started and move in (PLAYER_RIGHT_UP, PLAYER_RIGHT_DOWN):
-            self.game.kick_start_game(self, move)
+        if not self.game_stats.game_started and move == START_PAUSE_GAME:
+            self.game.kick_start_game(self)
         if move == PLAYER_LEFT_UP:
             self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
         elif move == PLAYER_LEFT_DOWN:
