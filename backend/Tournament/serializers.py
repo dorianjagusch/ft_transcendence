@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.utils.serializer_helpers import ReturnDict
 
 from .models import Tournament, \
                         TournamentPlayer
@@ -42,18 +43,15 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
         return None
     
     def get_winner(self, match: Match) -> TournamentPlayerSerializer | None:
-        if match.state is MatchState.FINISHED:
-            winning_player = match.players.filter(match_winner=True)
+        if match.state == MatchState.FINISHED:
+            winning_player = match.players.filter(match_winner=True).first()
             if winning_player:
                 winning_tournament_player = TournamentPlayer.objects.filter(
                     tournament=match.tournament,
                     user=winning_player.user
-                )
+                ).first()
                 return TournamentPlayerSerializer(winning_tournament_player).data if winning_tournament_player else None
-            else:
-                None
-        else:
-            return None
+        return None
 
 
 
@@ -153,7 +151,7 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 
 class TournamentInProgressSerializer(serializers.ModelSerializer):
     state_display = serializers.CharField(source='get_state_display', read_only=True)
-    participants = TournamentPlayerSerializer(many=True, read_only=True)
+    tournament_players = TournamentPlayerSerializer(many=True, read_only=True)
     matches = TournamentMatchSerializer(many=True, read_only=True)
     next_match = serializers.SerializerMethodField()
 
@@ -167,15 +165,20 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
             'state_display',
             'expires_ts',
             'player_amount',
-            'participants',
+            'tournament_players',
             'matches',
             'next_match',
         ]
         
-    def get_next_match(self, tournament: Tournament) -> TournamentMatchSerializer | None:
+    def get_next_match(self, tournament: Tournament) -> ReturnDict | None:
         next_match = tournament.next_match
         try:
             next_match = Match.objects.get(tournament=tournament, tournament_match_id=next_match)
-            return TournamentMatchSerializer(next_match).data
+            serializer = TournamentMatchSerializer(next_match)
+            # remove 'winner' from serializer
+            if 'winner' in serializer.fields:
+                serializer.fields.pop('winner')
+            return serializer.data
+
         except Match.DoesNotExist:
             return None
