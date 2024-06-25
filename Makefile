@@ -28,7 +28,7 @@ CYAN = \033[0;96m
 all: up
 
 up:
-	${DOCKER_COMPOSE} up --build --detach
+	sudo ${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
 prod:
@@ -44,7 +44,7 @@ stop:
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
 clean: stop
-	${DOCKER_COMPOSE} down -v
+	sudo ${DOCKER_COMPOSE} down -v
 	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
 
 fclean: clean
