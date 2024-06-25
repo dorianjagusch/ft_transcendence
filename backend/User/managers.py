@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
-	def create_user(self, username: str, password: str, **extra_fields: any) -> object:
+	def create_user(self, username: str, password: str, **extra_fields: any) -> 'User':
 		if not username:
 			raise ValueError('The username field must be set')
 		if not password:
