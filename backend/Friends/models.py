@@ -10,7 +10,7 @@ class Friend(models.Model):
 
 	objects = FriendsManager()
 
-	def __str__(self):
+	def __str__(self) -> str:
 		return f"{self.user.id} - {self.friend.id} - {self.insertTS}"
 
 	class Meta:

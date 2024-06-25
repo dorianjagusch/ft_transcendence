@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils.decorators import method_decorator
@@ -12,7 +13,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 
 class FriendsListView(APIView):
 	@method_decorator(must_be_authenticated)
-	def get(self, request):
+	def get(self, request: Request) -> Response:
 		friendship_status = request.query_params.get('friendship_status')
 		if not friendship_status or friendship_status == FriendShipStatus.NONE.value:
 			return Response({"message": "Expected to get parameter 'friendship_status'"}, status=status.HTTP_400_BAD_REQUEST)
@@ -23,7 +24,7 @@ class FriendsListView(APIView):
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(FriendInputSerializer, partial=True))
-	def post(self, request):
+	def post(self, request: Request) -> Response:
 		user_id = request.user.id
 		friend_id = request.data.get('friend_id')
 		if user_id == friend_id:
@@ -36,7 +37,7 @@ class FriendsListView(APIView):
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class FriendshipDetailView(APIView):
-	def delete(self, request, friend_id):
+	def delete(self, request: Request, friend_id: int) -> Response:
 		user_id = request.user.id
 		try:
 			Friend.objects.delete_friendship(user_id, friend_id)
