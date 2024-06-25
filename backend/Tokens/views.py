@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
@@ -20,7 +21,7 @@ class SingleMatchGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
-	def post(self, request):
+	def post(self, request: Request) -> Response:
 		host_user = request.user
 		username = request.data.get('username')
 		password = request.data.get('password')
@@ -39,7 +40,7 @@ class SingleMatchGuestTokenView(APIView):
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(MatchTokenSerializer))
-	def put(self, request):
+	def put(self, request: Request) -> Response:
 		try:
 			token = MatchToken.objects.get(token=request.data.get('token'))
 			if token.is_active == False or token.is_expired():

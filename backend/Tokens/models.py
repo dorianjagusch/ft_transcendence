@@ -15,15 +15,15 @@ class AbstractToken(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: any, **kwargs: any) -> None:
         if not self.expires_at:
             self.expires_at = timezone.now() + timedelta(minutes=5)
         super().save(*args, **kwargs)
 
-    def is_expired(self):
+    def is_expired(self) -> bool:
         return timezone.now() > self.expires_at
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.token)
 
 class MatchToken(AbstractToken):
