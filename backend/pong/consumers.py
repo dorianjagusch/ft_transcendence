@@ -2,7 +2,7 @@
 import json
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .game_status import PongStatus
+from .game import PongStatus
 from .constants import *
 
 from channels.db import database_sync_to_async
@@ -14,7 +14,6 @@ class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.token = None
         self.match = None
         self.player_left = None
         self.player_right = None
@@ -28,8 +27,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         query_string = self.scope['query_string'].decode('utf-8')
         token = query_string.split('=')[1] if 'token=' in query_string else None
 
-        self.token = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
-        if self.token:
+        authenticated = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
+        if authenticated:
             self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
@@ -42,8 +41,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         key_press = text_data.strip()
+        #move = get_move(key_press)
         self.game.update_positions(key_press)      
-        if self.game.game_over == True:
+        if self.game.game_stats.game_over == True:
             await self.send_positions()
 
             # save the final results of the match
@@ -67,15 +67,19 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.game.update_ball_position()
             await self.send_positions()
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)   # Wait for the specified interval before sending the next message
-            if self.game.game_over == True:
+            if self.game.game_stats.game_over == True:
                 break
+
+        # save the final results of the match
+        await self.save_match_final_results()
+        await self.close()
     
     @database_sync_to_async
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             match_token = MatchToken.objects.get(token=token)
             if not match_token.is_active or match_token.is_expired():
-                return None
+                return False
             
             match_token.is_active = False
             match_token.save()
@@ -84,19 +88,19 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
             self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
 
-            return match_token
+            return True
             
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
-            return None
+            return False
     
     @database_sync_to_async
     def save_match_final_results(self):
         # Save scores when the game is over
-        self.player_left.score = self.game.player_left_score
-        self.player_right.score = self.game.player_right_score
+        self.player_left.score = self.game.player_left.score
+        self.player_right.score = self.game.player_right.score
 
         # Determine and save the winner
-        if self.game.player_left_score > self.game.player_right_score:
+        if self.game.player_left.score > self.game.player_right.score:
             self.player_left.match_winner = True
         else:
             self.player_right.match_winner = True
