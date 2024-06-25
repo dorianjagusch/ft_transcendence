@@ -4,19 +4,18 @@ from User.models import User
 from .managers import FriendsManager
 
 class Friend(models.Model):
-	user_id = models.IntegerField()
-	friend_id = models.IntegerField()
+	user = models.ForeignKey(User, related_name='users', null=False, blank=False, on_delete=models.CASCADE)
+	friend = models.ForeignKey(User, related_name='friends', null=False, blank=False, on_delete=models.CASCADE)
 	insertTS = models.DateTimeField(auto_now_add=True)
 
 	objects = FriendsManager()
 
 	def __str__(self):
-		return f"{self.user_id} - {self.friend_id} - {self.insertTS}"
+		return f"{self.user.id} - {self.friend.id} - {self.insertTS}"
 
 	class Meta:
 		app_label = 'Friends'
 		constraints = [
-			models.UniqueConstraint(fields=['user_id', 'friend_id'], name='unique_user_friend_pair'),
-			models.UniqueConstraint(fields=['friend_id', 'user_id'], name='unique_friend_user_pair'),
+			models.UniqueConstraint(fields=['user', 'friend'], name='unique_user_friend_pair')
 		]
 

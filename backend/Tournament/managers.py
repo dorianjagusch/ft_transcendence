@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Tournament, \
                           TournamentPlayer, \
                             TournamentState
+from .serializers import TournamentCreationSerializer
 from .exceptions import TournamentCreationException, \
                               TournamentInProgressException
 from .tournamentMacros import TOURNAMENT_EXPIRERY_TIME_SECONDS
@@ -17,27 +18,27 @@ import sys
 
 class TournamentSetupManager:
     @staticmethod
-    def create_tournament_and_its_tournament_players(tournament_creation_serializer_validated_data):
+    def create_tournament_and_its_tournament_players(validated_data: TournamentCreationSerializer.validated_data) -> int:
         try:
             with transaction.atomic():
 
                 tournament = Tournament.objects.create(
-                    host_user = tournament_creation_serializer_validated_data['host_user'],
-                    custom_name = tournament_creation_serializer_validated_data.get('custom_name', None),
-                    player_amount = len(tournament_creation_serializer_validated_data['tokens']) + 1
+                    host_user = validated_data['host_user'],
+                    custom_name = validated_data.get('custom_name', None),
+                    player_amount = len(validated_data['tokens']) + 1
                 )
 
-                if tournament_creation_serializer_validated_data.get('host_user_custom_name', None):
-                    host_name_in_tournament = tournament_creation_serializer_validated_data['host_user_custom_name']
+                if validated_data.get('host_user_custom_name', None):
+                    host_name_in_tournament = validated_data['host_user_custom_name']
                 else:
-                    host_name_in_tournament = tournament_creation_serializer_validated_data['host_user'].username
+                    host_name_in_tournament = validated_data['host_user'].username
                 TournamentPlayer.objects.create(
                     tournament=tournament,
                     user=tournament.host_user,
                     name_in_tournament=host_name_in_tournament
                 )
 
-                for token_data in tournament_creation_serializer_validated_data['tokens']:
+                for token_data in validated_data['tokens']:
                     guest_name_in_tournament = token_data.custom_name if token_data.custom_name else token_data.guest_user.username
                     TournamentPlayer.objects.create(
                         tournament=tournament,
@@ -53,7 +54,7 @@ class TournamentSetupManager:
 
 
     @staticmethod
-    def setup_tournament_matches(tournament: Tournament):        
+    def setup_tournament_matches(tournament: Tournament) -> None:        
         if tournament.state != TournamentState.IN_PROGRESS or tournament.next_match != 0:
             raise TournamentInProgressException("Tournament is not in a valid state to set up matchups.")
         
@@ -96,7 +97,7 @@ class TournamentSetupManager:
             raise TournamentInProgressException(f"An error occurred while setting up matchups: {e}")
 
     @staticmethod
-    def start_tournament(tournament: Tournament):
+    def start_tournament(tournament: Tournament) -> None:
         tournament.start_ts = timezone.now()
         tournament.expires_ts = tournament.start_ts + timedelta(seconds=TOURNAMENT_EXPIRERY_TIME_SECONDS)
         tournament.save()
@@ -117,10 +118,11 @@ class TournamentInProgressManager:
             raise TournamentInProgressException(f"An user in the tournament has deleted their account; tournament aborted")
 
     @staticmethod
-    def assign_winner_to_next_tournament_match_with_less_than_two_players(winner: User) -> None:
+    def assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player: TournamentPlayer) -> None:
+        print("assign_winner_to_next_tournament_match_with_less_than_two_players", file=sys.stderr)
         try:
             with transaction.atomic():
-                tournament = winner.tournament
+                tournament = winning_tournament_player.tournament
                 try:
                     coming_tournament_matches = Match.objects.filter(
                         tournament=tournament,
@@ -133,7 +135,7 @@ class TournamentInProgressManager:
                 for match in coming_tournament_matches:
                     if len(Player.objects.filter(match=match)) < 2:
                         Player.objects.create(
-                            user=winner,
+                            user=winning_tournament_player.user,
                             match=match
                         )
                         return
@@ -146,6 +148,7 @@ class TournamentInProgressManager:
         
     @staticmethod
     def update_tournament_with_winning_tournament_player(winning_tournament_player: TournamentPlayer) -> None:
+        print("update_tournament_with_winning_tournament_player", file=sys.stderr)
         try:
             with transaction.atomic():
                 tournament = winning_tournament_player.tournament
@@ -159,7 +162,7 @@ class TournamentInProgressManager:
                         tournament=tournament,
                         tournament_match_id=next_tournament_match_id
                     )
-                    TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player.user)
+                    TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
 
                 except Match.DoesNotExist:
                     tournament.winner = winning_tournament_player.user
@@ -170,7 +173,7 @@ class TournamentInProgressManager:
             raise TournamentInProgressException(f"An error occurred while updating tournament data after finished match: {e}")
         
     @staticmethod
-    def abort_tournament(tournament: Tournament):
+    def abort_tournament(tournament: Tournament) -> None:
         tournament.abort_tournament()
         Match.objects.abort_tournament_matches(tournament.pk)
 

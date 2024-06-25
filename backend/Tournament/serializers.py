@@ -4,6 +4,7 @@ from .models import Tournament, \
                         TournamentPlayer
 from Tokens.models import TournamentGuestToken
 from Match.models import Match
+from Match.matchState import MatchState
 from Player.models import Player
 
 class TournamentPlayerSerializer(serializers.ModelSerializer):
@@ -15,29 +16,45 @@ class TournamentPlayerSerializer(serializers.ModelSerializer):
 class TournamentMatchSerializer(serializers.ModelSerializer):
     first_tournament_player = serializers.SerializerMethodField()
     second_tournament_player = serializers.SerializerMethodField()
+    winner = serializers.SerializerMethodField()
     class Meta:
         model = Match
-        fields = ['id', 'tournament_match_id', 'first_tournament_player', 'second_tournament_player']
+        fields = ['id', 'tournament_match_id', 'first_tournament_player', 'second_tournament_player', 'winner']
 
-    def get_first_tournament_player(self, obj):
-        first_player = obj.players.first()
+    def get_first_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
+        first_player = match.players.first()
         if first_player:
             tournament_player = TournamentPlayer.objects.filter(
-                tournament=obj.tournament,
+                tournament=match.tournament,
                 user=first_player.user
             ).first()
             return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
         return None
 
-    def get_second_tournament_player(self, obj):
-        second_player = obj.players.all()[1] if obj.players.count() > 1 else None
+    def get_second_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
+        second_player = match.players.all()[1] if match.players.count() > 1 else None
         if second_player:
             tournament_player = TournamentPlayer.objects.filter(
-                tournament=obj.tournament,
+                tournament=match.tournament,
                 user=second_player.user
             ).first()
             return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
         return None
+    
+    def get_winner(self, match: Match) -> TournamentPlayerSerializer | None:
+        if match.state is MatchState.FINISHED:
+            winning_player = match.players.filter(match_winner=True)
+            if winning_player:
+                winning_tournament_player = TournamentPlayer.objects.filter(
+                    tournament=match.tournament,
+                    user=winning_player.user
+                )
+                return TournamentPlayerSerializer(winning_tournament_player).data if winning_tournament_player else None
+            else:
+                None
+        else:
+            return None
+
 
 
 class TournamentOutputSerializer(serializers.ModelSerializer):
@@ -84,14 +101,14 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['state', 'start_time', 'end_time', 'updated_at']
 
-    def validate_custom_name(self, value):
-        if value is None or value == '':
+    def validate_custom_name(self, custom_name: str) -> str:
+        if custom_name is None or custom_name == '':
             raise serializers.ValidationError("This field may not be blank or null.")
-        if len(value) > 30:
+        if len(custom_name) > 30:
             raise serializers.ValidationError("Ensure this field has no more than 30 characters.")
-        return value
+        return custom_name
 
-    def validate_tournament_guest_token(self, token):
+    def validate_tournament_guest_token(self, token: TournamentGuestToken) -> TournamentGuestToken:
         try:
             guest_token = TournamentGuestToken.objects.get(token=token)
         except TournamentGuestToken.DoesNotExist:
@@ -106,7 +123,7 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
         
         return guest_token
 
-    def validate_token_amount(self, tokens):
+    def validate_token_amount(self, tokens: list[TournamentGuestToken]) -> None:
         tokens_amount = len(tokens)
         if tokens_amount not in [3, 7]:
             raise serializers.ValidationError("There must be 3 or 7 guest tokens.")
@@ -155,10 +172,10 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
             'next_match',
         ]
         
-    def get_next_match(self, obj):
-        next_match = obj.next_match
+    def get_next_match(self, tournament: Tournament) -> TournamentMatchSerializer | None:
+        next_match = tournament.next_match
         try:
-            next_match = Match.objects.get(tournament=obj, tournament_match_id=next_match)
+            next_match = Match.objects.get(tournament=tournament, tournament_match_id=next_match)
             return TournamentMatchSerializer(next_match).data
         except Match.DoesNotExist:
             return None

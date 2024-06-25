@@ -4,7 +4,7 @@ from rest_framework import status
 
 class TournamentCreationException(APIException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    default_detail = 'There was an error creating the tournament or players.'
+    default_detail = 'There was an error creating the tournament or its players.'
     default_code = 'tournament_creation_error'
 
 class TournamentInProgressException(APIException):
