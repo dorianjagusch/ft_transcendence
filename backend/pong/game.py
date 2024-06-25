@@ -36,13 +36,11 @@ class PongStatus:
     def get_consts(self):
         game_consts = {
             'players': {
-                'width': PLAYER_WIDTH,
-                'height': PLAYER_HEIGHT,
+                'width': 2 * HALF_PLAYER_WIDTH,
+                'height': 2 * HALF_PLAYER_HEIGHT,
             },
             'ball': {
-                'width': BALL_WIDTH,
-                'height': BALL_HEIGHT,
-                'speed': BALL_SPEED
+                'size': 2 * HALF_BALL_SIZE
             },
             'game': {
                 'margin': WALL_MARGIN,
