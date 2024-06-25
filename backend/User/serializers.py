@@ -21,9 +21,9 @@ class UserFriendOutputSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'username', 'is_online', 'friendship']
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, *args: any, **kwargs: any) -> None:
 		self.friendship = kwargs.pop('friendship', None)
 		super().__init__(*args, **kwargs)
 
-	def get_friendship(self, obj):
+	def get_friendship(self, obj: any) -> any:
 			return self.friendship

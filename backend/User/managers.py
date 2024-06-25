@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
-	def create_user(self, username, password, **extra_fields):
+	def create_user(self, username: str, password: str, **extra_fields: any) -> object:
 		if not username:
 			raise ValueError('The username field must be set')
 		if not password:
@@ -13,7 +13,7 @@ class UserManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, username, password, **extra_fields):
+	def create_superuser(self, username: str, password: str, **extra_fields: any) -> function:
 		extra_fields.setdefault('is_staff', True)
 		extra_fields.setdefault('is_superuser', True)
 

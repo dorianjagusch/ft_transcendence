@@ -1,5 +1,5 @@
 from functools import partial
-from urllib import request
+from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,14 +16,14 @@ from shared_utilities.decorators import must_be_authenticated, \
 									valid_serializer_in_body
 
 class UserListView(APIView):
-	def get(self, request):
+	def get(self, request: Request) -> Response:
 		users = User.objects.all()
 		serializer = UserOutputSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(csrf_exempt)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
-	def post(self, request):
+	def post(self, request: Request) -> Response:
 
 		inputSerializer = UserInputSerializer(data=request.data)
 		if not inputSerializer.is_valid():
@@ -40,7 +40,7 @@ class UserListView(APIView):
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 
 class UserDetailView(APIView):
-	def get(self, request, user_id):
+	def get(self, request: Request, user_id: int) -> Response:
 		login_user_id = request.user.id
 		try:
 			user = User.objects.get(pk=user_id)
@@ -55,7 +55,7 @@ class UserDetailView(APIView):
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
-	def put(self, request, user_id):
+	def put(self, request: Request, user_id: int) -> Response:
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
@@ -71,7 +71,7 @@ class UserDetailView(APIView):
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
-	def delete(self, request, user_id):
+	def delete(self, request: Request, user_id: int) -> Response:
 		try:
 			logout(request)
 			user = User.objects.get(pk=user_id)
@@ -84,7 +84,7 @@ class UserDetailView(APIView):
 
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
-	def post(self, request):
+	def post(self, request: Request) -> Response:
 		username_input = request.data.get('username')
 		password_input = request.data.get('password')
 		if not username_input or not password_input:
@@ -101,18 +101,18 @@ class UserLoginView(APIView):
 
 class UserLogoutView(APIView):
 	@method_decorator(must_be_authenticated)
-	def post(self, request):
+	def post(self, request: Request) -> Response:
 		logout(request)
 		return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
 
 # admin stuff, for debugging
 class UserAdminDetailsView(APIView):
-	def get(self, request):
+	def get(self, request: Request) -> Response:
 		admins = User.objects.filter(is_superuser=True)
 		serializer = UserOutputSerializer(admins, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
-	def post(self, request):
+	def post(self, request: Request) -> Response:
 		inputSerializer = UserInputSerializer(data=request.data)
 		if inputSerializer.is_valid():
 			username = inputSerializer.validated_data.get('username')
