@@ -26,8 +26,8 @@ class PongStatus:
             self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
         elif move == PLAYER_RIGHT_DOWN:
             self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
-        self.player_right.y = self.game.check_boundery(self.player_right.y)
-        self.player_left.y = self.game.check_boundery(self.player_left.y)
+        self.player_right.y = self.game.check_boundary(self.player_right.y)
+        self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
     def update_ball_position(self):

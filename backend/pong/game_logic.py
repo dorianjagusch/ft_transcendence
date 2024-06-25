@@ -8,8 +8,8 @@ class PongGame:
         player_y += move_units
         return player_y
 
-    def check_boundery(self, player_y):
-        player_y = max(min(player_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
+    def check_boundary(self, player_y):
+        player_y = max(min(player_y, PLAYGROUND_HEIGHT - HALF_PLAYER_HEIGHT), HALF_PLAYER_HEIGHT)
         return player_y
     
     def kick_start_game(self, pong_stat, move):
@@ -58,11 +58,11 @@ class PongGame:
         elif wall == 'right':
             pong_stat.player_left.score += 1
 
-        if pong_stat.player_left.score == 5:
+        if pong_stat.player_left.score == WINNING_SCORE:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_left'
             pong_stat.game_stats.loser = 'player_right'
-        elif pong_stat.player_right.score == 5:
+        elif pong_stat.player_right.score == WINNING_SCORE:
             pong_stat.game_stats.game_over = True
             pong_stat.game_stats.winner = 'player_right'
             pong_stat.game_stats.loser = 'player_left'
