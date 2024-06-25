@@ -29,7 +29,7 @@ services:
      - ft_transcendence_network
 
   backend:
-    image: backend:42
+    image: backend:adsjm
     container_name: backend_c
     build:
       context: ./backend
@@ -51,7 +51,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    image: frontend:42
+    image: frontend:adsjm
     container_name: frontend_c
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
