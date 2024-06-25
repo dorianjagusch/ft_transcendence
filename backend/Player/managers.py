@@ -1,11 +1,13 @@
 from django.db import models
 from django.db.models import Q
 from rest_framework.serializers import ValidationError
+import json
 
 from .serializers import PlayerSerializer
 
+# not used anywhere, delete file later
 class PlayerManager(models.Manager):
-	def create_player(self, player_serializer_data):
+	def create_player(self, player_serializer_data: json) -> 'Player':
 		serializer = PlayerSerializer(data=player_serializer_data)
 
 		if serializer.is_valid():
@@ -15,7 +17,7 @@ class PlayerManager(models.Manager):
 			raise ValidationError(serializer.errors)
 		
 
-	def get_player_match_opponent(self, player_id):
+	def get_player_match_opponent(self, player_id: int) -> 'Player':
 		try:
 			player = self.get(pk=player_id)
 		except models.DoesNotExist:
