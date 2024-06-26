@@ -55,12 +55,13 @@ class RequestService {
 	}
 
 	async postRequest(url, jsonBody) {
-		const cookies = getCookie('csrftoken')
+		const cookies = getCookie('csrftoken');
 		const request = fetch(`${url}`, {
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json'},
+				'Content-Type': 'application/json',
+			},
 			body: jsonBody,
 			credentials: 'include',
 		});
@@ -73,7 +74,8 @@ class RequestService {
 			method: 'PUT',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json'},
+				'Content-Type': 'application/json',
+			},
 			body: jsonBody,
 			credentials: 'include',
 		});
@@ -86,9 +88,10 @@ class RequestService {
 			method: 'DELETE',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json'},
+				'Content-Type': 'application/json',
+			},
 			credentials: 'include',
-			});
+		});
 
 		return this.checkResponseNoBody(request);
 	}

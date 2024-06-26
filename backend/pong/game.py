@@ -13,7 +13,7 @@ class PongStatus:
         self.ball = Ball()
         self.game_stats = GameStats()
         self.game = PongGame()
-        
+
 
     def update_positions(self, move):
         if not self.game_stats.game_started and move in (PLAYER_RIGHT_UP, PLAYER_RIGHT_DOWN):
@@ -36,18 +36,18 @@ class PongStatus:
     def get_consts(self):
         game_consts = {
             'players': {
-                'player-width': PLAYER_WIDTH,
-                'player-height': PLAYER_HEIGHT,
+                'width': PLAYER_WIDTH,
+                'height': PLAYER_HEIGHT,
             },
             'ball': {
-                'ball-width': BALL_WIDTH,
-                'ball-height': BALL_HEIGHT,
-                'ball-speed': BALL_SPEED
+                'width': BALL_WIDTH,
+                'height': BALL_HEIGHT,
+                'speed': BALL_SPEED
             },
             'game': {
-                'wall-margin': WALL_MARGIN,
-                'playground-width': PLAYGROUND_WIDTH,
-                'playground-hight': PLAYGROUND_HEIGHT
+                'margin': WALL_MARGIN,
+                'width': PLAYGROUND_WIDTH,
+                'height': PLAYGROUND_HEIGHT
             }
         }
         return game_consts
