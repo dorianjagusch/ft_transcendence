@@ -1,5 +1,6 @@
 import {setNavbar} from './components/navbar.js';
 import routes from './route.js';
+import constants from './constants.js';
 
 const pathToRegex = (path) =>
 	new RegExp('^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$');
@@ -37,14 +38,13 @@ const router = async () => {
 	}
 
 	const isLoggedOut = localStorage.getItem('isLoggedIn') !== 'true';
-	const allowedPaths = ['/login', '/register', '/', '/pong'];
 
-	if (isLoggedOut && !allowedPaths.includes(match.route.path)) {
+	if (isLoggedOut && !constants.allowedPaths.includes(match.route.path)) {
 		navigateTo('/login');
 		return;
 	} else if (
 		!isLoggedOut &&
-		allowedPaths.includes(match.route.path) &&
+		constants.allowedPaths.includes(match.route.path) &&
 		match.route.path !== '/pong'
 	) {
 		navigateTo('/dashboard');
