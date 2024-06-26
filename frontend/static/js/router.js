@@ -37,12 +37,16 @@ const router = async () => {
 	}
 
 	const isLoggedOut = localStorage.getItem('isLoggedIn') !== 'true';
-	const allowedPaths = ['/login', '/register', '/'];
+	const allowedPaths = ['/login', '/register', '/', '/pong'];
 
 	if (isLoggedOut && !allowedPaths.includes(match.route.path)) {
 		navigateTo('/login');
 		return;
-	} else if (!isLoggedOut && allowedPaths.includes(match.route.path)) {
+	} else if (
+		!isLoggedOut &&
+		allowedPaths.includes(match.route.path) &&
+		match.route.path !== '/pong'
+	) {
 		navigateTo('/dashboard');
 		return;
 	}

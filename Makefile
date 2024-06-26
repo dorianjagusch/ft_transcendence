@@ -48,7 +48,8 @@ clean: stop
 	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
 
 fclean: clean
-	sudo ${DOCKER_COMPOSE} down --rmi all --volumes --remove-orphans
+	${DOCKER_COMPOSE} down --rmi all --volumes --remove-orphans
+	python3 ./clear_migrations.py
 
 re: fclean all
 

@@ -107,7 +107,7 @@ DATABASES = {
 
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
+SESSION_COOKIE_AGE = 60 * 100 # session expiration time (in seconds)
 SESSION_COOKIE_HTTPONLY = False # Set to True in production
 SESSION_COOKIE_SECURE = False  # Set to True in production
 SESSION_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
