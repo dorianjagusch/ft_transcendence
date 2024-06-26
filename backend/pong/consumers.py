@@ -87,9 +87,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.match = Match.objects.get(pk=match_id)
             self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
             self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
-
-            return True
-            
+            return True            
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
             return False
     
