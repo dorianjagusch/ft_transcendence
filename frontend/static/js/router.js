@@ -1,4 +1,4 @@
-import setNavbar from './components/navbar.js';
+import {setNavbar} from './components/navbar.js';
 import routes from './route.js';
 
 const pathToRegex = (path) =>
