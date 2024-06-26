@@ -26,7 +26,7 @@ export default class {
 		return;
 	}
 
-	notify(message, type='success') {
+	notify(message, type = 'success') {
 		userNotification(message, type);
 		setTimeout(() => {
 			document.querySelector('.notification').remove();
@@ -37,10 +37,9 @@ export default class {
 		const main = document.querySelector('main');
 		main.innerHTML = '';
 		elements.forEach((element) => {
-			if (element){
+			if (element) {
 				main.appendChild(element);
 			}
 		});
 	}
 }
-

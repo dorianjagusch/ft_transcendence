@@ -13,6 +13,7 @@ export default class extends AView {
 			.then((logoutResponse) => {
 				localStorage.setItem('isLoggedIn', false);
 				localStorage.setItem('username', '');
+				document.querySelector('aside').remove();
 				document.cookie.split(';').forEach((c) => {
 					document.cookie = c
 						.replace(/^ +/, '')

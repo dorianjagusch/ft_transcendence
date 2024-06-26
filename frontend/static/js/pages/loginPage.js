@@ -3,6 +3,7 @@ import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
 import AView from './AView.js';
+import SideBar from '../components/sideBar.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -23,6 +24,7 @@ export default class extends AView {
 			.then(() => {
 				localStorage.setItem('username', username);
 				localStorage.setItem('isLoggedIn', true);
+				document.body.appendChild(SideBar());
 				this.navigateTo('/dashboard');
 			})
 			.catch((error) => {
