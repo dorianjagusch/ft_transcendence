@@ -1,5 +1,5 @@
-import { navigateTo } from '../router.js';
-import { userNotification } from '../components/userNotification.js';;
+import {navigateTo} from '../router.js';
+import {userNotification} from '../components/userNotification.js';
 
 export default class {
 	constructor(params) {
@@ -18,7 +18,7 @@ export default class {
 		return;
 	}
 
-	notify(message, type='success') {
+	notify(message, type = 'success') {
 		userNotification(message, type);
 		setTimeout(() => {
 			document.querySelector('.notification').innerText = '';
@@ -29,10 +29,9 @@ export default class {
 		const main = document.querySelector('main');
 		main.innerHTML = '';
 		elements.forEach((element) => {
-			if (element){
+			if (element) {
 				main.appendChild(element);
 			}
 		});
 	}
 }
-
