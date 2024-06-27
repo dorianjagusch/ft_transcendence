@@ -21,7 +21,7 @@ export default class {
 	notify(message, type = 'success') {
 		userNotification(message, type);
 		setTimeout(() => {
-			document.querySelector('.notification').remove();
+			document.querySelector('.notification').innerText = '';
 		}, 3000);
 	}
 
