@@ -1,30 +1,33 @@
-import backendURL from '../constants.js'
-import RequestService from './requestService.js'
-import NotImplementedError from '../exceptions/notImplemented.js'
+import backendURL from '../constants.js';
+import ArequestService from './ArequestService.js';
+import NotImplementedError from '../exceptions/notImplemented.js';
 
-class FriendService extends RequestService {
+class FriendService extends ArequestService {
 	constructor() {
 		super();
 	}
 
 	async getRequest(id) {
-		throw new NotImplementedError("GET method not implemented for FriendService");
+		throw new NotImplementedError('GET method not implemented for FriendService');
 	}
 
 	async getAllRequest(friendship_status) {
-		return super.getAllRequest(`${backendURL.friendURL}?friendship_status=${friendship_status}`);
+		return super.getAllRequest(
+			`${backendURL.friendURL}?friendship_status=${friendship_status}`
+		);
 	}
 
-	async postRequest({ friend_id }) {
+	async postRequest({friend_id}) {
 		return super.postRequest(
 			`${backendURL.friendURL}`,
 			JSON.stringify({
-				friend_id: friend_id
-		}));
+				friend_id: friend_id,
+			})
+		);
 	}
 
 	async putRequest(id, {user_id, friend_id}) {
-		throw new NotImplementedError("PUT method not implemented for FriendService");
+		throw new NotImplementedError('PUT method not implemented for FriendService');
 	}
 
 	async deleteRequest(friend_id) {

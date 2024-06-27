@@ -1,9 +1,12 @@
 import { navigateTo } from '../router.js';
 import { userNotification } from '../components/userNotification.js';;
 
-export default class {
+export default class Aview{
 	constructor(params) {
 		this.params = params;
+		if (this.constructor == Aview) {
+			throw new Error("Abstract classes can't be instantiated.");
+		}
 	}
 
 	setTitle(title) {

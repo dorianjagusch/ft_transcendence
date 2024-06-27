@@ -1,9 +1,9 @@
 import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
 
-class RequestService {
+class ArequestService {
 	constructor() {
-		if (this.constructor == RequestService) {
+		if (this.constructor == ArequestService) {
 			throw new Error("Abstract classes can't be instantiated.");
 		}
 	}
@@ -97,4 +97,4 @@ class RequestService {
 	}
 }
 
-export default RequestService;
+export default ArequestService;
