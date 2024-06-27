@@ -243,16 +243,21 @@ nav ul > * {
 
 nav img {
 	border-radius: 50%;
-	width: 2em
+	width: 5em
 }
 
 .notification{
-	position: absolute;
+	container-name: notification;
+	container-type: inline-size;
 	font-weight: 700;
-	top: var(--fs-medium);
-	left: 50%;
-	transform: translateX(-50%);
 	background-color: transparent;
+	width: 100%
+}
+
+@container notification (width >= 24ch){
+	.notification{
+		font-size: var(--fs-small)
+	}
 }
 
 /* Containers */
