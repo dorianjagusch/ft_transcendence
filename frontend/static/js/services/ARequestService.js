@@ -1,5 +1,6 @@
 import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
+import customErrors from '../exceptions/customErrors.js';
 
 class ArequestService {
 	constructor() {
@@ -8,11 +9,21 @@ class ArequestService {
 		}
 	}
 
+	throwCustomError(errorCode, errorText) {
+		const errorMap = {
+			401: customErrors.unauthorized_401,
+			409: customErrors.conflict_409,
+		};
+
+		const errorClass = errorMap[errorCode] || Error;
+		throw new errorClass(errorText);
+	}
+
 	async checkResponseWithBody(request) {
 		try {
 			const response = await request;
 			if (!response.ok) {
-				throw new Error('Error: ' + response.status);
+				this.throwCustomError(response.status, response.statusText);
 			}
 			return response.json();
 		} catch (error) {
