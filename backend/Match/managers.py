@@ -7,7 +7,7 @@ from Player.models import Player
 
 import sys
 
-class GameSetupManager:
+class MatchSetupManager:
 	@staticmethod
 	def create_match_and_its_players(match_token):
 		if not isinstance(match_token, MatchToken):

@@ -1,8 +1,6 @@
 from django.db import models
 from datetime import datetime
 
-from .managers import MatchManager
-
 # Question to Meri: put into separate file?
 class MatchState(models.IntegerChoices):
 	LOBBY = 0, 'lobby'
