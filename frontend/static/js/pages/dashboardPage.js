@@ -37,8 +37,6 @@ export default class extends AView {
 			return statsEntry;
 		});
 
-		const userSummary = profileSummaryStats(userData.stats);
-
 		const main = document.querySelector("main");
 		main.classList.add("profile", "dashboard");
 		this.updateMain(
@@ -46,7 +44,6 @@ export default class extends AView {
 			userImg,
 			userPlacement,
 			userDescription,
-			userSummary,
 			...userStats,
 			// gameGraph1,
 			userHistory
