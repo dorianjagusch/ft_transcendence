@@ -7,12 +7,9 @@ from rest_framework.request import Request
 
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
-<<<<<<< Updated upstream
-=======
 from Tokens.models import MatchToken, TournamentToken
 from Tokens.serializers import MatchTokenSerializer
 
->>>>>>> Stashed changes
 def must_be_authenticated(view_func):
 	@wraps(view_func)
 	def wrapper(*args, **kwargs):
