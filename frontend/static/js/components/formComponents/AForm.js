@@ -1,4 +1,4 @@
-import NotImplementedError from '../../exceptions/notImplemented.js';
+import NotImplementedError from '../../exceptions/NotImplementedException.js';
 
 export default class AForm {
 	constructor() {
@@ -18,6 +18,5 @@ export default class AForm {
 		return this.form;
 	}
 
-	generateForm() {
-	}
+	generateForm() {}
 }

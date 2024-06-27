@@ -86,8 +86,12 @@ export default class extends AView {
 			console.error('Error:', error);
 		}
 
+		const friendTitle = document.createElement('h2');
+		friendTitle.textContent = 'Friends';
 		const friendScroller = this.createFriendScroller(acceptedFriends, friendCard, 'friends', 'bg-secondary');
+		const requestTitle = document.createElement('h2');
+		requestTitle.textContent = 'Friend Requests';
 		const requestScroller = this.createRequestScroller(pendingFriends, requestCard, 'friend-request', 'bg-secondary');
-		this.updateMain(friendScroller, requestScroller);
+		this.updateMain(friendTitle, friendScroller, requestTitle, requestScroller);
 	}
 }

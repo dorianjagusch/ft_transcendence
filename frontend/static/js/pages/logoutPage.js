@@ -7,22 +7,27 @@ export default class extends AView {
 		this.setTitle('Logout');
 	}
 
-	getHTML() {
+	async getHTML() {
 		const logoutService = new LogoutService();
-		logoutService.postRequest()
-			.then((logoutResponse) => {
-				localStorage.setItem('isLoggedIn', false);
-				localStorage.setItem('username', '');
-				document.querySelector('aside').remove();
-				document.cookie.split(';').forEach((c) => {
-					document.cookie = c
-						.replace(/^ +/, '')
-						.replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
-				});
-				return this.navigateTo('/login');
-			})
-			.catch((error) => {
-				this.navigateTo('/dashboard');
+		try {
+			const logoutResponse = await logoutService.postRequest();
+			localStorage.setItem('isLoggedIn', false);
+			localStorage.setItem('username', '');
+			document.cookie.split(';').forEach((c) => {
+				document.cookie = c
+					.replace(/^ +/, '')
+					.replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
 			});
+			this.notify("You are not logged out.", 'success')
+		} catch (error) {
+			if (!error.status) {
+				this.nofity(error);
+			} else if ((error.status = 401)) {
+				this.notify('Session expired, please login.', 'error');
+			} else {
+				this.notify(error);
+			}
+		}
+		this.navigateTo('/login');
 	}
 }
