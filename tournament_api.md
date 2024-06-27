@@ -3,7 +3,6 @@ sequenceDiagram
     participant frontend
     participant server
 
-    Note over frontend,server: Converting URL parameters to JSON body for POST request
     frontend->>server: POST http://localhost:8080/tournaments/
     Note right of frontend: JSON Body: {"player_amount": 4, "name": "tournament1"}
     activate server
