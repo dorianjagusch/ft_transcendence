@@ -5,12 +5,11 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 
-from User.models import User
-from User.serializers import UserInputSerializer, \
-								UserOutputSerializer
-
 from .models import MatchToken
 from .serializers import MatchTokenSerializer
+from User.models import User
+from User.serializers import UserInputSerializer, UserOutputSerializer
+
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											valid_serializer_in_body
@@ -52,3 +51,4 @@ class SingleMatchGuestTokenView(APIView):
 				return Response({'message': 'Token is now expired'}, status=status.HTTP_200_OK)
 		except MatchToken.DoesNotExist:
 			return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+		

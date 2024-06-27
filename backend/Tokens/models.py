@@ -35,3 +35,4 @@ class MatchToken(AbstractToken):
     # tournament_match = models.ForeignKey()
 
     objects = MatchTokenManager()
+
