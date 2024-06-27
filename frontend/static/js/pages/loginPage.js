@@ -19,15 +19,20 @@ export default class extends AView {
 			return;
 		}
 		const loginService = new LoginService();
-		await loginService.postRequest({username, password})
-			.then(() => {
-				localStorage.setItem('username', username);
-				localStorage.setItem('isLoggedIn', true);
-				this.navigateTo('/dashboard');
-			})
-			.catch((error) => {
-				console.error('There has been a problem with your fetch operation:', error);
-			});
+		try {
+			await loginService.postRequest({username, password});
+			localStorage.setItem('username', username);
+			localStorage.setItem('isLoggedIn', true);
+			this.navigateTo('/dashboard');
+		} catch (error) {
+			if (!error.status){
+				console.error('Could not connect to server:', error);
+			} else if (error.status === 401) {
+				this.notify("Username or password is incorrect. Try again.", 'error');
+			} else {
+				this.notify(error);
+			}
+		}
 	};
 
 	appendEventListeners() {
