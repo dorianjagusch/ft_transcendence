@@ -3,6 +3,7 @@ import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
 import AView from './AView.js';
+import SideBar from '../components/sideBar.js';
 
 export default class extends AView {
 	constructor(params) {
