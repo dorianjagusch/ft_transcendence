@@ -3,13 +3,25 @@ from .constants import *
 import math
 
 class PongGame:
-    def move_player(self, player_y , move_units):
-        player_y += move_units
-        return player_y
-    def check_boundery(self, player_y):
-        player_y = max(min(player_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
-        return player_y 
-    def kick_start_game(self, pong_stat, move):
+    def update_player_positions(self, pong_stat, key_press):
+        # Update player positions based on key press
+        if not pong_stat.game_started and key_press in ('o', 'l'):
+            # If player 2 moves, start the game
+            self.kick_start_game(pong_stat, key_press)
+        if key_press == 'w':
+            pong_stat.player_left_y -= PLAYER_MOVEMENT_UNIT
+        elif key_press == 's':
+            pong_stat.player_left_y += PLAYER_MOVEMENT_UNIT
+        elif key_press == 'o':
+            pong_stat.player_right_y -= PLAYER_MOVEMENT_UNIT
+        elif key_press == 'l':
+            pong_stat.player_right_y += PLAYER_MOVEMENT_UNIT
+
+        # Ensure player positions stay within the bounds of the play area
+        pong_stat.player_left_y = max(min(pong_stat.player_left_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
+        pong_stat.player_right_y = max(min(pong_stat.player_right_y, PLAYGROUND_HEIGHT - (PLAYER_HEIGHT / 2 )), 0)
+
+    def kick_start_game(self, pong_stat, key_press):
         # Kick start the game based on right side player's movement
         if move == PLAYER_RIGHT_UP:
             # right side Player moves upward, set ball angle to 120 degrees
@@ -30,15 +42,15 @@ class PongGame:
 
     def check_collisions(self, pong_stat):
         # Check for collisions with players
-        if pong_stat.ball.x <= pong_stat.player_left.x + PLAYER_WIDTH and pong_stat.player_left.y <= pong_stat.ball.y <= pong_stat.player_left.y + PLAYER_HEIGHT:
-            self.handle_player_collision(pong_stat, pong_stat.player_left.y)
-        elif pong_stat.ball.x >= pong_stat.player_right.x - BALL_WIDTH and pong_stat.player_right.y <= pong_stat.ball.y <= pong_stat.player_right.y + PLAYER_HEIGHT:
-            self.handle_player_collision(pong_stat, pong_stat.player_right.y)
-        
+        if pong_stat.ball_x <= pong_stat.player_left_x + PLAYER_WIDTH and pong_stat.player_left_y <= pong_stat.ball_y <= pong_stat.player_left_y + PLAYER_HEIGHT:
+            self.handle_player_collision(pong_stat, pong_stat.player_left_y)
+        elif pong_stat.ball_x >= pong_stat.player_right_x - BALL_WIDTH and pong_stat.player_right_y <= pong_stat.ball_y <= pong_stat.player_right_y + PLAYER_HEIGHT:
+            self.handle_player_collision(pong_stat, pong_stat.player_right_y)
+
         # Check for collisions with top and bottom walls
-        if pong_stat.ball.y <= 0 or pong_stat.ball.y >= PLAYGROUND_HEIGHT - BALL_HEIGHT:
-            pong_stat.ball.angle = 360 - pong_stat.ball.angle
-            
+        if pong_stat.ball_y <= 0 or pong_stat.ball_y >= PLAYGROUND_HEIGHT - BALL_HEIGHT:
+            pong_stat.ball_angle = 360 - pong_stat.ball_angle
+
         # Check for collisions with vertical walls
         if pong_stat.ball.x <= 0:
             self.handle_wall_collision(pong_stat, 'left')
@@ -53,18 +65,18 @@ class PongGame:
         bounce_angle = normalized_intersect_y * (MAX_BOUNCE_ANGLE - MIN_BOUNCE_ANGLE)
         pong_stat.ball.angle = 180 - bounce_angle
 
-    def handle_wall_collision(self, pong_stat, wall):       
+    def handle_wall_collision(self, pong_stat, wall):
         if wall == 'left':
             pong_stat.player_right.score += 1
         elif wall == 'right':
-            pong_stat.player_left.score += 1
-            
-        if pong_stat.player_left.score == 5:
-            pong_stat.game_stats.game_over = True
-            pong_stat.game_stats.winner = 'player_left'
-            pong_stat.game_stats.loser = 'player_right'
-        elif pong_stat.player_right.score == 5:
-            pong_stat.game_stats.game_over = True
-            pong_stat.game_stats.winner = 'player_right'
-            pong_stat.game_stats.loser = 'player_left'
+            pong_stat.player_left_score += 1
+
+        if pong_stat.player_left_score == 5:
+            pong_stat.game_over = True
+            pong_stat.winner = 'player_left'
+            pong_stat.loser = 'player_right'
+        elif pong_stat.player_right_score == 5:
+            pong_stat.game_over = True
+            pong_stat.winner = 'player_right'
+            pong_stat.loser = 'player_left'
 
