@@ -5,8 +5,8 @@ from rest_framework.request import Request
 from rest_framework import status
 from django.shortcuts import redirect
 
+from .managers import GameSetupManager
 from Tokens.models import MatchToken
-from shared_utilities.GameSetupManager import GameSetupManager
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated
 
