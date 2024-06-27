@@ -11,7 +11,7 @@ from Player.models import Player
 class TournamentPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = TournamentPlayer
-        fields = ['user', 'name_in_tournament']
+        fields = ['id', 'user', 'name_in_tournament']
 
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
@@ -65,7 +65,7 @@ class TournamentOutputSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'host_user',
-            'custom_name',
+            'name',
             'state',
             'state_display',
             'next_match',
@@ -81,73 +81,110 @@ class TournamentOutputSerializer(serializers.ModelSerializer):
             ]
 
 class TournamentCreationSerializer(serializers.ModelSerializer):
-    tokens = serializers.ListField(
-        child=serializers.UUIDField(),
-        write_only=True
-    )
-    host_user_custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    host_user_display_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Tournament
         fields = [
-            'custom_name',
+            'name',
             'host_user',
-            'host_user_custom_name',
+            'host_user_display_name',
             'player_amount',
-            'tokens'
         ]
-        read_only_fields = ['state', 'start_time', 'end_time', 'updated_at']
 
     def validate_custom_name(self, custom_name: str) -> str:
-        if custom_name is None or custom_name == '':
+        if custom_name == '':
             raise serializers.ValidationError("This field may not be blank or null.")
         if len(custom_name) > 30:
             raise serializers.ValidationError("Ensure this field has no more than 30 characters.")
         return custom_name
-
-    def validate_tournament_guest_token(self, token: TournamentGuestToken) -> TournamentGuestToken:
-        try:
-            guest_token = TournamentGuestToken.objects.get(token=token)
-        except TournamentGuestToken.DoesNotExist:
-            raise serializers.ValidationError(f'Token {token} does not exist')
-
-        if not guest_token.is_active:
-            raise serializers.ValidationError(f'Token {token} is not active')
-        if guest_token.is_expired():
-            raise serializers.ValidationError(f'Token {token} is expired')
-        if self.context['request'].user != guest_token.host_user:
-            raise serializers.ValidationError('You are not the host user for this token')
-        
-        return guest_token
-
-    def validate_token_amount(self, tokens: list[TournamentGuestToken]) -> None:
-        tokens_amount = len(tokens)
-        if tokens_amount not in [3, 7]:
-            raise serializers.ValidationError("There must be 3 or 7 guest tokens.")
+    
+    def validate_tournament_player_amount(self, player_amount: int) -> None:
+        if player_amount not in [4, 8]:
+            raise serializers.ValidationError("Must have 4 or 8 players.")
         
     def validate(self, data):
-        custom_name = data.get('custom_name')
-        if custom_name:
-            self.validate_custom_name(custom_name)
+        tournament_name = data.get('name')
+        if tournament_name:
+            self.validate_custom_name(tournament_name)
 
-        host_user_custom_name = data.get('host_user_custom_name')
-        if host_user_custom_name:
-            self.validate_custom_name(host_user_custom_name)
-
-        guest_tokens = data.get('tokens')
-        if not guest_tokens:
-            raise serializers.ValidationError("No tokens in serializer.")
+        host_user_display_name = data.get('host_user_display_name')
+        if host_user_display_name:
+            self.validate_custom_name(host_user_display_name)
         
-        self.validate_token_amount(guest_tokens)
+        self.validate_tournament_player_amount(data.get('player_amount'))
 
-        # Validate each token
-        validated_tokens = [self.validate_tournament_guest_token(token) for token in guest_tokens]
+        return data    
 
-        # Update data with validated tokens
-        data['tokens'] = validated_tokens
 
-        return data
+# class OLD_TournamentCreationSerializer(serializers.ModelSerializer):
+#     tokens = serializers.ListField(
+#         child=serializers.UUIDField(),
+#         write_only=True
+#     )
+#     host_user_custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+#     custom_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+
+#     class Meta:
+#         model = Tournament
+#         fields = [
+#             'custom_name',
+#             'host_user',
+#             'host_user_custom_name',
+#             'player_amount',
+#             'tokens'
+#         ]
+#         read_only_fields = ['state', 'start_time', 'end_time', 'updated_at']
+
+#     def validate_custom_name(self, custom_name: str) -> str:
+#         if custom_name is None or custom_name == '':
+#             raise serializers.ValidationError("This field may not be blank or null.")
+#         if len(custom_name) > 30:
+#             raise serializers.ValidationError("Ensure this field has no more than 30 characters.")
+#         return custom_name
+
+#     def validate_tournament_guest_token(self, token: TournamentGuestToken) -> TournamentGuestToken:
+#         try:
+#             guest_token = TournamentGuestToken.objects.get(token=token)
+#         except TournamentGuestToken.DoesNotExist:
+#             raise serializers.ValidationError(f'Token {token} does not exist')
+
+#         if not guest_token.is_active:
+#             raise serializers.ValidationError(f'Token {token} is not active')
+#         if guest_token.is_expired():
+#             raise serializers.ValidationError(f'Token {token} is expired')
+#         if self.context['request'].user != guest_token.host_user:
+#             raise serializers.ValidationError('You are not the host user for this token')
+        
+#         return guest_token
+
+#     def validate_token_amount(self, tokens: list[TournamentGuestToken]) -> None:
+#         tokens_amount = len(tokens)
+#         if tokens_amount not in [3, 7]:
+#             raise serializers.ValidationError("There must be 3 or 7 guest tokens.")
+        
+#     def validate(self, data):
+#         custom_name = data.get('custom_name')
+#         if custom_name:
+#             self.validate_custom_name(custom_name)
+
+#         host_user_custom_name = data.get('host_user_custom_name')
+#         if host_user_custom_name:
+#             self.validate_custom_name(host_user_custom_name)
+
+#         guest_tokens = data.get('tokens')
+#         if not guest_tokens:
+#             raise serializers.ValidationError("No tokens in serializer.")
+        
+#         self.validate_token_amount(guest_tokens)
+
+#         # Validate each token
+#         validated_tokens = [self.validate_tournament_guest_token(token) for token in guest_tokens]
+
+#         # Update data with validated tokens
+#         data['tokens'] = validated_tokens
+
+#         return data
 
 class TournamentInProgressSerializer(serializers.ModelSerializer):
     state_display = serializers.CharField(source='get_state_display', read_only=True)
@@ -160,7 +197,7 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'host_user',
-            'custom_name',
+            'name',
             'state',
             'state_display',
             'expires_ts',

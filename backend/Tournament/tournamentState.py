@@ -1,6 +1,7 @@
 from django.db import models
 
 class TournamentState(models.IntegerChoices):
-	IN_PROGRESS = 0, 'in_progress'
-	FINISHED = 1, 'finished'
-	ABORTED = 2, 'aborted'
+	LOBBY = 0, 'lobby'
+	IN_PROGRESS = 1, 'in_progress'
+	FINISHED = 2, 'finished'
+	ABORTED = 3, 'aborted'

@@ -4,9 +4,10 @@ from datetime import timedelta
 from django.utils import timezone
 
 from .managers import MatchTokenManager, \
-                        TournamentGuestTokenManager
+                        TournamentTokenManager
 from .tokensMacros import TOKEN_EXPIRERY_TIME_SECONDS
 from User.models import User
+from Tournament.models import Tournament
 
 class AbstractToken(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -34,9 +35,7 @@ class MatchToken(AbstractToken):
 
     objects = MatchTokenManager()
 
-class TournamentGuestToken(AbstractToken):
-    host_user = models.ForeignKey(User, related_name='Tournament_token_host', on_delete=models.CASCADE)
-    guest_user = models.ForeignKey(User, related_name='Tournament_token_guest', on_delete=models.CASCADE)
-    custom_name = models.CharField(max_length=30, null=True, blank=True, default=None)
+class TournamentToken(AbstractToken):
+    tournament = models.ForeignKey(Tournament, related_name='tournament', on_delete=models.CASCADE)
 
-    objects = TournamentGuestTokenManager()
+    objects = TournamentTokenManager()
