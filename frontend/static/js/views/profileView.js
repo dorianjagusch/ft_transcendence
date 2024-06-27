@@ -66,7 +66,7 @@ export default class extends AView {
 			friendService.postRequest(data);
 			super.notify('Friendship created successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
-		} catch(error) {
+		} catch (error) {
 			super.notify(error);
 		}
 	}
@@ -76,7 +76,7 @@ export default class extends AView {
 			friendService.deleteRequest(this.friendId);
 			super.notify('Friendship declined successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
-		} catch(error) {
+		} catch (error) {
 			super.notify(error);
 		}
 	}

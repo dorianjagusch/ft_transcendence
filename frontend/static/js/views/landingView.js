@@ -11,7 +11,7 @@ export default class extends AView {
 	async getHTML() {
 		const welcomeSection = document.createElement('section');
 		welcomeSection.setAttribute('id', 'welcome');
-		const welcomeTitle = document.createElement('h2')
+		const welcomeTitle = document.createElement('h2');
 		welcomeTitle.textContent = 'Welcome';
 		const welcomeSubtext = document.createElement('h3');
 		welcomeSubtext.textContent = 'to the great pong tournament';
