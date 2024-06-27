@@ -1,4 +1,6 @@
 import AView from './AView.js';
+import {scrollContainer} from '../components/scrollContainer.js';
+import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -7,17 +9,18 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		const leaderBoard = document.createElement('section');
-		leaderBoard.classList.add('bg-secondary');
-		const leaderBoardTitle =
-			'<h2>Leaderboard</h2><ul class="col-scroll placements"></ul></section>';
-		leaderBoard.innerHTML = leaderBoardTitle;
-
 		const welcomeSection = document.createElement('section');
 		welcomeSection.setAttribute('id', 'welcome');
-		const welcomeHtml =
-			'<h2>Welcome</h2><h3>to the great pong tournament</h3>';
-		welcomeSection.innerHTML = welcomeHtml;
+		const welcomeTitle = document.createElement('h2')
+		welcomeTitle.textContent = 'Welcome';
+		const welcomeSubtext = document.createElement('h3');
+		welcomeSubtext.textContent = 'to the great pong tournament';
+
+		const leaderBoardTitle = document.createElement('h2');
+		leaderBoardTitle.textContent = 'Leaderboard';
+
+		const leaderBoardScroller = scrollContainer(null, smallPlacementCard, 'leaderboard');
+		leaderBoard.appendChild(leaderBoardScroller);
 
 		const pongButton = document.createElement('button');
 		pongButton.textContent = 'Play Pong';
