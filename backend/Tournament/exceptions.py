@@ -3,7 +3,7 @@ from rest_framework import status
 
 
 class TournamentCreationException(APIException):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    status_code = status.HTTP_403_FORBIDDEN
     default_detail = 'There was an error creating the tournament or its players.'
     default_code = 'tournament_creation_error'
 
