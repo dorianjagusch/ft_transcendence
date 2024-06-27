@@ -4,23 +4,15 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 
-from .models import Tournament, \
-						TournamentPlayer, \
-						TournamentState
-from .serializers import TournamentOutputSerializer, \
-							TournamentCreationSerializer, \
-							TournamentInProgressSerializer, \
-							TournamentPlayerSerializer
-from .managers import TournamentSetupManager, \
-						TournamentInProgressManager
-from .exceptions import TournamentCreationException, \
-							TournamentInProgressException
-from Tokens.models import MatchToken, TournamentToken
+from .models import Tournament, TournamentPlayer
+from .tournamentState import TournamentState
+from .managers import TournamentSetupManager, TournamentInProgressManager
+from .serializers import TournamentCreationSerializer, TournamentOutputSerializer
+from .exceptions import TournamentSetupException
+from Tokens.models import TournamentToken
 from Tokens.serializers import TournamentTokenSerializer
-from Match.models import Match
 
-from shared_utilities.decorators import must_be_authenticated, \
-											check_that_valid_tournament_token
+from shared_utilities.decorators import must_be_authenticated, check
 
 import sys
 
@@ -36,7 +28,7 @@ class TournamentListView(APIView):
 				tournament_token = TournamentToken.objects.create_tournament_token(tournament)
 				serializer = TournamentTokenSerializer(tournament_token)
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
-			except TournamentCreationException as e:
+			except TournamentSetupException as e:
 				return Response({'error': str(e)}, status=e.status_code)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -103,7 +95,7 @@ class OLD_TournamentListView(APIView):
 				tournament_id = TournamentSetupManager.create_tournament_and_its_participants(validated_data)
 				tournament_url = f"http://localhost:8080/tournaments/{tournament_id}"
 				return Response(tournament_url, status=status.HTTP_201_CREATED)
-			except TournamentCreationException as e:
+			except TournamentSetupException as e:
 				return Response({'error': str(e)}, status=e.status_code)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

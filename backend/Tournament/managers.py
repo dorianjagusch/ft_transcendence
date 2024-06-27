@@ -6,7 +6,7 @@ from .models import Tournament, \
                           TournamentPlayer, \
                             TournamentState
 from .serializers import TournamentCreationSerializer
-from .exceptions import TournamentCreationException, \
+from .exceptions import TournamentSetupException, \
                               TournamentInProgressException
 from .tournamentMacros import TOURNAMENT_EXPIRERY_TIME_SECONDS
 from Match.models import Match
@@ -38,13 +38,13 @@ class TournamentSetupManager:
                 return tournament
                 
         except Exception as e:
-            raise TournamentCreationException(f"An error occurred while creating tournament and host tournament player: {e}")
+            raise TournamentSetupException(f"An error occurred while creating tournament and host tournament player: {e}")
         
     @staticmethod
     def add_user_to_tournament_as_tournament_player(tournament: Tournament, user: User, display_name: str | None) -> TournamentPlayer:
         try:
             if tournament.state != TournamentState.LOBBY:
-                raise TournamentCreationException(f"Tournament {tournament.id} is not on lobby!")
+                raise TournamentSetupException(f"Tournament {tournament.id} is not on lobby!")
 
             tournament_player = TournamentPlayer.objects.create(
                 tournament=tournament,
@@ -54,7 +54,7 @@ class TournamentSetupManager:
             return tournament_player
 
         except Exception as e:
-            raise TournamentCreationException(f"An error occurred while trying to add guest user to tournament as tournament player: {e}")
+            raise TournamentSetupException(f"An error occurred while trying to add guest user to tournament as tournament player: {e}")
 
     @staticmethod
     def setup_tournament_matches(tournament: Tournament) -> None:        
@@ -216,7 +216,7 @@ class OLD_TournamentSetupManager:
                 return tournament.id
                 
         except Exception as e:
-            raise TournamentCreationException(f"An error occurred while creating tournament and its tournament players: {e}")
+            raise TournamentSetupException(f"An error occurred while creating tournament and its tournament players: {e}")
 
 
     @staticmethod
