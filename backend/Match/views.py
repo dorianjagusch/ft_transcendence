@@ -30,7 +30,7 @@ class MatchView(APIView):
         match, player_left, player_right = MatchSetupManager.create_match_and_its_players(token)
 
         if not all([match, player_left, player_right]):
-            return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_403_FORBIDDEN)
 
         pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
         return Response(pong_match_url, status=status.HTTP_200_OK)
@@ -42,7 +42,7 @@ class LaunchTestMatchView(APIView):
 		token = MatchToken.objects.create_single_match_token(request.user, request.user)
 		match, player_left_side, player_right_side = MatchSetupManager.create_match_and_its_players(token)
 		if not all([match, player_left_side, player_right_side]):
-			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_403_FORBIDDEN)
 
 		pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
 		return Response(pong_match_url, status=status.HTTP_200_OK)
