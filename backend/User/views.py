@@ -38,6 +38,14 @@ class UserListView(APIView):
 		user = User.objects.create_user(username=username, password=password)
 		outputSerializer = UserOutputSerializer(user)
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
+	
+	def delete(self, request):
+		user = request.user
+		print("heheh",  request.user, flush=True)
+		user.username = "hehe nice try"
+		user.is_online = False
+		user.save()
+		return Response("nice", status=status.HTTP_200_OK)
 
 class UserDetailView(APIView):
 	def get(self, request, user_id):
