@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 	'Tokens',
 	'Match',
 	'Player',
+	'Tournament',
 ]
 
 MIDDLEWARE = [
