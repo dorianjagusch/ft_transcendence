@@ -49,7 +49,6 @@ export default class extends AView {
 			userSummary,
 			...userStats,
 			// gameGraph1,
-			// gameGraph2,
 			userHistory
 		);
 	}
