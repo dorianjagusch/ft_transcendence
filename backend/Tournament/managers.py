@@ -1,9 +1,11 @@
 from django.db import transaction
+from datetime import timezone, timedelta
 
 from .models import Tournament, \
                         TournamentPlayer
 from .serializers import TournamentCreationSerializer
 from .exceptions import TournamentSetupException
+from .tournamentMacros import TOURNAMENT_EXPIRY_TIME_SECONDS
 from User.models import User
 
 class TournamentSetupManager:
@@ -14,13 +16,14 @@ class TournamentSetupManager:
                 tournament = Tournament.objects.create(
                     name=validated_data['name'] if validated_data['name'] else None,
                     host_user=validated_data['host_user'],
-                    player_amount=validated_data['player_amount']
+                    player_amount=validated_data['player_amount'],
+                    expires_ts=timezone.now() + timedelta(TOURNAMENT_EXPIRY_TIME_SECONDS),
                 )
 
                 TournamentPlayer.objects.create(
                     tournament=tournament,
                     user=tournament.host_user,
-                    display_name=validated_data['host_user_display_name'] if validated_data['host_user_display_name'] else None
+                    display_name=validated_data['host_user_display_name'] if validated_data['host_user_display_name'] else None,
                 )
 
                 return tournament
