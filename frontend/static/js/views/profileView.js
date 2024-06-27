@@ -57,13 +57,13 @@ export default class extends AView {
 		}
 	}
 
-	acceptHandler() {
+	async acceptHandler() {
 		const data = {
 			friend_id: this.friendId,
 		};
 
 		try {
-			friendService.postRequest(data);
+			await friendService.postRequest(data);
 			super.notify('Friendship created successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {
@@ -71,9 +71,9 @@ export default class extends AView {
 		}
 	}
 
-	declineHandler() {
+	async declineHandler() {
 		try {
-			friendService.deleteRequest(this.friendId);
+			await friendService.deleteRequest(this.friendId);
 			super.notify('Friendship declined successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {

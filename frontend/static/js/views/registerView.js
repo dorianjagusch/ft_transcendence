@@ -41,7 +41,7 @@ export default class extends AView {
 
 		const userService = new UserService();
 		try {
-			userService.postRequest(data);
+			await userService.postRequest(data);
 			this.notify('User created successfully. Please login.');
 			this.navigateTo('/login');
 		} catch (error) {
