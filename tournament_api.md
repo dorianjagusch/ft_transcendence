@@ -3,6 +3,7 @@ sequenceDiagram
     participant frontend
     participant server
 
+    Note over frontend,server: Converting URL parameters to JSON body for POST request
     frontend->>server: POST http://localhost:8080/tournaments/
     Note right of frontend: JSON Body: {"player_amount": 4, "name": "tournament1"}
     activate server
@@ -33,4 +34,10 @@ sequenceDiagram
     activate server
     server-->>frontend: {the monster you showed us with the tournament info and the next match | error that it's not complete}
     deactivate server
+
+	frontend->>server: GET http://localhost:8080/tournaments/1/<match_id>
+	activate server
+	server-->>frontend: {url: "ws://localhost:8080/tournaments/1/<match_id>"}
+	deactivate server
+
 ```
