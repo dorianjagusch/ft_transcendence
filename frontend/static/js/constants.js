@@ -8,6 +8,7 @@ const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
 const pongURL = `${baseURL}match/test`;
 
+const allowedPaths = ['/login', '/register', '/', '/pong'];
 
 const problemWithFetchMsg = "There was a problem with the fetch operation: ";
 
@@ -31,6 +32,7 @@ export default {
 	settingsURL,
 	friendURL,
 	pongURL,
+	allowedPaths,
 	FRIENDSHIPSTATUS,
 	GAMES
 };

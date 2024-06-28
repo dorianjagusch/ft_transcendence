@@ -265,16 +265,21 @@ nav ul > * {
 
 nav img {
 	border-radius: 50%;
-	width: 2em;
+	width: 5em
 }
 
-.notification {
-	position: absolute;
+.notification{
+	container-name: notification;
+	container-type: inline-size;
 	font-weight: 700;
-	top: var(--fs-medium);
-	left: 50%;
-	transform: translateX(-50%);
 	background-color: transparent;
+	width: 100%
+}
+
+@container notification (width >= 24ch){
+	.notification{
+		font-size: var(--fs-small)
+	}
 }
 
 /* Containers */
@@ -431,9 +436,6 @@ nav img {
 	min-width: 65px;
 }
 
-#welcome {
-	padding-top: 20%;
-}
 #welcome h2 {
 	font-size: 6rem;
 }
@@ -981,10 +983,10 @@ button:is(:focus, :hover) {
 .profile.dashboard {
 	grid-template-areas:
 		'title title title title title title title'
-		'profile-img profile-img placements placements placements placements placements'
-		'about about about stats stats stats stats'
-		'history history history graph-1 graph-1 graph-1 graph-1'
-		'history history history graph-2 graph-2 graph-2 graph-2';
+		'profile-img profile-img placements placements placements summary summary'
+		'about about about stats-1 stats-1 stats-2 stats-2'
+		'history history history graph-1 graph-1 graph-1 graph-1 '
+		'history history history graph-2 graph-2 graph-2 graph-2 ';
 
 	grid-template-rows: 0.1fr repeat(4, 1fr);
 	grid-template-columns: repeat(7, min(1fr, 150px));
@@ -1039,8 +1041,12 @@ button:is(:focus, :hover) {
 	display: grid;
 }
 
-.profile.dashboard .stats {
-	grid-area: stats;
+.profile.dashboard .stats-1 {
+	grid-area: stats-1;
+}
+
+.profile.dashboard .stats-2 {
+	grid-area: stats-2;
 }
 
 .dashboard .stat-entry {
@@ -1104,4 +1110,37 @@ button:is(:focus, :hover) {
 	justify-content: space-between;
 	order: 3;
 	font-size: var(--fs-small);
+}
+
+
+aside {
+	width: 30%;
+	height: 100svh;
+	position: fixed;
+	top: 0;
+	right: -30%;
+	padding: 2em;
+	background-color: var(--fg-color);
+	border-radius: 0.75em 0 0 0.75em;
+	border-color: var(--border-color);
+	border-width: 0.25em 0 0.25em 0.25em;
+	border-style: solid;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: space-between;
+}
+
+aside > * {
+	color: var(--text-color);
+	border-radius: 0.5em;
+}
+
+aside > button{
+	padding: 0.75em;
+}
+
+aside[active] {
+	transform : translateX(-100%);
 }
