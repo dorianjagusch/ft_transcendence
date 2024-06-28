@@ -1,13 +1,7 @@
 from django.db import models
 from datetime import datetime
 
-# Question to Meri: put into separate file?
-class MatchState(models.IntegerChoices):
-	LOBBY = 0, 'lobby'
-	IN_PROGRESS = 1, 'in_progress'
-	FINISHED = 2, 'finished'
-	ABORTED = 3, 'aborted'
-
+from .matchState import MatchState
 
 # Create your models here.
 class Match(models.Model):
