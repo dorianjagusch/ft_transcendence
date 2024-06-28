@@ -69,3 +69,18 @@ class TournamentPlayerListView(APIView):
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
 			return Response(TournamentSetupException(e))
+
+class TournamentPlayerDetailView(APIView):
+	@method_decorator(must_be_authenticated)
+	@method_decorator(check_that_valid_tournament_lobby_request)
+	def delete(self, request, tournament_id, tournamentplayer_id):
+		tournament = Tournament.objects.get(id=tournament_id)
+		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
+		if not tournament_player.exists():
+			return Response({'error': f'Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}'}, status=status.HTTP_404_NOT_FOUND)
+		
+		if tournament_player.user == request.user:
+			return Response({'error': 'Cannot delete host tournament player'}, status=status.HTTP_404_NOT_FOUND)
+		tournament_player.delete()
+		tournament_player.save()
+		return Response(status=status.HTTP_204_NO_CONTENT)
