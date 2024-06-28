@@ -1,11 +1,17 @@
 import json
 from functools import wraps
-from django.http import HttpResponseForbidden, HttpResponseNotAllowed
+from datetime import timezone
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.request import Request
+from django.http import HttpResponseForbidden, \
+							HttpResponseNotFound
 
-from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
+from Tournament.models import Tournament
+from Tournament.tournamentState import TournamentState
+
+from rest_framework.validators import UniqueValidator, \
+										UniqueTogetherValidator
 
 def must_be_authenticated(view_func):
 	@wraps(view_func)
@@ -96,6 +102,28 @@ def must_not_be_username(view_func):
 
 		if request.user.username == username:
 			return HttpResponseForbidden("request data username has to be different from the logged in user's username.")
+
+		return view_func(*args, **kwargs)
+	return wrapper
+
+def check_that_valid_tournament_request(view_func):
+	@wraps(view_func)
+	def wrapper(*args, **kwargs):
+		request = args[0] if args else None
+
+		if request.user.is_superuser:
+			return view_func(*args, **kwargs)
+
+		tournament_id = kwargs.get('tournament_id', None)
+		tournament = Tournament.objects.filter(id=tournament_id).first()
+		if not tournament:
+			return HttpResponseNotFound(f"Tournament {tournament_id} does not exist.")
+
+		if tournament.state not in (TournamentState.LOBBY, TournamentState.IN_PROGRESS) or timezone() > tournament.expires_ts:
+			return HttpResponseForbidden("Cannot modify this resource because tournament is either not in lobby, in progress, or it has expired")
+
+		if request.user != tournament.host_user:
+			return HttpResponseForbidden("You are not authorized to modify this resource.")
 
 		return view_func(*args, **kwargs)
 	return wrapper
