@@ -265,7 +265,7 @@ nav ul > * {
 
 nav img {
 	border-radius: 50%;
-	width: 5em
+	width: 5em;
 }
 
 .notification{
@@ -436,9 +436,6 @@ nav img {
 	min-width: 65px;
 }
 
-#welcome {
-	padding-top: 20%;
-}
 #welcome h2 {
 	font-size: 6rem;
 }

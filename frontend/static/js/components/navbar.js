@@ -50,6 +50,10 @@ const Navbar = (username) => {
 
 	ul.appendChild(loggedInSection);
 
+	const notificationSection = document.createElement('p');
+	notificationSection.classList.add('notification');
+	ul.appendChild(notificationSection);
+
 	const userSection = document.createElement('div');
 	userSection.classList.add('nav-partition', 'logged-in');
 	userSection.setAttribute('data-visible', 'true');

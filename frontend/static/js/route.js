@@ -1,18 +1,18 @@
-import landingPage from './pages/landingPage.js';
-import loginPage from './pages/loginPage.js';
-import logoutPage from './pages/logoutPage.js';
-import registerPage from './pages/registerPage.js';
-import dashboardPage from './pages/dashboardPage.js';
-import friendsPage from './pages/friendsPage.js';
-import profilePage from './pages/profilePage.js';
-import playPage from './pages/playPage.js';
-import pongPage from './pages/pongPage.js';
-import leaderBoard from './pages/leaderboardPage.js';
-import view404Page from './pages/view404.js';
-import modal from './pages/modal.js';
+import landingPage from './views/landingView.js';
+import loginPage from './views/loginView.js';
+import logoutPage from './views/logoutView.js';
+import registerPage from './views/registerView.js';
+import dashboardPage from './views/dashboardView.js';
+import friendsPage from './views/friendsView.js';
+import profilePage from './views/profileView.js';
+import playPage from './views/playView.js';
+import pongPage from './views/pongView.js';
+import leaderBoard from './views/leaderboardView.js';
+import show404Page from './views/404View.js';
+import modalPage from './views/modal.js';
 
 export default [
-	{ path: '/404', view: view404Page },
+	{ path: '/404', view: show404Page },
 	{ path: '/', view: landingPage },
 	{ path: '/login', view: loginPage },
 	{ path: '/logout', view: logoutPage },

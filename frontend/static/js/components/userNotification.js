@@ -1,6 +1,6 @@
 const userNotification = (message, type) => {
 
-	const notification = document.querySelector('#notification')
+	const notification = document.querySelector('.notification')
 	notification.classList.remove('error', 'success');
 	notification.innerText = message.message || message;
 
