@@ -7,7 +7,8 @@ from django.utils.decorators import method_decorator
 from .models import Tournament, \
 						TournamentPlayer
 from .serializers import TournamentCreationSerializer, \
-							TournamentPlayerSerializer
+							TournamentPlayerSerializer, \
+							TournamentInProgressSerializer
 from .managers import TournamentSetupManager, \
 						TournamentInProgressManager
 from .exceptions import TournamentSetupException, \
@@ -16,6 +17,7 @@ from .tournamentState import TournamentState
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
+											check_that_valid_tournament_request, \
 											check_that_valid_tournament_lobby_request, \
 											check_that_valid_tournament_in_progress_request, \
 											check_that_tournament_players_are_still_active
@@ -39,6 +41,29 @@ class TournamentListView(APIView):
 			}, status=status.HTTP_201_CREATED) 
 		except Exception as e:
 			return Response(TournamentSetupException(e))
+		
+class TournamentDetailView(APIView):
+	@method_decorator(must_be_authenticated)
+	@method_decorator(check_that_valid_tournament_request)
+	@method_decorator(check_that_tournament_players_are_still_active)
+	def post(self, request, tournament_id):
+		'''If tournament is in lobby, start tournament.
+
+		If tournament is in progress, return next match url.
+		'''
+		tournament = Tournament.objects.get(tournament_id)
+
+		if tournament.state == TournamentState.LOBBY:
+			try:
+				TournamentSetupManager.start_tournament(tournament)
+				tournament
+				serializer = TournamentInProgressSerializer(tournament)
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			except Exception as e:
+				return Response(TournamentSetupException(e))
+
+		elif tournament.state == TournamentState.IN_PROGRESS:
+			pass
 
 class TournamentPlayerListView(APIView):
 	@method_decorator(must_be_authenticated)
@@ -61,7 +86,7 @@ class TournamentPlayerListView(APIView):
 
 		try:
 			tournament_player = TournamentPlayer.objects.create(
-				tournament_id=tournament_id,
+				tournament=tournament,
 				user=user,
 				display_name=display_name,
 			)
@@ -91,5 +116,4 @@ class TournamentPlayerDetailView(APIView):
 		if tournament_player.user == request.user:
 			return Response({'error': 'Cannot delete host tournament player'}, status=status.HTTP_404_NOT_FOUND)
 		tournament_player.delete()
-		tournament_player.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
