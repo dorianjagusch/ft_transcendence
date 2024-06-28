@@ -15,12 +15,12 @@ export default class extends AView {
 		welcomeTitle.textContent = 'Welcome';
 		const welcomeSubtext = document.createElement('h3');
 		welcomeSubtext.textContent = 'to the great pong tournament';
+		welcomeSection.appendChild(welcomeTitle);
+		welcomeSection.appendChild(welcomeSubtext);
 
 		const leaderBoardTitle = document.createElement('h2');
 		leaderBoardTitle.textContent = 'Leaderboard';
-
 		const leaderBoardScroller = scrollContainer(null, smallPlacementCard, 'leaderboard');
-		leaderBoard.appendChild(leaderBoardScroller);
 
 		const pongButton = document.createElement('button');
 		pongButton.textContent = 'Play Pong';
@@ -28,6 +28,6 @@ export default class extends AView {
 			this.navigateTo('/pong');
 		});
 
-		this.updateMain(leaderBoard, welcomeSection, pongButton);
+		this.updateMain(welcomeSection, leaderBoardTitle, leaderBoardScroller, pongButton);
 	}
 }
