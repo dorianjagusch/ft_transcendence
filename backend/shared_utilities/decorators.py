@@ -1,6 +1,6 @@
 import json
 from functools import wraps
-from datetime import timezone
+from django.utils import timezone
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -13,6 +13,8 @@ from Tournament.tournamentState import TournamentState
 
 from rest_framework.validators import UniqueValidator, \
 										UniqueTogetherValidator
+
+import sys
 
 def must_be_authenticated(view_func):
 	@wraps(view_func)
@@ -133,7 +135,7 @@ def check_that_valid_tournament_request(view_func):
 		if tournament.state not in (TournamentState.LOBBY, TournamentState.IN_PROGRESS):
 			return HttpResponseForbidden("Cannot modify this resource because tournament is not in lobby or not in progress.")
 		
-		if timezone() > tournament.expires_ts:
+		if timezone.now() > tournament.expires_ts:
 			tournament.state=TournamentState.ABORTED
 			tournament.save()
 			return HttpResponseForbidden("Tournament has expired; tournament set to aborted!")
@@ -167,7 +169,7 @@ def check_that_valid_tournament_lobby_request(view_func):
 		if tournament.state != TournamentState.LOBBY:
 			return HttpResponseForbidden("Cannot modify this resource because tournament is not in lobby.")
 		
-		if timezone() > tournament.expires_ts:
+		if timezone.now() > tournament.expires_ts:
 			tournament.state=TournamentState.ABORTED
 			tournament.save()
 			return HttpResponseForbidden("Tournament has expired; tournament set to aborted!")
@@ -201,7 +203,7 @@ def check_that_valid_tournament_in_progress_request(view_func):
 		if tournament.state != TournamentState.IN_PROGRESS:
 			return HttpResponseForbidden("Cannot modify this resource because tournament is not in progress.")
 		
-		if timezone() > tournament.expires_ts:
+		if timezone.now() > tournament.expires_ts:
 			tournament.state=TournamentState.ABORTED
 			tournament.save()
 			return HttpResponseForbidden("Tournament has expired; tournament set to aborted!")

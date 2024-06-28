@@ -1,5 +1,6 @@
 from django.db import transaction
-from datetime import timezone, timedelta
+from django.utils import timezone
+from datetime import timedelta
 
 from .models import Tournament, \
                         TournamentPlayer
@@ -11,6 +12,8 @@ from User.models import User
 from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
+
+import sys
 
 class TournamentSetupManager:
     @staticmethod
@@ -33,11 +36,11 @@ class TournamentSetupManager:
                 return tournament
 
         except Exception as e:
-            return TournamentSetupException(e)
+            raise TournamentSetupException(e)
 
     @staticmethod
     def setup_tournament_matches(tournament: Tournament) -> None:        
-        if tournament.state != TournamentState.IN_PROGRESS or tournament.next_match != 0:
+        if tournament.state != TournamentState.LOBBY or tournament.next_match != 0:
             raise TournamentSetupException("Tournament is not in a valid state to set up matchups.")
         
         tournament_players = list(tournament.players.all())
@@ -81,7 +84,7 @@ class TournamentSetupManager:
         player_amount = tournament.players.count()
         if player_amount != tournament.player_amount:
             raise TournamentSetupException(f"tournament must have {tournament.player_amount} players to start, but currently it has {player_amount} players.")
-        TournamentInProgressManager.setup_tournament_matches(tournament)
+        TournamentSetupManager.setup_tournament_matches(tournament)
         tournament.start_ts = timezone.now()
         tournament.save()
 

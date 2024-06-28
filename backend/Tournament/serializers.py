@@ -9,7 +9,7 @@ from Match.matchState import MatchState
 class TournamentPlayerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = TournamentPlayer
-		fields = ['id', 'user', 'name_in_tournament']
+		fields = ['id', 'user', 'display_name']
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
 	first_tournament_player = serializers.SerializerMethodField()
