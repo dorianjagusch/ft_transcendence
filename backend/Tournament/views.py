@@ -54,6 +54,10 @@ class TournamentPlayerListView(APIView):
 		if user is None:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
+		tournament = Tournament.objects.get(id=tournament_id)
+		if tournament.players.count() >= tournament.player_amount:
+			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_403_FORBIDDEN)
+
 		try:
 			tournament_player = TournamentPlayer.objects.create(
 				tournament_id=tournament_id,
