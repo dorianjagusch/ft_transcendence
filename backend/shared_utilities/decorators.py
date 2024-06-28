@@ -7,7 +7,8 @@ from rest_framework.request import Request
 from django.http import HttpResponseForbidden, \
 							HttpResponseNotFound
 
-from Tournament.models import Tournament
+from Tournament.models import Tournament, \
+								TournamentPlayer
 from Tournament.tournamentState import TournamentState
 
 from rest_framework.validators import UniqueValidator, \
@@ -108,6 +109,12 @@ def must_not_be_username(view_func):
 	return wrapper
 
 def check_that_valid_tournament_request(view_func):
+	'''Check that a request that modifies tournament resource is valid.
+
+	The user making the request must be the tournament host.
+	The tournament state must be in lobby or in progress.
+	The tournament cannot be expired. If it is, set state to aborted.
+	'''
 	@wraps(view_func)
 	def wrapper(*args, **kwargs):
 		request = args[0] if args else None
@@ -120,11 +127,45 @@ def check_that_valid_tournament_request(view_func):
 		if not tournament:
 			return HttpResponseNotFound(f"Tournament {tournament_id} does not exist.")
 
-		if tournament.state not in (TournamentState.LOBBY, TournamentState.IN_PROGRESS) or timezone() > tournament.expires_ts:
-			return HttpResponseForbidden("Cannot modify this resource because tournament is either not in lobby, in progress, or it has expired")
-
 		if request.user != tournament.host_user:
 			return HttpResponseForbidden("You are not authorized to modify this resource.")
+
+		if tournament.state not in (TournamentState.LOBBY, TournamentState.IN_PROGRESS):
+			return HttpResponseForbidden("Cannot modify this resource because tournament is either not in lobby or not in progress")
+		
+		if timezone() > tournament.expires_ts:
+			tournament.state=TournamentState.ABORTED
+			tournament.save()
+			return HttpResponseForbidden("Tournament has expired; tournament set to aborted!")
+
+
+		return view_func(*args, **kwargs)
+	return wrapper
+
+def check_that_tournament_players_are_still_active(view_func):
+	'''Check that all tournament players that are taking part in tournament are still active.
+	If not, abort tournament.
+
+	Use only with POST, PUT or DELETE requests that have to do with active tournaments.
+	Always use after check_that_valid_tournament_request decorator!
+	'''
+	@wraps(view_func)
+	def wrapper(*args, **kwargs):
+		request = args[0] if args else None
+
+		if request.user.is_superuser:
+			return view_func(*args, **kwargs)
+
+		tournament_id = kwargs.get('tournament_id', None)
+		tournament = Tournament.objects.filter(id=tournament_id).first()
+		if not tournament:
+			return HttpResponseNotFound(f"Tournament {tournament_id} does not exist.")
+
+		inactive_players = tournament.players.filter(user__is_active=False)
+		if inactive_players.exists():
+			tournament.state = TournamentState.ABORTED
+			tournament.save()
+			return HttpResponseNotFound("One or more users taking part in tournament have deleted their profile; tournament aborted!")
 
 		return view_func(*args, **kwargs)
 	return wrapper
