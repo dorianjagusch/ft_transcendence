@@ -1,12 +1,54 @@
 from rest_framework import serializers
+from rest_framework.utils.serializer_helpers import ReturnDict
 
 from .models import Tournament, \
 						TournamentPlayer
+from Match.models import Match
+from Match.matchState import MatchState
 
 class TournamentPlayerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = TournamentPlayer
 		fields = ['id', 'user', 'name_in_tournament']
+
+class TournamentMatchSerializer(serializers.ModelSerializer):
+	first_tournament_player = serializers.SerializerMethodField()
+	second_tournament_player = serializers.SerializerMethodField()
+	winner = serializers.SerializerMethodField()
+	class Meta:
+		model = Match
+		fields = ['id', 'tournament_match_id', 'first_tournament_player', 'second_tournament_player', 'winner']
+
+	def get_first_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
+		first_player = match.players.first()
+		if first_player:
+			tournament_player = TournamentPlayer.objects.filter(
+				tournament=match.tournament,
+				user=first_player.user
+			).first()
+			return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
+		return None
+
+	def get_second_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
+		second_player = match.players.all()[1] if match.players.count() > 1 else None
+		if second_player:
+			tournament_player = TournamentPlayer.objects.filter(
+				tournament=match.tournament,
+				user=second_player.user
+			).first()
+			return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
+		return None
+	
+	def get_winner(self, match: Match) -> TournamentPlayerSerializer | None:
+		if match.state == MatchState.FINISHED:
+			winning_player = match.players.filter(match_winner=True).first()
+			if winning_player:
+				winning_tournament_player = TournamentPlayer.objects.filter(
+					tournament=match.tournament,
+					user=winning_player.user
+				).first()
+				return TournamentPlayerSerializer(winning_tournament_player).data if winning_tournament_player else None
+		return None
 
 class TournamentCreationSerializer(serializers.ModelSerializer):
 	host_user_display_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
@@ -43,3 +85,37 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 		self.validate_tournament_player_amount(data.get('player_amount'))
 
 		return data
+	
+class TournamentInProgressSerializer(serializers.ModelSerializer):
+	state_display = serializers.CharField(source='get_state_display', read_only=True)
+	tournament_players = TournamentPlayerSerializer(many=True, read_only=True)
+	matches = TournamentMatchSerializer(many=True, read_only=True)
+	next_match = serializers.SerializerMethodField()
+
+	class Meta:
+		model = Tournament
+		fields = [
+			'id',
+			'host_user',
+			'name',
+			'state',
+			'state_display',
+			'expires_ts',
+			'player_amount',
+			'tournament_players',
+			'matches',
+			'next_match',
+		]
+		
+	def get_next_match(self, tournament: Tournament) -> ReturnDict | None:
+		next_match = tournament.next_match
+		try:
+			next_match = Match.objects.get(tournament=tournament, tournament_match_id=next_match)
+			serializer = TournamentMatchSerializer(next_match)
+			# remove 'winner' from serializer
+			if 'winner' in serializer.fields:
+				serializer.fields.pop('winner')
+			return serializer.data
+
+		except Match.DoesNotExist:
+			return None
