@@ -8,10 +8,11 @@ import profilePage from './pages/profilePage.js';
 import playPage from './pages/playPage.js';
 import pongPage from './pages/pongPage.js';
 import leaderBoard from './pages/leaderboardPage.js';
-import show404Page from './pages/404Page.js';
+import view404Page from './pages/view404.js';
+import modal from './pages/modal.js';
 
 export default [
-	{ path: '/404', view: show404Page },
+	{ path: '/404', view: view404Page },
 	{ path: '/', view: landingPage },
 	{ path: '/login', view: loginPage },
 	{ path: '/logout', view: logoutPage },
@@ -22,4 +23,5 @@ export default [
 	{ path: '/pong', view: pongPage },
 	{ path: '/leaderboard', view: leaderBoard },
 	{ path: '/profile/:id', view: profilePage },
+	{ path: '/modal', view: modalPage}
 ];
