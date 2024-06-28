@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			e.preventDefault();
 			navigateTo(e.target.href);
 		}
+		if (!e.target.matches('[active]') && !e.target.matches("img#menu")) {
+			document.querySelector('aside').removeAttribute('active');
+		}
 	});
-
 	router();
 });

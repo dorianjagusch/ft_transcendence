@@ -1,9 +1,18 @@
-import { navigateTo } from '../router.js';
-import { userNotification } from '../components/userNotification.js';;
+import {navigateTo} from '../router.js';
+import {userNotification} from '../components/userNotification.js';
+import {Navbar} from '../components/navbar.js';
+import SideBar from '../components/sideBar.js';
+import constants from '../constants.js';
 
 export default class {
 	constructor(params) {
 		this.params = params;
+		if (!document.querySelector('nav')) {
+			document.querySelector('header').appendChild(Navbar());
+		}
+		if (!document.querySelector('aside') && localStorage.getItem('isLoggedIn') === 'true') {
+			document.querySelector('body').appendChild(SideBar());
+		}
 	}
 
 	setTitle(title) {
@@ -18,10 +27,10 @@ export default class {
 		return;
 	}
 
-	notify(message, type='success') {
+	notify(message, type = 'success') {
 		userNotification(message, type);
 		setTimeout(() => {
-			document.querySelector('.notification').remove();
+			document.querySelector('.notification').innerText = '';
 		}, 3000);
 	}
 
@@ -29,10 +38,9 @@ export default class {
 		const main = document.querySelector('main');
 		main.innerHTML = '';
 		elements.forEach((element) => {
-			if (element){
+			if (element) {
 				main.appendChild(element);
 			}
 		});
 	}
 }
-
