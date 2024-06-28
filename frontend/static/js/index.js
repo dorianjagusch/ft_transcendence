@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			navigateTo(e.target.href);
 		}
 		if (!e.target.matches('[active]') && !e.target.matches("img#menu")) {
-			document.querySelector('aside').removeAttribute('active');
+			document.querySelector('aside')?.removeAttribute('active');
 		}
 	});
 	router();

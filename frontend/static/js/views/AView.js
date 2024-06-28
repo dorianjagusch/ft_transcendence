@@ -4,9 +4,12 @@ import {Navbar} from '../components/navbar.js';
 import SideBar from '../components/sideBar.js';
 import constants from '../constants.js';
 
-export default class {
+export default class Aview{
 	constructor(params) {
 		this.params = params;
+		if (this.constructor == Aview) {
+			throw new Error("Abstract classes can't be instantiated.");
+		}
 		if (!document.querySelector('nav')) {
 			document.querySelector('header').appendChild(Navbar());
 		}

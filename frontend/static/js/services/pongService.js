@@ -1,7 +1,7 @@
-import RequestService from './requestService.js';
+import ArequestService from './ArequestService.js';
 import backendURL from '../constants.js';
 
-class PongService extends RequestService {
+class PongService extends ArequestService {
 	constructor() {
 		super();
 	}
