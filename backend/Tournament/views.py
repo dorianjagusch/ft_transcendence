@@ -15,6 +15,7 @@ from .exceptions import TournamentSetupException, \
 from .tournamentState import TournamentState
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated, \
+											must_not_be_username, \
 											check_that_valid_tournament_request, \
 											check_that_tournament_players_are_still_active
 
@@ -38,3 +39,28 @@ class TournamentListView(APIView):
 		except Exception as e:
 			return Response(TournamentSetupException(e))
 
+class TournamentPlayerListView(APIView):
+	@method_decorator(must_be_authenticated)
+	@method_decorator(check_that_valid_tournament_request)
+	@method_decorator(must_not_be_username)
+	def post(self, request, tournament_id):
+		username = request.data.get('username', None)
+		password = request.data.get('password', None)
+		display_name = request.data.get('display_name', None)
+
+		if not username or not password:
+			return Response({"error": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+		user = authenticate(username=username, password=password)
+		if user is None:
+			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+		try:
+			tournament_player = TournamentPlayer.objects.create(
+				tournament_id=tournament_id,
+				user=user,
+				display_name=display_name,
+			)
+			tournament_player_serializer = TournamentPlayerSerializer(tournament_player)
+			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
+		except Exception as e:
+			return Response(TournamentSetupException(e))
