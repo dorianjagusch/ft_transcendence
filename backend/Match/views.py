@@ -23,7 +23,7 @@ class MatchView(APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
         if not token.is_active or token.is_expired():
-            return Response({'error': 'Expired token'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'Expired token'}, status=status.HTTP_401_UNAUTHORIZED)
         if token.user_left_side.id != request.user.id:
             return Response({'error': 'You are not the host user in the token'}, status=status.HTTP_403_FORBIDDEN)
 

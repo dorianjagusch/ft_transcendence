@@ -1,6 +1,7 @@
 import json
 from functools import wraps
 from django.utils import timezone
+from django.http import HttpResponseForbidden, HttpResponseNotAllowed
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -22,8 +23,7 @@ def must_be_authenticated(view_func):
 		request = args[0] if args else None
 
 		if not request.user.is_authenticated:
-			return HttpResponseForbidden("You must be logged in to access this resource.")
-
+			return Response({'message': "Please log in to access this resource.",'error': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 		return view_func(*args, **kwargs)
 	return wrapper
 
