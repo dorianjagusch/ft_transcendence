@@ -42,7 +42,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         key_press = text_data.strip()
         #move = get_move(key_press)
-        self.game.update_positions(key_press)
+        self.game.update_positions(key_press)      
         if self.game.game_stats.game_over == True:
             await self.send_positions()
 
@@ -87,12 +87,10 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.match = Match.objects.get(pk=match_id)
             self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
             self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
-
             return True            
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
             return False
     
-
     @database_sync_to_async
     def save_match_final_results(self):
         # Save scores when the game is over
@@ -107,7 +105,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         self.player_left.save()
         self.player_right.save()
-
+        
     @database_sync_to_async
     def start_match(self, match):
         match.start_match()

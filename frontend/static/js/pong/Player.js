@@ -11,9 +11,10 @@ class Player {
 		const playerMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 		const player = new THREE.Mesh(playerGeometry, playerMaterial);
 		if (this.isLeft) {
-			player.position.set(game.margin + players.width, game.height / 2, 0);
+			player.position.set(game.margin + players.width / 2, Math.floor(game.height / 2), 0);
+
 		} else {
-			player.position.set(game.width - game.margin - players.width, game.height / 2, 0);
+			player.position.set(game.width - game.margin - players.width / 2, Math.floor(game.height / 2), 0);
 		}
 		return player;
 	}

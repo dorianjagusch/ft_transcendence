@@ -16,8 +16,8 @@ class PongStatus:
 
 
     def update_positions(self, move):
-        if not self.game_stats.game_started and move in (PLAYER_RIGHT_UP, PLAYER_RIGHT_DOWN):
-            self.game.kick_start_game(self, move)
+        if not self.game_stats.game_started and move == START_PAUSE_GAME:
+            self.game.kick_start_game(self)
         if move == PLAYER_LEFT_UP:
             self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
         elif move == PLAYER_LEFT_DOWN:
@@ -26,8 +26,8 @@ class PongStatus:
             self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
         elif move == PLAYER_RIGHT_DOWN:
             self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
-        self.player_right.y = self.game.check_boundery(self.player_right.y)
-        self.player_left.y = self.game.check_boundery(self.player_left.y)
+        self.player_right.y = self.game.check_boundary(self.player_right.y)
+        self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
     def update_ball_position(self):
@@ -36,13 +36,11 @@ class PongStatus:
     def get_consts(self):
         game_consts = {
             'players': {
-                'width': PLAYER_WIDTH,
-                'height': PLAYER_HEIGHT,
+                'width': 2 * HALF_PLAYER_WIDTH,
+                'height': 2 * HALF_PLAYER_HEIGHT,
             },
             'ball': {
-                'width': BALL_WIDTH,
-                'height': BALL_HEIGHT,
-                'speed': BALL_SPEED
+                'size': 2 * HALF_BALL_SIZE
             },
             'game': {
                 'margin': WALL_MARGIN,

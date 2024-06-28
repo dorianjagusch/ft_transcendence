@@ -12,26 +12,31 @@ class PongGame {
 		this.scene;
 		this.camera;
 		this.playgroundHeight = constants.game.playgroundHeight;
+		this.sizeFactor = null;
 		this.setupGame(constants);
 	}
 
 	setupGame(constants) {
-		const canvasSizing = 0.8;
+		this.sizeFactor = window.innerWidth / constants.game.width;
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(
-			Math.floor(window.innerWidth * canvasSizing),
-			Math.floor(window.innerHeight * canvasSizing)
+			Math.floor(window.innerWidth),
+			Math.floor(constants.game.height * this.sizeFactor)
 		);
 		document.querySelector('#pong').appendChild(this.renderer.domElement);
 
 		this.camera = new THREE.PerspectiveCamera(
-			45,
-			window.innerWidth / window.innerHeight,
+			90,
+			constants.game.width / constants.game.height,
 			1,
 			500
 		);
-		this.camera.position.set(90, 50, 200);
-		this.camera.lookAt(90, 50, 0);
+		this.camera.position.set(
+			constants.game.width / 2,
+			constants.game.height / 2,
+			constants.game.height / 2
+		);
+		this.camera.lookAt(constants.game.width / 2, constants.game.height / 2, 0);
 
 		this.scene = new THREE.Scene();
 
