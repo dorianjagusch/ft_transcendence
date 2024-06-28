@@ -16,7 +16,8 @@ from .tournamentState import TournamentState
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
-											check_that_valid_tournament_request, \
+											check_that_valid_tournament_lobby_request, \
+											check_that_valid_tournament_in_progress_request, \
 											check_that_tournament_players_are_still_active
 
 # Create your views here.
@@ -41,7 +42,7 @@ class TournamentListView(APIView):
 
 class TournamentPlayerListView(APIView):
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_request)
+	@method_decorator(check_that_valid_tournament_lobby_request)
 	@method_decorator(must_not_be_username)
 	def post(self, request, tournament_id):
 		username = request.data.get('username', None)
