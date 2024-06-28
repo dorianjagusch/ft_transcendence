@@ -22,13 +22,16 @@ from shared_utilities.decorators import must_be_authenticated, \
 											check_that_valid_tournament_in_progress_request, \
 											check_that_tournament_players_are_still_active
 
+import sys
+
 # Create your views here.
 class TournamentListView(APIView):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):
 		body_data = request.data.copy()
-		body_data['host_user'] = request.user
-		tournament_creation_serializer = TournamentCreationSerializer(body_data)
+		body_data['host_user'] = request.user.id
+
+		tournament_creation_serializer = TournamentCreationSerializer(data=body_data)
 		if not tournament_creation_serializer.is_valid():
 			return Response({'error': 'invalid request for tournament creation'}, status=status.HTTP_400_BAD_REQUEST)
 		
@@ -40,7 +43,7 @@ class TournamentListView(APIView):
 				'tournament_player': host_tournament_player_serializer.data
 			}, status=status.HTTP_201_CREATED) 
 		except Exception as e:
-			return Response(TournamentSetupException(e))
+			return Response({'error': str(e)},status=status.HTTP_403_FORBIDDEN)
 		
 class TournamentDetailView(APIView):
 	@method_decorator(must_be_authenticated)
@@ -51,29 +54,25 @@ class TournamentDetailView(APIView):
 
 		If tournament is in progress, return next match url.
 		'''
-		tournament = Tournament.objects.get(tournament_id)
-
+		tournament = Tournament.objects.get(id=tournament_id)
 		if tournament.state == TournamentState.LOBBY:
 			try:
 				TournamentSetupManager.start_tournament(tournament)
-				tournament
 				serializer = TournamentInProgressSerializer(tournament)
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			except Exception as e:
-				return Response(TournamentSetupException(e))
+				return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
 		elif tournament.state == TournamentState.IN_PROGRESS:
 			pass
 
 class TournamentPlayerListView(APIView):
-	@method_decorator(must_be_authenticated)
 	@method_decorator(check_that_valid_tournament_lobby_request)
-	@method_decorator(must_not_be_username)
+	@method_decorator(must_be_authenticated)
 	def post(self, request, tournament_id):
 		username = request.data.get('username', None)
 		password = request.data.get('password', None)
 		display_name = request.data.get('display_name', None)
-
 		if not username or not password:
 			return Response({"error": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 		user = authenticate(username=username, password=password)
@@ -93,7 +92,7 @@ class TournamentPlayerListView(APIView):
 			tournament_player_serializer = TournamentPlayerSerializer(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response(TournamentSetupException(e))
+			return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
 class TournamentPlayerDetailView(APIView):
 	def get(self, request, tournament_id, tournamentplayer_id):

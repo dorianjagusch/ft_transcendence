@@ -45,7 +45,7 @@ class Tournament(models.Model):
 class TournamentPlayer(models.Model):
 	tournament = models.ForeignKey(Tournament, related_name='players', on_delete=models.CASCADE)
 	user = models.ForeignKey(User, related_name='tournament_players', on_delete=models.CASCADE)
-	display_name = models.CharField(max_length=30, null=False, blank=False, default=None)
+	display_name = models.CharField(max_length=30, null=True, blank=True, default=None)
 
 	class Meta:
 		unique_together = ('tournament', 'user')
