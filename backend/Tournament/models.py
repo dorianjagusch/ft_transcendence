@@ -33,7 +33,7 @@ class Tournament(models.Model):
 			self.save()
 
 	def abort_tournament(self):
-		if self.state == TournamentState.IN_PROGRESS.value:
+		if self.state in (TournamentState.LOBBY, TournamentState.IN_PROGRESS.value):
 			self.state = TournamentState.ABORTED.value
 			self.end_ts = timezone.now()
 			self.save()
