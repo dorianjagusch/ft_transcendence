@@ -65,7 +65,7 @@ urlpatterns = [
 	path('tournaments/', TournamentListView.as_view()),
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
-	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerListView.as_view()),
+	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
 ]
 
 websocket_urlpatterns = [
