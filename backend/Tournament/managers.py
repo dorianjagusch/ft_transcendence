@@ -86,7 +86,7 @@ class TournamentSetupManager:
         if player_amount != tournament.player_amount:
             raise TournamentSetupException(f"tournament must have {tournament.player_amount} players to start, but currently it has {player_amount} players.")
         TournamentSetupManager.setup_tournament_matches(tournament)
-        tournament.start_ts = timezone.now()
+        tournament.start_tournament()
         tournament.save()
 
 
