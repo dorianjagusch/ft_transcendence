@@ -92,18 +92,17 @@ class TournamentSetupManager:
 
 class TournamentInProgressManager:
     @staticmethod
-    def make_sure_active_tournament_is_still_valid(tournament: Tournament) -> None:
+    def make_sure_tournament_has_not_expired(tournament: Tournament) -> None:
         if timezone.now() > tournament.expires_ts:
             tournament.abort_tournament()
             raise TournamentInProgressException(f"Tournament not finished in time; tournament aborted")
-        TournamentInProgressManager.make_sure_users_in_active_tournament_are_still_active(tournament)
-        
+
     @staticmethod
     def make_sure_users_in_active_tournament_are_still_active(tournament: Tournament) -> None:       
         tournament_players = TournamentPlayer.objects.filter(tournament=tournament)
         inactive_users = tournament_players.filter(user__is_active=False)
         if inactive_users.exists():
-            raise TournamentInProgressException(f"An user in the tournament has deleted their account; tournament aborted")
+            raise TournamentInProgressException(f"An user in the unfinished tournament has deleted their account; tournament aborted")
 
     @staticmethod
     def assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player: TournamentPlayer) -> None:

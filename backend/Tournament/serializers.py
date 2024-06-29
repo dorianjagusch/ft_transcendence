@@ -6,6 +6,13 @@ from .models import Tournament, \
 from Match.models import Match
 from Match.matchState import MatchState
 
+class TournamentSerializer(serializers.ModelSerializer):
+	state_display = serializers.CharField(source='get_state_display', read_only=True)
+
+	class Meta:
+		model = Tournament
+		fields = ['id', 'state_display']
+
 class TournamentPlayerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = TournamentPlayer

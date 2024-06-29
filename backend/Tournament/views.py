@@ -6,7 +6,8 @@ from django.utils.decorators import method_decorator
 
 from .models import Tournament, \
 						TournamentPlayer
-from .serializers import TournamentCreationSerializer, \
+from .serializers import TournamentSerializer, \
+	 						TournamentCreationSerializer, \
 							TournamentPlayerSerializer, \
 							TournamentInProgressSerializer
 from .managers import TournamentSetupManager, \
@@ -17,10 +18,7 @@ from .tournamentState import TournamentState
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
-											check_that_valid_tournament_request, \
-											check_that_valid_tournament_lobby_request, \
-											check_that_valid_tournament_in_progress_request, \
-											check_that_tournament_players_are_still_active
+											check_that_valid_tournament_request
 
 import sys
 
@@ -46,9 +44,15 @@ class TournamentListView(APIView):
 			return Response({'error': str(e)},status=status.HTTP_403_FORBIDDEN)
 		
 class TournamentDetailView(APIView):
+	def get(self, request, tournament_id):
+		tournament = Tournament.objects.filter(id=tournament_id).first()
+		if not tournament:
+			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+		serializer = TournamentSerializer(tournament)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_request)
-	@method_decorator(check_that_tournament_players_are_still_active)
+	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
 	def post(self, request, tournament_id):
 		'''If tournament is in lobby, start tournament.
 
@@ -66,9 +70,18 @@ class TournamentDetailView(APIView):
 		elif tournament.state == TournamentState.IN_PROGRESS:
 			pass
 
-class TournamentPlayerListView(APIView):
-	@method_decorator(check_that_valid_tournament_lobby_request)
 	@method_decorator(must_be_authenticated)
+	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
+	def delete(self, request, tournament_id):
+		tournament = Tournament.objects.filter(id=tournament_id).first()
+		if not tournament:
+			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+		tournament.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+
+class TournamentPlayerListView(APIView):
+	@method_decorator(must_be_authenticated)
+	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY]))
 	def post(self, request, tournament_id):
 		username = request.data.get('username', None)
 		password = request.data.get('password', None)
@@ -98,18 +111,18 @@ class TournamentPlayerDetailView(APIView):
 	def get(self, request, tournament_id, tournamentplayer_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
-		if not tournament_player.exists():
+		if not tournament_player:
 			return Response({'error': f'Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}'}, status=status.HTTP_404_NOT_FOUND)
 		
 		tournament_player_serializer = TournamentPlayerSerializer(tournament_player)
 		return Response(tournament_player_serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_lobby_request)
+	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY]))
 	def delete(self, request, tournament_id, tournamentplayer_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
-		if not tournament_player.exists():
+		if not tournament_player:
 			return Response({'error': f'Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}'}, status=status.HTTP_404_NOT_FOUND)
 		
 		if tournament_player.user == request.user:
