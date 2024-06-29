@@ -5,7 +5,8 @@ from datetime import timedelta
 from .models import Tournament, \
                         TournamentPlayer
 from .serializers import TournamentCreationSerializer
-from .exceptions import TournamentSetupException
+from .exceptions import TournamentSetupException, \
+                            TournamentInProgressException
 from .tournamentState import TournamentState
 from .tournamentMacros import TOURNAMENT_EXPIRY_TIME_SECONDS
 from User.models import User
@@ -90,9 +91,16 @@ class TournamentSetupManager:
 
 class TournamentInProgressManager:
     @staticmethod
+    def make_sure_users_in_active_tournament_are_still_active(tournament: Tournament) -> None:       
+        tournament_players = TournamentPlayer.objects.filter(tournament=tournament)
+        inactive_users = tournament_players.filter(user__is_active=False)
+        if inactive_users.exists():
+            raise TournamentInProgressException(f"An user in the tournament has deleted their account; tournament aborted")
+
+    @staticmethod
     def abort_tournament(tournament: Tournament) -> None:
         tournament.abort_tournament()
-        Match.objects.abort_tournament_matches(tournament)
+        TournamentInProgressManager.abort_tournament_matches(tournament)
 
     @staticmethod
     def abort_tournament_matches(tournament: Tournament):
