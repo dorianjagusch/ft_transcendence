@@ -89,7 +89,15 @@ class TournamentSetupManager:
         tournament.start_ts = timezone.now()
         tournament.save()
 
+
 class TournamentInProgressManager:
+    @staticmethod
+    def make_sure_active_tournament_is_still_valid(tournament: Tournament) -> None:
+        if timezone.now() > tournament.expires_ts:
+            tournament.abort_tournament()
+            raise TournamentInProgressException(f"Tournament not finished in time; tournament aborted")
+        TournamentInProgressManager.make_sure_users_in_active_tournament_are_still_active(tournament)
+        
     @staticmethod
     def make_sure_users_in_active_tournament_are_still_active(tournament: Tournament) -> None:       
         tournament_players = TournamentPlayer.objects.filter(tournament=tournament)
@@ -127,7 +135,6 @@ class TournamentInProgressManager:
         
     @staticmethod
     def update_tournament_with_winning_tournament_player(winning_tournament_player: TournamentPlayer) -> None:
-        print("update_tournament_with_winning_tournament_player", file=sys.stderr)
         try:
             with transaction.atomic():
                 tournament = winning_tournament_player.tournament
