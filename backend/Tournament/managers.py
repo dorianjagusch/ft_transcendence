@@ -124,6 +124,32 @@ class TournamentInProgressManager:
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while assigning the match winner to future match: {e}")
+        
+    @staticmethod
+    def update_tournament_with_winning_tournament_player(winning_tournament_player: TournamentPlayer) -> None:
+        print("update_tournament_with_winning_tournament_player", file=sys.stderr)
+        try:
+            with transaction.atomic():
+                tournament = winning_tournament_player.tournament
+                next_tournament_match_id = tournament.next_match
+                
+                # check if there is a next match in the tournament.
+                # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
+                # if no next match, set user as tournament winner and finish tournament
+                try:
+                    Match.objects.get(
+                        tournament=tournament,
+                        tournament_match_id=next_tournament_match_id
+                    )
+                    TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
+
+                except Match.DoesNotExist:
+                    tournament.winner = winning_tournament_player.user
+                    tournament.state = TournamentState.FINISHED
+                    tournament.save()
+
+        except Exception as e:
+            raise TournamentInProgressException(f"An error occurred while updating tournament data after finished match: {e}")
 
     @staticmethod
     def abort_tournament(tournament: Tournament) -> None:
