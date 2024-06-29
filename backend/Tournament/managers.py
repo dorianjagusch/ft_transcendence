@@ -98,6 +98,34 @@ class TournamentInProgressManager:
             raise TournamentInProgressException(f"An user in the tournament has deleted their account; tournament aborted")
 
     @staticmethod
+    def assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player: TournamentPlayer) -> None:
+        try:
+            with transaction.atomic():
+                tournament = winning_tournament_player.tournament
+                try:
+                    coming_tournament_matches = Match.objects.filter(
+                        tournament=tournament,
+                        tournament_match_id__gte=tournament.next_match
+                    ).order_by('tournament_match_id')
+
+                except Match.DoesNotExist:
+                    raise TournamentInProgressException("No future matchup with empty player slot")
+                
+                for match in coming_tournament_matches:
+                    if len(Player.objects.filter(match=match)) < 2:
+                        Player.objects.create(
+                            user=winning_tournament_player.user,
+                            match=match
+                        )
+                        return
+
+                # something went wrong if we got here
+                raise TournamentInProgressException("No future tournament match with empty players")
+
+        except Exception as e:
+            raise TournamentInProgressException(f"An error occurred while assigning the match winner to future match: {e}")
+
+    @staticmethod
     def abort_tournament(tournament: Tournament) -> None:
         tournament.abort_tournament()
         TournamentInProgressManager.abort_tournament_matches(tournament)
