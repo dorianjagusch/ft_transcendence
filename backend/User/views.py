@@ -6,6 +6,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.crypto import get_random_string
 
 from .models import User
 from Friends.models import Friend
@@ -38,14 +39,6 @@ class UserListView(APIView):
 		user = User.objects.create_user(username=username, password=password)
 		outputSerializer = UserOutputSerializer(user)
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
-	
-	def delete(self, request):
-		user = request.user
-		print("heheh",  request.user, flush=True)
-		user.username = "hehe nice try"
-		user.is_online = False
-		user.save()
-		return Response("nice", status=status.HTTP_200_OK)
 
 class UserDetailView(APIView):
 	def get(self, request, user_id):
@@ -83,12 +76,25 @@ class UserDetailView(APIView):
 		try:
 			logout(request)
 			user = User.objects.get(pk=user_id)
+			print("Before delete:", user.__dict__, flush=True) # for testing
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		except:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)
+		user.username = get_random_string(length=30)
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insertTS = None
+		user.last_login = None
+		user.is_online = False
+		# profile_picture = None
+	
+		user.save()
+		print("After delete:", user.__dict__, flush=True) # for testing
+		return Response("nice", status=status.HTTP_200_OK) # for testing
+		# return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
