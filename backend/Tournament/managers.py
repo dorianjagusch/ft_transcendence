@@ -84,7 +84,7 @@ class TournamentSetupManager:
     def start_tournament(tournament: Tournament) -> TournamentCreationSerializer:
         player_amount = tournament.players.count()
         if player_amount != tournament.player_amount:
-            raise TournamentSetupException(f"tournament must have {tournament.player_amount} players to start, but currently it has {player_amount} players.")
+            raise TournamentSetupException(f"Tournament must have {tournament.player_amount} players to start, but currently it has {player_amount} players.")
         TournamentSetupManager.setup_tournament_matches(tournament)
         tournament.start_tournament()
         tournament.save()
