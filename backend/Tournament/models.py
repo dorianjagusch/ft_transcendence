@@ -16,7 +16,7 @@ class Tournament(models.Model):
 	insert_ts = models.DateTimeField(auto_now_add=True)
 	start_ts = models.DateTimeField(null=True, blank=True)
 	end_ts = models.DateTimeField(null=True, blank=True)
-	updated_ts = models.DateTimeField(auto_now=True)
+	update_ts = models.DateTimeField(auto_now=True)
 
 	expires_ts = models.DateTimeField(null=True, blank=True)
 
