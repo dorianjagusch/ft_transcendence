@@ -144,7 +144,7 @@ def check_that_valid_tournament_request(tournament_states: Iterable[TournamentSt
 
 			except TournamentInProgressException as e:
 				TournamentInProgressManager.abort_tournament(tournament)
-				return HttpResponseForbidden(f"{str(e)}")
+				return HttpResponseForbidden(f"{str(e)}; tournament aborted!")
 			
 			return view_func(*args, **kwargs)
 		return wrapper
