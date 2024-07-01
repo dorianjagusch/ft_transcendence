@@ -94,7 +94,7 @@ class TournamentPlayerListView(APIView):
 
 		tournament = Tournament.objects.get(id=tournament_id)
 		if tournament.players.count() >= tournament.player_amount:
-			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_403_FORBIDDEN)
+			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 			tournament_player = TournamentPlayer.objects.create(
