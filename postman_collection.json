@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "3b021b9f-7ffe-44ae-b2e8-31dd13624273",
-		"name": "Rest API tests",
+		"name": "Rest API tests [OLD collection]]",
 		"description": "A collection of REST API tests for the backend.\n\nBefore running the tests, make sure that the database is empty, as the tests might give the incorrect results if there is anything in the database prior to running the tests.  \nTo do this, go to the backend container shell and write \\`python manage.py flush --no-input\\`\n\nBe aware that the tests need to be run in order, so always run the User app tests -folder before the Friends app tests -folder, for example.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34213706"
@@ -2020,7 +2020,7 @@
 					"response": []
 				},
 				{
-					"name": "launch single match against guest2",
+					"name": "ORIG launch single match against guest2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2067,6 +2067,44 @@
 					"response": []
 				},
 				{
+					"name": "launch single match against guest2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{user123_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{user123_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{guest2_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "launch test match",
 					"request": {
 						"method": "GET",
@@ -2098,6 +2136,1189 @@
 				}
 			],
 			"description": "These are individual requests without any tests."
+		},
+		{
+			"name": "OLD Tournament tests (IGNORE)",
+			"item": [
+				{
+					"name": "create t_guest_1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_1\",\n    \"password\": \"t_guest_1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create t_guest_2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_2\",\n    \"password\": \"t_guest_2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create t_guest_3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_3\",\n    \"password\": \"t_guest_3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create t_host",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"t_host_id\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_host\",\n    \"password\": \"t_host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login t_host",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"t_host_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"t_host_sessionid\", sessionIdCookie.value);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const jar = pm.cookies.jar();",
+									"",
+									"jar.clear('localhost', function (error) {",
+									"  console.log(\"error when clearing cookie jar\");",
+									"  console.log(error);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_host\",\n    \"password\": \"t_host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/login/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "t_guest_1 Authentication",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"t_guest_1_token\", jsonData.token.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_1\",\n    \"password\": \"t_guest_1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/tournament/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"tournament",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deactivate t_guest_1 token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{t_guest_1_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/tournament/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"tournament",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "t_guest_1 Authentication Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"t_guest_1_token\", jsonData.token.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_1\",\n    \"password\": \"t_guest_1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/tournament/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"tournament",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "t_guest_2 Authentication",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"t_guest_2_token\", jsonData.token.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_2\",\n    \"password\": \"t_guest_2\",\n    \"custom_name\": \"t_guest_2_custom_name\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/tournament/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"tournament",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "t_guest_3 Authentication",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"t_guest_3_token\", jsonData.token.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_3\",\n    \"password\": \"t_guest_3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/tournament/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"tournament",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create tournament",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Store the token value in a collection variable",
+									"pm.test(\"Store tournament_id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"tournament_id\", jsonData.tournament_id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host_user\": {{t_host_id}},\n    \"host_user_custom_name\": \"host_custom\",\n    \"player_amount\": 4,\n    \"tokens\": [\n        \"{{t_guest_1_token}}\",\n        \"{{t_guest_2_token}}\",\n        \"{{t_guest_3_token}}\"\n    ]\n}\n\n// {\n//     \"host_user\": 2,\n//     \"host_user_custom_name\": \"host_custom\",\n//     \"player_amount\": 4,\n//     \"tokens\": [\n//         \"9dcba440-b680-48eb-bdea-7a89db7084ef\",\n//         \"fa3c44be-e26f-43f8-bd68-86fc98e0ad37\",\n//         \"9a3d41a8-af70-403b-9226-6dee685ace2a\"\n//     ]\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get tournament",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start tournament match",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tournament tests",
+			"item": [
+				{
+					"name": "create t_guest_1 Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_1\",\n    \"password\": \"t_guest_1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create t_guest_2 Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_2\",\n    \"password\": \"t_guest_2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create t_guest_3 Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_3\",\n    \"password\": \"t_guest_3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create t_host Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"t_host_id\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_host\",\n    \"password\": \"t_host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login t_host Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var xsrfCookie = postman.getResponseCookie(\"csrftoken\");",
+									"pm.collectionVariables.set(\"t_host_csrftoken\", xsrfCookie.value);",
+									"var sessionIdCookie = postman.getResponseCookie(\"sessionid\");",
+									"pm.collectionVariables.set(\"t_host_sessionid\", sessionIdCookie.value);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const jar = pm.cookies.jar();",
+									"",
+									"jar.clear('localhost', function (error) {",
+									"  console.log(\"error when clearing cookie jar\");",
+									"  console.log(error);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_host\",\n    \"password\": \"t_host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/login/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"tournament_id\", jsonData.tournament_id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"player_amount\": 4,\n    \"name\": \"custom_tournament_name\",\n    \"host_user_display_name\": \"custom_host\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add guest_1 to tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_1\",\n    \"password\": \"t_guest_1\",\n    \"display_name\": \"onsie\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournament_id}}",
+								"players",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add guest_2 to tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_2\",\n    \"password\": \"t_guest_2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournament_id}}",
+								"players",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add guest_3 to tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"t_guest_3\",\n    \"password\": \"t_guest_3\",\n    \"display_name\": \"three\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournament_id}}",
+								"players",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "launch tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Store the token value in a collection variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"tournament_id\", jsonData.tournament_id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrftoken",
+								"value": "{{t_host_csrftoken}}",
+								"type": "text"
+							},
+							{
+								"key": "sessionid",
+								"value": "{{t_host_sessionid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tournaments/1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tournaments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -2185,6 +3406,41 @@
 		},
 		{
 			"key": "guest2_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "t_host_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "t_host_csrftoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "t_host_sessionid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "t_guest_1_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "t_guest_2_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "t_guest_3_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tournament_id",
 			"value": "",
 			"type": "string"
 		}
