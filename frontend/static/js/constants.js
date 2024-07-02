@@ -5,7 +5,9 @@ const logoutURL = `${baseURL}logout/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
+const pongURL = `${baseURL}match/test`;
 
+const allowedPaths = ['/login', '/register', '/', '/pong'];
 
 const problemWithFetchMsg = "There was a problem with the fetch operation: ";
 
@@ -17,8 +19,7 @@ const FRIENDSHIPSTATUS = {
 };
 
 const GAMES = {
-	"Pong": 0,
-	"Game2": 1,
+	"Pong": 0
 }
 
 export default {
@@ -29,6 +30,8 @@ export default {
 	leaderboardURL,
 	settingsURL,
 	friendURL,
+	pongURL,
+	allowedPaths,
 	FRIENDSHIPSTATUS,
 	GAMES
 };

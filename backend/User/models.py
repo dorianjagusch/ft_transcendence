@@ -13,7 +13,7 @@ class User(AbstractBaseUser):
 	insertTS = models.DateTimeField(_('insertTS'), auto_now_add=True, blank=True, null=True)
 	last_login = models.DateTimeField(_('last_login'), blank=True, null=True)
 	is_online = models.BooleanField(_('is_online'), default=False)
-	profile_picture_path = models.CharField(_'profile_picture_path', max_length=200, blank=True, null=True)
+	# profile_picture_path = models.CharField(_'profile_picture_path', max_length=200, blank=True, null=True)
 
 	objects = UserManager()
 

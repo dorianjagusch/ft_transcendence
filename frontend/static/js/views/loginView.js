@@ -3,6 +3,7 @@ import LoginForm from '../components/formComponents/loginForm.js';
 import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
 import AView from './AView.js';
+import SideBar from '../components/sideBar.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -19,15 +20,21 @@ export default class extends AView {
 			return;
 		}
 		const loginService = new LoginService();
-		await loginService.postRequest({username, password})
-			.then(() => {
-				localStorage.setItem('username', username);
-				localStorage.setItem('isLoggedIn', true);
-				this.navigateTo('/dashboard');
-			})
-			.catch((error) => {
-				console.error('There has been a problem with your fetch operation:', error);
-			});
+		try {
+			const user = await loginService.postRequest({username, password});
+			localStorage.setItem('username', user.username);
+			localStorage.setItem('isLoggedIn', true);
+			localStorage.setItem('user_id', user.id)
+			this.navigateTo('/dashboard');
+		} catch (error) {
+			if (!error.status){
+				console.error('Could not connect to server:', error);
+			} else if (error.status === 401) {
+				this.notify("Username or password is incorrect. Try again.", 'error');
+			} else {
+				this.notify(error);
+			}
+		}
 	};
 
 	appendEventListeners() {

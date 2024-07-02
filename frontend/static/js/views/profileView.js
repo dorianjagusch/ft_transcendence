@@ -5,10 +5,10 @@ import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import profileDescription from '../components/profileComponents/profileDescription.js';
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
-import { profileStats } from '../components/profileComponents/profileStats.js';
+import {profileStats} from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import constants from '../constants.js';
-import { scrollContainer } from '../components/scrollContainer.js';
+import {scrollContainer} from '../components/scrollContainer.js';
 import UserService from '../services/userService.js';
 import FriendService from '../services/friendService.js';
 
@@ -20,7 +20,7 @@ export default class extends AView {
 		this.acceptHandler = this.acceptHandler.bind(this);
 		this.declineHandler = this.declineHandler.bind(this);
 		this.selectButtons = this.selectButtons.bind(this);
-		this.friendId = params.id
+		this.friendId = params.id;
 	}
 
 	selectButtons(relationship) {
@@ -28,12 +28,28 @@ export default class extends AView {
 			case constants.FRIENDSHIPSTATUS.FRIEND:
 				return null;
 			case constants.FRIENDSHIPSTATUS.NOTFRIEND:
-				return [{className: 'accept-btn', textContent: 'Add Friend', handler: this.acceptHandler}];
+				return [
+					{
+						className: 'accept-btn',
+						textContent: 'Add Friend',
+						handler: this.acceptHandler,
+					},
+				];
 			case constants.FRIENDSHIPSTATUS.PENDINGSENT:
-				return [{className: 'decline-btn', textContent: 'Cancel Request', handler: this.declineHandler}];
+				return [
+					{
+						className: 'decline-btn',
+						textContent: 'Cancel Request',
+						handler: this.declineHandler,
+					},
+				];
 			case constants.FRIENDSHIPSTATUS.PENDINGRECEIVED:
 				return [
-					{className: 'decline-btn', textContent: 'Decline', handler: this.declineHandler},
+					{
+						className: 'decline-btn',
+						textContent: 'Decline',
+						handler: this.declineHandler,
+					},
 					{className: 'accept-btn', textContent: 'Accept', handler: this.acceptHandler},
 				];
 			default:
@@ -41,33 +57,28 @@ export default class extends AView {
 		}
 	}
 
-	acceptHandler() {
+	async acceptHandler() {
 		const data = {
-			friend_id: this.friendId
-		}
-		console.log(data.friend_id);
+			friend_id: this.friendId,
+		};
 
-		this.friendService
-			.postRequest(data)
-			.then(() => {
-				super.notify('Friendship created successfully.');
-				super.navigateTo(`/profile/${this.friendId}`);
-			})
-			.catch((error) => {
-				super.notify(error);
-			});
+		try {
+			await friendService.postRequest(data);
+			super.notify('Friendship created successfully.');
+			super.navigateTo(`/profile/${this.friendId}`);
+		} catch (error) {
+			super.notify(error);
+		}
 	}
 
-	declineHandler() {
-		this.friendService
-			.deleteRequest(this.friendId)
-			.then(() => {
-				super.notify('Friendship declined successfully.');
-				super.navigateTo(`/profile/${this.friendId}`);
-			})
-			.catch((error) => {
-				super.notify(error);
-			});
+	async declineHandler() {
+		try {
+			await friendService.deleteRequest(this.friendId);
+			super.notify('Friendship declined successfully.');
+			super.navigateTo(`/profile/${this.friendId}`);
+		} catch (error) {
+			super.notify(error);
+		}
 	}
 
 	async getHTML() {
@@ -77,7 +88,7 @@ export default class extends AView {
 			img: './static/assets/img/default-user.png',
 			description:
 				'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, aliquid! Reiciendis nobis, dolores optio eaque tempora debitis nulla vel magnam nam soluta quas doloribus sit odit eligendi architecto distinctio voluptas recusandae quos necessitatibus tenetur nisi po',
-			friendship: constants.FRIENDSHIPSTATUS.FRIEND
+			friendship: constants.FRIENDSHIPSTATUS.FRIEND,
 		};
 
 		try {
@@ -187,21 +198,23 @@ export default class extends AView {
 
 		const buttons = this.selectButtons(friendship);
 		const actionBar = buttonBar(buttons);
-		const userPlacement = arrayToElementsList(userData.placements, 'user-placement', smallPlacementCard);
+		const userPlacement = arrayToElementsList(
+			userData.placements,
+			'user-placement',
+			smallPlacementCard
+		);
 		const userDescription = profileDescription(userData.user.description);
 
-		const userStats = friendship === "friend"
-			? scrollContainer(
-				userData.stats,
-				profileStats, "row", "stat-list")
-			: null;
+		const userStats =
+			friendship === 'friend'
+				? scrollContainer(userData.stats, profileStats, 'row', 'stat-list')
+				: null;
 		userStats?.classList.add('play-stats');
 
-		const userHistory = friendship === "friend"
-			? scrollContainer(
-				userData.playHistory,
-				profilePlayHistory, "col", "history-list")
-			: null;
+		const userHistory =
+			friendship === 'friend'
+				? scrollContainer(userData.playHistory, profilePlayHistory, 'col', 'history-list')
+				: null;
 		userHistory?.classList.add('play-history');
 
 		this.updateMain(
@@ -215,3 +228,11 @@ export default class extends AView {
 		);
 	}
 }
+
+// TODO: Implement the profile page view
+
+// 3. Set up event handler for friend request buttons
+// 4. Set up event handler for accept/decline friend request buttons
+// 5. Set up event handler for cancel friend request buttons
+// 6. Set up event handler for unfriend buttons
+// 7. Set up event handler for invite to game buttons

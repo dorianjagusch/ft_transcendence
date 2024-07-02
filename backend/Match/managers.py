@@ -5,8 +5,6 @@ from .playerMatchStatus import PlayerMatchStatus
 from Player.models import Player
 from User.models import User
 
-import sys
-
 class MatchManager(models.Manager):
 	def get_matches_with_user(self, user_id, match_status):
 		try:

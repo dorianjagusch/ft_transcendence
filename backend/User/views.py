@@ -95,7 +95,7 @@ class UserLoginView(APIView):
 			login(request, user)
 			# set additional session data if necessary
 			request.session['is_authenticated'] = True
-			return Response({"message": "User login successful"}, status=status.HTTP_202_ACCEPTED)
+			return Response(UserOutputSerializer(user).data, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 

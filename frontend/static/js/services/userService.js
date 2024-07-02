@@ -1,7 +1,7 @@
 import backendURL from '../constants.js';
-import RequestService from './requestService.js'
+import ArequestService from './ArequestService.js';
 
-class UserService extends RequestService {
+class UserService extends ArequestService {
 	constructor() {
 		super();
 	}
@@ -20,7 +20,8 @@ class UserService extends RequestService {
 			JSON.stringify({
 				username: username,
 				password: password,
-		}));
+			})
+		);
 	}
 
 	async putRequest(id, {username, password}) {
@@ -30,7 +31,8 @@ class UserService extends RequestService {
 			JSON.stringify({
 				username: username,
 				password: password,
-		}));
+			})
+		);
 	}
 
 	async deleteRequest(id) {

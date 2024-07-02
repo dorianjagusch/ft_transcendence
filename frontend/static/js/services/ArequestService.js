@@ -1,18 +1,29 @@
 import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
+import customErrors from '../exceptions/customErrors.js';
 
-class RequestService {
+class ArequestService {
 	constructor() {
-		if (this.constructor == RequestService) {
+		if (this.constructor == ArequestService) {
 			throw new Error("Abstract classes can't be instantiated.");
 		}
+	}
+
+	throwCustomError(errorCode, errorText) {
+		const errorMap = {
+			401: customErrors.unauthorized_401,
+			409: customErrors.conflict_409,
+		};
+
+		const errorClass = errorMap[errorCode] || Error;
+		throw new errorClass(errorText);
 	}
 
 	async checkResponseWithBody(request) {
 		try {
 			const response = await request;
 			if (!response.ok) {
-				throw new Error('Error: ' + response.status);
+				this.throwCustomError(response.status, response.statusText);
 			}
 			return response.json();
 		} catch (error) {
@@ -55,12 +66,13 @@ class RequestService {
 	}
 
 	async postRequest(url, jsonBody) {
-		const cookies = getCookie('csrftoken')
+		const cookies = getCookie('csrftoken');
 		const request = fetch(`${url}`, {
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json'},
+				'Content-Type': 'application/json',
+			},
 			body: jsonBody,
 			credentials: 'include',
 		});
@@ -73,7 +85,8 @@ class RequestService {
 			method: 'PUT',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json'},
+				'Content-Type': 'application/json',
+			},
 			body: jsonBody,
 			credentials: 'include',
 		});
@@ -86,12 +99,13 @@ class RequestService {
 			method: 'DELETE',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json'},
+				'Content-Type': 'application/json',
+			},
 			credentials: 'include',
-			});
+		});
 
 		return this.checkResponseNoBody(request);
 	}
 }
 
-export default RequestService;
+export default ArequestService;

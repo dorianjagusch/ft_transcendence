@@ -28,7 +28,10 @@ export default class extends AView {
 		}
 
 		if (this.linkClicked == false) {
-			this.notify('Please click the link to agree to the Privacy Policy before registering.', 'error');
+			this.notify(
+				'Please click the link to agree to the Privacy Policy before registering.',
+				'error'
+			);
 			return;
 		}
 		const data = {
@@ -37,15 +40,13 @@ export default class extends AView {
 		};
 
 		const userService = new UserService();
-		userService
-			.postRequest(data)
-			.then(() => {
-				this.notify('User created successfully. Please login.');
-				this.navigateTo('/login');
-			})
-			.catch((error) => {
-				this.notify(error);
-			});
+		try {
+			await userService.postRequest(data);
+			this.notify('User created successfully. Please login.');
+			this.navigateTo('/login');
+		} catch (error) {
+			this.notify(error);
+		}
 	};
 
 	appendEventListeners() {

@@ -107,7 +107,7 @@ DATABASES = {
 
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 60 * 10 # session expiration time (in seconds)
+SESSION_COOKIE_AGE = 60 * 100 # session expiration time (in seconds)
 SESSION_COOKIE_HTTPONLY = False # Set to True in production
 SESSION_COOKIE_SECURE = False  # Set to True in production
 SESSION_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
@@ -118,11 +118,6 @@ AUTH_USER_MODEL = 'User.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
 ]
-
-# Configure login URL
-LOGIN_URL = '/users/login/'  # The URL where the login view is located
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

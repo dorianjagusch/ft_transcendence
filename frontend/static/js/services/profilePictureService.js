@@ -1,7 +1,7 @@
 import userURL from "../constants.js";
-import RequestService from "./requestService.js";
+import ArequestService from "./ArequestService.js";
 
-class ProfilePictureService extends RequestService {
+class ProfilePictureService extends ArequestService {
 	constructor() {
 		super();
 	}

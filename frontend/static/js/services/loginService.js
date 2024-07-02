@@ -1,7 +1,7 @@
-import backendURL from "../constants.js";
-import RequestService from "./requestService.js";
+import backendURL from '../constants.js';
+import ArequestService from './ArequestService.js';
 
-class LoginService extends RequestService {
+class LoginService extends ArequestService {
 	constructor() {
 		super();
 	}
@@ -12,7 +12,8 @@ class LoginService extends RequestService {
 			JSON.stringify({
 				username: username,
 				password: password,
-		}));
+			})
+		);
 	}
 }
 
