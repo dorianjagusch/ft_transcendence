@@ -14,7 +14,7 @@ from .tournamentState import TournamentState
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
-											check_that_valid_tournament_request
+											validate_tournament_request
 
 import sys
 
@@ -48,7 +48,7 @@ class TournamentDetailView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
+	@method_decorator(validate_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
 	def post(self, request, tournament_id):
 		'''If tournament is in lobby, start tournament.
 
@@ -67,17 +67,17 @@ class TournamentDetailView(APIView):
 			pass
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
+	@method_decorator(validate_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
 	def delete(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
 			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
-		tournament.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)
+		TournamentManager.in_progress.abort_tournament(tournament)
+		return Response({"message": "Tournament has been abandoned."}, status=status.HTTP_200_OK)
 
 class TournamentPlayerListView(APIView):
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY]))
+	@method_decorator(validate_tournament_request([TournamentState.LOBBY]))
 	def post(self, request, tournament_id):
 		username = request.data.get('username', None)
 		password = request.data.get('password', None)
@@ -110,7 +110,7 @@ class TournamentPlayerDetailView(APIView):
 		return Response(tournament_player_serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(check_that_valid_tournament_request([TournamentState.LOBBY]))
+	@method_decorator(validate_tournament_request([TournamentState.LOBBY]))
 	def delete(self, request, tournament_id, tournamentplayer_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()

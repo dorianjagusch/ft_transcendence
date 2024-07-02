@@ -112,7 +112,7 @@ def must_not_be_username(view_func):
 		return view_func(*args, **kwargs)
 	return wrapper
 
-def check_that_valid_tournament_request(tournament_states: Iterable[TournamentState]):
+def validate_tournament_request(tournament_states: Iterable[TournamentState]):
 	'''Check that a request that modifies tournament resource is valid.
 
 	The user making the request must be the tournament host.
