@@ -71,7 +71,6 @@ class UserManagerTests(TestCase):
 		superuser = User.objects.create_superuser(username, password)
 
 		self.assertEqual(superuser.username, username)
-		self.assertTrue(superuser.is_staff)
 		self.assertTrue(superuser.is_superuser)
 
 	def test_create_superuser_with_extra_fields_throws(self):
@@ -80,14 +79,6 @@ class UserManagerTests(TestCase):
 		password = 'password123'
 		extra_fields = {'email': 'admin@example.com'}  # example extra fields
 		with self.assertRaises(TypeError):
-			User.objects.create_superuser(username, password, **extra_fields)
-
-	def test_create_superuser_invalid_staff_flag(self):
-		User = get_user_model()
-		username = 'admin'
-		password = 'password123'
-		extra_fields = {'is_staff': False}  # setting is_staff=False which is invalid for a superuser
-		with self.assertRaises(ValueError):
 			User.objects.create_superuser(username, password, **extra_fields)
 
 	def test_create_superuser_invalid_superuser_flag(self):

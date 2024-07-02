@@ -12,7 +12,6 @@ import profileStatsByGame from "../components/profileComponents/profileStatsByGa
 import profileSummaryStats from "../components/profileComponents/profileSummaryStats.js";
 
 import userData from "../userAPIData/userAPIDashboard.js";
-import { profileStats } from "../components/profileComponents/profileStats.js";
 
 export default class extends AView {
 	constructor(params) {
@@ -21,7 +20,6 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-
 		const title = profileTitle("Your Stats");
 		const userImg = profileImg(userData.user.img);
 
