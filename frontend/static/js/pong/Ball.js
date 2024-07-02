@@ -5,11 +5,11 @@ class Ball {
 		this.ball = this.createBall(constants);
 	}
 
-	createBall({ball: {ballWidth, ballHeight}, game}) {
-		const ballGeometry = new THREE.BoxGeometry(ballWidth, ballHeight, 0);
+	createBall({ball: {size}, game}) {
+		const ballGeometry = new THREE.BoxGeometry(size, size, 0);
 		const ballMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 		const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-		ball.position.set(game.width / 2, game.height / 2, 0);
+		ball.position.set(Math.floor(game.width / 2), Math.floor(game.height / 2), 0);
 		return ball;
 	}
 }
