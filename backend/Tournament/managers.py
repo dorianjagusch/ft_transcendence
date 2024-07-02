@@ -16,6 +16,7 @@ from Player.models import Player
 
 import sys
 
+
 class TournamentSetupManager:
     @staticmethod
     def create_tournament_and_tournament_player_for_host(validated_data: TournamentCreationSerializer.validated_data):
@@ -28,11 +29,7 @@ class TournamentSetupManager:
                     expires_ts=timezone.now() + timedelta(TOURNAMENT_EXPIRY_TIME_SECONDS),
                 )
 
-                TournamentPlayer.objects.create(
-                    tournament=tournament,
-                    user=tournament.host_user,
-                    display_name=validated_data['host_user_display_name'] if validated_data['host_user_display_name'] else None,
-                )
+                TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, validated_data['host_user_display_name'] if validated_data['host_user_display_name'] else None)
 
                 return tournament
 
@@ -49,6 +46,8 @@ class TournamentSetupManager:
             raise TournamentSetupException("The number of tournament_players does not match the expected player amount.")
         
         match_amount = tournament.player_amount - 1
+        if match_amount not in [3, 7]:
+            raise TournamentSetupException("Match amount can only be 3 or 7.")
 
         try:
             with transaction.atomic():
@@ -171,3 +170,18 @@ class TournamentInProgressManager:
             if match.state in [MatchState.LOBBY, MatchState.IN_PROGRESS]:
                 match.state = MatchState.ABORTED
                 match.save()
+
+class TournamentPlayerManager:
+    @staticmethod
+    def create_tournament_player(tournament: Tournament, user: User, display_name: str | None) -> TournamentPlayer:
+        tournament_player = TournamentPlayer.objects.create(
+                    tournament=tournament,
+                    user=user,
+                    display_name=display_name
+                )
+        return tournament_player
+
+class TournamentManager:
+    setup = TournamentSetupManager
+    in_progress = TournamentInProgressManager
+    players = TournamentPlayerManager

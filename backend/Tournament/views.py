@@ -6,12 +6,8 @@ from django.utils.decorators import method_decorator
 
 from .models import Tournament, \
 						TournamentPlayer
-from .serializers import TournamentSerializer, \
-	 						TournamentCreationSerializer, \
-							TournamentPlayerSerializer, \
-							TournamentInProgressSerializer
-from .managers import TournamentSetupManager, \
-						TournamentInProgressManager
+from .serializers import TournamentSerializers
+from .managers import TournamentManager
 from .exceptions import TournamentSetupException, \
 							TournamentInProgressException
 from .tournamentState import TournamentState
@@ -29,13 +25,13 @@ class TournamentListView(APIView):
 		body_data = request.data.copy()
 		body_data['host_user'] = request.user.id
 
-		tournament_creation_serializer = TournamentCreationSerializer(data=body_data)
+		tournament_creation_serializer = TournamentSerializers.creation(data=body_data)
 		if not tournament_creation_serializer.is_valid():
 			return Response({'error': 'invalid request for tournament creation'}, status=status.HTTP_400_BAD_REQUEST)
 		
 		try:
-			tournament = TournamentSetupManager.create_tournament_and_tournament_player_for_host(tournament_creation_serializer.validated_data)
-			host_tournament_player_serializer = TournamentPlayerSerializer(tournament.players.all().first())
+			tournament = TournamentManager.setup.create_tournament_and_tournament_player_for_host(tournament_creation_serializer.validated_data)
+			host_tournament_player_serializer = TournamentSerializers.player(tournament.players.all().first())
 			return Response({
 				'tournament_id': tournament.id,
 				'tournament_player': host_tournament_player_serializer.data
@@ -48,7 +44,7 @@ class TournamentDetailView(APIView):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
 			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
-		serializer = TournamentSerializer(tournament)
+		serializer = TournamentSerializers.default(tournament)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
@@ -61,8 +57,8 @@ class TournamentDetailView(APIView):
 		tournament = Tournament.objects.get(id=tournament_id)
 		if tournament.state == TournamentState.LOBBY:
 			try:
-				TournamentSetupManager.start_tournament(tournament)
-				serializer = TournamentInProgressSerializer(tournament)
+				TournamentManager.setup.start_tournament(tournament)
+				serializer = TournamentSerializers.in_progress(tournament)
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			except Exception as e:
 				return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
@@ -97,12 +93,8 @@ class TournamentPlayerListView(APIView):
 			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
-			tournament_player = TournamentPlayer.objects.create(
-				tournament=tournament,
-				user=user,
-				display_name=display_name,
-			)
-			tournament_player_serializer = TournamentPlayerSerializer(tournament_player)
+			tournament_player = TournamentManager.players.create_tournament_player(tournament, user, display_name)
+			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
 			return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
@@ -114,7 +106,7 @@ class TournamentPlayerDetailView(APIView):
 		if not tournament_player:
 			return Response({'error': f'Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}'}, status=status.HTTP_404_NOT_FOUND)
 		
-		tournament_player_serializer = TournamentPlayerSerializer(tournament_player)
+		tournament_player_serializer = TournamentSerializers.player(tournament_player)
 		return Response(tournament_player_serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)

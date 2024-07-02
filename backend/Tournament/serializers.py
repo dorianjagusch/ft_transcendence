@@ -19,12 +19,12 @@ class TournamentPlayerSerializer(serializers.ModelSerializer):
 		fields = ['id', 'user', 'display_name']
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
-	first_tournament_player = serializers.SerializerMethodField()
-	second_tournament_player = serializers.SerializerMethodField()
+	tournament_player_left = serializers.SerializerMethodField()
+	tournament_player_right = serializers.SerializerMethodField()
 	winner = serializers.SerializerMethodField()
 	class Meta:
 		model = Match
-		fields = ['id', 'tournament_match_id', 'first_tournament_player', 'second_tournament_player', 'winner']
+		fields = ['id', 'tournament_match_id', 'tournament_player_left', 'tournament_player_right', 'winner']
 
 	def get_first_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
 		first_player = match.players.first()
@@ -126,3 +126,9 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 
 		except Match.DoesNotExist:
 			return None
+		
+class TournamentSerializers:
+	default = TournamentSerializer
+	creation = TournamentCreationSerializer
+	in_progress = TournamentInProgressSerializer
+	player = TournamentPlayerSerializer
