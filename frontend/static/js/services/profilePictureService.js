@@ -7,18 +7,26 @@ class ProfilePictureService extends ArequestService {
 		super();
 	}
 
+	async getRequest() {
+		return super.getRequest(`${backendURL.userURL}${user_id}/profile_pictures/`);
+	}
+
 	async postProfilePictureRequest(user_id, data) {
-		const request = fetch(`${backendURL.userURL}${user_id}/profile_pictures/`, {
+		const postRequest = fetch(`${backendURL.userURL}${user_id}/profile_pictures/`, {
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'multipart/form-data',
 			},
 			body: data,
 			credentials: 'include',
 		});
 
-		return this.checkResponseWithBody(request);
+		const response = await postRequest;
+		if (!response.ok) {
+			this.throwCustomError(response.status, response.statusText);
+		}
+
+		return response;
 	}
 }
 

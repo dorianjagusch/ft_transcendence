@@ -6,8 +6,10 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+import mimetypes
+import imghdr
 
-from .models import User
+from .models import User, ProfilePicture
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -87,7 +89,7 @@ class UserProfilePictureView(APIView):
 	def post(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
-		except ObjectDoesNotExist:
+		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		if 'file' not in request.FILES:
@@ -101,6 +103,22 @@ class UserProfilePictureView(APIView):
 			profile_picture = ProfilePicture(user=user, picture=file)
 		profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
+
+	def get(request, user_id):
+		try:
+			profile_picture = ProfilePicture.objects.get(user_id=user_id)
+			image_data = profile_picture.picture.read()
+
+			image_format = imghdr.what(None, h=image_data)
+			if image_format:
+				content_type = mimetypes.types_map[f'.{image_format}']
+			else:
+				content_type = 'image/jpeg'
+			return HttpResponse(image_data, content_type=content_type)
+		except ProfilePicture.DoesNotExist:
+			return Response(status=HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response(status=HTTP_400_BAD_REQUEST)
 
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)

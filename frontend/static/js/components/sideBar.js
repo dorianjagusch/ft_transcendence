@@ -19,33 +19,29 @@ const sideBarButton = (classes, text, callback) => {
 
 const profilePictureHandler = async (file) => {
 	if (!file) {
-		alert('Profile picture is null');
+		alert('Profile picture was not given.');
 		return;
 	}
 
 	const formData = new FormData();
 	formData.append('file', file);
+	const userIdStr = localStorage.getItem('user_id');
+	if (!userIdStr) {
+		throw new Error("User ID is not found in local storage");
+	}
+
+	const userId = parseInt(userIdStr, 10);
+	if (isNaN(userId)) {
+		throw new Error("User ID is not a valid number");
+	}
 
 	try
 	{
-		const userIdStr = localStorage.getItem('user_id');
-		if (!userIdStr) {
-			throw new Error("User ID is not found in local storage");
-		}
-
-		const userId = parseInt(userIdStr, 10);
-		if (isNaN(userId)) {
-			throw new Error("User ID is not a valid number");
-		}
-
 		const profilePictureService = new ProfilePictureService();
-		profilePictureService.postProfilePictureRequest(userId, file);
-
-		notify('User profile picture added successfully. Please login.');
+		profilePictureService.postProfilePictureRequest(userId, formData);
+	} catch (error) {
+		notify(error, 'error');
 	}
-	catch (error) {
-		notify('Updating the profile picture failed', 'error');
-	};
 }
 
 const SideBar = () => {
@@ -72,18 +68,18 @@ const SideBar = () => {
 		profilePictureHandler(file);
 	});
 
+	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () => navigateTo('/logout'));
 	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile');
 	const viewProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'View profile', () => navigateTo('/dashboard'));
 	const profilePictureBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Update profilepicture', () => fileInput.click());
 	const createTournamentBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Create Tournament', () => navigateTo('/tournament'));
-	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () => navigateTo('/logout'));
 	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account');
 
+	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
 	aside.appendChild(viewProfileBtn);
 	aside.appendChild(profilePictureBtn);
 	aside.appendChild(createTournamentBtn);
-	aside.appendChild(logoutBtn);
 	aside.appendChild(deleteAccountBtn);
 
 	return aside;

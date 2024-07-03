@@ -23,6 +23,13 @@ APP_DIRS = [
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -171,6 +178,7 @@ CSRF_COOKIE_SECURE = False #set to true in production
 
 CSRF_TRUSTED_ORIGINS = [
 		'http://localhost:80',
+		'http://localhost:8080',
 		'http://127.0.0.1:80',
 		'http://localhost',
 		'http://127.0.0.1',
@@ -186,6 +194,7 @@ CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
 		'http://localhost:80',
+		'http://localhost:8080',
 		'http://127.0.0.1:80',
 		'http://localhost',
 		'http://127.0.0.1',
