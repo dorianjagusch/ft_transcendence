@@ -2,7 +2,6 @@ import {navigateTo} from '../router.js';
 import {userNotification} from '../components/userNotification.js';
 import {Navbar} from '../components/navbar.js';
 import SideBar from '../components/sideBar.js';
-import constants from '../constants.js';
 
 export default class Aview{
 	constructor(params) {

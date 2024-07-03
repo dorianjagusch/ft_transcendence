@@ -13,7 +13,6 @@ class User(AbstractBaseUser):
 	insertTS = models.DateTimeField(_('insertTS'), auto_now_add=True, blank=True, null=True)
 	last_login = models.DateTimeField(_('last_login'), blank=True, null=True)
 	is_online = models.BooleanField(_('is_online'), default=False)
-	# profile_picture_path = models.CharField(_'profile_picture_path', max_length=200, blank=True, null=True)
 
 	objects = UserManager()
 
@@ -22,3 +21,10 @@ class User(AbstractBaseUser):
 
 	def __str__(self):
 		return self.username
+
+class ProfilePicture(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	picture = models.ImageField(upload_to='profile_pictures/')
+
+	def __str__(self):
+		return f"{self.user.username}'s Profile Picture"

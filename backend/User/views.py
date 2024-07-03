@@ -82,6 +82,26 @@ class UserDetailView(APIView):
 		user.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
+class UserProfilePictureView(APIView):
+	@method_decorator(csrf_exempt)
+	def post(self, request, user_id):
+		try:
+			user = User.objects.get(pk=user_id)
+		except ObjectDoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
+		if 'file' not in request.FILES:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+		file = request.FILES['file']
+
+		try:
+			profile_picture = ProfilePicture.objects.get(user=user)
+			profile_picture.picture = file
+		except ProfilePicture.DoesNotExist:
+			profile_picture = ProfilePicture(user=user, picture=file)
+		profile_picture.save()
+		return Response(status=status.HTTP_200_OK)
+
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
 	def post(self, request):

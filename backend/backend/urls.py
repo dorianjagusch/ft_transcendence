@@ -16,12 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 
 from pong.consumers import PongConsumer
 
 # add app views here
 from User.views import UserDetailView, \
 						UserListView, \
+						UserProfilePictureView, \
 						UserLoginView, \
 						UserLogoutView, \
 						UserAdminDetailsView
@@ -40,6 +43,7 @@ urlpatterns = [
 	# User views
 	path('users/', UserListView.as_view()),
 	path('users/<int:user_id>', UserDetailView.as_view()),
+	path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
 	path('login/', UserLoginView.as_view()),
 	path('logout/', UserLogoutView.as_view()),
 	path('admins/', UserAdminDetailsView.as_view()),
@@ -55,7 +59,7 @@ urlpatterns = [
 	# Match Views
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 websocket_urlpatterns = [
     path('pong/<int:match_id>', PongConsumer.as_asgi()),

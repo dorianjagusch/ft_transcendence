@@ -8,30 +8,6 @@ export default class extends AView {
 		this.setTitle('Profile picture');
 	}
 
-	profilePictureHandler = async () => {
-		const file = document.getElementById('profilePicture').value;
-		if (!file){
-			this.notify('Profile picture is null', 'error');
-			return;
-		}
-
-		const formData = new FormData();
-		formData.append('file', file);
-
-		try
-		{
-			const user_id = localStorage.getItem('user_id');
-			const profilePictureService = new ProfilePictureService();
-			profilePictureService.postRequest(user_id, file);
-
-			this.notify('User profile picture added successfully. Please login.');
-			this.navigateTo('/dashboard');
-		}
-		catch (error) {
-			this.notify(error);
-		};
-	}
-
 	appendEventListeners() {
 		const registerButton = document.querySelector('.primary-btn');
 		registerButton.addEventListener('click', this.profilePictureHandler);
