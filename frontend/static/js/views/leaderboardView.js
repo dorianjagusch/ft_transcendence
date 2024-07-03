@@ -1,6 +1,7 @@
 import { scrollContainer } from '../components/scrollContainer.js';
 import { PlacementCard } from '../components/placementCard.js';
 import AView from './AView.js';
+// import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -109,11 +110,9 @@ export default class extends AView {
 		];
 
 		// get players from API
-		const leaderBoardOne = scrollContainer(players, PlacementCard);
+		const leaderBoardOne = scrollContainer(players, PlacementCard, "col");
 		leaderBoardOne.classList.add('leaderboard', 'bg-secondary');
-		const leaderBoardTwo = scrollContainer(players, PlacementCard);
-		leaderBoardTwo.classList.add('leaderboard', 'bg-secondary');
 
-		this.updateMain(leaderBoardOne, leaderBoardTwo);
+		this.updateMain(leaderBoardOne);
 	}
 }
