@@ -139,8 +139,8 @@ def validate_tournament_request(tournament_states: Iterable[TournamentState]):
 				return HttpResponseForbidden(f"Cannot modify this resource because tournament state is not in '{tournament_states}'.")
 			
 			try:
-				TournamentInProgressManager.make_sure_tournament_has_not_expired(tournament)
-				TournamentInProgressManager.make_sure_users_in_active_tournament_are_still_active(tournament)
+				TournamentInProgressManager.raise_error_if_tournament_has_expired(tournament)
+				TournamentInProgressManager.raise_error_if_inactive_user_in_tournament(tournament)
 
 			except TournamentInProgressException as e:
 				TournamentInProgressManager.abort_tournament(tournament)

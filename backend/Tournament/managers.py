@@ -91,12 +91,12 @@ class TournamentSetupManager:
 
 class TournamentInProgressManager:
     @staticmethod
-    def make_sure_tournament_has_not_expired(tournament: Tournament) -> None:
+    def raise_error_if_tournament_has_expired(tournament: Tournament) -> None:
         if timezone.now() > tournament.expires_ts:
             raise TournamentInProgressException(f"Tournament not finished in time")
 
     @staticmethod
-    def make_sure_users_in_active_tournament_are_still_active(tournament: Tournament) -> None:       
+    def raise_error_if_inactive_user_in_tournament(tournament: Tournament) -> None:       
         tournament_players = TournamentPlayer.objects.filter(tournament=tournament)
         inactive_users = tournament_players.filter(user__is_active=False)
         if inactive_users.exists():
