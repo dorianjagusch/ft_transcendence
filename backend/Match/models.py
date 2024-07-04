@@ -15,7 +15,7 @@ class Match(models.Model):
 	start_time = models.DateTimeField(null=True, blank=True)
 	end_time = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+	update_at = models.DateTimeField(auto_now=True)
 
 	def start_match(self):
 		if self.state == MatchState.LOBBY.value:
