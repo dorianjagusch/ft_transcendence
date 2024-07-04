@@ -18,7 +18,7 @@ class Tournament(models.Model):
 	end_ts = models.DateTimeField(null=True, blank=True)
 	update_ts = models.DateTimeField(auto_now=True)
 
-	expires_ts = models.DateTimeField(null=True, blank=True)
+	expire_ts = models.DateTimeField(null=True, blank=True)
 
 	def start_tournament(self):
 		if self.state == TournamentState.LOBBY.value:

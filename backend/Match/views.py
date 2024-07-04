@@ -27,9 +27,9 @@ class MatchView(APIView):
         if token.user_left_side.id != request.user.id:
             return Response({'error': 'You are not the host user in the token'}, status=status.HTTP_403_FORBIDDEN)
 
-        match, player_left, player_right = MatchSetupManager.create_match_and_its_players(token)
+        match = MatchSetupManager.create_match_and_its_players(token)
 
-        if not all([match, player_left, player_right]):
+        if not match:
             return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_403_FORBIDDEN)
 
         pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
@@ -40,8 +40,8 @@ class LaunchTestMatchView(APIView):
 	@method_decorator(must_be_authenticated)
 	def get(self, request):
 		token = MatchToken.objects.create_single_match_token(request.user, request.user)
-		match, player_left_side, player_right_side = MatchSetupManager.create_match_and_its_players(token)
-		if not all([match, player_left_side, player_right_side]):
+		match = MatchSetupManager.create_match_and_its_players(token)
+		if not match:
 			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_403_FORBIDDEN)
 
 		pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'

@@ -10,7 +10,7 @@ class Match(models.Model):
 	start_time = models.DateTimeField(null=True, blank=True)
 	end_time = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+	update_at = models.DateTimeField(auto_now=True)
 
 	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
 	tournament_match_id = models.PositiveIntegerField(default=0)
