@@ -44,7 +44,10 @@ class TournamentDetailView(APIView):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
 			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
-		serializer = TournamentSerializers.default(tournament)
+		if request.user == tournament.host_user and tournament.state == TournamentState.IN_PROGRESS:
+			serializer = TournamentSerializers.in_progress(tournament)
+		else:
+			serializer = TournamentSerializers.default(tournament)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)

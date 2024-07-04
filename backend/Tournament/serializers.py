@@ -24,9 +24,9 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
 	winner = serializers.SerializerMethodField()
 	class Meta:
 		model = Match
-		fields = ['id', 'tournament_match_id', 'tournament_player_left', 'tournament_player_right', 'winner']
+		fields = ['id', 'tournament_player_left', 'tournament_player_right', 'winner']
 
-	def get_first_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
+	def get_tournament_player_left(self, match: Match) -> TournamentPlayerSerializer | None:
 		first_player = match.players.first()
 		if first_player:
 			tournament_player = TournamentPlayer.objects.filter(
@@ -36,7 +36,7 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
 			return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
 		return None
 
-	def get_second_tournament_player(self, match: Match) -> TournamentPlayerSerializer | None:
+	def get_tournament_player_right(self, match: Match) -> TournamentPlayerSerializer | None:
 		second_player = match.players.all()[1] if match.players.count() > 1 else None
 		if second_player:
 			tournament_player = TournamentPlayer.objects.filter(
@@ -107,7 +107,7 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'name',
 			'state',
 			'state_display',
-			'expires_ts',
+			'expire_ts',
 			'player_amount',
 			'tournament_players',
 			'matches',
@@ -115,9 +115,9 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 		]
 		
 	def get_next_match(self, tournament: Tournament) -> ReturnDict | None:
-		next_match = tournament.next_match
 		try:
-			next_match = Match.objects.get(tournament=tournament, tournament_match_id=next_match)
+			tournament_matches = Match.objects.filter(tournament=tournament).order_by('id')
+			next_match = tournament_matches[tournament.next_match]
 			serializer = TournamentMatchSerializer(next_match)
 			# remove 'winner' from serializer
 			if 'winner' in serializer.fields:

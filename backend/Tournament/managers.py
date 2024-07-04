@@ -26,7 +26,7 @@ class TournamentSetupManager:
                     name=validated_data['name'] if validated_data['name'] else None,
                     host_user=validated_data['host_user'],
                     player_amount=validated_data['player_amount'],
-                    expires_ts=timezone.now() + timedelta(TOURNAMENT_EXPIRY_TIME_SECONDS),
+                    expire_ts=timezone.now() + timedelta(TOURNAMENT_EXPIRY_TIME_SECONDS),
                 )
 
                 TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, validated_data['host_user_display_name'] if validated_data['host_user_display_name'] else None)
@@ -56,8 +56,7 @@ class TournamentSetupManager:
                 # if you want to set the players for the initial matches based on some other algorithm, replace this part
                 for i in range(0, len(tournament_players), 2):
                     match = Match.objects.create(
-                        tournament=tournament,
-                        tournament_match_id=i // 2
+                        tournament=tournament
                     )
                     Player.objects.create(
                         user=tournament_players[i].user,
@@ -70,10 +69,9 @@ class TournamentSetupManager:
 
                 # create the rest of the tournament matches
                 # the match winners will be assigned to them later
-                for tournament_match_id in range(len(tournament_players) // 2, match_amount):
+                for unfilled_matches in range(len(tournament_players) // 2, match_amount):
                     Match.objects.create(
-                        tournament=tournament,
-                        tournament_match_id=tournament_match_id
+                        tournament=tournament
                     )
 
         except Exception as e:
@@ -92,7 +90,7 @@ class TournamentSetupManager:
 class TournamentInProgressManager:
     @staticmethod
     def raise_error_if_tournament_has_expired(tournament: Tournament) -> None:
-        if timezone.now() > tournament.expires_ts:
+        if timezone.now() > tournament.expire_ts:
             raise TournamentInProgressException(f"Tournament not finished in time")
 
     @staticmethod
@@ -108,15 +106,14 @@ class TournamentInProgressManager:
             with transaction.atomic():
                 tournament = winning_tournament_player.tournament
                 try:
-                    coming_tournament_matches = Match.objects.filter(
-                        tournament=tournament,
-                        tournament_match_id__gte=tournament.next_match
-                    ).order_by('tournament_match_id')
+                    tournament_matches = Match.objects.filter(
+                        tournament=tournament
+                    ).order_by('id')
 
                 except Match.DoesNotExist:
                     raise TournamentInProgressException("No future matchup with empty player slot")
                 
-                for match in coming_tournament_matches:
+                for match in tournament_matches:
                     if len(Player.objects.filter(match=match)) < 2:
                         Player.objects.create(
                             user=winning_tournament_player.user,
@@ -135,22 +132,17 @@ class TournamentInProgressManager:
         try:
             with transaction.atomic():
                 tournament = winning_tournament_player.tournament
-                next_tournament_match_id = tournament.next_match
                 
-                # check if there is a next match in the tournament.
-                # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
+                # check if there is a next match is equal or greater than the tournament matches count
                 # if no next match, set user as tournament winner and finish tournament
-                try:
-                    Match.objects.get(
-                        tournament=tournament,
-                        tournament_match_id=next_tournament_match_id
-                    )
-                    TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
-
-                except Match.DoesNotExist:
+                if tournament.next_match >= tournament.matches.count():
                     tournament.winner = winning_tournament_player.user
                     tournament.state = TournamentState.FINISHED
                     tournament.save()
+                
+                # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
+                TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
+
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while updating tournament data after finished match: {e}")
