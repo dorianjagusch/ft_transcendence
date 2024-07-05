@@ -10,7 +10,6 @@ import { scrollContainer } from "../components/scrollContainer.js";
 import profilePlayHistory from "../components/profileComponents/profilePlayHistory.js";
 import profileStatsByGame from "../components/profileComponents/profileStatsByGame.js"
 import profileSummaryStats from "../components/profileComponents/profileSummaryStats.js";
-
 import userData from "../userAPIData/userAPIDashboard.js";
 import { profileStats } from "../components/profileComponents/profileStats.js";
 
@@ -37,8 +36,6 @@ export default class extends AView {
 			return statsEntry;
 		});
 
-		const userSummary = profileSummaryStats(userData.stats);
-
 		const main = document.querySelector("main");
 		main.classList.add("profile", "dashboard");
 		this.updateMain(
@@ -46,10 +43,8 @@ export default class extends AView {
 			userImg,
 			userPlacement,
 			userDescription,
-			userSummary,
 			...userStats,
 			// gameGraph1,
-			// gameGraph2,
 			userHistory
 		);
 	}

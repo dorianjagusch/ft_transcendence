@@ -1,26 +1,22 @@
-#Movement units, and angles
-PLAYER_MOVEMENT_UNIT = 1
-BALL_SPEED = 5 
-MAX_BOUNCE_ANGLE = 90  # Bounce angle in degrees
-MIN_BOUNCE_ANGLE = -90
+# constants.py
+import math
 
-#Dimensions and measurements
+PLAYER_MOVEMENT_UNIT = 9
 PLAYGROUND_WIDTH = 180
 PLAYGROUND_HEIGHT = 100
-PLAYER_WIDTH = 1
-PLAYER_HEIGHT = 40
-BALL_WIDTH = 1
-BALL_HEIGHT = 1
-WALL_MARGIN = 2
-
-#Message (sent to the client) intervals
 MESSAGE_INTERVAL_SECONDS = 0.05  # 50 milliseconds
-
-#Keys
+HALF_PLAYER_WIDTH = 1
+HALF_PLAYER_HEIGHT = 10
+HALF_BALL_SIZE = 1
+WALL_MARGIN = 12
+BALL_SPEED = 2
+MAX_BOUNCE_ANGLE_RAD = 30 * math.pi / 180 # Bounce angle in degrees
 PLAYER_RIGHT_UP = 'o'
 PLAYER_RIGHT_DOWN = 'l'
 PLAYER_LEFT_UP = 'w'
 PLAYER_LEFT_DOWN = 's'
-
-#Game Rules
-WINING_SCORE = 5
+START_PAUSE_GAME = 'Enter'
+WINNING_SCORE = 5
+COLLISION_TOLERANCE = 1e-1
+SLOW_DOWN_FACTOR = 2 / 3
+SPEED_UP_FACTOR = 1.05

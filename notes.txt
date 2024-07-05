@@ -1,0 +1,2 @@
+When navigating away from game page. Websocket remains open
+make game 3D
