@@ -16,13 +16,16 @@ class StatsView(APIView):
 	def get(self, request):
 		x = [1, 2, 3, 4, 5]
 		y = [10, 11, 12, 13, 14]
-		fig = go.Figure()
-
-		fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Line Plot'))
-		fig.update_layout(title='Basic Line Chart', xaxis_title='X Axis', yaxis_title='Y Axis')
+		fig = fig = go.Figure(data=[go.Table(header=dict(values=['A Scores', 'B Scores']),
+                 cells=dict(values=[[100, 90, 80, 90], [95, 85, 75, 95]]))
+                     ])
 
         # Convert plot to HTML
 		plot_html = pio.to_html(fig, full_html=True)
 
 
 		return HttpResponse(plot_html, content_type='text/html')
+	
+class LeaderBoardView(APIView):
+	def get(self, request):
+		return

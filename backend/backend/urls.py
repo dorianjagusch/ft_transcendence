@@ -60,6 +60,7 @@ urlpatterns = [
 
 	# Stats Views
 	path('stats/', StatsView.as_view()),
+	path('leaderboard/', LeaderBoardView.as_view()),
 ]
 
 websocket_urlpatterns = [
