@@ -34,7 +34,8 @@ from Tokens.views import SingleMatchGuestTokenView
 from Match.views import MatchView, \
 							LaunchTestMatchView
 
-from stats.views import StatsView
+from stats.views import StatsView, \
+							LeaderBoardView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),

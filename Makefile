@@ -28,7 +28,7 @@ CYAN = \033[0;96m
 all: up
 
 up:
-	sudo ${DOCKER_COMPOSE} up --build --detach
+	${DOCKER_COMPOSE} up --build --detach
 	@echo "${GREEN}${NAME} is up!${C_RESET}"
 
 prod:
