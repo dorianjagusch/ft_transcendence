@@ -43,7 +43,6 @@ urlpatterns = [
 	path('login/', UserLoginView.as_view()),
 	path('logout/', UserLogoutView.as_view()),
 	path('admins/', UserAdminDetailsView.as_view()),
-#	path('delete/', UserDeleteView.as_view()),
 
 
 	# Friends views

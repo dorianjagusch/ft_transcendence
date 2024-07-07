@@ -76,7 +76,6 @@ class UserDetailView(APIView):
 		try:
 			logout(request)
 			user = User.objects.get(pk=user_id)
-			print("Before delete:", user.__dict__, flush=True) # for testing
 		except User.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		except:
@@ -92,9 +91,7 @@ class UserDetailView(APIView):
 		# profile_picture = None
 	
 		user.save()
-		print("After delete:", user.__dict__, flush=True) # for testing
-		return Response("nice", status=status.HTTP_200_OK) # for testing
-		# return Response(status=status.HTTP_204_NO_CONTENT)
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
