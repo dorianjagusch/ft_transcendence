@@ -21,7 +21,7 @@ const sideBarButton = (classes, text, callback) => {
 
 const profilePictureHandler = async (file) => {
 	if (!file) {
-		alert('Profile picture was not given.');
+		notify('Profile picture was not given.', 'error');
 		return;
 	}
 

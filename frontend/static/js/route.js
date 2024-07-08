@@ -9,7 +9,6 @@ import playPage from './views/playView.js';
 import pongPage from './views/pongView.js';
 import leaderBoard from './views/leaderboardView.js';
 import show404Page from './views/404View.js';
-import profilePicturePage from './views/profilePictureView.js';
 
 export default [
 	{ path: '/404', view: show404Page },
@@ -18,7 +17,6 @@ export default [
 	{ path: '/logout', view: logoutPage },
 	{ path: '/register', view: registerPage },
 	{ path: '/dashboard', view: dashboardPage },
-	{ path: '/profilePicture', view: profilePicturePage },
 	{ path: '/friends', view: friendsPage },
 	{ path: '/play', view: playPage },
 	{ path: '/pong', view: pongPage },
