@@ -6,6 +6,8 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from .validators import validate_image
+from django.core.exceptions import ValidationError
 import mimetypes
 import imghdr
 import base64
@@ -96,6 +98,11 @@ class UserProfilePictureView(APIView):
 		if 'file' not in request.FILES:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 		file = request.FILES['file']
+
+		try:
+			validate_image(file)
+		except ValidationError as e:
+			return Response({"message": e.messages}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 			profile_picture = ProfilePicture.objects.get(user=user)

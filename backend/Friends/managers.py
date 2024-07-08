@@ -53,5 +53,3 @@ class FriendsManager(models.Manager):
 				user_friend.delete()
 			if friend_user.exists():
 				friend_user.delete()
-
-

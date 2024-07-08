@@ -33,7 +33,7 @@ const profilePictureHandler = async (file) => {
 	try
 	{
 		const profilePictureService = new ProfilePictureService();
-		profilePictureService.postProfilePictureRequest(userId, formData);
+		await profilePictureService.postProfilePictureRequest(userId, formData);
 	} catch (error) {
 		notify(error, 'error');
 	}
@@ -48,7 +48,7 @@ const SideBar = () => {
 		const img = getProfilePicture();
 		aside.appendChild(img);
 	} catch (error) {
-		console.error('Error creating profile picture element:', error);
+		console.error('Error getting the profile picture element: ', error);
 	}
 
 	const fileInput = fileInputField(profilePictureHandler);

@@ -30,10 +30,11 @@ class ProfilePictureService {
 
 		const response = await postRequest;
 		if (!response.ok) {
-			this.throwCustomError(response.status, response.statusText);
+			const errorMessage = await response.json();
+			throw new Error(errorMessage.message || 'Error occurred.');
 		}
 
-		return response;
+		return response.json();
 	}
 }
 
