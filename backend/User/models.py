@@ -23,7 +23,7 @@ class User(AbstractBaseUser):
 		return self.username
 
 class ProfilePicture(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.CASCADE) # Take out CASCADE
 	picture = models.ImageField(upload_to='profile_pictures/')
 
 	def __str__(self):

@@ -1,5 +1,6 @@
 import {navigateTo} from '../router.js';
 import {userNotification} from '../components/userNotification.js';
+import getProfilePicture from './profilePicture.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
 const notify = (message, type = 'success') => {
@@ -42,25 +43,24 @@ const profilePictureHandler = async (file) => {
 	} catch (error) {
 		notify(error, 'error');
 	}
+
+	navigateTo('/dashboard');
 }
 
 const SideBar = () => {
 	const aside = document.createElement('aside');
 
-	const img = document.createElement('img');
-	let profile_pic = localStorage.getItem('user_profile_picture');
-	if (!profile_pic) {
-		img.setAttribute('src', 'static/assets/img/default-user.png');
+	try {
+		const img = getProfilePicture();
+		aside.appendChild(img);
+	} catch (error) {
+		console.error('Error creating profile picture element:', error);
 	}
-	else {
-		img.setAttribute('src', profile_pic);
-	}
-	img.setAttribute('alt', '');
-	aside.appendChild(img);
 
 	const fileInput = document.createElement('input');
 	fileInput.setAttribute('type', 'file');
 	fileInput.setAttribute('id', 'profilePicture');
+	fileInput.style.display = 'none';
 	aside.appendChild(fileInput);
 
 	fileInput.addEventListener('change', (event) => {
@@ -71,7 +71,7 @@ const SideBar = () => {
 	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () => navigateTo('/logout'));
 	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile');
 	const viewProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'View profile', () => navigateTo('/dashboard'));
-	const profilePictureBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Update profilepicture', () => fileInput.click());
+	const profilePictureBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Update profile picture', () => fileInput.click());
 	const createTournamentBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Create Tournament', () => navigateTo('/tournament'));
 	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account');
 

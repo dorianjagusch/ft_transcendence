@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import mimetypes
 import imghdr
+import base64
 
 from .models import User, ProfilePicture
 from Friends.models import Friend
@@ -104,21 +105,25 @@ class UserProfilePictureView(APIView):
 		profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
 
-	def get(request, user_id):
+	def get(self, request, user_id):
 		try:
-			profile_picture = ProfilePicture.objects.get(user_id=user_id)
-			image_data = profile_picture.picture.read()
+			user = User.objects.get(pk=user_id)
+			profile_picture = ProfilePicture.objects.filter(user=user).first()
+			if not profile_picture:
+				return Response(status=status.HTTP_404_NOT_FOUND)
 
-			image_format = imghdr.what(None, h=image_data)
-			if image_format:
-				content_type = mimetypes.types_map[f'.{image_format}']
-			else:
-				content_type = 'image/jpeg'
-			return HttpResponse(image_data, content_type=content_type)
+			# Get the actual file path from the ImageFieldFile instance
+			image_path = profile_picture.picture.path
+			with open(image_path, "rb") as image_file:
+				image_data = image_file.read()
+				encoded_image = base64.b64encode(image_data).decode('utf-8')
+				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
 		except ProfilePicture.DoesNotExist:
-			return Response(status=HTTP_404_NOT_FOUND)
-		except Exception as e:
-			return Response(status=HTTP_400_BAD_REQUEST)
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		except FileNotFoundError:
+			return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)

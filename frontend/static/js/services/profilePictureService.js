@@ -1,14 +1,21 @@
 import backendURL from "../constants.js";
 import getCookie from '../utils/getCookie.js';
-import ArequestService from "./ArequestService.js";
 
-class ProfilePictureService extends ArequestService {
+class ProfilePictureService {
 	constructor() {
-		super();
 	}
 
-	async getRequest() {
-		return super.getRequest(`${backendURL.userURL}${user_id}/profile_pictures/`);
+	async checkResponseWithBody(request) {
+		const response = await request;
+		return response;
+	}
+
+	async getRequest(user_id) {
+		const request = fetch(`${backendURL.userURL}${user_id}/profile_pictures/`, {
+			credentials: 'include',
+		});
+
+		return this.checkResponseWithBody(request);
 	}
 
 	async postProfilePictureRequest(user_id, data) {
