@@ -1,7 +1,7 @@
 import {navigateTo} from '../router.js';
-import {userNotification} from '../components/userNotification.js';
 import {Navbar} from '../components/navbar.js';
 import SideBar from '../components/sideBar.js';
+import notify from '../utils/notify.js';
 
 export default class Aview{
 	constructor(params) {
@@ -30,10 +30,7 @@ export default class Aview{
 	}
 
 	notify(message, type = 'success') {
-		userNotification(message, type);
-		setTimeout(() => {
-			document.querySelector('.notification').innerText = '';
-		}, 3000);
+		notify(message, type);
 	}
 
 	updateMain(...elements) {
