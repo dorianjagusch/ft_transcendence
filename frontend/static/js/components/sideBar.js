@@ -1,5 +1,6 @@
 import {navigateTo} from '../router.js';
 import {userNotification} from '../components/userNotification.js';
+import fileInputField from '../components/formComponents/fileInputField.js'
 import getProfilePicture from './profilePicture.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
@@ -45,7 +46,7 @@ const profilePictureHandler = async (file) => {
 	}
 
 	navigateTo('/dashboard');
-}
+};
 
 const SideBar = () => {
 	const aside = document.createElement('aside');
@@ -57,16 +58,8 @@ const SideBar = () => {
 		console.error('Error creating profile picture element:', error);
 	}
 
-	const fileInput = document.createElement('input');
-	fileInput.setAttribute('type', 'file');
-	fileInput.setAttribute('id', 'profilePicture');
-	fileInput.style.display = 'none';
+	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
-
-	fileInput.addEventListener('change', (event) => {
-		const file = event.target.files[0];
-		profilePictureHandler(file);
-	});
 
 	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () => navigateTo('/logout'));
 	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile');
