@@ -23,8 +23,8 @@ APP_DIRS = [
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2097152
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2097152
 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.MemoryFileUploadHandler',
