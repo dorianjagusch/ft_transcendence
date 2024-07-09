@@ -56,4 +56,8 @@ const router = async () => {
 	view.getHTML();
 };
 
+window.addEventListener('beforeunload', () => {
+	localStorage.clear();
+});
+
 export {navigateTo, router};
