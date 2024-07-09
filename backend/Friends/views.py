@@ -18,6 +18,9 @@ class FriendsListView(APIView):
 			return Response({"message": "Expected to get parameter 'friendship_status'"}, status=status.HTTP_400_BAD_REQUEST)
 		user_id = request.user.id
 		friends = Friend.objects.get_user_friends(user_id, friendship_status)
+
+		if not friends:
+			friends = []
 		serializer = UserOutputSerializer(friends, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 

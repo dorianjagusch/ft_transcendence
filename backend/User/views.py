@@ -89,6 +89,8 @@ class UserDetailView(APIView):
 
 class UserProfilePictureView(APIView):
 	@method_decorator(csrf_exempt)
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
 	def post(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -112,6 +114,7 @@ class UserProfilePictureView(APIView):
 		profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
 
+	@method_decorator(must_be_authenticated)
 	def get(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
