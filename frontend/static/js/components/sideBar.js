@@ -48,7 +48,7 @@ const SideBar = () => {
 		const img = getProfilePicture();
 		aside.appendChild(img);
 	} catch (error) {
-		console.error('Error getting the profile picture element: ', error);
+		console.log('Error getting the profile picture element: ', error);
 	}
 
 	const fileInput = fileInputField(profilePictureHandler);
