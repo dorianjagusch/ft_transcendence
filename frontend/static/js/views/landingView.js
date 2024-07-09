@@ -8,7 +8,7 @@ export default class extends AView {
 		this.setTitle('Landing Page');
 	}
 
-	async getHTML() {
+	getHTML() {
 		const welcomeSection = document.createElement('section');
 		welcomeSection.setAttribute('id', 'welcome');
 		const welcomeTitle = document.createElement('h2');
