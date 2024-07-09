@@ -37,6 +37,9 @@ from Tokens.views import SingleMatchGuestTokenView
 from Match.views import MatchView, \
 							LaunchTestMatchView
 
+from stats.views import StatsView, \
+							LeaderBoardView
+
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
@@ -59,6 +62,10 @@ urlpatterns = [
 	# Match Views
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
+
+	# Stats Views
+	path('stats/', StatsView.as_view()),
+	path('leaderboard/', LeaderBoardView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 websocket_urlpatterns = [
