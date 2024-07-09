@@ -102,7 +102,7 @@ class UserProfilePictureView(APIView):
 		try:
 			validate_image(file)
 		except ValidationError as e:
-			return Response({"message": e.messages}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 			profile_picture = ProfilePicture.objects.get(user=user)

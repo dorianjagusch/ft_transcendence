@@ -33,7 +33,7 @@ const profilePictureHandler = async (file) => {
 	try
 	{
 		const profilePictureService = new ProfilePictureService();
-		await profilePictureService.postProfilePictureRequest(userId, formData);
+		profilePictureService.postProfilePictureRequest(userId, formData);
 	} catch (error) {
 		notify(error, 'error');
 	}
