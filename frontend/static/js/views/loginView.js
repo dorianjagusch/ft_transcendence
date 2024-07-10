@@ -21,9 +21,10 @@ export default class extends AView {
 		}
 		const loginService = new LoginService();
 		try {
-			await loginService.postRequest({username, password});
-			localStorage.setItem('username', username);
+			const user = await loginService.postRequest({username, password});
+			localStorage.setItem('username', user.username);
 			localStorage.setItem('isLoggedIn', true);
+			localStorage.setItem('user_id', user.id)
 			this.navigateTo('/dashboard');
 		} catch (error) {
 			if (!error.status){

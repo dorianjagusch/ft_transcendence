@@ -983,10 +983,10 @@ button:is(:focus, :hover) {
 .profile.dashboard {
 	grid-template-areas:
 		'title title title title title title title'
-		'profile-img profile-img placements placements placements placements placements'
+		'profile-img profile-img placements placements placements summary summary'
 		'about about about stats stats stats stats'
-		'history history history graph-1 graph-1 graph-1 graph-1'
-		'history history history graph-2 graph-2 graph-2 graph-2';
+		'history history history graph-1 graph-1 graph-1 graph-1 '
+		'history history history graph-2 graph-2 graph-2 graph-2 ';
 
 	grid-template-rows: 0.1fr repeat(4, 1fr);
 	grid-template-columns: repeat(7, min(1fr, 150px));
@@ -1041,8 +1041,12 @@ button:is(:focus, :hover) {
 	display: grid;
 }
 
-.profile.dashboard .stats {
-	grid-area: stats;
+.profile.dashboard .stats-1 {
+	grid-area: stats-1;
+}
+
+.profile.dashboard .stats-2 {
+	grid-area: stats-2;
 }
 
 .dashboard .stat-entry {
