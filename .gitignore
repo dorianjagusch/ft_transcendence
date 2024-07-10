@@ -157,3 +157,5 @@ GitHub.sublime-settings
 
 #Ignore personal notes
 notes.txt
+**/node_modules/
+**/*package*.json
