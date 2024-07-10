@@ -185,6 +185,16 @@ class PongGame {
 		this.updateScore(players);
 		this.renderer.render(this.scene, this.camera);
 	}
+
+	toggle3D() {
+		this.PlayerLeft.switchMaterial();
+		this.PlayerLeft.updatePlayerDepth();
+		this.PlayerRight.switchMaterial();
+		this.PlayerRight.updatePlayerDepth();
+		this.GameBall.switchMaterial();
+		this.GameBall.updateBallDepth();
+		this.plane.plane.visible = !this.plane.plane.visible;
+	}
 }
 
 export default PongGame;
