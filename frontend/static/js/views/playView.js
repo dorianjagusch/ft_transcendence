@@ -9,8 +9,9 @@ export default class extends AView {
 
 	async getHTML() {
 		const gameOne = GameCard('Pong', 'pong-front', 'pong-card');
+		const gameTwo = GameCard('Other game', 'pong-front', 'pong-card');
 
-		this.updateMain(gameOne);
+		this.updateMain(gameOne, gameTwo);
 		const main = document.querySelector('main');
 		main.classList.add('flex-row');
 	}

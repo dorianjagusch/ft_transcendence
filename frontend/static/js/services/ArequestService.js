@@ -66,7 +66,6 @@ class ArequestService {
 	}
 
 	async postRequest(url, jsonBody) {
-		const cookies = getCookie('csrftoken');
 		const request = fetch(`${url}`, {
 			method: 'POST',
 			headers: {
