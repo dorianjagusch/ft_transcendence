@@ -14,4 +14,4 @@ def validate_image(file):
 		raise ValidationError('File size exceeds the maximum limit of 2MB.')
 
 	if file.content_type not in valid_mime_types:
-		raise ValidationError('Unsupported file type. Allowed types are: image/jpeg, image/png, image/gif.')
+		raise ValidationError('Unsupported file type. Allowed types are: jpeg, png, gif.')
