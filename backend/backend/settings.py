@@ -179,7 +179,6 @@ CSRF_COOKIE_SECURE = False #set to true in production
 
 CSRF_TRUSTED_ORIGINS = [
 		'http://localhost:80',
-		'http://localhost:8080',
 		'http://127.0.0.1:80',
 		'http://localhost',
 		'http://127.0.0.1',
@@ -195,7 +194,6 @@ CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
 		'http://localhost:80',
-		'http://localhost:8080',
 		'http://127.0.0.1:80',
 		'http://localhost',
 		'http://127.0.0.1',
