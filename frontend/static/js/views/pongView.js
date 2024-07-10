@@ -20,7 +20,7 @@ export default class extends AView {
 			this.chatSocket = new ChatSocket(matchUrl);
 			this.chatSocket.connect();
 		} catch (error) {
-			console.log(error);
+			this.notify(error, "error");
 		}
 
 		const pong = Pong.PongContainer();
