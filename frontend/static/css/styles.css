@@ -9,7 +9,7 @@
 
 	--bg-color: var(--blue-700);
 	--fg-color: var(--blue-400);
-	--border-color: var(-x-blue-150);
+	--border-color: var(--blue-100);
 
 	--fs-xlarge: 5rem;
 	--fs-large: 3rem;
@@ -308,7 +308,7 @@ nav img {
 }
 
 .border {
-	border: calc(var(--fs-small) / 2) solid var(--border-color);
+	border: calc(var(--fs-small) / 2) var(--border-color) solid ;
 	border-radius: 1em;
 }
 
