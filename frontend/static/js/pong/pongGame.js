@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import elements from './setupSceneElements.js';
 import Player from './Player.js';
 import Ball from './Ball.js';
+import Light from './Light.js';
+import Plane from './Plane.js';
 
 class PongGame {
 	constructor(constants) {
@@ -11,12 +13,17 @@ class PongGame {
 		this.renderer;
 		this.scene;
 		this.camera;
+		this.light;
+		this.light2;
+		this.light3;
+		this.plane;
 		this.playgroundHeight = constants.game.playgroundHeight;
 		this.sizeFactor = null;
+		this.toggle3D = this.toggle3D.bind(this);
 		this.setupGame(constants);
 	}
 
-	setupGame(constants) {
+	initializeRenderer(constants) {
 		this.sizeFactor = window.innerWidth / constants.game.width;
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(
@@ -75,6 +82,7 @@ class PongGame {
 		if (game.over === true) {
 			this.displayGameOver(game);
 		}
+
 		this.PlayerLeft.player.position.setY(players.left.position.y);
 		this.PlayerRight.player.position.setY(players.right.position.y);
 		this.GameBall.ball.position.set(ball.position.x, ball.position.y, 0);
