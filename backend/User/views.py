@@ -115,6 +115,7 @@ class UserProfilePictureView(APIView):
 		return Response(status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
 	def get(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -128,8 +129,6 @@ class UserProfilePictureView(APIView):
 				image_data = image_file.read()
 				encoded_image = base64.b64encode(image_data).decode('utf-8')
 				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
-		except User.DoesNotExist:
-			return Response({'image': ''}, status=status.HTTP_200_OK)
 		except ProfilePicture.DoesNotExist:
 			return Response({'image': ''}, status=status.HTTP_200_OK)
 		except FileNotFoundError:
