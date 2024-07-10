@@ -1140,3 +1140,64 @@ aside > button{
 aside[active] {
 	transform : translateX(-100%);
 }
+
+.player-info{
+	gap: 1em;
+	border-radius: 1em;
+	background-color: var(--fg-color);
+	padding: 2em;
+}
+
+.player-info h3{
+	align-self: center;
+}
+
+.player-info img{
+	border-radius: 0.8em;
+}
+
+.opponent-selection h3{
+	text-align: center;
+}
+
+dialog {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--fg-color);
+	border-radius: 1em;
+	padding: 2em;
+	color: var(--text-color);
+}
+
+.authenticate-user-modal > form {
+	gap: 3em;
+}
+
+dialog::backdrop{
+	background-color: hsl(0 0% 0% / 0.5);
+}
+
+dialog .x-btn{
+	position: absolute;
+	top: calc(var(--page-padding) / 2);
+	right: calc(var(--page-padding) / 2);
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+}
+
+.authenticate-user-modal > form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2em;
+}
+
+.vs{
+	font-size: var(--fs-xlarge);
+	text-align: center;
+	padding: 0;
+}
