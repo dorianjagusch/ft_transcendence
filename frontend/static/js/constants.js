@@ -7,9 +7,9 @@ const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
 const pongURL = `${baseURL}match/test`;
-const modalURL = `${baseURL}modal/`;
+const authenticationURL = `${baseURL}/authenticate/`;
 
-const allowedPaths = ['/login', '/register', '/', '/pong', '/modal'];
+const allowedPaths = ['/login', '/register', '/', '/pong'];
 
 const problemWithFetchMsg = "There was a problem with the fetch operation: ";
 
@@ -33,7 +33,7 @@ export default {
 	settingsURL,
 	friendURL,
 	pongURL,
-	modalURL,
+	authenticationURL,
 	allowedPaths,
 	FRIENDSHIPSTATUS,
 	GAMES

@@ -660,12 +660,12 @@ button:is(:focus, :hover) {
 }
 
 .decline-btn,
-.add-btn {
+.add-btn,
+.close-btn {
 	background-color: var(--bg-color);
 }
 
-.decline-btn {
-	background-color: var(--bg-color);
+.decline-btn{
 	padding: 0.8rem 2em;
 	color: white;
 	border-color: var(--decline-color);
