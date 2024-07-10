@@ -62,4 +62,10 @@ window.addEventListener('load', () => {
 	}
 });
 
+window.addEventListener('beforeunload', () => {
+	if (!sessionStorage.getItem('isLoggedInSession')) {
+		localStorage.clear();
+	}
+});
+
 export {navigateTo, router};
