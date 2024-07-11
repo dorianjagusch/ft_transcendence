@@ -1,6 +1,5 @@
 import AView from "./AView.js";
 import Modal from "../components/modal.js";
-import completeProfileForm from "../components/formComponents/completeProfileForm.js";
 import profileTitle from "../components/profileComponents/profileTitle.js";
 import profileImg from "../components/profileComponents/profileImg.js";
 import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';

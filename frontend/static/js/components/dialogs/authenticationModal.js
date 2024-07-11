@@ -1,7 +1,6 @@
 import ADialog from './ADialog.js';
 import loginForm from '../formComponents/loginForm.js';
 import AuthenticationService from '../../services/AuthenticationService.js';
-import {navigateTo} from '../../router.js';
 import {inputNotification} from '../userNotification.js';
 
 export default class AuthenticationModal extends ADialog {
@@ -10,7 +9,6 @@ export default class AuthenticationModal extends ADialog {
 		this.notify = this.notify.bind(this);
 		this.getFormData = this.getFormData.bind(this);
 		this.authenticateUser = this.authenticateUser.bind(this);
-		this.getFormData = this.getFormData.bind(this);
 		this.onDataReceived = parentCallback;
 		this.appendEventlistenters();
 	}
@@ -55,7 +53,6 @@ export default class AuthenticationModal extends ADialog {
 				if (e.target.classList.contains('primary-btn')) {
 					e.preventDefault();
 					const {username, password} = this.getFormData();
-					console.log(username, password);
 					if (!username || !password) {
 						this.notify('Provide a username and password.');
 						return;
