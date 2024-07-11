@@ -2,8 +2,6 @@ import ChatSocket from '../pong/ChatSocket.js';
 import PongService from '../services/pongService.js';
 import Pong from '../pong/pong.js';
 import AView from './AView.js';
-import PongGame from '../pong/pongGame.js';
-
 
 export default class extends AView {
 	constructor(params) {
