@@ -11,8 +11,7 @@ export default class extends AView {
 		const logoutService = new LogoutService();
 		try {
 			 await logoutService.postRequest();
-			localStorage.setItem('isLoggedIn', false);
-			localStorage.setItem('username', '');
+			localStorage.clear();
 			document.cookie.split(';').forEach((c) => {
 				document.cookie = c
 					.replace(/^ +/, '')

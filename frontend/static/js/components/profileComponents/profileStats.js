@@ -1,4 +1,3 @@
-
 const StatLine = (className, label, value, afterText = '') => {
 	const line = document.createElement('div');
 	line.classList.add(className);

@@ -6,9 +6,14 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from .validators import validate_image
+from django.core.exceptions import ValidationError
+import mimetypes
+import imghdr
+import base64
 from django.utils.crypto import get_random_string
 
-from .models import User
+from .models import User, ProfilePicture
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -93,6 +98,51 @@ class UserDetailView(APIView):
 		user.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
+class UserProfilePictureView(APIView):
+	@method_decorator(csrf_exempt)
+	def post(self, request, user_id):
+		try:
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
+		if 'file' not in request.FILES:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+		file = request.FILES['file']
+
+		try:
+			validate_image(file)
+		except ValidationError as e:
+			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+		try:
+			profile_picture = ProfilePicture.objects.get(user=user)
+			profile_picture.picture = file
+		except ProfilePicture.DoesNotExist:
+			profile_picture = ProfilePicture(user=user, picture=file)
+		profile_picture.save()
+		return Response(status=status.HTTP_200_OK)
+
+	def get(self, request, user_id):
+		try:
+			user = User.objects.get(pk=user_id)
+			profile_picture = ProfilePicture.objects.filter(user=user).first()
+			if not profile_picture:
+				return Response(status=status.HTTP_404_NOT_FOUND)
+
+			# Get the actual file path from the ImageFieldFile instance
+			image_path = profile_picture.picture.path
+			with open(image_path, "rb") as image_file:
+				image_data = image_file.read()
+				encoded_image = base64.b64encode(image_data).decode('utf-8')
+				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		except ProfilePicture.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		except FileNotFoundError:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
 	def post(self, request):
@@ -106,7 +156,7 @@ class UserLoginView(APIView):
 			login(request, user)
 			# set additional session data if necessary
 			request.session['is_authenticated'] = True
-			return Response({"message": "User login successful"}, status=status.HTTP_202_ACCEPTED)
+			return Response(UserOutputSerializer(user).data, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 

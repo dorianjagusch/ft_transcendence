@@ -1,8 +1,8 @@
 import backendURL from '../constants.js';
-import ArequestService from './ArequestService.js';
+import ARequestService from './ARequestService.js';
 import NotImplementedError from '../exceptions/NotImplementedException.js';
 
-class FriendService extends ArequestService {
+class FriendService extends ARequestService {
 	constructor() {
 		super();
 	}
