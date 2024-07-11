@@ -15,11 +15,33 @@ export default class extends AView {
 		gameCard.addEventListener('click', () => {
 			this.navigateTo('/match');
 		});
+
+		const tournamentButton = document.querySelector('.tournament-button');
+		if (tournamentButton) {
+			tournamentButton.addEventListener('click', () => {
+				const playerModal = document.querySelector('.player-number-modal');
+				playerModal.showModal();
+			});
+		}
 	}
 
 	async getHTML() {
 		const gameOne = GameCard('Pong', 'pong-front', 'pong-card');
-		this.updateMain(gameOne);
+
+		const playerNumberModal = new TournamentModal();
+		playerNumberModal.dialog.classList.add('player-number-modal');
+		playerNumberModal.dialog.classList.remove('bg-secondary');
+		playerNumberModal.dialog.classList.add('bg-primary');
+
+		const selectPlayersModal = new playersModal();
+		const playerNameModal = new changeNickNameModal();
+
+		this.updateMain(
+			gameOne,
+			playerNumberModal.dialog,
+			selectPlayersModal.dialog,
+			playerNameModal.dialog
+		);
 		const main = document.querySelector('main');
 		main.classList.add('flex-row');
 		this.attachEventListeners();
