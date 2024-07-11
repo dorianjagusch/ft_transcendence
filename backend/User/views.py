@@ -85,7 +85,7 @@ class UserDetailView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		except:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user.username = get_random_string(length=30)
+		user.username = "deleted_user_" + str(user_id + 42)
 		user.set_password(get_random_string(length=30))
 		user.is_active = False
 		user.is_staff = False
@@ -93,8 +93,6 @@ class UserDetailView(APIView):
 		user.insertTS = None
 		user.last_login = None
 		user.is_online = False
-		# profile_picture = None
-	
 		user.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
