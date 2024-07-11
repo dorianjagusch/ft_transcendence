@@ -1,44 +1,24 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
+import AObject3D from './AObject3D.js'
 
-class Ball {
-	constructor(constants) {
-		this.materials = {
-			default: new THREE.MeshBasicMaterial({color: 0xffffff}),
-			alternative: new THREE.MeshLambertMaterial({color: 0xffffff}),
+
+class Ball extends AObject3D{
+	constructor(constants, options) {
+		super(options)
+		this.dimensions = {
+			width: constants.ball.size,
+			height: constants.ball.size,
+			depth: constants.ball.size,
 		};
-		this.size = constants.ball.size;
-		this.depth = 0;
-		this.ball = this.createBall(constants);
+		this.object = this.create(constants);
 	}
 
-	createBall({game}) {
-		const ballGeometry = new THREE.BoxGeometry(this.size, this.size, this.depth);
+	create({game}) {
+		const ballGeometry = new THREE.BoxGeometry(this.dimensions.width, this.dimensions.height, this.dimensions.depth);
 		const ballMaterial = this.materials.default;
 		const ball = new THREE.Mesh(ballGeometry, ballMaterial);
 		ball.position.set(Math.floor(game.width / 2), Math.floor(game.height / 2), 0);
 		return ball;
-	}
-
-	switchMaterial() {
-		if (this.ball.material === this.materials.default) {
-			this.ball.material = this.materials.alternative;
-			this.ball.castShadow = true;
-			this.ball.receiveShadow = true;
-		} else {
-			this.ball.material = this.materials.default;
-			this.ball.castShadow = false;
-			this.ball.receiveShadow = false;
-		}
-	}
-
-	updateBallDepth() {
-		const ballGeometry = new THREE.BoxGeometry(
-			this.size,
-			this.size,
-			this.depth ? 0 : this.size
-		);
-		this.ball.geometry.dispose();
-		this.ball.geometry = ballGeometry;
 	}
 }
 export default Ball;

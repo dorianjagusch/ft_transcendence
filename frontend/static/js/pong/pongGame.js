@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import elements from './setupSceneElements.js';
 import Player from './Player.js';
 import Ball from './Ball.js';
 import Light from './Light.js';
@@ -46,7 +45,7 @@ class PongGame {
 		this.camera.position.set(
 			constants.game.width / 2,
 			constants.game.height / 2,
-			constants.game.height / (2 * Math.tan(verticalFOV * Math.PI / 360))
+			constants.game.height / (2 * Math.tan((verticalFOV * Math.PI) / 360))
 		);
 
 		this.camera.lookAt(constants.game.width / 2, constants.game.height / 2, 0);

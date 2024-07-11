@@ -1,20 +1,23 @@
 import * as THREE from 'three';
+import AObject3D from './AObject3D.js';
 
-class Player {
-	constructor(constants, isLeft, color) {
-		this.isLeft = isLeft;
-		this.color = color;
-		this.materials = {
-			default: new THREE.MeshBasicMaterial({color: 0xffffff}),
-			alternative: new THREE.MeshLambertMaterial({color: color}),
+class Player extends AObject3D{
+	constructor(constants, options) {
+		super(options)
+		if (this.isLeft === undefined || !(typeof this.isLeft === 'boolean'))
+			throw new TypeError('isLeft needs to be provided as a boolean');
+		if (!this.color)
+			throw new TypeError('color must be a number');
+
+		this.dimensions = {
+			width: constants.players.width,
+			height: constants.players.height,
+			depth: 3 * constants.ball.size,
 		};
-		this.depth = 3 * constants.ball.size;
-		this.width = constants.players.width;
-		this.height = constants.players.height;
-		this.player = this.createPlayer(constants);
+		this.object = this.create(constants);
 	}
 
-	createPlayer({players, game}) {
+	create({players, game}) {
 		const playerGeometry = new THREE.BoxGeometry(players.width, players.height, 0);
 		const playerMaterial = this.materials.default;
 		const player = new THREE.Mesh(playerGeometry, playerMaterial);
@@ -30,26 +33,5 @@ class Player {
 		return player;
 	}
 
-	switchMaterial() {
-		if (this.player.material === this.materials.default) {
-			this.player.material = this.materials.alternative;
-			this.player.receiveShadow = true;
-			this.player.castShadow = true;
-		} else {
-			this.player.material = this.materials.default;
-			this.player.receiveShadow = false;
-			this.player.castShadow = false;
-		}
-	}
-
-	updatePlayerDepth() {
-		const playerGeometry = new THREE.BoxGeometry(
-			this.width,
-			this.height,
-			this.player.geometry.parameters.depth ? 0 : this.depth
-		);
-		this.player.geometry.dispose();
-		this.player.geometry = playerGeometry;
-	}
 }
 export default Player;
