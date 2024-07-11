@@ -4,6 +4,7 @@ import {scrollContainer} from '../components/scrollContainer.js';
 import FriendService from '../services/friendService.js';
 import constants from '../constants.js';
 import AView from './AView.js';
+import getFriendProfilePicture from '../components/friendProfilePicture.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -58,6 +59,26 @@ export default class extends AView {
 		return scroller;
 	}
 
+	mapResponse = (response) => {
+		return response.map((element) => {
+			const id = element.id;
+			let profileImgUrl;
+			try {
+				const profileImg = getFriendProfilePicture(id);
+				profileImgUrl = profileImg.src;
+			} catch (error) {
+				console.log('Error getting the profile picture element: ', error);
+			}
+
+			return {
+				id: element.id,
+				username: element.username,
+				img: profileImgUrl,
+				status: element.is_online ? 'online' : 'offline',
+			};
+		});
+	};
+
 	async getHTML() {
 		let acceptedFriends = [];
 		let pendingFriends = [];
@@ -71,20 +92,10 @@ export default class extends AView {
 			);
 
 			const acceptedResponse = await acceptedPromise;
-			acceptedFriends = acceptedResponse.map((element) => ({
-				id: element.id,
-				username: element.username,
-				img: 'https://unsplash.it/200/200',
-				status: element.is_online ? 'online' : 'offline',
-			}));
+			acceptedFriends = this.mapResponse(acceptedResponse);
 
 			const pendingResponse = await pendingPromise;
-			pendingFriends = pendingResponse.map((element) => ({
-				id: element.id,
-				username: element.username,
-				img: 'https://unsplash.it/200/200',
-				status: element.is_online ? 'online' : 'offline',
-			}));
+			pendingFriends = this.mapResponse(pendingResponse);
 		} catch (error) {
 			console.error('An error occured when retrieving your friends', error);
 		}
