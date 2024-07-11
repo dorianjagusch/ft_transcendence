@@ -1205,3 +1205,59 @@ dialog .x-btn{
 	text-align: center;
 	padding: 0;
 }
+
+/* Radio buttons */
+.menu-item:has(input[type='radio']+label){
+	display: flex;
+	justify-content: space-around;
+}
+
+input[type='radio']{
+	margin: 0;
+	appearance: none;
+}
+
+input[type='radio']+label{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+input[type="radio"]+label::after {
+	content: '';
+}
+
+.radio-item:has(input[type="radio"]) {
+	position: relative;
+	margin-bottom: 1em;
+}
+
+p:has(+.menu-item>input[type="radio"]){
+	margin-block: 2em;
+}
+
+*:has(input[type="radio"]) {
+	margin-bottom: 1em;
+}
+
+.radio-item:has(input[type="radio"])::before {
+	position: absolute;
+	content: "";
+	border-radius: 5px;
+	width: 2em;
+	height: 2em;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--bg-color);
+}
+
+.radio-item:has(input[type="radio"]:checked)::before {
+	border: calc(var(--fs-small) / 3) solid white;
+}
+
+p:has(+.menu-item) {
+	margin-block: 1em;
+}
+
