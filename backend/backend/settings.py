@@ -23,6 +23,13 @@ APP_DIRS = [
 
 TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2097152
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2097152
+
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -44,7 +51,6 @@ INSTALLED_APPS = [
     'backend',
 	'channels',
 	'daphne',
-	'pong',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,6 +65,8 @@ INSTALLED_APPS = [
 	'Match',
 	'Player',
 	'Tournament',
+	'pong',
+	'stats',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +114,9 @@ DATABASES = {
     }
 }
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 100 # session expiration time (in seconds)
@@ -119,11 +130,6 @@ AUTH_USER_MODEL = 'User.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
 ]
-
-# Configure login URL
-LOGIN_URL = '/users/login/'  # The URL where the login view is located
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

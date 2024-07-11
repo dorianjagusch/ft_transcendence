@@ -7,12 +7,18 @@ export default class extends AView {
 		this.setTitle('Play');
 	}
 
+	attachEventListeners() {
+		const gameCard = document.querySelector('.game-card');
+		gameCard.addEventListener('click', () => {
+			this.navigateTo('/match');
+		});
+	}
+
 	async getHTML() {
 		const gameOne = GameCard('Pong', 'pong-front', 'pong-card');
-		const gameTwo = GameCard('Other game', 'pong-front', 'pong-card');
-
-		this.updateMain(gameOne, gameTwo);
+		this.updateMain(gameOne);
 		const main = document.querySelector('main');
 		main.classList.add('flex-row');
+		this.attachEventListeners();
 	}
 }
