@@ -78,7 +78,6 @@ const userData = {
 	stats: [
 		// [statObj, ...] | null
 		statObj1,
-		statObj2,
 	],
 	playHistory: [
 		//[historyObj, ...] | null
