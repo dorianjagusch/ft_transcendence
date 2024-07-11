@@ -2,7 +2,15 @@ import PongGame from './pongGame.js';
 
 class ChatSocket {
 	constructor(url) {
-		this.chatSocket = new WebSocket(url);
+
+		this.chatSocket = null;
+
+		try {
+			this.chatSocket = new WebSocket(url);
+		} catch (error) {
+			throw new Error('Could not connect to chat socket');
+		}
+
 		this.acceptMessage = this.acceptMessage.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handleError = this.handleError.bind(this);
@@ -21,13 +29,16 @@ class ChatSocket {
 	}
 
 	handleClose(e) {
-		console.error('Chat socket closed unexpectedly');
-		this.removeEventListeners();
+		if (this.chatSocket && this.chatSocket.readyState == WebSocket.OPEN) {
+			this.chatSocket.close();
+			this.removeEventListeners();
+			this.chatSocket = null;
+		}
 	}
 
 	handleError(e) {
 		console.error('Chat socket error:', e);
-		if (chatSocket.readyState == WebSocket.OPEN) {
+		if (this.chatSocket && chatSocket.readyState == WebSocket.OPEN) {
 			chatSocket.close();
 		}
 		this.removeEventListeners();
@@ -38,10 +49,12 @@ class ChatSocket {
 	}
 
 	removeEventListeners() {
-		this.chatSocket.removeEventListener('close', this.handleClose);
-		this.chatSocket.removeEventListener('error', this.handleError);
-		this.chatSocket.removeEventListener('message', this.acceptMessage);
-		window.removeEventListener('keyup', this.sendKey);
+		if (this.chatSocket){
+			this.chatSocket.removeEventListener('close', this.handleClose);
+			this.chatSocket.removeEventListener('error', this.handleError);
+			this.chatSocket.removeEventListener('message', this.acceptMessage);
+			window.removeEventListener('keyup', this.sendKey);
+		}
 	}
 
 	connect() {

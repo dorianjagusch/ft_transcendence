@@ -2,9 +2,9 @@ import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
 import customErrors from '../exceptions/customErrors.js';
 
-class RequestService {
+class ARequestService {
 	constructor() {
-		if (this.constructor == RequestService) {
+		if (this.constructor == ARequestService) {
 			throw new Error("Abstract classes can't be instantiated.");
 		}
 	}
@@ -66,7 +66,6 @@ class RequestService {
 	}
 
 	async postRequest(url, jsonBody) {
-		const cookies = getCookie('csrftoken');
 		const request = fetch(`${url}`, {
 			method: 'POST',
 			headers: {
@@ -108,4 +107,4 @@ class RequestService {
 	}
 }
 
-export default RequestService;
+export default ARequestService;

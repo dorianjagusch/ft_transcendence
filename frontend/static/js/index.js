@@ -1,5 +1,4 @@
 import {router, navigateTo} from './router.js';
-import logoutService from './services/logoutService.js';
 
 window.addEventListener('popstate', router);
 
@@ -10,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			navigateTo(e.target.href);
 		}
 		if (!e.target.matches('[active]') && !e.target.matches("img#menu")) {
-			document.querySelector('aside').removeAttribute('active');
+			document.querySelector('aside')?.removeAttribute('active');
 		}
 	});
 	router();
