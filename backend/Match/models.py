@@ -7,10 +7,10 @@ from Tournament.models import Tournament
 # Create your models here.
 class Match(models.Model):
 	state = models.IntegerField(choices=MatchState.choices, default=MatchState.LOBBY)
-	start_time = models.DateTimeField(null=True, blank=True)
-	end_time = models.DateTimeField(null=True, blank=True)
-	created_at = models.DateTimeField(auto_now_add=True)
-	update_at = models.DateTimeField(auto_now=True)
+	start_ts = models.DateTimeField(null=True, blank=True)
+	end_ts = models.DateTimeField(null=True, blank=True)
+	insert_ts = models.DateTimeField(auto_now_add=True)
+	update_ts = models.DateTimeField(auto_now=True)
 
 	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
