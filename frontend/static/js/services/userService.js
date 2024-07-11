@@ -1,7 +1,7 @@
 import backendURL from '../constants.js';
-import ArequestService from './ArequestService.js';
+import ARequestService from './ARequestService.js';
 
-class UserService extends ArequestService {
+class UserService extends ARequestService {
 	constructor() {
 		super();
 	}

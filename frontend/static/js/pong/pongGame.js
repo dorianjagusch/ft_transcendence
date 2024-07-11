@@ -24,10 +24,10 @@ class PongGame {
 	}
 
 	initializeRenderer(constants) {
-		this.sizeFactor = window.innerWidth / constants.game.width;
+		this.sizeFactor = window.innerWidth / constants.game.width * 0.8;
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(
-			Math.floor(window.innerWidth),
+			Math.floor(window.innerWidth * 0.8),
 			Math.floor(constants.game.height * this.sizeFactor)
 		);
 		document.querySelector('#pong').appendChild(this.renderer.domElement);

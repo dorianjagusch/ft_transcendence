@@ -6,6 +6,7 @@ const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
 const pongURL = `${baseURL}match/test`;
+const authenticationURL = `${baseURL}/authenticate/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];
 
@@ -31,6 +32,7 @@ export default {
 	settingsURL,
 	friendURL,
 	pongURL,
+	authenticationURL,
 	allowedPaths,
 	FRIENDSHIPSTATUS,
 	GAMES
