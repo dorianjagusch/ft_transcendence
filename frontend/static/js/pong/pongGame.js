@@ -6,19 +6,20 @@ import Plane from './Plane.js';
 
 class PongGame {
 	constructor(constants) {
-		this.PlayerLeft;
-		this.PlayerRight;
-		this.GameBall;
+		this.playerLeft;
+		this.playerRight;
+		this.gameBall;
 		this.renderer;
 		this.scene;
 		this.camera;
-		this.light;
-		this.light2;
-		this.light3;
+		this.sceneLights;
 		this.plane;
+		this.materials;
+		this.is3D = false;
 		this.playgroundHeight = constants.game.playgroundHeight;
 		this.sizeFactor = null;
-		this.toggle3D = this.toggle3D.bind(this);
+		this.display3D = this.display3D.bind(this);
+		this.display2D = this.display2D.bind(this);
 		this.setupGame(constants);
 	}
 
@@ -55,93 +56,117 @@ class PongGame {
 		this.scene = new THREE.Scene();
 	}
 
-	addPlayers(constants) {
-		this.PlayerLeft = new Player(constants, true, 0xff0000);
-		this.scene.add(this.PlayerLeft.player);
-
-		this.PlayerRight = new Player(constants, false, 0x0000ff);
-		this.scene.add(this.PlayerRight.player);
-	}
-
-	addBall(constants) {
-		this.GameBall = new Ball(constants);
-		this.scene.add(this.GameBall.ball);
-	}
-
-	addPlane(constants) {
-		this.plane = new Plane(constants);
-		this.scene.add(this.plane.plane);
-		this.plane.plane.visible = false;
-	}
-
-	addLight(type, options) {
-		const light = new Light(type, {
-			color: options.color,
-			intensity: options.intensity,
-			position: options.position,
-		});
-
-		if (options.angle) {
-			light.angle = options.angle;
+	addObject(Entity, constants, options = null) {
+		if (!Entity instanceof THREE.Object3D && !Entity instanceof THREE.Light) {
+			throw new Error('Entity must be a Three Object3D constructor');
 		}
-
-		if (options.penumbra) {
-			light.penumbra = options.penumbra;
-		}
-
-		this.scene.add(light.light);
-		return light;
+		const object = new Entity(constants, options);
+		this.scene.add(object.object || object.light);
+		return object;
 	}
 
-	setupLights(constants) {
-		this.light = this.addLight(THREE.SpotLight, {
-			color: 0xffffff,
-			intensity: 750,
-			position: {
-				x: constants.game.width / 2,
-				y: constants.game.height / 2,
-				z: 30,
+	addLights(constants) {
+		const gameLights = [
+			{
+				type: THREE.SpotLight,
+				props: {
+					color: 0xffffff,
+					intensity: 750,
+					position: {
+						x: constants.game.width / 2,
+						y: constants.game.height / 2,
+						z: 30,
+					},
+				},
 			},
-			angle: Math.PI / 64,
-		});
-
-		this.light2 = this.addLight(THREE.SpotLight, {
-			color: this.PlayerLeft.color,
-			intensity: 1000,
-			position: {
-				x: this.PlayerRight.player.position.x,
-				y: this.PlayerRight.player.position.y,
-				z: 30,
+			{
+				type: THREE.SpotLight,
+				props: {
+					color: this.playerLeft.color,
+					intensity: 1000,
+					position: {
+						x: this.playerRight.object.position.x,
+						y: this.playerRight.object.position.y,
+						z: 30,
+					},
+					penumbra: 0.7,
+				},
 			},
-			penumbra: 0.7,
-		});
-
-		this.light3 = this.addLight(THREE.SpotLight, {
-			color: this.PlayerRight.color,
-			intensity: 1000,
-			position: {
-				x: this.PlayerLeft.player.position.x,
-				y: this.PlayerLeft.player.position.y,
-				z: 50,
+			{
+				type: THREE.SpotLight,
+				props: {
+					color: this.playerRight.color,
+					intensity: 1000,
+					position: {
+						x: this.playerLeft.object.position.x,
+						y: this.playerLeft.object.position.y,
+						z: 50,
+					},
+					penumbra: 0.7,
+				},
 			},
-			penumbra: 0.7,
-		});
+			{
+				type: THREE.AmbientLight,
+				props: {
+					color: 0x404040,
+					intensity: 3,
+					position: {},
+				},
+			},
+		];
 
-		this.AmbientLight = this.addLight(THREE.AmbientLight, {
-			color: 0x404040,
-			intensity: 3,
-			position: {},
-		});
+		const sceneLights = gameLights.map((light) => this.addObject(Light, null, light));
+		return sceneLights;
+	}
+
+	createMaterials() {
+		const materials = {
+			default: new THREE.MeshBasicMaterial({color: 0xffffff}),
+			plane: new THREE.MeshLambertMaterial({color: 0x333333}),
+			playerLeft: new THREE.MeshLambertMaterial({color: 0xff0000}),
+			playerRight: new THREE.MeshLambertMaterial({color: 0x0000ff}),
+			ball: new THREE.MeshLambertMaterial({color: 0xffffff}),
+		};
+		this.materials = materials;
 	}
 
 	setupGame(constants) {
 		this.initializeRenderer(constants);
 		this.setupCamera(constants);
 		this.createScene();
-		this.addPlayers(constants);
-		this.addBall(constants);
-		this.addPlane(constants);
-		this.setupLights(constants);
+		this.createMaterials();
+
+		this.playerLeft = this.addObject(Player, constants, {
+			materials: {
+				default: this.materials.default,
+				alternative: this.materials.playerLeft,
+			},
+			isLeft: true,
+			color: 0xff0000,
+		});
+
+		this.playerRight = this.addObject(Player, constants, {
+			materials: {
+				default: this.materials.default,
+				alternative: this.materials.playerRight,
+			},
+			isLeft: false,
+			color: 0x0000ff,
+		});
+
+		this.gameBall = this.addObject(Ball, constants, {
+			materials: {
+				default: this.materials.default,
+				alternative: this.materials.ball,
+			},
+		});
+		this.plane = this.addObject(Plane, constants, {
+			materials: {
+				default: this.materials.plane,
+			},
+			visible: false,
+		});
+		this.sceneLights = this.addLights(constants);
 		this.renderer.render(this.scene, this.camera);
 	}
 
@@ -169,30 +194,45 @@ class PongGame {
 			this.displayGameOver(game);
 		}
 
-		this.PlayerLeft.player.position.setY(players.left.position.y);
-		this.PlayerRight.player.position.setY(players.right.position.y);
-		this.GameBall.ball.position.set(ball.position.x, ball.position.y, 0);
+		this.playerLeft.object.position.setY(players.left.position.y);
+		this.playerRight.object.position.setY(players.right.position.y);
+		this.gameBall.object.position.set(ball.position.x, ball.position.y, 0);
 
-		if (ball.depth){
-			this.GameBall.ball.rotation.x += 0.1;
+		if (this.is3D) {
+			this.gameBall.object.rotation.x += 0.1;
 			const rotationSpeed = 0.075;
-			this.GameBall.ball.rotation.y += rotationSpeed;
+			this.gameBall.object.rotation.y += rotationSpeed;
+			this.gameBall.object.updateMatrix();
 		}
-		this.light.followObject(this.GameBall.ball);
-		this.light2.followObject(this.PlayerLeft.player);
-		this.light3.followObject(this.PlayerRight.player);
+		this.sceneLights[0].followObject(this.gameBall.object);
+		this.sceneLights[1].followObject(this.playerLeft.object);
+		this.sceneLights[2].followObject(this.playerRight.object);
 		this.updateScore(players);
 		this.renderer.render(this.scene, this.camera);
 	}
 
-	toggle3D() {
-		this.PlayerLeft.switchMaterial();
-		this.PlayerLeft.updatePlayerDepth();
-		this.PlayerRight.switchMaterial();
-		this.PlayerRight.updatePlayerDepth();
-		this.GameBall.switchMaterial();
-		this.GameBall.updateBallDepth();
-		this.plane.plane.visible = !this.plane.plane.visible;
+	display3D() {
+		this.is3D = true;
+		this.playerLeft.switchMaterial(this.materials.playerLeft, true);
+		this.playerLeft.setDepth(this.playerLeft.getDepth());
+		this.playerRight.switchMaterial(this.materials.playerRight, true);
+		this.playerRight.setDepth(this.playerLeft.getDepth());
+		this.gameBall.switchMaterial(this.materials.ball, true);
+		this.gameBall.setDepth(this.gameBall.getDepth());
+		this.plane.setVisibility(true);
+	}
+
+	display2D() {
+		this.is3D = false;
+		this.playerLeft.switchMaterial(this.materials.default, false);
+		this.playerLeft.setDepth(0);
+		this.playerRight.switchMaterial(this.materials.default, false);
+		this.playerRight.setDepth(0);
+		this.gameBall.switchMaterial(this.materials.default, false);
+		this.gameBall.setDepth(0);
+		this.gameBall.object.rotation.x = 0;
+		this.gameBall.object.rotation.y = 0;
+		this.plane.setVisibility(false);
 	}
 }
 
