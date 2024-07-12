@@ -45,6 +45,13 @@ class ChatSocket {
 	}
 
 	sendKey(e) {
+		if (e.key == " " && this.game){
+			if (!this.game.is3D){
+				this.game.display3D();
+			} else {
+				this.game.display2D();
+			}
+		}
 		this.chatSocket.send(e.key);
 	}
 
