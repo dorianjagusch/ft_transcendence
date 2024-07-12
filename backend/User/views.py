@@ -11,6 +11,7 @@ from django.core.exceptions import ValidationError
 import mimetypes
 import imghdr
 import base64
+from django.utils.crypto import get_random_string
 
 from .models import User, ProfilePicture
 from Friends.models import Friend
@@ -84,7 +85,15 @@ class UserDetailView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		except:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user.delete()
+		user.username = "deleted_user_" + str(user_id + 42)
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insertTS = None
+		user.last_login = None
+		user.is_online = False
+		user.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserProfilePictureView(APIView):
