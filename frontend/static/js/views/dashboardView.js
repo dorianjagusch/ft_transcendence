@@ -1,6 +1,5 @@
 import AView from "./AView.js";
-import Modal from "../components/modal.js";
-import completeProfileForm from "../components/formComponents/completeProfileForm.js";
+import getProfilePicture from "../components/profilePicture.js";
 import profileTitle from "../components/profileComponents/profileTitle.js";
 import profileImg from "../components/profileComponents/profileImg.js";
 import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
@@ -18,12 +17,19 @@ export default class extends AView {
 		this.setTitle("Dashboard");
 	}
 
-	async getHTML() {
+	getHTML() {
 		const title = profileTitle("Your Stats");
-		const userImg = profileImg(userData.user.img);
+
+		let imgElement;
+		try {
+			const img = getProfilePicture();
+			imgElement = profileImg(img);
+		} catch (error) {
+			console.log('Error getting the profile picture element: ', error);
+		}
 
 		const userPlacement = arrayToElementsList(userData.placements, "placements", smallPlacementCard);
-		userPlacement.classList.add('flex-col')
+		userPlacement.classList.add('flex-col');
 		const userDescription = profileDescription(userData.user.description);
 
 		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, "column");
@@ -40,13 +46,11 @@ export default class extends AView {
 		main.classList.add("profile", "dashboard");
 		this.updateMain(
 			title,
-			userImg,
+			imgElement,
 			userPlacement,
 			userDescription,
 			userSummary,
 			...userStats,
-			// gameGraph1,
-			// gameGraph2,
 			userHistory
 		);
 	}

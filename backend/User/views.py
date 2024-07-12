@@ -98,6 +98,8 @@ class UserDetailView(APIView):
 
 class UserProfilePictureView(APIView):
 	@method_decorator(csrf_exempt)
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
 	def post(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -121,12 +123,14 @@ class UserProfilePictureView(APIView):
 		profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
 
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
 	def get(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
 			profile_picture = ProfilePicture.objects.filter(user=user).first()
 			if not profile_picture:
-				return Response(status=status.HTTP_404_NOT_FOUND)
+				return Response({'image': ''}, status=status.HTTP_200_OK)
 
 			# Get the actual file path from the ImageFieldFile instance
 			image_path = profile_picture.picture.path
@@ -134,10 +138,8 @@ class UserProfilePictureView(APIView):
 				image_data = image_file.read()
 				encoded_image = base64.b64encode(image_data).decode('utf-8')
 				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
 		except ProfilePicture.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({'image': ''}, status=status.HTTP_200_OK)
 		except FileNotFoundError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
