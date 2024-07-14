@@ -7,7 +7,7 @@ class PongService extends ARequestService {
 		super();
 	}
 
-	async getRequest() {
+	async getRequest(url) {
 		return super.getRequest(backendURL.pongURL);
 	}
 

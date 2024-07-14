@@ -23,25 +23,81 @@ export default class extends AView {
 				playerModal.showModal();
 			});
 		}
+		if (!document.querySelector('.select-players-modal')) {
+			return;
+		}
+	}
+
+	adjustSummaryModal() {
+		document.querySelector('main').appendChild(this.summaryModal.dialog);
+		this.summaryModal.dialog.classList.add('summary-modal');
+		this.summaryModal.dialog.classList.remove('bg-secondary');
+		this.summaryModal.dialog.classList.add('bg-primary');
+		const summaryTitle = document.createElement('h3');
+		summaryTitle.textContent = 'Start this tournament?';
+		document.querySelector('.selected-players').prepend(summaryTitle);
+	}
+
+	openSummaryModal(tournamentData) {
+		this.selectPlayersModal.dialog.close();
+		this.summaryModal = new SummaryModal(this.startTournament, tournamentData);
+		this.adjustSummaryModal();
+		this.summaryModal.dialog.addEventListener('click', (e) => {
+			if (e.target.classList.contains('accept-btn')) {
+				e.preventDefault();
+				this.summaryModal.dialog.close();
+				this.startTournament(tournamentData);
+			} else if (e.target.classList.contains('decline-btn')) {
+				e.preventDefault();
+				this.summaryModal.dialog.close();
+				this.selectPlayersModal.dialog.showModal();
+			}
+		});
+		this.summaryModal.dialog.showModal();
+	}
+
+	startTournament(tournamentData) {
+		// this.navigateTo(`/tournament/${tournamentData.id}/match/${tournamentData.match_id}`);
+		this.navigateTo('/pong');
+	}
+
+	adjustSelectPlayerModal() {
+		document.querySelector('main').appendChild(this.selectPlayersModal.dialog);
+		this.selectPlayersModal.dialog.classList.add('player-modal');
+		this.selectPlayersModal.dialog.classList.remove('bg-secondary');
+		this.selectPlayersModal.dialog.classList.add('bg-primary');
+		const selectPlayerTitle = document.createElement('h3');
+		selectPlayerTitle.textContent = 'Select Players';
+		document.querySelector('.player-selection').prepend(selectPlayerTitle);
+	}
+
+	openSelectPlayersModal(tournamentData) {
+		this.playerNumberModal.dialog.close();
+		if (this.selectPlayersModal && this.selectPlayersModal.tournamentId === tournamentData.id) {
+			this.selectPlayersModal.dialog.showModal();
+			return;
+		}
+		this.selectPlayersModal = new SelectPlayersModal(this.openSummaryModal, tournamentData);
+		this.adjustSelectPlayerModal();
+		this.selectPlayersModal.dialog.addEventListener('click', (e) => {
+			if (e.target.classList.contains('decline-btn')) {
+				e.preventDefault();
+				this.selectPlayersModal.dialog.close();
+				this.playerNumberModal.dialog.showModal();
+			}
+		});
+		this.selectPlayersModal.dialog.showModal();
 	}
 
 	async getHTML() {
 		const gameOne = GameCard('Pong', 'pong-front', 'pong-card');
 
-		const playerNumberModal = new TournamentModal();
-		playerNumberModal.dialog.classList.add('player-number-modal');
-		playerNumberModal.dialog.classList.remove('bg-secondary');
-		playerNumberModal.dialog.classList.add('bg-primary');
+		this.playerNumberModal = new TournamentModal(this.openSelectPlayersModal);
+		this.playerNumberModal.dialog.classList.add('player-number-modal');
+		this.playerNumberModal.dialog.classList.remove('bg-secondary');
+		this.playerNumberModal.dialog.classList.add('bg-primary');
 
-		const selectPlayersModal = new playersModal();
-		const playerNameModal = new changeNickNameModal();
-
-		this.updateMain(
-			gameOne,
-			playerNumberModal.dialog,
-			selectPlayersModal.dialog,
-			playerNameModal.dialog
-		);
+		this.updateMain(gameOne, this.playerNumberModal.dialog);
 		const main = document.querySelector('main');
 		main.classList.add('flex-row');
 		this.attachEventListeners();

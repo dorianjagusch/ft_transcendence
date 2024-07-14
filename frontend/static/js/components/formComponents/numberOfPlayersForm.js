@@ -8,7 +8,7 @@ export default class extends AForm {
 	}
 
 	generateForm() {
-		const header = document.createElement('h2');
+		const header = document.createElement('h3');
 		header.textContent = 'Pong Tournament';
 		const tournamentName = inputField('text', 'Battle Name', 'tournament-name');
 		tournamentName.setAttribute('placeholder', 'optional')

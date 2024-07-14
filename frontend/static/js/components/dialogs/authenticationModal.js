@@ -6,10 +6,10 @@ import {inputNotification} from '../userNotification.js';
 export default class AuthenticationModal extends ADialog {
 	constructor(parentCallback) {
 		super(new loginForm(), new AuthenticationService());
-		this.notify = this.notify.bind(this);
 		this.getFormData = this.getFormData.bind(this);
 		this.authenticateUser = this.authenticateUser.bind(this);
 		this.onDataReceived = parentCallback;
+		this.tournamentId;
 		this.appendEventlistenters();
 	}
 
@@ -18,14 +18,6 @@ export default class AuthenticationModal extends ADialog {
 		const username = form.querySelector('#username').value;
 		const password = form.querySelector('#current-password').value;
 		return {username, password};
-	}
-
-	notify(message) {
-		const notification = inputNotification(message);
-		this.form.form.querySelector('h3').after(notification);
-		setTimeout(() => {
-			notification.remove();
-		}, 3000);
 	}
 
 	async authenticateUser(guestUser) {
