@@ -32,7 +32,6 @@ def must_be_url_user(view_func):
 		return view_func(*args, **kwargs)
 	return wrapper
 
-
 def must_be_body_user_id(view_func):
 	@wraps(view_func)
 	def wrapper(*args, **kwargs):

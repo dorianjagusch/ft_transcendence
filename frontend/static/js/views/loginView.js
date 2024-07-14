@@ -23,6 +23,8 @@ export default class extends AView {
 			localStorage.setItem('username', user.username);
 			localStorage.setItem('isLoggedIn', true);
 			localStorage.setItem('user_id', user.id)
+
+			sessionStorage.setItem('isLoggedInSession', true);
 			this.navigateTo('/dashboard');
 		} catch (error) {
 			if (!error.status){

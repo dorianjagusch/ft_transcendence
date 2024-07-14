@@ -229,10 +229,3 @@ export default class extends AView {
 	}
 }
 
-// TODO: Implement the profile page view
-
-// 3. Set up event handler for friend request buttons
-// 4. Set up event handler for accept/decline friend request buttons
-// 5. Set up event handler for cancel friend request buttons
-// 6. Set up event handler for unfriend buttons
-// 7. Set up event handler for invite to game buttons

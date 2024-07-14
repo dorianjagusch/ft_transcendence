@@ -11,6 +11,7 @@ from django.core.exceptions import ValidationError
 import mimetypes
 import imghdr
 import base64
+from django.utils.crypto import get_random_string
 
 from .models import User, ProfilePicture
 from Friends.models import Friend
@@ -84,11 +85,21 @@ class UserDetailView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		except:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user.delete()
+		user.username = "deleted_user_" + str(user_id + 42)
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insertTS = None
+		user.last_login = None
+		user.is_online = False
+		user.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserProfilePictureView(APIView):
 	@method_decorator(csrf_exempt)
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
 	def post(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
@@ -112,12 +123,14 @@ class UserProfilePictureView(APIView):
 		profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
 
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
 	def get(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
 			profile_picture = ProfilePicture.objects.filter(user=user).first()
 			if not profile_picture:
-				return Response(status=status.HTTP_404_NOT_FOUND)
+				return Response({'image': ''}, status=status.HTTP_200_OK)
 
 			# Get the actual file path from the ImageFieldFile instance
 			image_path = profile_picture.picture.path
@@ -125,10 +138,8 @@ class UserProfilePictureView(APIView):
 				image_data = image_file.read()
 				encoded_image = base64.b64encode(image_data).decode('utf-8')
 				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
 		except ProfilePicture.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({'image': ''}, status=status.HTTP_200_OK)
 		except FileNotFoundError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 

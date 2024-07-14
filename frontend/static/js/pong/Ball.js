@@ -1,13 +1,21 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
+import AObject3D from './AObject3D.js'
 
-class Ball {
-	constructor(constants) {
-		this.ball = this.createBall(constants);
+
+class Ball extends AObject3D{
+	constructor(constants, options) {
+		super(options)
+		this.dimensions = {
+			width: constants.ball.size,
+			height: constants.ball.size,
+			depth: constants.ball.size,
+		};
+		this.object = this.create(constants);
 	}
 
-	createBall({ball: {size}, game}) {
-		const ballGeometry = new THREE.BoxGeometry(size, size, 0);
-		const ballMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+	create({game}) {
+		const ballGeometry = new THREE.BoxGeometry(this.dimensions.width, this.dimensions.height, this.dimensions.depth);
+		const ballMaterial = this.materials.default;
 		const ball = new THREE.Mesh(ballGeometry, ballMaterial);
 		ball.position.set(Math.floor(game.width / 2), Math.floor(game.height / 2), 0);
 		return ball;

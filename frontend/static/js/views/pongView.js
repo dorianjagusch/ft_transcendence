@@ -13,6 +13,29 @@ export default class extends AView {
 		this.setTitle('Pong');
 		this.chatSocket = null;
 		this.pongService = new PongService();
+		this.attachEventListeners = this.attachEventListeners.bind(this);
+	}
+
+	attachEventListeners() {
+		document.querySelectorAll('.nav-link').forEach((link) => {
+			link.addEventListener('click', this.chatSocket.handleClose);
+		});
+
+		window.addEventListener('beforeunload', this.chatSocket.handleClose);
+
+		const observer = new MutationObserver((mutationsList, observer) => {
+			for (let mutation of mutationsList) {
+				if (mutation.removedNodes) {
+					mutation.removedNodes.forEach((node) => {
+						if (node.id = "pong") {
+							this.chatSocket.handleClose();
+							observer.disconnect();
+						}
+					});
+				}
+			}
+		});
+		observer.observe(document.body, {childList: true, subtree: true});
 	}
 
 	async getHTML() {
@@ -22,10 +45,12 @@ export default class extends AView {
 			this.chatSocket = new ChatSocket(matchUrl);
 			this.chatSocket.connect();
 		} catch (error) {
-			console.log(error);
+			this.notify(error);
+			this.navigateTo('/play');
 		}
 
 		const pong = Pong.PongContainer();
 		this.updateMain(pong);
+		this.attachEventListeners();
 	}
 }
