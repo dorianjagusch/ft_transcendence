@@ -23,8 +23,9 @@ export default class selectPlayersForm extends AForm {
 				const playerCard = PlayerCard(
 					localStorage.getItem('username'),
 					// localStorage.getItem('userImage')
-					'../static/assets/img/default-user.png'
-					, 0, true
+					'../static/assets/img/default-user.png',
+					0,
+					true
 				);
 				playerCard.setAttribute('data-user-selected', 'true')
 				playerList.appendChild(playerCard);
