@@ -7,7 +7,6 @@ from .game_stats import GameStats
 
 class PongStatus:
     def __init__(self):
-        # Initialize game state
         self.player_left = Player(WALL_MARGIN)
         self.player_right = Player(PLAYGROUND_WIDTH - WALL_MARGIN)
         self.ball = Ball()
