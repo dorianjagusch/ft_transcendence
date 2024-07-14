@@ -1,13 +1,16 @@
 import AView from './AView.js';
 import {GameCard} from '../components/gameCard.js';
 import TournamentModal from '../components/dialogs/tournamentModals/tournamentModal.js';
-import playersModal from '../components/dialogs/tournamentModals/playerModal.js';
-import changeNickNameModal from '../components/dialogs/tournamentModals/changeNickNameModal.js';
+import SelectPlayersModal from '../components/dialogs/tournamentModals/selectPlayersModal.js';
+import SummaryModal from '../components/dialogs/tournamentModals/summaryModal.js';
+import {navigateTo} from '../router.js';
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Play');
+		this.openSelectPlayersModal = this.openSelectPlayersModal.bind(this);
+		this.openSummaryModal = this.openSummaryModal.bind(this);
 	}
 
 	attachEventListeners() {
