@@ -23,10 +23,11 @@ export default class AuthenticationModal extends ADialog {
 	async authenticateUser(guestUser) {
 		try {
 			const guestData = {
-				username: 'Player 2',
+				username: guestUser.username,
 				img: './static/assets/img/default-user.png',
-				wins: 20,
-				losses: 0,
+				wins: 20, //needed for matches
+				losses: 0, //needed for matches both are just in the mock data, but are expected for stats of individual match display
+				player_id: this.dialog.getAttribute('data-modal-id'),
 			};
 			// const guestData = await this.service.postRequest(guestUser);
 			this.dialog.close();
@@ -52,7 +53,7 @@ export default class AuthenticationModal extends ADialog {
 					try {
 						this.authenticateUser({username, password});
 					} catch (error) {
-						console.error(error);
+						thi§s.notify(error.message);
 					}
 				} else if (e.target.classList.contains('decline-btn')) {
 					this.dialog.close();

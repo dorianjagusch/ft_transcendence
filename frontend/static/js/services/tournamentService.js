@@ -2,7 +2,7 @@ import ARequestService from "./ARequestService.js";
 import backendURL from "../constants.js";
 import NotImplementedError from "../exceptions/NotImplementedException.js";
 
-export default class TournamenService extends ARequestService{
+export default class TournamentService extends ARequestService{
 	constructor() {
 		super();
 	}
