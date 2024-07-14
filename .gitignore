@@ -157,13 +157,8 @@ GitHub.sublime-settings
 
 #Ignore personal notes
 notes.txt
-<<<<<<< HEAD
-**/node_modules/
-**/*package*.json
-=======
 
 #frontend testing
 **/node_modules/
 frontend/**/tests
 frontend/**/package*.json
->>>>>>> main
