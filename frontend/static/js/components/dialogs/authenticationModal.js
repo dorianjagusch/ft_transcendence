@@ -1,7 +1,6 @@
 import ADialog from './ADialog.js';
 import loginForm from '../formComponents/loginForm.js';
 import AuthenticationService from '../../services/AuthenticationService.js';
-import {inputNotification} from '../userNotification.js';
 
 export default class AuthenticationModal extends ADialog {
 	constructor(parentCallback) {
@@ -53,7 +52,7 @@ export default class AuthenticationModal extends ADialog {
 					try {
 						this.authenticateUser({username, password});
 					} catch (error) {
-						thi§s.notify(error.message);
+						this.notify(error.message);
 					}
 				} else if (e.target.classList.contains('decline-btn')) {
 					this.dialog.close();
