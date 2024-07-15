@@ -1344,3 +1344,34 @@ dialog h3 {
 		}
 	}
 }
+
+
+.search-friend-modal{
+	& .menu-item{
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5em;
+	}
+
+	& .friend-result{
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1em;
+		padding: 1em;
+		border-radius: 1em;
+		margin-bottom: 1em;
+
+		&  > img{
+			width: 2.5em;
+			height: 2.5em;
+			border-radius: 1em;
+		}
+
+		& button img{
+			padding: 0.75em;
+		}
+	}
+}
