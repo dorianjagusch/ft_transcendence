@@ -47,7 +47,7 @@ export default class extends AView {
 
 	openSearchFriendsmodal() {
 		const modal = document.querySelector('.search-friends-modal');
-		modal.openModal();
+		modal.showModal();
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
