@@ -1,4 +1,5 @@
 import AForm from './AForm.js';
+import InputField from './inputField.js';
 
 export default class searchFriendsForm extends AForm {
 	constructor() {
@@ -11,6 +12,6 @@ export default class searchFriendsForm extends AForm {
 		const resultSection = document.createElement('div');
 		resultSection.classList.add('search-results');
 		this.appendToForm(searchField, resultSection);
-		return form;
+		return this.getForm();
 	}
 }

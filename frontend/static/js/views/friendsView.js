@@ -47,7 +47,7 @@ export default class extends AView {
 
 	openSearchFriendsmodal() {
 		const modal = document.querySelector('.search-friends-modal');
-		modal.openModal
+		modal.openModal();
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
@@ -117,9 +117,13 @@ export default class extends AView {
 		const searchFriendsButton = document.createElement('button');
 		searchFriendsButton.classList.add('primary-btn');
 		searchFriendsButton.textContent = 'Search Friends';
-		const searchFriendsModal = new SearchFriendsModal();
-
 		searchFriendsSection.appendChild(searchFriendsButton);
+		const searchFriendsModal = new SearchFriendsModal();
+		searchFriendsModal.dialog.classList.add('search-friends-modal');
+		searchFriendsButton.addEventListener('click', () => {
+			this.openSearchFriendsmodal();
+		});
+
 		this.updateMain(
 			friendTitle,
 			friendScroller,

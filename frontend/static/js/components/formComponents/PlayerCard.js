@@ -1,6 +1,6 @@
-import ImageButton from "./ImageButton.js";
+import ImageButton from './ImageButton.js';
 
-const appendPlayerButtonBar = (playerCard) => {
+const appendPlayerButtonBar = (playerCard, id) => {
 	const buttonBar = document.createElement('div');
 	buttonBar.classList.add('-button-bar');
 	playerCard.appendChild(buttonBar);
@@ -8,11 +8,12 @@ const appendPlayerButtonBar = (playerCard) => {
 	const gearButton = ImageButton('./static/assets/img/gear.png');
 	buttonBar.appendChild(gearButton);
 
-	const plusButton = ImageButton('./static/assets/img/plus.png');
-	plusButton.classList.add('toggle-user', 'add');
-	buttonBar.appendChild(plusButton);
-
-}
+	if (id !== 0) {
+		const plusButton = ImageButton('./static/assets/img/plus.png');
+		plusButton.classList.add('toggle-user', 'add');
+		buttonBar.appendChild(plusButton);
+	}
+};
 
 const PlayerCard = (playername, userImage, playerId, withButtons) => {
 	const playerCard = document.createElement('div');
@@ -31,10 +32,10 @@ const PlayerCard = (playername, userImage, playerId, withButtons) => {
 	playerCard.appendChild(playerName);
 
 	if (withButtons) {
-		appendPlayerButtonBar(playerCard);
+		appendPlayerButtonBar(playerCard, playerId);
 	}
 
 	return playerCard;
-}
+};
 
-export default PlayerCard
+export default PlayerCard;

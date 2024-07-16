@@ -1,5 +1,5 @@
 import ADialog from './ADialog.js';
-import searchResultCard from '../cardComponents/searchResultCard.js';
+import searchResultCard from '../formComponents/searchResultCard.js';
 import UserService from '../../services/userService.js';
 import searchFriendsForm from '../formComponents/searchFriendsForm.js';
 
@@ -9,8 +9,10 @@ export default class SearchFriendsModal extends ADialog {
 		this.appendEventlistenters();
 	}
 
+	//TODO ADD FriendService to determine friend status with the user they are trying to add
+			
 	appendEventlistenters() {
-		const searchFriendsField = document.querySelector('#friend-name');
+		const searchFriendsField = this.form.form.querySelector('#friend-name');
 		searchFriendsField.addEventListener('input', async () => {
 			const searchMatches = await this.service.getRequest(searchFriendsField.value);
 			const searchResults = document.querySelector('.search-results');
@@ -20,7 +22,7 @@ export default class SearchFriendsModal extends ADialog {
 				searchResults.appendChild(searchResult);
 			});
 		});
-		const searchResults = document.querySelector('.search-results');
+		const searchResults = this.form.form.querySelector('.search-results');
 		searchResults.addEventListener('click', (e) => {
 			e.preventDefault();
 			if (e.target.classList.contains('add-btn')) {

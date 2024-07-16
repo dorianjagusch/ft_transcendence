@@ -1,4 +1,4 @@
-function searchResultCard(username, img, id) {
+const searchResultCard = (username, img, id) => {
 	const searchResultDiv = document.createElement('div');
 	searchResultDiv.classList.add('friend-result', 'bg-primary');
 	searchResultDiv.setAttribute('data-id', id);
@@ -29,3 +29,5 @@ function searchResultCard(username, img, id) {
 
 	return searchResultDiv;
 }
+
+export default searchResultCard;

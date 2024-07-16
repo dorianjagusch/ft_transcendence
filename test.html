@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link rel="stylesheet" href="./frontend/static/css/styles.css" />
+	</head>
+	<body>
+		<main>
+			<dialog class="search-friend-modal" open>
+				<form>
+					<h3>Find new friends</h3>
+					<div class="menu-item">
+						<label for="friend-name">Search</label>
+						<input
+							id="friend-name"
+							name="friend-name"
+							type="text"
+							placeholder="Friend's username"
+						/>
+					</div>
+					<div class="search-results">
+						<div class="friend-result bg-primary">
+							<img
+								src="./frontend/static/assets/img/default-user.png"
+								alt="Avatar"
+							/>
+							<p class="friend-name">Username</p>
+							<div class="friend-actions">
+								<button class="add-btn">
+									<img
+										src="./frontend/static/assets/img/plus.png"
+									/>
+								</button>
+							</div>
+						</div>
+
+						<div class="friend-result bg-primary">
+							<img
+								src="./frontend/static/assets/img/default-user.png"
+								alt="Avatar"
+							/>
+							<p class="friend-name">Username</p>
+							<div class="friend-actions">
+								<button class="add-btn">
+									<img
+										src="./frontend/static/assets/img/plus.png"
+									/>
+								</button>
+							</div>
+						</div>
+
+						<div class="friend-result bg-primary">
+							<img
+								src="./frontend/static/assets/img/default-user.png"
+								alt="Avatar"
+							/>
+							<p class="friend-name">Username</p>
+							<div class="friend-actions">
+								<button class="add-btn">
+									<img
+										src="./frontend/static/assets/img/plus.png"
+									/>
+								</button>
+							</div>
+						</div>
+
+						<div class="friend-result bg-primary">
+							<img
+								src="./frontend/static/assets/img/default-user.png"
+								alt="Avatar"
+							/>
+							<p class="friend-name">Username</p>
+							<div class="friend-actions">
+								<button class="add-btn">
+									<img
+										src="./frontend/static/assets/img/plus.png"
+									/>
+								</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</dialog>
+		</main>
+	</body>
+	<script>
+		function SearchResult(username, img, id) {
+			const searchResultDiv = document.createElement('div');
+			searchResultDiv.classList.add('friend-result', 'bg-primary');
+			searchResultDiv.setAttribute('data-id', id);
+
+			const avatarImg = document.createElement('img');
+			avatarImg.src = img;
+			avatarImg.alt = 'Avatar';
+
+			const friendName = document.createElement('p');
+			friendName.classList.add('friend-name');
+			friendName.textContent = username;
+
+			const friendActions = document.createElement('div');
+			friendActions.classList.add('friend-actions');
+
+			const addButton = document.createElement('button');
+			addButton.classList.add('add-btn');
+
+			const plusImg = document.createElement('img');
+			plusImg.src = './frontend/static/assets/img/plus.png';
+
+			addButton.appendChild(plusImg);
+			friendActions.appendChild(addButton);
+
+			searchResultDiv.appendChild(avatarImg);
+			searchResultDiv.appendChild(friendName);
+			searchResultDiv.appendChild(friendActions);
+
+			return searchResultDiv;
+		}
+	</script>
+</html>
