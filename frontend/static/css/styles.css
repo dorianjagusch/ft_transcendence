@@ -1286,12 +1286,6 @@ dialog h3 {
 		grid-template-columns: 1fr 1fr;
 	};
 
-
-	& .player-list:has(:not(.button-bar)) .player-card{
-		font-size: var(--fs-medium);
-		justify-content: space-around;
-	}
-
 	& .player-list {
 		display: grid;
 		margin: 0;
@@ -1344,6 +1338,11 @@ dialog h3 {
 		}
 	}
 }
+
+.summary-modal .player-list .player-card{
+		font-size: var(--fs-medium);
+		justify-content: space-around;
+	}
 
 
 .search-friend-modal{
