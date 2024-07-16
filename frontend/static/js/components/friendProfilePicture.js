@@ -4,26 +4,20 @@ const getFriendProfilePicture = (id) => {
 	const img = document.createElement('img');
 	var profilePictureService = new ProfilePictureService();
 
-	profilePictureService.getFriendProfilePictureRequest(id)
-	.then(response => {
-		if (!response.ok) {
-			throw new Error(`Error: ${response.status}`);
-		}
-
-		return response.json();
-	})
-	.then(responseBody => {
-		if (responseBody.image === '') {
-			img.setAttribute('src', './static/assets/img/default-user.png');
+	try {
+		const response = profilePictureService.getFriendProfilePictureRequest(id)
+		if (response.image) {
+			img.setAttribute('src', `data:image/jpeg;base64,${response.image}`);
 		}
 		else {
-			img.setAttribute('src', `data:image/jpeg;base64,${responseBody.image}`);
+			img.setAttribute('src', './static/assets/img/default-user.png');
 		}
-	})
-	.catch(error => {
-		console.error('Error fetching profile picture:', error);
+
+		return img;
+	} catch (error) {
+		console.log('Error: ', error);
 		img.setAttribute('src', './static/assets/img/default-user.png');
-	});
+	}
 
 	return img;
 };

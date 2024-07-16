@@ -133,33 +133,6 @@ class UserProfilePictureView(APIView):
 		except FileNotFoundError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
-class UserProfilePictureView(APIView):
-	@method_decorator(csrf_exempt)
-	@method_decorator(must_be_authenticated)
-	@method_decorator(must_be_url_user)
-	def post(self, request, user_id):
-		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-
-		if 'file' not in request.FILES:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
-		file = request.FILES['file']
-
-		try:
-			validate_image(file)
-		except ValidationError as e:
-			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
-
-		try:
-			profile_picture = ProfilePicture.objects.get(user=user)
-			profile_picture.picture = file
-		except ProfilePicture.DoesNotExist:
-			profile_picture = ProfilePicture(user=user, picture=file)
-		profile_picture.save()
-		return Response(status=status.HTTP_200_OK)
-
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
 	def post(self, request):

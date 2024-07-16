@@ -62,20 +62,18 @@ export default class extends AView {
 	mapResponse = (response) => {
 		return response.map((element) => {
 			const id = element.id;
-			let profileImgUrl;
 			try {
 				const profileImg = getFriendProfilePicture(id);
-				profileImgUrl = profileImg.src;
+
+				return {
+					id: element.id,
+					username: element.username,
+					img: profileImg.src,
+					status: element.is_online ? 'online' : 'offline',
+				};
 			} catch (error) {
 				console.log('Error getting the profile picture element: ', error);
 			}
-
-			return {
-				id: element.id,
-				username: element.username,
-				img: profileImgUrl,
-				status: element.is_online ? 'online' : 'offline',
-			};
 		});
 	};
 
