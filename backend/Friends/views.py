@@ -4,12 +4,13 @@ from rest_framework import status
 from django.utils.decorators import method_decorator
 from User.serializers import UserOutputSerializer
 from .models import Friend
-from User.models import ProfilePicture
+from User.models import User, ProfilePicture
 from .serializers import FriendInputSerializer, FriendOutputSerializer
 from .friendShipStatus import FriendShipStatus
 from shared_utilities.decorators import must_be_authenticated, \
 									must_be_body_user_id, \
 									valid_serializer_in_body
+import base64
 
 class FriendsListView(APIView):
 	@method_decorator(must_be_authenticated)

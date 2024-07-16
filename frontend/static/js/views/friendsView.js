@@ -14,6 +14,7 @@ export default class extends AView {
 		this.acceptHandler = this.acceptHandler.bind(this);
 		this.declineHandler = this.declineHandler.bind(this);
 		this.profileHandler = this.profileHandler.bind(this);
+		this.mapResponse = this.mapResponse.bind(this);
 	}
 
 	profileHandler(friend) {
@@ -59,7 +60,7 @@ export default class extends AView {
 		return scroller;
 	}
 
-	mapResponse = (response) => {
+	async mapResponse(response) {
 		return response.map((element) => {
 			const id = element.id;
 			try {
@@ -68,7 +69,7 @@ export default class extends AView {
 				return {
 					id: element.id,
 					username: element.username,
-					img: profileImg.src,
+					img: profileImg,
 					status: element.is_online ? 'online' : 'offline',
 				};
 			} catch (error) {
@@ -90,10 +91,10 @@ export default class extends AView {
 			);
 
 			const acceptedResponse = await acceptedPromise;
-			acceptedFriends = this.mapResponse(acceptedResponse);
+			acceptedFriends = await this.mapResponse(acceptedResponse);
 
 			const pendingResponse = await pendingPromise;
-			pendingFriends = this.mapResponse(pendingResponse);
+			pendingFriends = await this.mapResponse(pendingResponse);
 		} catch (error) {
 			console.error('An error occured when retrieving your friends', error);
 		}

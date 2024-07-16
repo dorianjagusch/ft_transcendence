@@ -19,7 +19,7 @@ class ProfilePictureService {
 	}
 
 	async getFriendProfilePictureRequest(user_id) {
-		const request = fetch(`friends/${user_id}/profile_pictures/`, {
+		const request = fetch(`${backendURL.friendURL}${user_id}/profile_pictures/`, {
 			credentials: 'include',
 		});
 
