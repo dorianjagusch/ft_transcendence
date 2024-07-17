@@ -40,7 +40,6 @@ export default class extends Aview {
 	}
 
 	attachPlayerInfo(guestUserData) {
-		console.log(guestUserData);
 		const playerRight = PlayerInfo(guestUserData);
 
 		const container = document.createElement('div');

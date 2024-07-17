@@ -15,7 +15,6 @@ class UserService extends ARequestService {
 		Object.entries(params).forEach(([key, value]) => {
 			url.searchParams.append(key, value);
 		});
-		console.log(url);
 		return super.getAllRequest(`${url}`);
 	}
 
