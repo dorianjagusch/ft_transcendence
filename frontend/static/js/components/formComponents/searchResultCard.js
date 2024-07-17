@@ -1,7 +1,9 @@
-const searchResultCard = (username, img, id) => {
-	const searchResultDiv = document.createElement('div');
-	searchResultDiv.classList.add('friend-result', 'bg-primary');
-	searchResultDiv.setAttribute('data-id', id);
+import buttonBar from '../profileComponents/buttonBar.js';
+
+const searchResultCard = ({username, img, id, relationship}, buttonSelector) => {
+	const searchResult = document.createElement('div');
+	searchResult.classList.add('friend-result', 'bg-primary');
+	searchResult.setAttribute('data-id', id);
 
 	const avatarImg = document.createElement('img');
 	avatarImg.src = img;
@@ -11,23 +13,13 @@ const searchResultCard = (username, img, id) => {
 	friendName.classList.add('friend-name');
 	friendName.textContent = username;
 
-	const friendActions = document.createElement('div');
-	friendActions.classList.add('friend-actions');
+	const friendActions = buttonBar(buttonSelector(relationship));
 
-	const addButton = document.createElement('button');
-	addButton.classList.add('add-btn');
+	searchResult.appendChild(avatarImg);
+	searchResult.appendChild(friendName);
+	searchResult.appendChild(friendActions);
 
-	const plusImg = document.createElement('img');
-	plusImg.src = './frontend/static/assets/img/plus.png';
-
-	addButton.appendChild(plusImg);
-	friendActions.appendChild(addButton);
-
-	searchResultDiv.appendChild(avatarImg);
-	searchResultDiv.appendChild(friendName);
-	searchResultDiv.appendChild(friendActions);
-
-	return searchResultDiv;
-}
+	return searchResult;
+};
 
 export default searchResultCard;
