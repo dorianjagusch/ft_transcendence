@@ -25,7 +25,7 @@ export default class extends AView {
 			friend_id: friend.id,
 		};
 		try {
-			friendService.postRequest(data).then(() => {
+			this.friendService.postRequest(data).then(() => {
 				super.notify('Friendship created successfully.');
 				super.navigateTo('/friends');
 			});
@@ -36,7 +36,7 @@ export default class extends AView {
 
 	declineHandler(friend) {
 		try {
-			friendService.deleteRequest(friend.id).then(() => {
+			this.friendService.deleteRequest(friend.id).then(() => {
 				super.notify('Friendship declined successfully.');
 				super.navigateTo('/friends');
 			});
