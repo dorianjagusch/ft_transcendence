@@ -15,6 +15,7 @@ export default class SearchFriendsModal extends ADialog {
 		this.addFriend = this.addFriend.bind(this);
 		this.deleteFriendRequest = this.deleteFriendRequest.bind(this);
 		this.appendEventlistenters();
+		this.searchFriendsField;
 	}
 
 	adjustForm() {
@@ -54,9 +55,34 @@ export default class SearchFriendsModal extends ADialog {
 		}
 	}
 
+	updateSearchResults(searchMatches) {
+		const searchResults = document.querySelector('.search-results');
+		searchResults.innerHTML = '';
+		if (!searchMatches) {
+			searchResults.textContent = 'No results found.';
+			return;
+		}
+		searchMatches.forEach((match) => {
+			const searchResult = searchResultCard(match, this.selectButtons);
+			searchResults.appendChild(searchResult);
+		});
+	}
+
+	async refreshSearchResults(searchTerm) {
+		searchTerm = searchTerm.trim();
+		if (searchTerm.length < 3) {
+			return;
+		}
+		const searchMatches = await this.service.getAllRequest({
+			username_contains: searchTerm,
+		});
+		this.updateSearchResults(searchMatches);
+	}
+
 	async addFriend(friendId) {
 		try {
 			await this.friendService.postRequest({friend_id: friendId});
+			await this.refreshSearchResults(this.searchFriendsField.value);
 			this.notify('Friend request sent.');
 		} catch (error) {
 			this.notify(error);
@@ -66,23 +92,16 @@ export default class SearchFriendsModal extends ADialog {
 	async deleteFriendRequest(friendId) {
 		try {
 			await this.friendService.deleteRequest(friendId);
+			await this.refreshSearchResults(this.searchFriendsField.value);
 			this.notify('Friendship declined successfully.');
 		} catch (error) {
 			this.notify(error);
 		}
 	}
 
-	searchInputLister() {
-		const searchFriendsField = this.form.form.querySelector('#friend-name');
-		searchFriendsField.addEventListener('input', async () => {
-			const searchMatches = await this.service.getAllRequest();
-			const searchResults = document.querySelector('.search-results');
-			searchResults.innerHTML = '';
-			searchMatches.forEach((match) => {
-				match.relationship = constants.FRIENDSHIPSTATUS.NOTFRIEND;
-				const searchResult = searchResultCard(match, this.selectButtons);
-				searchResults.appendChild(searchResult);
-			});
+	searchInputListener() {
+		this.searchFriendsField.addEventListener('input', async () => {
+			await this.refreshSearchResults(this.searchFriendsField.value);
 		});
 	}
 
@@ -105,7 +124,8 @@ export default class SearchFriendsModal extends ADialog {
 	}
 
 	appendEventlistenters() {
-		this.searchInputLister();
+		this.searchFriendsField = this.form.form.querySelector('#friend-name');
+		this.searchInputListener();
 		this.searchResultListener();
 	}
 }

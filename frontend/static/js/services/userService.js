@@ -10,8 +10,13 @@ class UserService extends ARequestService {
 		return super.getRequest(`${backendURL.userURL}${id}`);
 	}
 
-	async getAllRequest() {
-		return super.getAllRequest(`${backendURL.userURL}`);
+	async getAllRequest(params) {
+		const url = new URL(backendURL.userURL);
+		Object.entries(params).forEach(([key, value]) => {
+			url.searchParams.append(key, value);
+		});
+		console.log(url);
+		return super.getAllRequest(`${url}`);
 	}
 
 	async postRequest({username, password}) {
