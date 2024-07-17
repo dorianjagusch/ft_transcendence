@@ -34,6 +34,7 @@ class FriendsListView(APIView):
 		try:
 			friend = Friend.objects.create_friendship(user_id, friend_id)
 		except Exception as e:
+			# TODO: ADD ERROR for conflict 409 if friendship in the desired direction already exists
 			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		serializer = FriendOutputSerializer(friend)
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -44,5 +45,6 @@ class FriendshipDetailView(APIView):
 		try:
 			Friend.objects.delete_friendship(user_id, friend_id)
 		except Exception as e:
+			# TODO: 404 if friendship does not exist
 			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		return Response(status=status.HTTP_204_NO_CONTENT)
