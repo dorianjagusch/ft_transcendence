@@ -1,6 +1,6 @@
 import buttonBar from '../profileComponents/buttonBar.js';
 
-const searchResultCard = ({username, img, id, relationship}, buttonSelector) => {
+const searchResultCard = ({username, img, id, friendship}, buttonSelector) => {
 	const searchResult = document.createElement('div');
 	searchResult.classList.add('friend-result', 'bg-primary');
 	searchResult.setAttribute('data-id', id);
@@ -13,7 +13,7 @@ const searchResultCard = ({username, img, id, relationship}, buttonSelector) => 
 	friendName.classList.add('friend-name');
 	friendName.textContent = username;
 
-	const friendActions = buttonBar(buttonSelector(relationship));
+	const friendActions = buttonBar(buttonSelector(friendship));
 
 	searchResult.appendChild(avatarImg);
 	searchResult.appendChild(friendName);

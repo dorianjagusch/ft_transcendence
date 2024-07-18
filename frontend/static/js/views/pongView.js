@@ -23,21 +23,22 @@ export default class extends AView {
 
 		window.addEventListener('beforeunload', this.chatSocket.handleClose);
 
-
 		// TODO unnest the conditionals in the loop
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
-				if (mutation.removedNodes) {
-					mutation.removedNodes.forEach((node) => {
-						if (node.id = "pong") {
-							this.chatSocket.handleClose();
-							observer.disconnect();
-						}
-					});
+				if (!mutation.removedNodes) {
+					return;
 				}
-			}
+				mutation.removedNodes.forEach((node) => {
+					if ((node.id != 'pong')) {
+						return;
+					}
+						this.chatSocket.handleClose();
+						observer.disconnect();
+					}
+				)};
 		});
-		observer.observe(document.body, {childList: true, subtree: true});
+		observer.observe(document.body.querySelector('main'), {childList: true, subtree: false});
 	}
 
 	async getHTML() {
