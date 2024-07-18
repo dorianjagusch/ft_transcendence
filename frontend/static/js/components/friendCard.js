@@ -4,8 +4,8 @@ const friendCard = (friend, navigateTo) => {
 
 	const userId = document.createElement('div');
 	userId.className = 'user-id';
-	user.setAttribute('data-id', friend.id);
-	user.setAttribute('data-visible', 'false');
+	userId.setAttribute('data-id', friend.id);
+	userId.setAttribute('data-visible', 'false');
 
 	const userCardText = document.createElement('div');
 	userCardText.className = 'user-card-text';
