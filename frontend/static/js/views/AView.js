@@ -9,9 +9,11 @@ export default class Aview{
 		if (this.constructor == Aview) {
 			throw new Error("Abstract classes can't be instantiated.");
 		}
-		if (!document.querySelector('nav')) {
-			document.querySelector('header').appendChild(Navbar());
+		if (document.querySelector('nav')) {
+			document.querySelector('nav').remove();
 		}
+		document.querySelector('header').appendChild(Navbar());
+
 		if (!document.querySelector('aside') && localStorage.getItem('isLoggedIn') === 'true') {
 			document.querySelector('body').appendChild(SideBar());
 		}
