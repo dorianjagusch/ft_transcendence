@@ -4,7 +4,7 @@ from .game_logic import PongGame
 from .player import Player
 from .ball import Ball
 from .game_stats import GameStats
-import sys
+import asyncio
 
 class PongStatus:
     def __init__(self):
@@ -36,12 +36,17 @@ class PongStatus:
         self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
-    def ai_move_paddle(self):
-        move = self.calculate_ai_position()
-        if move == PLAYER_AI_UP:
-            self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
-        elif move == PLAYER_AI_DOWN:
-            self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+    async def ai_move_paddle(self):
+        steps = self.calculate_ai_steps()
+        move = self.calculate_ai_move()
+        if move != PLAYER_AI_STAY:
+            for i in range(steps):
+                if move == PLAYER_AI_UP:
+                    self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
+                elif move == PLAYER_AI_DOWN:
+                    self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+                if steps > 1:
+                    await asyncio.sleep(0.0001)
         self.player_right.y = self.game.check_boundary(self.player_right.y)
         self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
@@ -49,8 +54,32 @@ class PongStatus:
     def update_ball_position(self):
         self.game.update_ball_position(self)
 
-    def calculate_ai_position(self):
-        return 'up'
+    def length(self, x, y):
+        sum = x * x + y * y
+        return math.sqrt(sum)
+
+    def calculate_ai_move(self):
+        if self.ball.y < self.player_right.y:
+            return 'down'
+        elif self.ball.y > self.player_right.y:
+            return 'up'
+        return 'stay'
+
+    def calculate_ai_steps(self):
+        dist_from_ball_x = self.ball.x - self.player_right.x
+        dist_from_ball_y = self.ball.y - self.player_right.y
+        dist_length = self.length(dist_from_ball_x, dist_from_ball_y)
+
+        # Look ahead factor depends on the speed and distance of the ball
+        look_ahead_factor = dist_length / (PLAYER_MOVEMENT_UNIT + self.ball.speed)
+        if look_ahead_factor > 10:
+            return 3
+        elif look_ahead_factor > 5:
+            return 2
+        elif look_ahead_factor > 1:
+            return 1
+        else:
+            return 0
 
     def get_consts(self):
         game_consts = {

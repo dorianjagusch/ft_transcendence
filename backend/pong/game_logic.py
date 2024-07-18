@@ -34,7 +34,7 @@ class PongGame:
     def update_ball_position(self, pong_stat):
         if pong_stat.game_stats.game_started:
             pong_stat.ball.x += pong_stat.ball.speed * math.cos(pong_stat.ball.angle)
-            pong_stat.ball.y += pong_stat.ball.speed* math.sin(pong_stat.ball.angle)
+            pong_stat.ball.y += pong_stat.ball.speed * math.sin(pong_stat.ball.angle)
             self.check_collisions(pong_stat)
 
     def check_ball_close_to_player(self, pong_stat, player):

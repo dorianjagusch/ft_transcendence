@@ -9,7 +9,6 @@ from channels.db import database_sync_to_async
 from Tokens.models import MatchToken
 from Match.models import Match
 from Player.models import Player
-import sys
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -55,7 +54,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def ai_opponent_loop(self):
         while not self.game.game_stats.game_over:
-            self.game.ai_move_paddle()
+            await self.game.ai_move_paddle()
             await asyncio.sleep(1)
 
     async def send_positions(self):
