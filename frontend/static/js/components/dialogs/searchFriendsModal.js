@@ -1,6 +1,7 @@
 import ADialog from './ADialog.js';
 import searchResultCard from '../formComponents/searchResultCard.js';
 import UserService from '../../services/userService.js';
+import getProfilePicture from '../profilePicture.js';
 import searchFriendsForm from '../formComponents/searchFriendsForm.js';
 import FriendService from '../../services/friendService.js';
 import {navigateTo} from '../../router.js';
@@ -78,8 +79,9 @@ export default class SearchFriendsModal extends ADialog {
 			const searchMatches = await this.service.getAllRequest();
 			const searchResults = document.querySelector('.search-results');
 			searchResults.innerHTML = '';
-			searchMatches.forEach((match) => {
+			searchMatches.forEach(async (match) => {
 				match.relationship = constants.FRIENDSHIPSTATUS.NOTFRIEND;
+				match.img = await getProfilePicture(match.id);
 				const searchResult = searchResultCard(match, this.selectButtons);
 				searchResults.appendChild(searchResult);
 			});
