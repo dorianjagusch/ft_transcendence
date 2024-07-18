@@ -85,7 +85,7 @@ export default class extends AView {
 	}
 
 	async getHTML() {
-		let user = {
+		let fakeUser = {
 			id: 1,
 			username: 'Username',
 			img: './static/assets/img/default-user.png',
@@ -94,16 +94,14 @@ export default class extends AView {
 			friendship: constants.FRIENDSHIPSTATUS.FRIEND,
 		};
 
+		let userResponse;
 		try {
-			const userResponse = await this.userService.getRequest(this.friendId);
-
-			user.id = userResponse.id ?? user.id;
-			user.username = userResponse.username ?? user.username;
-			user.img = userResponse.img ?? user.img;
-			user.description = userResponse.description ?? user.description;
-			user.friendship = userResponse.friendship ?? user.friendship;
+			userResponse = await this.userService.getRequest(this.friendId);
+			userResponse.img = await getProfilePicture(this.friendId);
+			console.log(userResponse.img);
 		} catch (error) {
-			console.error('Error: ', error);
+			console.notify(error);
+			this.navigateTo('/friends');
 		}
 
 		const statObj1 = {
@@ -139,7 +137,7 @@ export default class extends AView {
 		};
 
 		const userData = {
-			user,
+			userResponse,
 			friendship: 'friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
 			placements: [
 				//[placementObj, ...] | null
@@ -157,12 +155,12 @@ export default class extends AView {
 			],
 		};
 
-		const friendship = userData.user.friendship;
+		const friendship = userResponse.friendship;
 		const main = document.querySelector('main');
 		main.classList.add('profile', friendship);
-		this.setTitle(`${userData.user.username}'s Profile`);
-		const userName = profileTitle(userData.user.username);
-		const userImg = profileImg(userData.user.img);
+		this.setTitle(`${userResponse.username}'s Profile`);
+		const userName = profileTitle(userResponse.username);
+		const userImg = profileImg(userResponse.img);
 
 		const buttons = this.selectButtons(friendship);
 		const actionBar = buttonBar(buttons);
@@ -171,7 +169,7 @@ export default class extends AView {
 			'user-placement',
 			smallPlacementCard
 		);
-		const userDescription = profileDescription(userData.user.description);
+		const userDescription = profileDescription(fakeUser.description);
 
 		const userStats =
 			friendship === 'friend'
