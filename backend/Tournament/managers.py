@@ -108,10 +108,6 @@ class TournamentInProgressManager:
                 
                 # check if there is a next match is equal or greater than the tournament matches count
                 # if no next match, set user as tournament winner and finish tournament
-                print("update_tournament_with_winning_tournament_player", file=sys.stderr)
-                print(f"tournament.next_match: {tournament.next_match}", file=sys.stderr)
-                print(f"tournament.matches.count(): {tournament.matches.count()}", file=sys.stderr)
-
                 if tournament.next_match >= tournament.matches.count():
                     tournament.winner = winning_tournament_player.user
                     tournament.state = TournamentState.FINISHED
