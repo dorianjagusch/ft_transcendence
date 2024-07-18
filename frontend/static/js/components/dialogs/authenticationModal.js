@@ -7,7 +7,7 @@ export default class AuthenticationModal extends ADialog {
 		super(new loginForm(), new AuthenticationService());
 		this.getFormData = this.getFormData.bind(this);
 		this.authenticateUser = this.authenticateUser.bind(this);
-		this.onDataReceived = parentCallback;8;
+		this.onDataReceived = parentCallback;
 		this.tournamentId;
 		this.appendEventlistenters();
 	}
@@ -44,7 +44,7 @@ export default class AuthenticationModal extends ADialog {
 			(e) => {
 				if (e.target.classList.contains('primary-btn')) {
 					e.preventDefault();
-					const {username, password} = this.getFormData();8;
+					const {username, password} = this.getFormData();
 					if (!username || !password) {
 						this.notify('Provide a username and password.');
 						return;
