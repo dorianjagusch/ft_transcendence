@@ -14,7 +14,7 @@ export default class extends Aview {
 
 	attachEventListeners() {
 		const aiButton = document.querySelector('.opponent-selection > button');
-		if (aiButton) {
+		if (aiButton){
 			aiButton.addEventListener('click', () => {
 				const confirmModal = document.querySelector('.confirm-choice-modal');
 				confirmModal.inert = true;
@@ -40,7 +40,6 @@ export default class extends Aview {
 	}
 
 	attachPlayerInfo(guestUserData) {
-		console.log(guestUserData);
 		const playerRight = PlayerInfo(guestUserData);
 
 		const container = document.createElement('div');

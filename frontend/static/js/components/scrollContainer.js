@@ -1,6 +1,6 @@
 const scrollContainer = (elements, callback, orientation = 'row', ...classNames) => {
 
-	if (!elements) {
+	if (!elements || !callback) {
 		return;
 	}
 

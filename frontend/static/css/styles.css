@@ -690,13 +690,13 @@ button:is(:focus, :hover) {
 }
 
 .check-btn {
-	background-size: 70%;
+	background-size: 50%;
 	background-color: var(--accept-color);
 	background-image: url('../assets/img/tickmark.png');
 }
 
 .x-btn {
-	background-size: 60%;
+	background-size: 40%;
 	background-color: var(--decline-color);
 	background-image: url('../assets/img/x.png');
 }
