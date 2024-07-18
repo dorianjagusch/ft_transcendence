@@ -19,9 +19,6 @@ const requestCard = (request, acceptRequest, declineRequest, profileHandler) => 
 	const card = document.createElement('div');
 	card.className = 'scroll-element request-card';
 
-	const imgElement = document.createElement('img');
-	imgElement.src = request.img;
-
 	const userCardText = document.createElement('p');
 
 	const userName = document.createElement('div');
@@ -30,7 +27,7 @@ const requestCard = (request, acceptRequest, declineRequest, profileHandler) => 
 
 	userCardText.appendChild(userName);
 
-	card.append(imgElement, userCardText, requestOptions(request, acceptRequest, declineRequest));
+	card.append(request.img, userCardText, requestOptions(request, acceptRequest, declineRequest));
 	card.addEventListener('click', () => profileHandler(request));
 
 	return card;
