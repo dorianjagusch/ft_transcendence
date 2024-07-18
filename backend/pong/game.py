@@ -38,8 +38,7 @@ class PongStatus:
         self.game.update_ball_position(self)
 
     async def ai_move_paddle(self):
-        steps = self.calculate_ai_steps()
-        move = self.calculate_ai_move()
+        steps, move = self.calculate_ai_steps()
         if move != PLAYER_AI_STAY:
             for i in range(steps):
                 if move == PLAYER_AI_UP:
@@ -60,31 +59,65 @@ class PongStatus:
         sum = x * x + y * y
         return math.sqrt(sum)
 
-    def calculate_ai_move(self):
-        if self.ball.y < self.player_right.y:
-            return 'down'
-        elif self.ball.y > self.player_right.y:
-            return 'up'
-        return 'stay'
-
     def calculate_ai_steps(self):
-        dist_from_ball_x = self.ball.x - self.player_right.x
-        dist_from_ball_y = self.ball.y - self.player_right.y
+        # Convert the angle to radians
+        angle_rad = math.radians(self.ball.angle)
+
+        # Calculate the x and y components of the speed
+        speed_x = math.cos(angle_rad) * self.ball.speed
+        speed_y = math.sin(angle_rad) * self.ball.speed
+
+        ball_x = self.ball.x
+        ball_y = self.ball.y
+        while ball_x < self.player_right.x:
+            if speed_x != 0:
+                time_to_vertical_wall = (PLAYGROUND_WIDTH - ball_x) / speed_x if speed_x > 0 else ball_x / -speed_x
+            else:
+                time_to_vertical_wall = float('inf')
+
+            # Calculate the time until the next horizontal wall collision
+            if speed_y != 0:
+                time_to_horizontal_wall = (PLAYGROUND_HEIGHT - ball_y) / speed_y if speed_y > 0 else ball_y / -speed_y
+            else:
+                time_to_horizontal_wall = float('inf')
+
+            # Find the minimum time to the next collision
+            time_to_collision = min(time_to_vertical_wall, time_to_horizontal_wall)
+
+            # Update the ball's position
+            ball_x += speed_x * time_to_collision
+            ball_y += speed_y * time_to_collision
+
+            # Check for collisions with walls and update the speed components
+            if ball_x >= PLAYGROUND_WIDTH or ball_x <= 0:
+                speed_x = -speed_x
+            if ball_y >= PLAYGROUND_HEIGHT or ball_y <= 0:
+                speed_y = -speed_y
+
+            # If the ball has reached or passed the paddle, stop the loop
+            if ball_x >= self.player_right.x:
+                break
+
+        dist_from_ball_x = ball_x - self.player_right.x
+        dist_from_ball_y = ball_y - self.player_right.y
         dist_length = self.length(dist_from_ball_x, dist_from_ball_y)
-        print(f"ball.x: {self.ball.y}", file=sys.stderr)
-        print(f"distance from ball: {dist_length}", file=sys.stderr)
 
         # Look ahead factor depends on the speed and distance of the ball
         look_ahead_factor = dist_length / (PLAYER_MOVEMENT_UNIT + self.ball.speed)
-        print(f"look ahead: {look_ahead_factor}", file=sys.stderr)
-        if look_ahead_factor > 10:
-            return 1
-        elif look_ahead_factor > 5:
-            return 2
-        elif look_ahead_factor > 1:
-            return 3
+        if look_ahead_factor > 10 and ball_y < self.player_right.y:
+            return (1, 'down')
+        if look_ahead_factor > 10 and ball_y > self.player_right.y:
+            return (1, 'up')
+        elif look_ahead_factor > 5 and ball_y < self.player_right.y:
+            return (2, 'down')
+        elif look_ahead_factor > 5 and ball_y > self.player_right.y:
+            return (2, 'up')
+        elif look_ahead_factor > 1 and ball_y < self.player_right.y:
+            return (3, 'down')
+        elif look_ahead_factor > 1 and ball_y > self.player_right.y:
+            return (3, 'up')
         else:
-            return 0
+            return (0, 'stay')
 
     def get_consts(self):
         game_consts = {
