@@ -1,4 +1,5 @@
 import NotImplementedError from '../../exceptions/NotImplementedException.js';
+import { inputNotification } from '../userNotification.js';
 
 export default class ADialog {
 	constructor(Form, Service) {
@@ -9,6 +10,7 @@ export default class ADialog {
 		this.form = Form || null;
 		this.constructBaseDialog = this.constructBaseDialog.bind(this);
 		this.dialog = this.constructBaseDialog();
+		this.notify = this.notify.bind(this);
 		this.appendBaseEventlistenters = this.appendBaseEventlistenters.bind(this);
 		this.appendBaseEventlistenters();
 	}
@@ -31,6 +33,14 @@ export default class ADialog {
 				this.dialog.close();
 			}
 		});
+	}
+
+	notify(message) {
+		const notification = inputNotification(message);
+		this.dialog.querySelector('h3').after(notification);
+		setTimeout(() => {
+			notification.remove();
+		}, 3000);
 	}
 
 	cancelButton() {
