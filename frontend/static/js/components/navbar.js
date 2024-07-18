@@ -1,3 +1,5 @@
+import getProfilePicture from "./profilePicture.js"
+
 const setNavbar = (isLoggedOut) => {
 	const navPartitions = document.querySelectorAll('.nav-partition');
 	navPartitions.forEach((partition) => {
@@ -31,6 +33,25 @@ const navbarItem = (link, type, content) => {
 	return navbarItem;
 };
 
+const getPictureNavbarItem = (href, userSection) => {
+	try {
+		const navbarItem = document.createElement('li');
+		navbarItem.classList.add('nav-item');
+
+		const img = getProfilePicture();
+		navbarItem.appendChild(img);
+
+		const navbarLink = document.createElement('a');
+		navbarLink.href = href;
+		navbarLink.setAttribute('data-link', '');
+		navbarLink.appendChild(navbarItem);
+
+		userSection.appendChild(navbarLink);
+	} catch (error) {
+		console.log('Error getting the profile picture element: ', error);
+	}
+};
+
 const Navbar = (username) => {
 	const nav = document.createElement('nav');
 	const ul = document.createElement('ul');
@@ -50,12 +71,15 @@ const Navbar = (username) => {
 
 	ul.appendChild(loggedInSection);
 
+	const notificationSection = document.createElement('p');
+	notificationSection.classList.add('notification');
+	ul.appendChild(notificationSection);
+
 	const userSection = document.createElement('div');
 	userSection.classList.add('nav-partition', 'logged-in');
 	userSection.setAttribute('data-visible', 'true');
 
-	const userImageItem = navbarItem('/dashboard', 'image', './static/assets/img/default-user.png');
-	userSection.appendChild(userImageItem);
+	getPictureNavbarItem('/dashboard', userSection);
 
 	const userLinkItem = navbarItem('/user', 'text', username);
 	userLinkItem.id = 'user';

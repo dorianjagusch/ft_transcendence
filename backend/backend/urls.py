@@ -16,12 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 
 from pong.consumers import PongConsumer
 
 # add app views here
 from User.views import UserDetailView, \
 						UserListView, \
+						UserProfilePictureView, \
 						UserLoginView, \
 						UserLogoutView, \
 						UserAdminDetailsView
@@ -34,10 +37,15 @@ from Tokens.views import SingleMatchGuestTokenView
 from Match.views import MatchView, \
 							LaunchTestMatchView
 
+
 from Tournament.views import TournamentListView, \
 								TournamentDetailView, \
 								TournamentPlayerListView, \
 								TournamentPlayerDetailView
+
+from stats.views import StatsView, \
+							LeaderBoardView
+
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -45,6 +53,7 @@ urlpatterns = [
 	# User views
 	path('users/', UserListView.as_view()),
 	path('users/<int:user_id>', UserDetailView.as_view()),
+	path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
 	path('login/', UserLoginView.as_view()),
 	path('logout/', UserLogoutView.as_view()),
 	path('admins/', UserAdminDetailsView.as_view()),
@@ -61,12 +70,19 @@ urlpatterns = [
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 
+
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
 	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
 ]
+
+	# Stats Views
+	path('stats/', StatsView.as_view()),
+	path('leaderboard/', LeaderBoardView.as_view()),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 websocket_urlpatterns = [
     path('pong/<int:match_id>', PongConsumer.as_asgi()),

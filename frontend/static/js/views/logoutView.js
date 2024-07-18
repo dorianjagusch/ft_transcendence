@@ -10,18 +10,19 @@ export default class extends AView {
 	async getHTML() {
 		const logoutService = new LogoutService();
 		try {
-			const logoutResponse = await logoutService.postRequest();
+			 await logoutService.postRequest();
+			localStorage.clear();
 			localStorage.setItem('isLoggedIn', false);
-			localStorage.setItem('username', '');
+			sessionStorage.setItem('isLoggedInSession', false);
 			document.cookie.split(';').forEach((c) => {
 				document.cookie = c
 					.replace(/^ +/, '')
 					.replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
 			});
-			this.notify("You are not logged out.", 'success')
+			this.notify("You are now logged out.", 'success')
 		} catch (error) {
 			if (!error.status) {
-				this.nofity(error);
+				this.notify(error);
 			} else if ((error.status = 401)) {
 				this.notify('Session expired, please login.', 'error');
 			} else {

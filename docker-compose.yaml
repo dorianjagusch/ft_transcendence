@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   ft_transcendence_network:
     name: ft_transcendence_network
@@ -26,7 +24,7 @@ services:
       retries: 3
       start_period: 80s
     networks:
-     - ft_transcendence_network
+      - ft_transcendence_network
 
   backend:
     image: backend:adsjm
@@ -40,13 +38,13 @@ services:
     entrypoint: ./entrypoint.sh
     command: bash -c "python manage.py runserver 0.0.0.0:8080"
     depends_on:
-       postgres:
-         condition: service_healthy
+        postgres:
+          condition: service_healthy
     restart: always
     volumes:
       - ./backend:/app
     networks:
-     - ft_transcendence_network
+      - ft_transcendence_network
 
   frontend:
     build:

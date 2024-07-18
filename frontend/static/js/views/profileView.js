@@ -57,32 +57,28 @@ export default class extends AView {
 		}
 	}
 
-	acceptHandler() {
+	async acceptHandler() {
 		const data = {
 			friend_id: this.friendId,
 		};
 
-		this.friendService
-			.postRequest(data)
-			.then(() => {
-				super.notify('Friendship created successfully.');
-				super.navigateTo(`/profile/${this.friendId}`);
-			})
-			.catch((error) => {
-				super.notify(error);
-			});
+		try {
+			await friendService.postRequest(data);
+			super.notify('Friendship created successfully.');
+			super.navigateTo(`/profile/${this.friendId}`);
+		} catch (error) {
+			super.notify(error);
+		}
 	}
 
-	declineHandler() {
-		this.friendService
-			.deleteRequest(this.friendId)
-			.then(() => {
-				super.notify('Friendship declined successfully.');
-				super.navigateTo(`/profile/${this.friendId}`);
-			})
-			.catch((error) => {
-				super.notify(error);
-			});
+	async declineHandler() {
+		try {
+			await friendService.deleteRequest(this.friendId);
+			super.notify('Friendship declined successfully.');
+			super.navigateTo(`/profile/${this.friendId}`);
+		} catch (error) {
+			super.notify(error);
+		}
 	}
 
 	async getHTML() {
@@ -115,32 +111,11 @@ export default class extends AView {
 				gamesWon: 5,
 			},
 		};
-		const statObj2 = {
-			game: 'Game2',
-			stats: {
-				highscore: 100,
-				gamesPlayed: 10,
-				gamesWon: 5,
-			},
-		};
 
-		const statObj3 = {
-			game: 'Game3',
-			stats: {
-				highscore: 100,
-				gamesPlayed: 10,
-				gamesWon: 5,
-			},
-		};
 
 		const placementObj1 = {
 			game: 'Pong',
 			place: 1,
-		};
-
-		const placementObj2 = {
-			game: 'Game2',
-			place: 101,
 		};
 
 		const historyObj1 = {
@@ -153,19 +128,10 @@ export default class extends AView {
 			date: '2021-01-02',
 			score: 100,
 		};
+
 		const historyObj3 = {
-			game: 'Game2',
-			date: '2021-01-03',
-			score: 100,
-		};
-		const historyObj4 = {
 			game: 'Pong',
 			date: '2021-01-04',
-			score: 100,
-		};
-		const historyObj5 = {
-			game: 'Game2',
-			date: '2021-01-05',
 			score: 100,
 		};
 
@@ -175,21 +141,16 @@ export default class extends AView {
 			placements: [
 				//[placementObj, ...] | null
 				placementObj1,
-				placementObj2,
 			],
 			stats: [
 				// [statObj, ...] | null
 				statObj1,
-				statObj2,
-				statObj3,
 			],
 			playHistory: [
 				//[historyObj, ...] | null
 				historyObj1,
 				historyObj2,
 				historyObj3,
-				historyObj4,
-				historyObj5,
 			],
 		};
 
@@ -233,10 +194,3 @@ export default class extends AView {
 	}
 }
 
-// TODO: Implement the profile page view
-
-// 3. Set up event handler for friend request buttons
-// 4. Set up event handler for accept/decline friend request buttons
-// 5. Set up event handler for cancel friend request buttons
-// 6. Set up event handler for unfriend buttons
-// 7. Set up event handler for invite to game buttons

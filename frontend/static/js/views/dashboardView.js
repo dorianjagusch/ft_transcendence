@@ -1,4 +1,5 @@
 import AView from "./AView.js";
+import getProfilePicture from "../components/profilePicture.js";
 import profileTitle from "../components/profileComponents/profileTitle.js";
 import profileImg from "../components/profileComponents/profileImg.js";
 import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
@@ -6,9 +7,7 @@ import profileDescription from "../components/profileComponents/profileDescripti
 import smallPlacementCard from "../components/profileComponents/smallPlacementCard.js";
 import { scrollContainer } from "../components/scrollContainer.js";
 import profilePlayHistory from "../components/profileComponents/profilePlayHistory.js";
-import profileStatsByGame from "../components/profileComponents/profileStatsByGame.js"
 import profileSummaryStats from "../components/profileComponents/profileSummaryStats.js";
-
 import userData from "../userAPIData/userAPIDashboard.js";
 
 export default class extends AView {
@@ -17,21 +16,23 @@ export default class extends AView {
 		this.setTitle("Dashboard");
 	}
 
-	async getHTML() {
+	getHTML() {
 		const title = profileTitle("Your Stats");
-		const userImg = profileImg(userData.user.img);
+
+		let imgElement;
+		try {
+			const img = getProfilePicture();
+			imgElement = profileImg(img);
+		} catch (error) {
+			console.log('Error getting the profile picture element: ', error);
+		}
 
 		const userPlacement = arrayToElementsList(userData.placements, "placements", smallPlacementCard);
-		userPlacement.classList.add('flex-col')
+		userPlacement.classList.add('flex-col');
 		const userDescription = profileDescription(userData.user.description);
 
 		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, "column");
 		userHistory.classList.add('play-history');
-
-		const userStats = userData.stats.map((game, index) => {
-			const statsEntry = profileStatsByGame(game, index + 1);
-			return statsEntry;
-		});
 
 		const userSummary = profileSummaryStats(userData.stats);
 
@@ -39,13 +40,10 @@ export default class extends AView {
 		main.classList.add("profile", "dashboard");
 		this.updateMain(
 			title,
-			userImg,
+			imgElement,
 			userPlacement,
 			userDescription,
 			userSummary,
-			...userStats,
-			// gameGraph1,
-			// gameGraph2,
 			userHistory
 		);
 	}
