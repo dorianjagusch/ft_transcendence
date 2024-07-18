@@ -12,6 +12,7 @@ import {scrollContainer} from '../components/scrollContainer.js';
 import UserService from '../services/userService.js';
 import FriendService from '../services/friendService.js';
 
+
 export default class extends AView {
 	constructor(params) {
 		super(params);
@@ -63,7 +64,8 @@ export default class extends AView {
 		};
 
 		try {
-			await friendService.postRequest(data);
+			await this.friendService.postRequest(data);
+			//TODO: distinguish between creating a new friendship and accepting a pending request
 			super.notify('Friendship created successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {
@@ -73,7 +75,7 @@ export default class extends AView {
 
 	async declineHandler() {
 		try {
-			await friendService.deleteRequest(this.friendId);
+			await this.friendService.deleteRequest(this.friendId);
 			super.notify('Friendship declined successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {

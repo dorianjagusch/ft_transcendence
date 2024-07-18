@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import User
+from Friends.managers import FriendsManager
+from Friends.models import Friend
 
 class UserInputSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(write_only=True)
@@ -13,7 +15,7 @@ class UserOutputSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'username', 'is_online']
 
-    
+
 class UserFriendOutputSerializer(serializers.ModelSerializer):
 	friendship = serializers.SerializerMethodField()
 
@@ -21,9 +23,10 @@ class UserFriendOutputSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ['id', 'username', 'is_online', 'friendship']
 
-	def __init__(self, *args, **kwargs):
-		self.friendship = kwargs.pop('friendship', None)
-		super().__init__(*args, **kwargs)
-
 	def get_friendship(self, obj):
-			return self.friendship
+		user_id = self.context['request'].user.id
+		friend_id = obj.id
+		if (not user_id or not friend_id):
+			return None
+		status = FriendsManager.get_friendship_status(Friend.objects, user_id, friend_id)
+		return status

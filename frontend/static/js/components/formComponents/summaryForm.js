@@ -1,4 +1,4 @@
-import AForm from "./AForm.js";7
+import AForm from "./AForm.js";
 import PlayerCard from "./PlayerCard.js";
 
 export default class summaryForm extends AForm {

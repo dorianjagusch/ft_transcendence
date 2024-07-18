@@ -30,8 +30,4 @@ class MatchToken(AbstractToken):
     user_left_side = models.ForeignKey(User, related_name='match_token_left', on_delete=models.CASCADE)
     user_right_side = models.ForeignKey(User, related_name='match_token_right', null=True, on_delete=models.CASCADE)
 
-    # FOR TOURNAMENTS
-    # tournament = models.ForeignKey()
-    # tournament_match = models.ForeignKey()
-
     objects = MatchTokenManager()
