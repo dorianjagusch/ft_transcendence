@@ -1,47 +1,20 @@
-import backendURL from "../constants.js";
-import getCookie from '../utils/getCookie.js';
+import backendURL from '../constants.js';
+import ARequestService from './ARequestService.js';
 
-class ProfilePictureService {
+export default class ProfilePictureService extends ARequestService {
 	constructor() {
+		super();
 	}
 
-	async checkResponseWithBody(request) {
-		const response = await request;
-		return response;
+	async getRequest(id) {
+		return await super.getRequest(`${backendURL.userURL}${id}/profile_pictures/`);
 	}
 
-	async getRequest(user_id) {
-		const request = fetch(`${backendURL.userURL}${user_id}/profile_pictures/`, {
-			credentials: 'include',
-		});
-
-		return this.checkResponseWithBody(request);
+	async getFriendProfilePictureRequest(id) {
+		return super.getRequest(`${backendURL.friendURL}${id}/profile_pictures/`);
 	}
 
-	async getFriendProfilePictureRequest(user_id) {
-		const request = fetch(`${backendURL.friendURL}${user_id}/profile_pictures/`, {
-			credentials: 'include',
-		});
-
-		return this.checkResponseWithBody(request);
-	}
-
-	async postProfilePictureRequest(user_id, data) {
-		const postRequest = fetch(`${backendURL.userURL}${user_id}/profile_pictures/`, {
-			method: 'POST',
-			headers: {
-				'X-CSRFToken': getCookie('csrftoken'),
-			},
-			body: data,
-			credentials: 'include',
-		});
-
-		const response = await postRequest;
-		if (!response.ok) {
-			const responseData = await response.json();
-			throw new Error(responseData.message || 'Error occurred.');
-		}
+	async postRequest(id, data) {
+		return super.postRequest(`${backendURL.userURL}${id}/profile_pictures/`, data);
 	}
 }
-
-export default ProfilePictureService;
