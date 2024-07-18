@@ -12,6 +12,9 @@ from .exceptions import TournamentSetupException, \
 							TournamentInProgressException
 from .tournamentState import TournamentState
 from User.models import User
+from Tokens.models import MatchToken
+from Tokens.managers import MatchTokenManager
+from Match.matchState import MatchState
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											validate_tournament_request
@@ -67,7 +70,10 @@ class TournamentDetailView(APIView):
 				return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
 		elif tournament.state == TournamentState.IN_PROGRESS:
-			pass
+			next_match = tournament.matches.filter(state=MatchState.LOBBY).order_by('id').first()
+			token = MatchTokenManager.create_tournament_match_token(next_match)
+			pong_match_url = f'ws://localhost:8080/pong/{next_match.id}?token={token.token}'
+			return Response(pong_match_url, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(validate_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
