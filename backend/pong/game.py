@@ -45,9 +45,9 @@ class PongStatus:
                     self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
                 elif move == PLAYER_AI_DOWN:
                     self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+                self.player_right.y = self.game.check_boundary(self.player_right.y)
                 if steps > 1:
-                    await asyncio.sleep(0.0001)
-        self.player_right.y = self.game.check_boundary(self.player_right.y)
+                    await asyncio.sleep(0.001)
         self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
