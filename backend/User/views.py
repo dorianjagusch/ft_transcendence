@@ -132,7 +132,6 @@ class UserProfilePictureView(APIView):
 			if not profile_picture:
 				return Response({'image': ''}, status=status.HTTP_200_OK)
 
-			# Get the actual file path from the ImageFieldFile instance
 			image_path = profile_picture.picture.path
 			with open(image_path, "rb") as image_file:
 				image_data = image_file.read()
