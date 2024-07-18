@@ -10,6 +10,7 @@ from User.serializers import UserInputSerializer, \
 								UserOutputSerializer
 
 from .models import MatchToken
+from .managers import MatchTokenManager
 from .serializers import MatchTokenSerializer
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
@@ -27,7 +28,7 @@ class SingleMatchGuestTokenView(APIView):
 
 		guest_user = authenticate(username=username, password=password)
 		if guest_user is not None:
-			token = MatchToken.objects.create_single_match_token(host_user, guest_user)
+			token = MatchTokenManager.create_single_match_token(host_user, guest_user)
 			token_serializer = MatchTokenSerializer(token)
 			user_serializer = UserOutputSerializer(guest_user)
 			return Response({
