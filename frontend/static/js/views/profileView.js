@@ -11,6 +11,7 @@ import constants from '../constants.js';
 import {scrollContainer} from '../components/scrollContainer.js';
 import UserService from '../services/userService.js';
 import FriendService from '../services/friendService.js';
+import getProfilePicture from '../components/profilePicture.js';
 
 
 export default class extends AView {

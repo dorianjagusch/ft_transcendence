@@ -43,7 +43,7 @@ const SideBar = async () => {
 	const aside = document.createElement('aside');
 	const img = document.createElement('img');
 	try {
-		img.src = await getProfilePicture()
+		img.src = await getProfilePicture(localStorage.getItem('user_id'));
 	} catch (error) {
 		console.log('Error getting the profile picture element: ', error);
 	}

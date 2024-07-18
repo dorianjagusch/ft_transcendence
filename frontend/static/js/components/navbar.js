@@ -45,7 +45,7 @@ const createUserSection = async () => {
 	const userSection = document.createElement('div');
 	userSection.classList.add('nav-partition', 'logged-in');
 
-	const userImage = await getProfilePicture();
+	const userImage = await getProfilePicture(localStorage.getItem('user_id'));
 	const userImageItem = navbarItem('/dashboard', 'image', userImage);
 	userSection.appendChild(userImageItem);
 

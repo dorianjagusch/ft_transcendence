@@ -21,7 +21,7 @@ export default class extends AView {
 
 		let imgElement;
 		try {
-			const img = await getProfilePicture();
+			const img = await getProfilePicture(localStorage.getItem("userId"));
 			imgElement = profileImg(img);
 		} catch (error) {
 			console.log('Error getting the profile picture element: ', error);

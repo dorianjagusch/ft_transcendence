@@ -1,7 +1,6 @@
 import ProfilePictureService from '../services/profilePictureService.js';
 
-const getProfilePicture = async () => {
-	const userIdStr = localStorage.getItem('user_id');
+const getProfilePicture = async (userIdStr) => {
 	if (!userIdStr) {
 		throw new Error('User ID is not found in local storage');
 	}
