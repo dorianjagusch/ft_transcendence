@@ -56,4 +56,10 @@ const router = async () => {
 	view.getHTML();
 };
 
+window.addEventListener('load', () => {
+	if (!sessionStorage.getItem('isLoggedInSession')) {
+		localStorage.clear();
+	}
+});
+
 export {navigateTo, router};
