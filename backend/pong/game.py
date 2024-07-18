@@ -1,17 +1,18 @@
 from .constants import *
 import math
 from .game_logic import PongGame
-from .player import Player
+from .pongPlayer import PongPlayer
 from .ball import Ball
 from .game_stats import GameStats
 import asyncio
+import sys
 
 class PongStatus:
-    def __init__(self):
+    def __init__(self, ball, player_left, player_right):
         # Initialize game state
-        self.player_left = Player(WALL_MARGIN)
-        self.player_right = Player(PLAYGROUND_WIDTH - WALL_MARGIN)
-        self.ball = Ball()
+        self.player_left = player_left
+        self.player_right = player_right
+        self.ball = ball
         self.game_stats = GameStats()
         self.ai_opponent = False
         self.game = PongGame()
@@ -45,9 +46,10 @@ class PongStatus:
                     self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
                 elif move == PLAYER_AI_DOWN:
                     self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+
                 self.player_right.y = self.game.check_boundary(self.player_right.y)
                 if steps > 1:
-                    await asyncio.sleep(0.001)
+                    await asyncio.sleep(0.0001)
         self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
@@ -69,6 +71,8 @@ class PongStatus:
         dist_from_ball_x = self.ball.x - self.player_right.x
         dist_from_ball_y = self.ball.y - self.player_right.y
         dist_length = self.length(dist_from_ball_x, dist_from_ball_y)
+        print(f"ball.y: {self.ball.y}", file=sys.stderr)
+        print(f"distance from ball: {dist_length}", file=sys.stderr)
 
         # Look ahead factor depends on the speed and distance of the ball
         look_ahead_factor = dist_length / (PLAYER_MOVEMENT_UNIT + self.ball.speed)

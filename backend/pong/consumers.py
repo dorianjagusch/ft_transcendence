@@ -9,16 +9,19 @@ from channels.db import database_sync_to_async
 from Tokens.models import MatchToken
 from Match.models import Match
 from Player.models import Player
+from .pongPlayer import PongPlayer
+from .ball import Ball
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.match = None
-        self.player_left = None
-        self.player_right = None
+        self.player_left = PongPlayer(WALL_MARGIN)
+        self.player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
         self.ai_opponent = True
-        self.game = PongStatus()
+        self.ball = Ball()
+        self.game = PongStatus(self.ball, self.player_left, self.player_right)
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
