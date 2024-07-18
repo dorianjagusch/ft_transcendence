@@ -1,41 +1,28 @@
 import ProfilePictureService from '../services/profilePictureService.js';
 
-const getProfilePicture = () => {
+const getProfilePicture = async () => {
 	const userIdStr = localStorage.getItem('user_id');
 	if (!userIdStr) {
-		throw new Error("User ID is not found in local storage");
+		throw new Error('User ID is not found in local storage');
 	}
-
 	const userId = parseInt(userIdStr, 10);
 	if (isNaN(userId)) {
-		throw new Error("User ID is not a valid number");
+		throw new Error('User ID is not a valid number');
 	}
 
-	const img = document.createElement('img');
-	var profilePictureService = new ProfilePictureService();
+	const profilePictureService = new ProfilePictureService();
 
-	profilePictureService.getRequest(userId)
-	.then(response => {
-		if (!response.ok) {
-			throw new Error(`Error: ${response.status}`);
-		}
-
-		return response.json();
-	})
-	.then(responseBody => {
+	try {
+		const responseBody = await profilePictureService.getRequest(userId);
 		if (responseBody.image === '') {
-			img.setAttribute('src', './static/assets/img/default-user.png');
+			return './static/assets/img/default-user.png';
+		} else {
+			return `data:image/jpeg;base64,${responseBody.image}`;
 		}
-		else {
-			img.setAttribute('src', `data:image/jpeg;base64,${responseBody.image}`);
-		}
-	})
-	.catch(error => {
-		console.error('Error fetching profile picture:', error);
-		img.setAttribute('src', './static/assets/img/default-user.png');
-	});
-
-	return img;
+	} catch (error) {
+		'./static/assets/img/default-user.png';
+	}
+	return ''
 };
 
 export default getProfilePicture;
