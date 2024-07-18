@@ -2,6 +2,7 @@ import getProfilePicture from './profilePicture.js';
 
 const toggleSideBar = (e) => {
 	e.preventDefault();
+	e.stopPropagation();
 	document.querySelector('aside').toggleAttribute('active');
 };
 
