@@ -33,7 +33,7 @@ class Tournament(models.Model):
 			self.save()
 
 	def abort_tournament(self):
-		if self.state == TournamentState.IN_PROGRESS.value:
+		if self.state in (TournamentState.LOBBY, TournamentState.IN_PROGRESS.value):
 			self.state = TournamentState.ABORTED.value
 			self.end_ts = timezone.now()
 			self.save()
@@ -41,11 +41,12 @@ class Tournament(models.Model):
 	def __str__(self):
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
 		return f'Tournament {self.pk} - {self.get_state_display()}'
-	
+
+
 class TournamentPlayer(models.Model):
 	tournament = models.ForeignKey(Tournament, related_name='players', on_delete=models.CASCADE)
 	user = models.ForeignKey(User, related_name='tournament_players', on_delete=models.CASCADE)
-	display_name = models.CharField(max_length=30, null=False, blank=False)
+	display_name = models.CharField(max_length=30, null=True, blank=True, default=None)
 
 	class Meta:
 		unique_together = ('tournament', 'user')
