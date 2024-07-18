@@ -16,12 +16,12 @@ export default class extends AView {
 		this.setTitle("Dashboard");
 	}
 
-	getHTML() {
+	async getHTML() {
 		const title = profileTitle("Your Stats");
 
 		let imgElement;
 		try {
-			const img = getProfilePicture();
+			const img = await getProfilePicture();
 			imgElement = profileImg(img);
 		} catch (error) {
 			console.log('Error getting the profile picture element: ', error);
