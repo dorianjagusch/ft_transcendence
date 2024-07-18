@@ -1,4 +1,5 @@
 import backendURL from '../constants.js';
+import getCookie from '../utils/getCookie.js';
 import ARequestService from './ARequestService.js';
 
 export default class ProfilePictureService extends ARequestService {
@@ -15,6 +16,15 @@ export default class ProfilePictureService extends ARequestService {
 	}
 
 	async postRequest(id, data) {
-		return super.postRequest(`${backendURL.userURL}${id}/profile_pictures/`, data);
+		const postRequest = fetch(`${backendURL.userURL}${id}/profile_pictures/`, {
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+			body: data,
+			credentials: 'include',
+		});
+		const responseData = this.checkResponseWithBody(postRequest);
+		return responseData;
 	}
 }
