@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 	'Tokens',
 	'Match',
 	'Player',
+	'Tournament',
 	'pong',
 	'stats',
 ]

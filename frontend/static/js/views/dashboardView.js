@@ -7,7 +7,6 @@ import profileDescription from "../components/profileComponents/profileDescripti
 import smallPlacementCard from "../components/profileComponents/smallPlacementCard.js";
 import { scrollContainer } from "../components/scrollContainer.js";
 import profilePlayHistory from "../components/profileComponents/profilePlayHistory.js";
-import profileStatsByGame from "../components/profileComponents/profileStatsByGame.js"
 import profileSummaryStats from "../components/profileComponents/profileSummaryStats.js";
 import userData from "../userAPIData/userAPIDashboard.js";
 
@@ -35,11 +34,6 @@ export default class extends AView {
 		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, "column");
 		userHistory.classList.add('play-history');
 
-		const userStats = userData.stats.map((game, index) => {
-			const statsEntry = profileStatsByGame(game, index + 1);
-			return statsEntry;
-		});
-
 		const userSummary = profileSummaryStats(userData.stats);
 
 		const main = document.querySelector("main");
@@ -50,7 +44,6 @@ export default class extends AView {
 			userPlacement,
 			userDescription,
 			userSummary,
-			...userStats,
 			userHistory
 		);
 	}

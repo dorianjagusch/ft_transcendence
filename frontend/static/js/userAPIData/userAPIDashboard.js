@@ -14,33 +14,13 @@ const statObj1 = {
 		gamesWon: 5,
 	},
 };
-const statObj2 = {
-	game: 'Game2',
-	stats: {
-		highscore: 100,
-		gamesPlayed: 10,
-		gamesWon: 5,
-	},
-};
 
-const statObj3 = {
-	game: 'Game3',
-	stats: {
-		highscore: 100,
-		gamesPlayed: 10,
-		gamesWon: 5,
-	},
-};
 
 const placementObj1 = {
 	game: 'Pong',
 	place: 1,
 };
 
-const placementObj2 = {
-	game: 'Game2',
-	place: 101,
-};
 
 const historyObj1 = {
 	game: 'Pong',
@@ -52,19 +32,10 @@ const historyObj2 = {
 	date: '2021-01-02',
 	score: 100,
 };
+
 const historyObj3 = {
-	game: 'Game2',
-	date: '2021-01-03',
-	score: 100,
-};
-const historyObj4 = {
 	game: 'Pong',
 	date: '2021-01-04',
-	score: 100,
-};
-const historyObj5 = {
-	game: 'Game2',
-	date: '2021-01-05',
 	score: 100,
 };
 
@@ -73,7 +44,6 @@ const userData = {
 	placements: [
 		//[placementObj, ...] | null
 		placementObj1,
-		placementObj2,
 	],
 	stats: [
 		// [statObj, ...] | null
@@ -84,8 +54,6 @@ const userData = {
 		historyObj1,
 		historyObj2,
 		historyObj3,
-		historyObj4,
-		historyObj5,
 	],
 };
 
