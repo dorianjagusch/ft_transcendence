@@ -1,9 +1,7 @@
 import LoginService from '../services/loginService.js';
 import LoginForm from '../components/formComponents/loginForm.js';
-import ProfileForm from '../components/formComponents/completeProfileForm.js';
 import Modal from '../components/modal.js';
 import AView from './AView.js';
-import SideBar from '../components/sideBar.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -59,11 +57,7 @@ export default class extends AView {
 
 		modalContainer.appendChild(signUpButton);
 
-		const ProfileModal = Modal('profile', 'bg-secondary', ProfileForm);
-		ProfileModal.classList.add('overlay');
-		ProfileModal.setAttribute('data-visible', 'false');
-
-		this.updateMain(modalContainer, ProfileModal);
+		this.updateMain(modalContainer);
 		this.appendEventListeners();
 	}
 }

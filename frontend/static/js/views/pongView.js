@@ -2,6 +2,10 @@ import ChatSocket from '../pong/ChatSocket.js';
 import PongService from '../services/pongService.js';
 import Pong from '../pong/pong.js';
 import AView from './AView.js';
+import PongGame from '../pong/pongGame.js';
+
+/*TODO: Let it take parameters to distingish between match and tournament
+		expect /tournament/id/match/id or /match/id*/
 
 export default class extends AView {
 	constructor(params) {
@@ -19,6 +23,8 @@ export default class extends AView {
 
 		window.addEventListener('beforeunload', this.chatSocket.handleClose);
 
+
+		// TODO unnest the conditionals in the loop
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
 				if (mutation.removedNodes) {

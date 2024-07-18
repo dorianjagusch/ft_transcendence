@@ -1,17 +1,14 @@
 import ADialog from './ADialog.js';
 import loginForm from '../formComponents/loginForm.js';
 import AuthenticationService from '../../services/AuthenticationService.js';
-import {navigateTo} from '../../router.js';
-import {inputNotification} from '../userNotification.js';
 
 export default class AuthenticationModal extends ADialog {
 	constructor(parentCallback) {
 		super(new loginForm(), new AuthenticationService());
-		this.notify = this.notify.bind(this);
 		this.getFormData = this.getFormData.bind(this);
 		this.authenticateUser = this.authenticateUser.bind(this);
-		this.getFormData = this.getFormData.bind(this);
 		this.onDataReceived = parentCallback;
+		this.tournamentId;
 		this.appendEventlistenters();
 	}
 
@@ -22,21 +19,14 @@ export default class AuthenticationModal extends ADialog {
 		return {username, password};
 	}
 
-	notify(message) {
-		const notification = inputNotification(message);
-		this.form.form.querySelector('h3').after(notification);
-		setTimeout(() => {
-			notification.remove();
-		}, 3000);
-	}
-
 	async authenticateUser(guestUser) {
 		try {
 			const guestData = {
-				username: 'Player 2',
+				username: guestUser.username,
 				img: './static/assets/img/default-user.png',
-				wins: 20,
-				losses: 0,
+				wins: 20, //needed for matches
+				losses: 0, //needed for matches both are just in the mock data, but are expected for stats of individual match display
+				player_id: this.dialog.getAttribute('data-modal-id'),
 			};
 			// const guestData = await this.service.postRequest(guestUser);
 			this.dialog.close();
@@ -55,7 +45,6 @@ export default class AuthenticationModal extends ADialog {
 				if (e.target.classList.contains('primary-btn')) {
 					e.preventDefault();
 					const {username, password} = this.getFormData();
-					console.log(username, password);
 					if (!username || !password) {
 						this.notify('Provide a username and password.');
 						return;
@@ -63,7 +52,7 @@ export default class AuthenticationModal extends ADialog {
 					try {
 						this.authenticateUser({username, password});
 					} catch (error) {
-						console.error(error);
+						this.notify(error.message);
 					}
 				} else if (e.target.classList.contains('decline-btn')) {
 					this.dialog.close();

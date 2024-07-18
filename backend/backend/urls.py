@@ -30,7 +30,8 @@ from User.views import UserDetailView, \
 						UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
-						FriendshipDetailView
+						FriendshipDetailView, \
+						FriendProfilePictureView
 
 from Tokens.views import SingleMatchGuestTokenView
 
@@ -45,6 +46,7 @@ from Tournament.views import TournamentListView, \
 from stats.views import StatsView, \
 							LeaderBoardView
 
+
 urlpatterns = [
 	path('admin/', admin.site.urls),
 
@@ -56,10 +58,10 @@ urlpatterns = [
 	path('logout/', UserLogoutView.as_view()),
 	path('admins/', UserAdminDetailsView.as_view()),
 
-
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
+	path('friends/<int:user_id>/profile_pictures/', FriendProfilePictureView.as_view()),
 
 	# Tokens views
 	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
@@ -67,6 +69,7 @@ urlpatterns = [
 	# Match Views
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
+
 
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
@@ -78,6 +81,7 @@ urlpatterns = [
 	path('stats/', StatsView.as_view()),
 	path('leaderboard/', LeaderBoardView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 websocket_urlpatterns = [
     path('pong/<int:match_id>', PongConsumer.as_asgi()),

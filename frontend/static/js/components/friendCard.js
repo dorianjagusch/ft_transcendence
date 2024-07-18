@@ -7,9 +7,6 @@ const friendCard = (friend, navigateTo) => {
 	user.setAttribute('data-id', friend.id);
 	user.setAttribute('data-visible', 'false');
 
-	const imgElement = document.createElement('img');
-	imgElement.src = friend.img;
-
 	const userCardText = document.createElement('div');
 	userCardText.className = 'user-card-text';
 
@@ -24,7 +21,7 @@ const friendCard = (friend, navigateTo) => {
 	userCardText.appendChild(userName);
 	userCardText.appendChild(userStatus);
 
-	friendCard.appendChild(imgElement);
+	friendCard.appendChild(friend.img);
 	friendCard.appendChild(userCardText);
 	friendCard.appendChild(userId);
 	friendCard.addEventListener('click', () => navigateTo(friend));

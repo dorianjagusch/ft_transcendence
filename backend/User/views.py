@@ -23,6 +23,13 @@ from shared_utilities.decorators import must_be_authenticated, \
 
 class UserListView(APIView):
 	def get(self, request):
+		if request.user.is_authenticated and request.GET.get("username_contains"):
+			username_contains = request.GET.get("username_contains")
+			users = User.objects.filter(username__contains=username_contains).exclude(id=request.user.id)
+			## add error handling if either user doesn't exits or user is not authenticated
+			serializer = UserFriendOutputSerializer(users, many=True, context={'request': request})
+			return Response(serializer.data, status=status.HTTP_200_OK)
+
 		users = User.objects.all()
 		serializer = UserOutputSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
@@ -56,7 +63,7 @@ class UserDetailView(APIView):
 			serializer = UserOutputSerializer(user)
 			return Response(serializer.data)
 		friendship = Friend.objects.get_friendship_status(login_user_id, user.id)
-		serializer = UserFriendOutputSerializer(user, friendship=friendship)
+		serializer = UserFriendOutputSerializer(user, context={'request': request})
 		return Response(serializer.data)
 
 	@method_decorator(must_be_authenticated)
@@ -132,7 +139,6 @@ class UserProfilePictureView(APIView):
 			if not profile_picture:
 				return Response({'image': ''}, status=status.HTTP_200_OK)
 
-			# Get the actual file path from the ImageFieldFile instance
 			image_path = profile_picture.picture.path
 			with open(image_path, "rb") as image_file:
 				image_data = image_file.read()

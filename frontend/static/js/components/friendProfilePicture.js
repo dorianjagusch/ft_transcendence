@@ -1,20 +1,10 @@
 import ProfilePictureService from '../services/profilePictureService.js';
 
-const getProfilePicture = () => {
-	const userIdStr = localStorage.getItem('user_id');
-	if (!userIdStr) {
-		throw new Error("User ID is not found in local storage");
-	}
-
-	const userId = parseInt(userIdStr, 10);
-	if (isNaN(userId)) {
-		throw new Error("User ID is not a valid number");
-	}
-
+const getFriendProfilePicture = (id) => {
 	const img = document.createElement('img');
 	var profilePictureService = new ProfilePictureService();
 
-	profilePictureService.getRequest(userId)
+	profilePictureService.getFriendProfilePictureRequest(id)
 	.then(response => {
 		if (!response.ok) {
 			throw new Error(`Error: ${response.status}`);
@@ -38,4 +28,4 @@ const getProfilePicture = () => {
 	return img;
 };
 
-export default getProfilePicture;
+export default getFriendProfilePicture;
