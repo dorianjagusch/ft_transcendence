@@ -1,8 +1,6 @@
 from django.db import models
 from datetime import datetime
 
-from .managers import MatchManager
-
 # Question to Meri: put into separate file?
 class MatchState(models.IntegerChoices):
 	LOBBY = 0, 'lobby'
@@ -17,9 +15,7 @@ class Match(models.Model):
 	start_time = models.DateTimeField(null=True, blank=True)
 	end_time = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-
-	objects = MatchManager()
+	update_at = models.DateTimeField(auto_now=True)
 
 	def start_match(self):
 		if self.state == MatchState.LOBBY.value:
@@ -41,7 +37,7 @@ class Match(models.Model):
 
 	def __str__(self):
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
-		return f'Match {self.pk} - {self.get_state_display()}'
+		return f'Match {self.id} - {self.get_state_display()}'
 
 	# for later
 	# tournament_id = models.ForeignKey(Tournament, related_name='tournament_id', null=True, blank=True, on_delete=models.SET_NULL)
