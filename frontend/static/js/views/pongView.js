@@ -23,6 +23,8 @@ export default class extends AView {
 
 		window.addEventListener('beforeunload', this.chatSocket.handleClose);
 
+
+		// TODO unnest the conditionals in the loop
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
 				if (mutation.removedNodes) {

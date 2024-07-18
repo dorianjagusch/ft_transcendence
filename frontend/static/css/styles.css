@@ -1331,7 +1331,7 @@ dialog h3 {
 			background-color: var(--bg-color);
 		}
 
-		.button-bar {
+		& .button-bar {
 			width: 100%;
 			flex-wrap: nowrap;
 			justify-content: space-between;
@@ -1343,3 +1343,39 @@ dialog h3 {
 		font-size: var(--fs-medium);
 		justify-content: space-around;
 	}
+
+
+.search-friends-modal{
+	& .menu-item{
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5em;
+	}
+
+	& .friend-result{
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1em;
+		padding: 1em;
+		overflow-y: scroll;
+		border-radius: 1em;
+		margin-bottom: 1em;
+
+		&:hover{
+			outline: 5px solid var(--border-color);
+		}
+
+		&  > img{
+			width: 2.5em;
+			height: 2.5em;
+			border-radius: 1em;
+		}
+
+		& button{
+			font-size: var(--fs-small);
+		}
+	}
+}

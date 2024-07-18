@@ -1,6 +1,7 @@
 import {friendCard} from '../components/friendCard.js';
 import {requestCard} from '../components/requestCard.js';
 import {scrollContainer} from '../components/scrollContainer.js';
+import SearchFriendsModal from '../components/dialogs/searchFriendsModal.js';
 import FriendService from '../services/friendService.js';
 import constants from '../constants.js';
 import AView from './AView.js';
@@ -26,7 +27,7 @@ export default class extends AView {
 			friend_id: friend.id,
 		};
 		try {
-			friendService.postRequest(data).then(() => {
+			this.friendService.postRequest(data).then(() => {
 				super.notify('Friendship created successfully.');
 				super.navigateTo('/friends');
 			});
@@ -37,13 +38,18 @@ export default class extends AView {
 
 	declineHandler(friend) {
 		try {
-			friendService.deleteRequest(friend.id).then(() => {
+			this.friendService.deleteRequest(friend.id).then(() => {
 				super.notify('Friendship declined successfully.');
 				super.navigateTo('/friends');
 			});
 		} catch (error) {
 			super.notify(error);
 		}
+	}
+
+	openSearchFriendsmodal() {
+		const modal = document.querySelector('.search-friends-modal');
+		modal.showModal();
 	}
 
 	createFriendScroller(friendsArray, card, tokens, identifier) {
@@ -115,6 +121,26 @@ export default class extends AView {
 			'friend-request',
 			'bg-secondary'
 		);
-		this.updateMain(friendTitle, friendScroller, requestTitle, requestScroller);
+
+		const searchFriendsSection = document.createElement('section');
+		searchFriendsSection.classList.add('search-friends');
+		const searchFriendsButton = document.createElement('button');
+		searchFriendsButton.classList.add('primary-btn');
+		searchFriendsButton.textContent = 'Search Friends';
+		searchFriendsSection.appendChild(searchFriendsButton);
+		const searchFriendsModal = new SearchFriendsModal();
+		searchFriendsModal.dialog.classList.add('search-friends-modal');
+		searchFriendsButton.addEventListener('click', () => {
+			this.openSearchFriendsmodal();
+		});
+
+		this.updateMain(
+			friendTitle,
+			friendScroller,
+			requestTitle,
+			requestScroller,
+			searchFriendsSection,
+			searchFriendsModal.dialog
+		);
 	}
 }
