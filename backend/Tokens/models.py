@@ -4,7 +4,6 @@ from datetime import timedelta
 from django.utils import timezone
 
 from User.models import User
-from .managers import MatchTokenManager
 
 class AbstractToken(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
