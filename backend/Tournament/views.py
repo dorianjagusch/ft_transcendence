@@ -138,8 +138,6 @@ class TournamentMatchListView(APIView):
 		return Response(tournament_match_serializers.data, status=status.HTTP_200_OK)
 
 class TournamentMatchDetailView(APIView):
-	# @method_decorator(must_be_authenticated)
-	# @method_decorator(validate_tournament_request([TournamentState.IN_PROGRESS]))
 	def get(self, request, tournament_id, tournament_match_id):
 		'''get details of a single tournament match.
 		If host and tournament is in progress and the tournament_match_id is the next_match, return match url.
@@ -150,10 +148,21 @@ class TournamentMatchDetailView(APIView):
 		tournament_matches = tournament.matches.all().order_by('id')
 		if tournament_match_id >= tournament_matches.count():
 			return Response(f"Tournament {tournament_id} does not have {tournament_match_id} match", status=status.HTTP_404_NOT_FOUND)
+		
 		# check if user is host, tournament is in progress, and the tournament_match_id is the next_match, if so, start match
 		if request.user == tournament.host_user \
 			and tournament.state == TournamentState.IN_PROGRESS \
 			and tournament_matches.filter(state=TournamentState.FINISHED).count() == tournament_match_id:
+
+			# check that the tournament is still valid
+			try:
+				TournamentManager.in_progress.raise_error_if_tournament_has_expired(tournament)
+				TournamentManager.in_progress.raise_error_if_inactive_user_in_tournament(tournament)
+
+			except TournamentInProgressException as e:
+				TournamentManager.in_progress.abort_tournament(tournament)
+				return Response(f"{str(e)}; tournament aborted!", status=status.HTTP_403_FORBIDDEN)
+
 			if tournament_matches[tournament_match_id].state != TournamentState.LOBBY:
 				return Response({"error": f"the tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
 			next_match = tournament_matches[tournament_match_id]

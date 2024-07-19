@@ -103,7 +103,6 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 	
 class TournamentInProgressSerializer(serializers.ModelSerializer):
 	state = serializers.CharField(source='get_state_display', read_only=True)
-	next_match = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Tournament
@@ -116,19 +115,6 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'player_amount',
 			'next_match',
 		]
-		
-	def get_next_match(self, tournament: Tournament) -> ReturnDict | None:
-		try:
-			tournament_matches = Match.objects.filter(tournament=tournament).order_by('id')
-			next_match = tournament_matches[tournament.next_match]
-			serializer = TournamentMatchSerializer(next_match)
-			# remove 'winner' from serializer
-			if 'winner' in serializer.fields:
-				serializer.fields.pop('winner')
-			return serializer.data
-
-		except Match.DoesNotExist:
-			return None
 		
 class TournamentSerializers:
 	default = TournamentSerializer
