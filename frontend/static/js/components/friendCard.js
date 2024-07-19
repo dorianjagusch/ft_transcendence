@@ -10,6 +10,10 @@ const friendCard = (friend, navigateTo) => {
 	const userCardText = document.createElement('div');
 	userCardText.className = 'user-card-text';
 
+	const friendImg = document.createElement('img');
+
+	friendImg.src = friend.img;
+
 	const userName = document.createElement('div');
 	userName.className = 'user-name';
 	userName.innerText = friend.username;
@@ -21,7 +25,7 @@ const friendCard = (friend, navigateTo) => {
 	userCardText.appendChild(userName);
 	userCardText.appendChild(userStatus);
 
-	friendCard.appendChild(friend.img);
+	friendCard.appendChild(friendImg);
 	friendCard.appendChild(userCardText);
 	friendCard.appendChild(userId);
 	friendCard.addEventListener('click', () => navigateTo(friend));
