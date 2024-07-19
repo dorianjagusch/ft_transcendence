@@ -19,7 +19,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.match = None
         self.player_left = PongPlayer(WALL_MARGIN)
         self.player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
-        self.ai_opponent = True
+        self.ai_opponent = False
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
         self.game = PongStatus(self.ball, self.player_left, self.player_right)
