@@ -25,7 +25,9 @@ class UserListView(APIView):
 	def get(self, request):
 		if request.user.is_authenticated and request.GET.get("username_contains"):
 			username_contains = request.GET.get("username_contains")
-			users = User.objects.filter(username__contains=username_contains).exclude(id=request.user.id)
+			users = (User.objects.filter(username__contains=username_contains)
+				.exclude(id=request.user.id)
+				.exclude(username__startswith='deleted_user_'))
 			## add error handling if either user doesn't exits or user is not authenticated
 			serializer = UserFriendOutputSerializer(users, many=True, context={'request': request})
 			return Response(serializer.data, status=status.HTTP_200_OK)
