@@ -11,10 +11,6 @@ export default class ProfilePictureService extends ARequestService {
 		return await super.getRequest(`${backendURL.userURL}${id}/profile_pictures/`);
 	}
 
-	async getFriendProfilePictureRequest(id) {
-		return super.getRequest(`${backendURL.friendURL}${id}/profile_pictures/`);
-	}
-
 	async postRequest(id, data) {
 		const postRequest = fetch(`${backendURL.userURL}${id}/profile_pictures/`, {
 			method: 'POST',
