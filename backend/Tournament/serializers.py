@@ -19,13 +19,20 @@ class TournamentPlayerSerializer(serializers.ModelSerializer):
 		fields = ['id', 'user', 'display_name']
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
+	tournament_match_id = serializers.SerializerMethodField()
+	match_id = serializers.IntegerField(source='id', read_only=True)
 	state = serializers.CharField(source='get_state_display', read_only=True)
 	tournament_player_left = serializers.SerializerMethodField()
 	tournament_player_right = serializers.SerializerMethodField()
 	winner = serializers.SerializerMethodField()
 	class Meta:
 		model = Match
-		fields = ['id', 'state', 'tournament_player_left', 'tournament_player_right', 'winner']
+		fields = ['tournament_match_id', 'match_id', 'state', 'tournament_player_left', 'tournament_player_right', 'winner']
+
+	def get_tournament_match_id(self, match: Match) -> int:
+		matches = match.tournament.matches.all().order_by('id')
+		match_ids = list(matches.values_list('id', flat=True))
+		return match_ids.index(match.id)
 
 	def get_tournament_player_left(self, match: Match) -> TournamentPlayerSerializer | None:
 		first_player = match.players.first()
