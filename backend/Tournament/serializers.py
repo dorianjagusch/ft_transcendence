@@ -19,12 +19,13 @@ class TournamentPlayerSerializer(serializers.ModelSerializer):
 		fields = ['id', 'user', 'display_name']
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
+	state = serializers.CharField(source='get_state_display', read_only=True)
 	tournament_player_left = serializers.SerializerMethodField()
 	tournament_player_right = serializers.SerializerMethodField()
 	winner = serializers.SerializerMethodField()
 	class Meta:
 		model = Match
-		fields = ['id', 'tournament_player_left', 'tournament_player_right', 'winner']
+		fields = ['id', 'state', 'tournament_player_left', 'tournament_player_right', 'winner']
 
 	def get_tournament_player_left(self, match: Match) -> TournamentPlayerSerializer | None:
 		first_player = match.players.first()
@@ -94,9 +95,7 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 		return data
 	
 class TournamentInProgressSerializer(serializers.ModelSerializer):
-	state_display = serializers.CharField(source='get_state_display', read_only=True)
-	tournament_players = TournamentPlayerSerializer(many=True, read_only=True)
-	matches = TournamentMatchSerializer(many=True, read_only=True)
+	state = serializers.CharField(source='get_state_display', read_only=True)
 	next_match = serializers.SerializerMethodField()
 
 	class Meta:
@@ -106,11 +105,8 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'host_user',
 			'name',
 			'state',
-			'state_display',
 			'expire_ts',
 			'player_amount',
-			'tournament_players',
-			'matches',
 			'next_match',
 		]
 		
@@ -132,3 +128,4 @@ class TournamentSerializers:
 	creation = TournamentCreationSerializer
 	in_progress = TournamentInProgressSerializer
 	player = TournamentPlayerSerializer
+	match = TournamentMatchSerializer
