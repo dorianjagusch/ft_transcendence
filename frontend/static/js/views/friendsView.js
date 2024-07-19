@@ -5,7 +5,7 @@ import SearchFriendsModal from '../components/dialogs/searchFriendsModal.js';
 import FriendService from '../services/friendService.js';
 import constants from '../constants.js';
 import AView from './AView.js';
-import getFriendProfilePicture from '../components/friendProfilePicture.js';
+import getProfilePicture from '../components/profilePicture.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -70,7 +70,7 @@ export default class extends AView {
 		return response.map((element) => {
 			const id = element.id;
 			try {
-				const profileImg = getFriendProfilePicture(id);
+				const profileImg = getProfilePicture(id);
 
 				return {
 					id: element.id,
@@ -82,7 +82,7 @@ export default class extends AView {
 				console.log('Error getting the profile picture element: ', error);
 			}
 		});
-	};
+	}
 
 	async getHTML() {
 		let acceptedFriends = [];

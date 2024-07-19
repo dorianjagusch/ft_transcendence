@@ -1,46 +1,49 @@
-import AView from "./AView.js";
-import getProfilePicture from "../components/profilePicture.js";
-import profileTitle from "../components/profileComponents/profileTitle.js";
-import profileImg from "../components/profileComponents/profileImg.js";
+import AView from './AView.js';
+import getProfilePicture from '../components/profilePicture.js';
+import profileTitle from '../components/profileComponents/profileTitle.js';
+import profileImg from '../components/profileComponents/profileImg.js';
 import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
-import profileDescription from "../components/profileComponents/profileDescription.js";
-import smallPlacementCard from "../components/profileComponents/smallPlacementCard.js";
-import { scrollContainer } from "../components/scrollContainer.js";
-import profilePlayHistory from "../components/profileComponents/profilePlayHistory.js";
-import profileSummaryStats from "../components/profileComponents/profileSummaryStats.js";
-import userData from "../userAPIData/userAPIDashboard.js";
+import profileDescription from '../components/profileComponents/profileDescription.js';
+import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
+import {scrollContainer} from '../components/scrollContainer.js';
+import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
+import profileSummaryStats from '../components/profileComponents/profileSummaryStats.js';
+import userData from '../userAPIData/userAPIDashboard.js';
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
-		this.setTitle("Dashboard");
+		this.setTitle('Dashboard');
 	}
 
 	async getHTML() {
-		const title = profileTitle("Your Stats");
+		const title = profileTitle('Your Stats');
 
-		let imgElement;
+		let profileImage;
 		try {
-			const img = await getProfilePicture(localStorage.getItem("userId"));
-			imgElement = profileImg(img);
+			profileImage = profileImg(await getProfilePicture(localStorage.getItem('user_id')));
 		} catch (error) {
 			console.log('Error getting the profile picture element: ', error);
 		}
 
-		const userPlacement = arrayToElementsList(userData.placements, "placements", smallPlacementCard);
+		const userPlacement = arrayToElementsList(
+			userData.placements,
+			'placements',
+			smallPlacementCard
+		);
 		userPlacement.classList.add('flex-col');
 		const userDescription = profileDescription(userData.user.description);
 
-		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, "column");
+		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'column');
 		userHistory.classList.add('play-history');
 
 		const userSummary = profileSummaryStats(userData.stats);
 
-		const main = document.querySelector("main");
-		main.classList.add("profile", "dashboard");
+		const main = document.querySelector('main');
+		main.classList.add('profile', 'dashboard');
 		this.updateMain(
 			title,
-			imgElement,
+			profileImage,
 			userPlacement,
 			userDescription,
 			userSummary,
