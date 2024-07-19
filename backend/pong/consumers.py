@@ -20,6 +20,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.player_left = PongPlayer(WALL_MARGIN)
         self.player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
         self.ai_opponent = True
+        self.ai_target_y = self.player_right.y
         self.ball = Ball()
         self.game = PongStatus(self.ball, self.player_left, self.player_right)
 
@@ -34,6 +35,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             if self.ai_opponent is True:
                 self.game.use_ai_opponent()
                 asyncio.create_task(self.ai_opponent_loop())
+                asyncio.create_task(self.ai_move_loop())
             self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
@@ -55,10 +57,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         await self.send_positions()
 
+    async def ai_move_loop(self):
+        while not self.game.game_stats.game_over:
+            await self.game.ai_move_paddle(self.ai_target_y)
+            await asyncio.sleep(0.01)
+
     async def ai_opponent_loop(self):
         while not self.game.game_stats.game_over:
-            await self.game.ai_move_paddle()
-            await asyncio.sleep(1)
+            self.ai_target_y = self.game.calculate_ai_steps()
+            await asyncio.sleep(AI_SLEEP_SECONDS)
 
     async def send_positions(self):
         game_state = self.game.get_game_state()

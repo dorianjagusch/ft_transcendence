@@ -37,20 +37,13 @@ class PongStatus:
         self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
-    async def ai_move_paddle(self):
-        steps, move = self.calculate_ai_steps()
-        if move != PLAYER_AI_STAY:
-            for i in range(steps):
-                if move == PLAYER_AI_UP:
-                    self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
-                elif move == PLAYER_AI_DOWN:
-                    self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
-
-                self.player_right.y = self.game.check_boundary(self.player_right.y)
-                if steps > 1:
-                    await asyncio.sleep(0.0001)
-        self.player_left.y = self.game.check_boundary(self.player_left.y)
-        self.game.update_ball_position(self)
+    async def ai_move_paddle(self, target_y):
+        if abs(self.player_right.y - target_y) > AI_PADDLE_TOLERANCE:
+            if self.player_right.y < target_y:
+                self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT // 2)
+            elif self.player_right.y > target_y:
+                self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT // 2)
+            self.player_right.y = self.game.check_boundary(self.player_right.y)
 
     def update_ball_position(self):
         self.game.update_ball_position(self)
@@ -70,6 +63,7 @@ class PongStatus:
         ball_x = self.ball.x
         ball_y = self.ball.y
         while ball_x < self.player_right.x:
+            # Calculate the time until the next vertical wall collision
             if speed_x != 0:
                 time_to_vertical_wall = (PLAYGROUND_WIDTH - ball_x) / speed_x if speed_x > 0 else ball_x / -speed_x
             else:
@@ -98,26 +92,7 @@ class PongStatus:
             if ball_x >= self.player_right.x:
                 break
 
-        dist_from_ball_x = ball_x - self.player_right.x
-        dist_from_ball_y = ball_y - self.player_right.y
-        dist_length = self.length(dist_from_ball_x, dist_from_ball_y)
-
-        # Look ahead factor depends on the speed and distance of the ball
-        look_ahead_factor = dist_length / (PLAYER_MOVEMENT_UNIT + self.ball.speed)
-        if look_ahead_factor > 10 and ball_y < self.player_right.y:
-            return (1, 'down')
-        if look_ahead_factor > 10 and ball_y > self.player_right.y:
-            return (1, 'up')
-        elif look_ahead_factor > 5 and ball_y < self.player_right.y:
-            return (2, 'down')
-        elif look_ahead_factor > 5 and ball_y > self.player_right.y:
-            return (2, 'up')
-        elif look_ahead_factor > 1 and ball_y < self.player_right.y:
-            return (3, 'down')
-        elif look_ahead_factor > 1 and ball_y > self.player_right.y:
-            return (3, 'up')
-        else:
-            return (0, 'stay')
+        return ball_y
 
     def get_consts(self):
         game_consts = {
