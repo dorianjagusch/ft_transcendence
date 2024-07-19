@@ -99,7 +99,7 @@ class TournamentInProgressManager:
         inactive_users = tournament_players.filter(user__is_active=False)
         if inactive_users.exists():
             raise TournamentInProgressException(f"A user in the unfinished tournament has deleted their account")
-        
+
     @staticmethod
     def update_tournament_with_winning_tournament_player(winning_tournament_player: TournamentPlayer) -> None:
         try:

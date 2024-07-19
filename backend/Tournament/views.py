@@ -19,9 +19,6 @@ from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											validate_tournament_request
 
-import sys
-
-# Create your views here.
 class TournamentListView(APIView):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):
@@ -56,8 +53,6 @@ class TournamentDetailView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(validate_tournament_request([TournamentState.LOBBY]))
 	def post(self, request, tournament_id):
-		'''starts the tournament.
-		'''
 		tournament = Tournament.objects.get(id=tournament_id)
 		try:
 			TournamentManager.setup.start_tournament(tournament)
@@ -139,9 +134,6 @@ class TournamentMatchListView(APIView):
 
 class TournamentMatchDetailView(APIView):
 	def get(self, request, tournament_id, tournament_match_id):
-		'''get details of a single tournament match.
-		If host and tournament is in progress and the tournament_match_id is the next_match, return match url.
-		'''
 		tournament = Tournament.objects.get(id=tournament_id)
 		if not tournament:
 			return Response(f"Tournament {tournament_id} not found", status=status.HTTP_404_NOT_FOUND)
@@ -149,12 +141,10 @@ class TournamentMatchDetailView(APIView):
 		if tournament_match_id >= tournament_matches.count():
 			return Response(f"Tournament {tournament_id} does not have {tournament_match_id} match", status=status.HTTP_404_NOT_FOUND)
 		
-		# check if user is host, tournament is in progress, and the tournament_match_id is the next_match, if so, start match
 		if request.user == tournament.host_user \
 			and tournament.state == TournamentState.IN_PROGRESS \
 			and tournament_matches.filter(state=TournamentState.FINISHED).count() == tournament_match_id:
 
-			# check that the tournament is still valid
 			try:
 				TournamentManager.in_progress.raise_error_if_tournament_has_expired(tournament)
 				TournamentManager.in_progress.raise_error_if_inactive_user_in_tournament(tournament)
