@@ -40,17 +40,13 @@ class PongStatus:
     async def ai_move_paddle(self, target_y):
         if abs(self.player_right.y - target_y) > AI_PADDLE_TOLERANCE:
             if self.player_right.y < target_y:
-                self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT // 2)
+                self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT // 1.3)
             elif self.player_right.y > target_y:
-                self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT // 2)
+                self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT // 1.3)
             self.player_right.y = self.game.check_boundary(self.player_right.y)
 
     def update_ball_position(self):
         self.game.update_ball_position(self)
-
-    def length(self, x, y):
-        sum = x * x + y * y
-        return math.sqrt(sum)
 
     def calculate_ai_steps(self):
         # Convert the angle to radians
@@ -59,6 +55,9 @@ class PongStatus:
         # Calculate the x and y components of the speed
         speed_x = math.cos(angle_rad) * self.ball.speed
         speed_y = math.sin(angle_rad) * self.ball.speed
+
+        if speed_x < 0:
+            return PLAYGROUND_HEIGHT // 2
 
         ball_x = self.ball.x
         ball_y = self.ball.y
@@ -85,8 +84,11 @@ class PongStatus:
             # Check for collisions with walls and update the speed components
             if ball_x >= PLAYGROUND_WIDTH or ball_x <= 0:
                 speed_x = -speed_x
+                ball_x = max(min(ball_x, PLAYGROUND_WIDTH), 0)
+
             if ball_y >= PLAYGROUND_HEIGHT or ball_y <= 0:
                 speed_y = -speed_y
+                ball_y = max(min(ball_y, PLAYGROUND_HEIGHT), 0)
 
             # If the ball has reached or passed the paddle, stop the loop
             if ball_x >= self.player_right.x:

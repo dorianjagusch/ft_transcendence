@@ -60,12 +60,12 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def ai_move_loop(self):
         while not self.game.game_stats.game_over:
             await self.game.ai_move_paddle(self.ai_target_y)
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.008)
 
     async def ai_opponent_loop(self):
         while not self.game.game_stats.game_over:
             self.ai_target_y = self.game.calculate_ai_steps()
-            await asyncio.sleep(AI_SLEEP_SECONDS)
+            await asyncio.sleep(1)
 
     async def send_positions(self):
         game_state = self.game.get_game_state()
