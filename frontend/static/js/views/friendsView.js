@@ -92,35 +92,35 @@ export default class extends AView {
 			const acceptedPromise = this.friendService.getAllRequest(
 				constants.FRIENDSHIPSTATUS.FRIEND
 			);
-			const pendingPromise = this.friendService.getAllRequest(
-				constants.FRIENDSHIPSTATUS.PENDINGRECEIVED
-			);
-
 			const acceptedResponse = await acceptedPromise;
 			acceptedFriends = await this.mapResponse(acceptedResponse);
 
+			const friendScroller = this.createFriendScroller(
+				acceptedFriends,
+				'friends',
+				'bg-secondary'
+			);
+			document.querySelector('h2').after(friendScroller);
+
+			const pendingPromise = this.friendService.getAllRequest(
+				constants.FRIENDSHIPSTATUS.PENDINGRECEIVED
+			);
 			const pendingResponse = await pendingPromise;
 			pendingFriends = await this.mapResponse(pendingResponse);
+
+			const requestScroller = this.createRequestScroller(
+				pendingFriends,
+				'friend-request',
+				'bg-secondary'
+			);
 		} catch (error) {
 			console.error('An error occured when retrieving your friends', error);
 		}
 
 		const friendTitle = document.createElement('h2');
 		friendTitle.textContent = 'Friends';
-		const friendScroller = this.createFriendScroller(
-			acceptedFriends,
-			friendCard,
-			'friends',
-			'bg-secondary'
-		);
 		const requestTitle = document.createElement('h2');
 		requestTitle.textContent = 'Friend Requests';
-		const requestScroller = this.createRequestScroller(
-			pendingFriends,
-			requestCard,
-			'friend-request',
-			'bg-secondary'
-		);
 
 		const searchFriendsSection = document.createElement('section');
 		searchFriendsSection.classList.add('search-friends');
@@ -136,9 +136,7 @@ export default class extends AView {
 
 		this.updateMain(
 			friendTitle,
-			friendScroller,
 			requestTitle,
-			requestScroller,
 			searchFriendsSection,
 			searchFriendsModal.dialog
 		);
