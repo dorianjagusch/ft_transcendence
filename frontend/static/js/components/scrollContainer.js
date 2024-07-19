@@ -1,6 +1,6 @@
-const scrollContainer = (elements, orientation = 'row', ...classNames) => {
+const scrollContainer = (elements, callback, orientation = 'row', ...classNames) => {
 
-	if (!elements) {
+	if (!elements || !callback) {
 		return;
 	}
 
@@ -11,6 +11,12 @@ const scrollContainer = (elements, orientation = 'row', ...classNames) => {
 	innerScroller.classList.add('snaps-inline',
 		`${orientation}-scroll`,
 		...classNames);
+
+	elements.forEach((element) => {
+		const currentCard = callback(element);
+		currentCard.classList.add('scroll-element');
+		innerScroller.appendChild(currentCard);
+	});
 
 	outerScroller.appendChild(innerScroller);
 
