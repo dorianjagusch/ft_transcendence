@@ -98,7 +98,7 @@ class TournamentInProgressManager:
         tournament_players = TournamentPlayer.objects.filter(tournament=tournament)
         inactive_users = tournament_players.filter(user__is_active=False)
         if inactive_users.exists():
-            raise TournamentInProgressException(f"An user in the unfinished tournament has deleted their account")
+            raise TournamentInProgressException(f"A user in the unfinished tournament has deleted their account")
         
     @staticmethod
     def update_tournament_with_winning_tournament_player(winning_tournament_player: TournamentPlayer) -> None:
@@ -106,7 +106,6 @@ class TournamentInProgressManager:
             with transaction.atomic():
                 tournament = winning_tournament_player.tournament
                 
-                # check if there is a next match is equal or greater than the tournament matches count
                 # if no next match, set user as tournament winner and finish tournament
                 if tournament.next_match >= tournament.matches.count():
                     tournament.winner = winning_tournament_player.user
