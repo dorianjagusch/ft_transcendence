@@ -25,7 +25,6 @@ const navbarItem = (link, type, content) => {
 	return navbarItem;
 };
 
-
 const createdLoggedInSection = () => {
 	const loggedInSection = document.createElement('div');
 	loggedInSection.classList.add('nav-partition', 'logged-in');
@@ -73,32 +72,28 @@ const createLoggedOutSection = () => {
 	return loggedOutSection;
 };
 
-const Navbar = async () => {
-	const nav = document.createElement('nav');
-	const ul = document.createElement('ul');
-
+const updateNavbar = async () => {
+	const ul = document.querySelector('nav ul');
+	ul.innerHTML = '';
 	if (localStorage.getItem('isLoggedIn') === 'true') {
 		const loggedInSection = createdLoggedInSection();
 		ul.appendChild(loggedInSection);
 
-		const notificationSection = document.createElement('p');
-		notificationSection.classList.add('notification');
-		ul.appendChild(notificationSection);
-
 		const userSection = await createUserSection();
 		ul.appendChild(userSection);
 	} else {
-		const notificationSection = document.createElement('p');
-		notificationSection.classList.add('notification');
-		ul.appendChild(notificationSection);
-
 		const loggedOutSection = createLoggedOutSection();
 		ul.appendChild(loggedOutSection);
 	}
+};
+
+const Navbar = async () => {
+	const nav = document.createElement('nav');
+	const ul = document.createElement('ul');
 
 	nav.appendChild(ul);
 
 	document.querySelector('header').appendChild(nav);
 };
 
-export {Navbar};
+export {Navbar, updateNavbar};
