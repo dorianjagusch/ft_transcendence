@@ -5,16 +5,26 @@ import UserService from '../services/userService.js'; // TODO: Switch out for st
 import getProfilePicture from '../components/profilePicture.js';
 import AcceptDeclineModal from '../components/dialogs/acceptDeclineModal.js';
 import AuthenticationModal from '../components/dialogs/authenticationModal.js';
+import AuthenticationService from '../services/authenticationService.js';
 
 export default class extends Aview {
 	constructor() {
 		super();
 		this.setTitle('Modal');
 		this.userService = new UserService();
+		this.authenticationService = new AuthenticationService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
+		this.createAiMatch = this.createAiMatch.bind(this);
 		this.token = null;
 		this.opponent = null;
+	}
+
+	async createAiMatch() {
+		const data = await this.authenticationService.postAiMatch({ai_opponent: true});
+		localStorage.setItem('opponent', 'AI');
+		localStorage.setItem('token', this.token);
+		this.navigateTo('/pong');
 	}
 
 	attachEventListeners() {
@@ -40,6 +50,7 @@ export default class extends Aview {
 		if (startButton) {
 			startButton.addEventListener('click', () => {
 				localStorage.setItem('token', this.token);
+				localStorage.setItem('opponent', JSON.stringify(this.opponent)); //TODO: Encrypt data
 				this.navigateTo('/pong');
 			});
 		}
@@ -88,7 +99,7 @@ export default class extends Aview {
 
 		const opponentSelection = OpponentSelection();
 
-		const acceptDeclineModal = new AcceptDeclineModal();
+		const acceptDeclineModal = new AcceptDeclineModal(this.createAiMatch);
 		acceptDeclineModal.dialog.classList.add('confirm-choice-modal');
 
 		const authenticationModal = new AuthenticationModal(this.attachPlayerInfo);

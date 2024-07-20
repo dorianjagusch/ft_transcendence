@@ -9,7 +9,7 @@ class PongService extends ARequestService {
 
 	async getRequest() {
 		const matchToken = localStorage.getItem('token');
-		const url = `${backendURL.pongURL}` + (matchToken ? `?token=${matchToken}` : '');
+		const url = `${backendURL.pongURL}?` + (matchToken ? `token=${matchToken}`: '');
 		return super.getRequest(url);
 	}
 

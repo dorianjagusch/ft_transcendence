@@ -1,6 +1,6 @@
 import ADialog from './ADialog.js';
 import loginForm from '../formComponents/loginForm.js';
-import AuthenticationService from '../../services/AuthenticationService.js';
+import AuthenticationService from '../../services/authenticationService.js';
 
 export default class AuthenticationModal extends ADialog {
 	constructor(parentCallback) {

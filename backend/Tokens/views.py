@@ -20,7 +20,7 @@ class SingleMatchGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
-	def post(self, request, ai_opponent='false'):
+	def post(self, request, ai_opponent=None):
 		host_user = request.user
 		if ai_opponent is not None and ai_opponent == 'true':
 			token = MatchToken.objects.create_single_match_token(host_user, None)
