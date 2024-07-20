@@ -5,7 +5,7 @@ const logoutURL = `${baseURL}logout/`;
 const leaderboardURL = `${baseURL}leaderboards/`;
 const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
-const pongURL = `${baseURL}match/test`;
+const pongURL = `${baseURL}match/`;
 const authenticationURL = `${baseURL}tokens/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];

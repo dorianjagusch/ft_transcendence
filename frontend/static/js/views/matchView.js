@@ -14,6 +14,7 @@ export default class extends Aview {
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
 		this.token = null;
+		this.opponent = null;
 	}
 
 	attachEventListeners() {
@@ -38,17 +39,17 @@ export default class extends Aview {
 		const startButton = document.querySelector('.start-btn');
 		if (startButton) {
 			startButton.addEventListener('click', () => {
-				
+				localStorage.setItem('token', this.token);
 				this.navigateTo('/pong');
 			});
 		}
 	}
 
 	async attachPlayerInfo(tokenData) {
-		this.token = tokenData.token;
-		const guestUserData = tokenData.guest_user
-		guestUserData.img = await getProfilePicture(guestUserData.id);
-		const playerRight = PlayerInfo(guestUserData);
+		this.token = tokenData.token.token;
+		this.opponent = tokenData.guest_user
+		this.opponent.img = await getProfilePicture(this.opponent.id);
+		const playerRight = PlayerInfo(this.opponent);
 
 		const container = document.createElement('div');
 		const vs = document.createElement('h2');
