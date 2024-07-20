@@ -1,4 +1,5 @@
 # pong/consumers.py
+from django.db import transaction
 import json
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -8,9 +9,13 @@ from .constants import *
 from channels.db import database_sync_to_async
 from Tokens.models import MatchToken
 from Match.models import Match
+from Match.matchState import MatchState
 from Player.models import Player
 from .pongPlayer import PongPlayer
 from .ball import Ball
+from Tournament.models import Tournament, TournamentPlayer
+from Tournament.managers import TournamentManager
+
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -52,7 +57,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         if self.game.game_stats.game_over == True:
             await self.send_positions()
-            await self.save_match_final_results()
+            await self.save_match_results()
             await self.close()
 
         await self.send_positions()
@@ -84,18 +89,26 @@ class PongConsumer(AsyncWebsocketConsumer):
             if self.game.game_stats.game_over == True:
                 break
 
-        await self.save_match_final_results()
+        await self.save_match_results()
         await self.close()
 
     @database_sync_to_async
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
-            match_token = MatchToken.objects.get(token=token)
-            if not match_token.is_active or match_token.is_expired():
-                return False
+            with transaction.atomic():
+                match_token = MatchToken.objects.get(token=token)
+                if not match_token.is_active or match_token.is_expired():
+                    return False
 
-            match_token.is_active = False
-            match_token.save()
+                match_token.is_active = False
+                match_token.save()
+
+                self.match = Match.objects.get(pk=match_id)
+                players = Player.objects.filter(match=self.match).order_by('id')
+                if players.count() != 2:
+                    return False
+                self.player_left = players[0]
+                self.player_right = players[1]
 
             self.match = Match.objects.get(pk=match_id)
             self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
@@ -108,18 +121,65 @@ class PongConsumer(AsyncWebsocketConsumer):
             return False
 
     @database_sync_to_async
-    def save_match_final_results(self):
+    def save_match_results(self):
+        print("save_match_results", file=sys.stderr)
+        self.match.state = MatchState.FINISHED
+
+        # Save scores when the game is over
         self.player_left.score = self.game.player_left.score
         self.player_right.score = self.game.player_right.score
 
+        # Determine and save the winner
         if self.game.player_left.score > self.game.player_right.score:
             self.player_left.match_winner = True
         else:
             self.player_right.match_winner = True
 
-        self.player_left.save()
-        self.player_right.save()
+        try:
+            with transaction.atomic():
+                self.match.save()
+                self.player_left.save()
+                self.player_right.save()
+
+                if self.match.tournament:
+                    self.update_tournament_data_with_match_results(self.match)
+
+        except Exception as e:
+            self.abort_match(self.match)
+
+    # @database_sync_to_async
+    def update_tournament_data_with_match_results(self, match: Match):
+        try:
+            if not match.tournament:
+                return
+
+            winning_player = match.players.filter(match_winner=True).first()
+
+            # this shouldn't happen, but in case, abort tournament
+            if not winning_player:
+                TournamentManager.in_progress.abort_tournament(match.tournament)
+
+            with transaction.atomic():
+
+                winning_tournament_player = TournamentPlayer.objects.get(
+                    tournament=match.tournament,
+                    user=winning_player.user
+                )
+
+                match.tournament.next_match += 1
+                match.tournament.save()
+
+                TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
+
+        except Exception as e:
+            print(f"An error occurred while updating match results: {e}", file=sys.stderr)
 
     @database_sync_to_async
     def start_match(self, match):
         match.start_match()
+
+    @database_sync_to_async
+    def abort_match(self, match: Match):
+        match.abort_match()
+        if match.tournament:
+            TournamentManager.in_progress.abort_tournament(match.tournament)
