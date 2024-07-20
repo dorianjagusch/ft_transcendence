@@ -13,11 +13,12 @@ export default class extends Aview {
 		this.userService = new UserService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
+		this.token = null;
 	}
 
 	attachEventListeners() {
 		const aiButton = document.querySelector('.opponent-selection > button');
-		if (aiButton){
+		if (aiButton) {
 			aiButton.addEventListener('click', () => {
 				const confirmModal = document.querySelector('.confirm-choice-modal');
 				confirmModal.inert = true;
@@ -27,7 +28,7 @@ export default class extends Aview {
 		}
 
 		const localButton = document.querySelector('.opponent-selection > button:nth-child(3)');
-		if (localButton){
+		if (localButton) {
 			localButton.addEventListener('click', () => {
 				const authenticationModal = document.querySelector('.authenticate-user-modal');
 				authenticationModal.showModal();
@@ -35,14 +36,18 @@ export default class extends Aview {
 		}
 
 		const startButton = document.querySelector('.start-btn');
-		if (startButton){
+		if (startButton) {
 			startButton.addEventListener('click', () => {
+				
 				this.navigateTo('/pong');
 			});
 		}
 	}
 
-	attachPlayerInfo(guestUserData) {
+	async attachPlayerInfo(tokenData) {
+		this.token = tokenData.token;
+		const guestUserData = tokenData.guest_user
+		guestUserData.img = await getProfilePicture(guestUserData.id);
 		const playerRight = PlayerInfo(guestUserData);
 
 		const container = document.createElement('div');
@@ -60,7 +65,6 @@ export default class extends Aview {
 		main.appendChild(playerRight);
 		document.querySelector('.opponent-selection').remove();
 		this.attachEventListeners();
-
 	}
 
 	adjustForm(authenticationForm) {
@@ -72,14 +76,12 @@ export default class extends Aview {
 	}
 
 	async getHTML() {
-
 		let playerLeft = null;
 		try {
 			const userData = await this.userService.getRequest(localStorage.getItem('user_id'));
 			userData.img = await getProfilePicture(userData.id);
 			playerLeft = PlayerInfo(userData);
-		}
-		catch (error) {
+		} catch (error) {
 			console.log(error);
 		}
 

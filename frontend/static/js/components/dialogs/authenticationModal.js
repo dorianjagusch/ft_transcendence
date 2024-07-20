@@ -19,18 +19,12 @@ export default class AuthenticationModal extends ADialog {
 		return {username, password};
 	}
 
-	async authenticateUser(guestUser) {
+	async authenticateUser(userData) {
 		try {
-			const guestData = {
-				username: guestUser.username,
-				img: './static/assets/img/default-user.png',
-				wins: 20, //needed for matches
-				losses: 0, //needed for matches both are just in the mock data, but are expected for stats of individual match display
-				player_id: this.dialog.getAttribute('data-modal-id'),
-			};
+			const tokenData = await this.service.postMatch(userData);
 			this.dialog.close();
 			if (this.onDataReceived) {
-				this.onDataReceived(guestData);
+				this.onDataReceived(tokenData);
 			}
 		} catch (error) {
 			this.notify(error.message);
