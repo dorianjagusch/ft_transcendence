@@ -1,3 +1,15 @@
+const populateInnerScroller = (elements, innerScroller, callback) => {
+
+	if (!callback){
+		return;
+	}
+		elements.forEach((element) => {
+			const currentCard = callback(element);
+			currentCard.classList.add('scroll-element');
+			innerScroller.appendChild(currentCard);
+		});
+	}
+
 const scrollContainer = (elements, callback, orientation = 'row', ...classNames) => {
 
 	if (!elements || !callback) {
@@ -12,15 +24,11 @@ const scrollContainer = (elements, callback, orientation = 'row', ...classNames)
 		`${orientation}-scroll`,
 		...classNames);
 
-	elements.forEach((element) => {
-		const currentCard = callback(element);
-		currentCard.classList.add('scroll-element');
-		innerScroller.appendChild(currentCard);
-	});
+	populateInnerScroller(elements, innerScroller, callback);
 
 	outerScroller.appendChild(innerScroller);
 
 	return outerScroller;
 };
 
-export { scrollContainer };
+export { scrollContainer, populateInnerScroller };

@@ -34,11 +34,10 @@ const profilePictureHandler = async (file) => {
 
 	try {
 		const profilePictureService = new ProfilePictureService();
-		profilePictureService.postProfilePictureRequest(userId, formData);
+		await profilePictureService.postRequest(userId, formData);
 	} catch (error) {
 		notify(error, 'error');
 	}
-
 	navigateTo('/dashboard');
 };
 
@@ -53,16 +52,14 @@ const deleteAccount = async (userId) => {
 	}
 }
 
-const SideBar = () => {
+const SideBar = async () => {
 	const aside = document.createElement('aside');
-
+	const img = document.createElement('img');
 	try {
-		const img = getProfilePicture();
-		aside.appendChild(img);
+		img.src = await getProfilePicture(localStorage.getItem('user_id'));
 	} catch (error) {
 		console.log('Error getting the profile picture element: ', error);
 	}
-
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
 
@@ -70,8 +67,8 @@ const SideBar = () => {
 		['sidebar-element', 'bg-primary'],
 		'Edit profile');
 	const viewProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'],
-		 'View profile',
-		 () => navigateTo('/dashboard')
+		'View profile',
+		() => navigateTo('/dashboard')
 	);
 	const profilePictureBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
@@ -94,6 +91,8 @@ const SideBar = () => {
 		AreYouSureModal.dialog.showModal();
 	});
 
+	aside.appendChild(img);
+	aside.appendChild(fileInput);
 	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
 	aside.appendChild(viewProfileBtn);
@@ -102,7 +101,7 @@ const SideBar = () => {
 	aside.appendChild(deleteAccountBtn);
 	aside.appendChild(AreYouSureModal.dialog);
 
-	return aside;
+	document.querySelector('body').appendChild(aside);
 };
 
 export default SideBar;
