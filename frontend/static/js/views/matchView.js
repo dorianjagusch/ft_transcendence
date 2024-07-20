@@ -1,6 +1,8 @@
 import Aview from './AView.js';
 import {PlayerInfo} from '../components/playerInfo.js';
 import {OpponentSelection} from '../components/opponentSelection.js';
+import UserService from '../services/userService.js'; // TODO: Switch out for stats service
+import getProfilePicture from '../components/profilePicture.js';
 import AcceptDeclineModal from '../components/dialogs/acceptDeclineModal.js';
 import AuthenticationModal from '../components/dialogs/authenticationModal.js';
 
@@ -8,6 +10,7 @@ export default class extends Aview {
 	constructor() {
 		super();
 		this.setTitle('Modal');
+		this.userService = new UserService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
 	}
@@ -69,14 +72,17 @@ export default class extends Aview {
 	}
 
 	async getHTML() {
-		const playerInfo = {
-			username: 'Player 1',
-			img: './static/assets/img/default-user.png',
-			wins: 20,
-			losses: 0,
-		};
 
-		const playerLeft = PlayerInfo(playerInfo);
+		let playerLeft = null;
+		try {
+			const userData = await this.userService.getRequest(localStorage.getItem('user_id'));
+			userData.img = await getProfilePicture(userData.id);
+			playerLeft = PlayerInfo(userData);
+		}
+		catch (error) {
+			console.log(error);
+		}
+
 		const opponentSelection = OpponentSelection();
 
 		const acceptDeclineModal = new AcceptDeclineModal();

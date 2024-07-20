@@ -28,7 +28,6 @@ export default class AuthenticationModal extends ADialog {
 				losses: 0, //needed for matches both are just in the mock data, but are expected for stats of individual match display
 				player_id: this.dialog.getAttribute('data-modal-id'),
 			};
-			// const guestData = await this.service.postRequest(guestUser);
 			this.dialog.close();
 			if (this.onDataReceived) {
 				this.onDataReceived(guestData);
