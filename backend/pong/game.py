@@ -5,7 +5,6 @@ from .pongPlayer import PongPlayer
 from .ball import Ball
 from .game_stats import GameStats
 import asyncio
-import sys
 
 class PongStatus:
     def __init__(self, ball, player_left, player_right):
@@ -64,14 +63,12 @@ class PongStatus:
             if speed_x != 0:
                 time_to_vertical_wall = (PLAYGROUND_WIDTH - ball_x) / speed_x if speed_x > 0 else ball_x / -speed_x
             else:
-                print("speed_x is zero", file=sys.stderr)
                 time_to_vertical_wall = float('inf')
 
             # Calculate the time until the next horizontal wall collision
             if speed_y != 0:
                 time_to_horizontal_wall = (PLAYGROUND_HEIGHT - ball_y) / speed_y if speed_y > 0 else ball_y / -speed_y
             else:
-                print("speed_y is zero", file=sys.stderr)
                 time_to_horizontal_wall = float('inf')
 
             # Find the minimum time to the next collision
