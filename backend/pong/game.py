@@ -49,15 +49,13 @@ class PongStatus:
         self.game.update_ball_position(self)
 
     def calculate_ai_steps(self):
-        # Convert the angle to radians
-        angle_rad = math.radians(self.ball.angle)
+        angle = self.ball.angle % (2 * math.pi)
+        if math.pi / 2 <= angle <= 3 * math.pi / 2:
+            return PLAYGROUND_HEIGHT // 2
 
         # Calculate the x and y components of the speed
-        speed_x = math.cos(angle_rad) * self.ball.speed
-        speed_y = math.sin(angle_rad) * self.ball.speed
-
-        if speed_x < 0:
-            return PLAYGROUND_HEIGHT // 2
+        speed_x = math.cos(self.ball.angle) * self.ball.speed
+        speed_y = math.sin(self.ball.angle) * self.ball.speed
 
         ball_x = self.ball.x
         ball_y = self.ball.y
@@ -66,12 +64,14 @@ class PongStatus:
             if speed_x != 0:
                 time_to_vertical_wall = (PLAYGROUND_WIDTH - ball_x) / speed_x if speed_x > 0 else ball_x / -speed_x
             else:
+                print("speed_x is zero", file=sys.stderr)
                 time_to_vertical_wall = float('inf')
 
             # Calculate the time until the next horizontal wall collision
             if speed_y != 0:
                 time_to_horizontal_wall = (PLAYGROUND_HEIGHT - ball_y) / speed_y if speed_y > 0 else ball_y / -speed_y
             else:
+                print("speed_y is zero", file=sys.stderr)
                 time_to_horizontal_wall = float('inf')
 
             # Find the minimum time to the next collision

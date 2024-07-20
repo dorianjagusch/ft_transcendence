@@ -4,7 +4,7 @@ import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game import PongStatus
 from .constants import *
-
+import sys
 from channels.db import database_sync_to_async
 from Tokens.models import MatchToken
 from Match.models import Match
@@ -19,7 +19,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.match = None
         self.player_left = PongPlayer(WALL_MARGIN)
         self.player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
-        self.ai_opponent = False
+        self.ai_opponent = True
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
         self.game = PongStatus(self.ball, self.player_left, self.player_right)
@@ -65,10 +65,12 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def ai_opponent_loop(self):
         while not self.game.game_stats.game_over:
             self.ai_target_y = self.game.calculate_ai_steps()
+            print(f"target y: {self.ai_target_y}, current y: {self.game.player_right.y}", file=sys.stderr)
             await asyncio.sleep(1)
 
     async def send_positions(self):
         game_state = self.game.get_game_state()
+        # print(f"ball x: {self.game.ball.x}, ball angle: {self.ball.angle}", file=sys.stderr)
         await self.send(text_data=json.dumps(game_state))
 
     async def send_consts(self):
