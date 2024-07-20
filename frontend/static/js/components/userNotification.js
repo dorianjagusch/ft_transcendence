@@ -1,21 +1,26 @@
 const userNotification = (message, type) => {
+	const notificationSection = document.createElement('section');
+	notificationSection.classList.add('notification-section');
+	const notificationText = document.createElement('p');
+	notificationText.classList.add('notification');
 
-	const notification = document.querySelector('.notification')
-	notification.classList.remove('error', 'success');
-	notification.innerText = message.message || message;
-
+	notificationText.innerText = message.message || message;
 	message instanceof Error || type === 'error'
-		? notification.classList.add('error')
-		: notification.classList.add('success');
+		? notificationText.classList.add('error')
+		: notificationText.classList.add('success');
+
+	notificationSection.appendChild(notificationText);
+	document.body.appendChild(notificationSection);
 };
 
 const inputNotification = (message, type) => {
-	const notification = document.createElement('div')
+	const notification = document.createElement('div');
 	notification.classList.add('.input-notification');
 	notification.innerText = message.message || message;
-
-	notification.classList.add('error')
+	message instanceof Error || type === 'error'
+		? notification.classList.add('error')
+		: notification.classList.add('success');
 	return notification;
 };
 
-export { userNotification, inputNotification };
+export {userNotification, inputNotification};
