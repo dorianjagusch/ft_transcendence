@@ -77,7 +77,6 @@ urlpatterns = [
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
 	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
-]
 
 	# Stats Views
 	path('stats/', StatsView.as_view()),
