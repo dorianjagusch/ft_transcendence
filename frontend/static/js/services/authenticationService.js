@@ -18,7 +18,9 @@ export default class AuthenticationService extends ARequestService {
 		);
 	}
 
-	async postAiMatch() {
-		return super.postRequest(`${backendURL.authenticationURL}match/`);
+	async postAiMatch(URLParams) {
+		const url = new URL(`${backendURL.authenticationURL}match/`);
+		Object.keys(URLParams).forEach(key => url.searchParams.append(key, URLParams[key]));
+		return super.postRequest(url);
 	}
 }
