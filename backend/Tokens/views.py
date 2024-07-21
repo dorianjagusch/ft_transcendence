@@ -20,11 +20,17 @@ class SingleMatchGuestTokenView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
-	def post(self, request):
+	def post(self, request, ai_opponent):
 		host_user = request.user
+		if ai_opponent is not None and ai_opponent == 'true':
+			token = MatchToken.objects.create_single_match_token(host_user, null)
+			return Response({
+				'token': token_serializer.data,
+				'guest_user': ''
+			}, status=status.HTTP_201_CREATED)
+
 		username = request.data.get('username')
 		password = request.data.get('password')
-
 		guest_user = authenticate(username=username, password=password)
 		if guest_user is not None:
 			token = MatchToken.objects.create_single_match_token(host_user, guest_user)
