@@ -4,6 +4,21 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login
 
 from .models import User
+from .serializers import UserInputSerializer
+
+class UserCreationMixin:
+	def create_user(self, request: Request) -> User | Response:
+		inputSerializer = UserInputSerializer(data=request.data)
+		if not inputSerializer.is_valid():
+			errors = inputSerializer.errors
+			if 'username' in errors and 'exists' in errors['username'][0]:
+				return Response(inputSerializer.errors, status=status.HTTP_409_CONFLICT)
+			else:
+				return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+		username = inputSerializer.validated_data.get('username')
+		password = inputSerializer.validated_data.get('password')
+		return User.objects.create_user(username=username, password=password)
 
 class UserAuthenticationMixin:
 	def authenticate_user(self, request: Request) -> User | Response:

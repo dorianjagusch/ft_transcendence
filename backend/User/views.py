@@ -14,7 +14,7 @@ import base64
 from django.utils.crypto import get_random_string
 
 from .models import User, ProfilePicture
-from .mixins import UserAuthenticationMixin, UserLoginMixin
+from .mixins import UserCreationMixin, UserAuthenticationMixin, UserLoginMixin
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -22,7 +22,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 	 								must_be_url_user, \
 									valid_serializer_in_body
 
-class UserListView(APIView):
+class UserListView(APIView, UserCreationMixin):
 	def get(self, request):
 		if request.user.is_authenticated and request.GET.get("username_contains"):
 			username_contains = request.GET.get("username_contains")
@@ -39,18 +39,11 @@ class UserListView(APIView):
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
 	def post(self, request):
 
-		inputSerializer = UserInputSerializer(data=request.data)
-		if not inputSerializer.is_valid():
-			errors = inputSerializer.errors
-			if 'username' in errors and 'exists' in errors['username'][0]:
-				return Response(inputSerializer.errors, status=status.HTTP_409_CONFLICT)
-			else:
-				return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		user_creation_result = self.create_user(request)
+		if not isinstance(user_creation_result, User):
+			return user_creation_result
 
-		username = inputSerializer.validated_data.get('username')
-		password = inputSerializer.validated_data.get('password')
-		user = User.objects.create_user(username=username, password=password)
-		outputSerializer = UserOutputSerializer(user)
+		outputSerializer = UserOutputSerializer(user_creation_result)
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 
 class UserDetailView(APIView):
