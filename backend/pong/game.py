@@ -5,7 +5,6 @@ from .pongPlayer import PongPlayer
 from .ball import Ball
 from .game_stats import GameStats
 import asyncio
-import sys
 
 class PongStatus:
     def __init__(self, ball, player_left, player_right):
@@ -39,9 +38,9 @@ class PongStatus:
 
     async def ai_move_paddle(self, target_y):
         if abs(self.player_right.y - target_y) > AI_PADDLE_TOLERANCE:
-            if self.player_right.y < target_y:
+            if self.player_right.y <= target_y:
                 self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT // 1.3)
-            elif self.player_right.y > target_y:
+            elif self.player_right.y >= target_y:
                 self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT // 1.3)
             self.player_right.y = self.game.check_boundary(self.player_right.y)
 
@@ -49,15 +48,13 @@ class PongStatus:
         self.game.update_ball_position(self)
 
     def calculate_ai_steps(self):
-        # Convert the angle to radians
-        angle_rad = math.radians(self.ball.angle)
+        angle = self.ball.angle % (2 * math.pi)
+        if math.pi / 2 <= angle <= 3 * math.pi / 2:
+            return PLAYGROUND_HEIGHT // 2
 
         # Calculate the x and y components of the speed
-        speed_x = math.cos(angle_rad) * self.ball.speed
-        speed_y = math.sin(angle_rad) * self.ball.speed
-
-        if speed_x < 0:
-            return PLAYGROUND_HEIGHT // 2
+        speed_x = math.cos(self.ball.angle) * self.ball.speed
+        speed_y = math.sin(self.ball.angle) * self.ball.speed
 
         ball_x = self.ball.x
         ball_y = self.ball.y
