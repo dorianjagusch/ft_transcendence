@@ -13,7 +13,7 @@ class UserAuthenticationMixin:
 		if not username or not password:
 			return Response({"message": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 		
-		user = authenticate(username, password)
+		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			return user
 		else:
