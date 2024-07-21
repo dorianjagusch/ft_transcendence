@@ -2,6 +2,7 @@ import ADialog from './ADialog.js';
 import searchResultCard from '../formComponents/searchResultCard.js';
 import UserService from '../../services/userService.js';
 import searchFriendsForm from '../formComponents/searchFriendsForm.js';
+import getProfilePicture from '../profilePicture.js';
 import FriendService from '../../services/friendService.js';
 import {navigateTo} from '../../router.js';
 import constants from '../../constants.js'; //TODO: remove once backend send relationship with search results
@@ -62,7 +63,8 @@ export default class SearchFriendsModal extends ADialog {
 			searchResults.textContent = 'No results found.';
 			return;
 		}
-		searchMatches.forEach((match) => {
+		searchMatches.forEach( async (match) => {
+			match.img = await getProfilePicture(match.id);
 			const searchResult = searchResultCard(match, this.selectButtons);
 			searchResults.appendChild(searchResult);
 		});

@@ -34,16 +34,15 @@ const profilePictureHandler = async (file) => {
 
 	try {
 		const profilePictureService = new ProfilePictureService();
-		profilePictureService.postProfilePictureRequest(userId, formData);
+		await profilePictureService.postRequest(userId, formData);
 	} catch (error) {
 		notify(error, 'error');
 	}
-
 	navigateTo('/dashboard');
 };
 
 const deleteAccount = async (userId) => {
-	try{
+	try {
 		new UserService().deleteRequest(userId);
 		localStorage.clear();
 		navigateTo('/');
@@ -51,27 +50,27 @@ const deleteAccount = async (userId) => {
 		notify(error, 'error');
 		navigateTo('/dashboard');
 	}
-}
+};
 
-const SideBar = () => {
+const SideBar = async () => {
 	const aside = document.createElement('aside');
-
+	const img = document.createElement('img');
 	try {
-		const img = getProfilePicture();
-		aside.appendChild(img);
+		img.src = await getProfilePicture(localStorage.getItem('user_id'));
 	} catch (error) {
 		console.log('Error getting the profile picture element: ', error);
 	}
-
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
 
 	const editProfileBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
-		'Edit profile');
-	const viewProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'],
-		 'View profile',
-		 () => navigateTo('/dashboard')
+		'Edit profile'
+	);
+
+	const viewProfileBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'View profile', () => navigateTo('/dashboard')
 	);
 	const profilePictureBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
@@ -83,26 +82,29 @@ const SideBar = () => {
 		'Create Tournament',
 		() => navigateTo('/tournament')
 	);
-	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () =>
-		navigateTo('/logout')
+	const logoutBtn = sideBarButton
+	(['sidebar-element', 'bg-primary'],
+		'Logout',
+		() => navigateTo('/logout')
 	);
 
 	const AreYouSureModal = new AcceptDeclineModal(deleteAccount, localStorage.getItem('user_id'));
-	AreYouSureModal.form.form.querySelector('h3').textContent = 'Are you sure you want to delete your account?';
+	AreYouSureModal.form.form.querySelector('h3').textContent =
+		'Are you sure you want to delete your account?';
 	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account', () => {
-		document.querySelector
+		document.querySelector;
 		AreYouSureModal.dialog.showModal();
 	});
 
+	aside.appendChild(img);
+	aside.appendChild(fileInput);
 	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
 	aside.appendChild(viewProfileBtn);
 	aside.appendChild(profilePictureBtn);
 	aside.appendChild(createTournamentBtn);
 	aside.appendChild(deleteAccountBtn);
-	aside.appendChild(AreYouSureModal.dialog);
-
-	return aside;
+	document.querySelector('body').appendChild(aside);
 };
 
 export default SideBar;

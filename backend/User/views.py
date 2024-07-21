@@ -133,7 +133,6 @@ class UserProfilePictureView(APIView):
 		return Response(status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(must_be_url_user)
 	def get(self, request, user_id):
 		try:
 			user = User.objects.get(pk=user_id)
