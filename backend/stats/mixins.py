@@ -1,7 +1,11 @@
 import plotly.io as pio
 from User.models import User
 from django.db.models import Count, Q
-from Match.models import MatchState
+from datetime import timedelta
+from django.utils import timezone
+from Match.models import Match
+from Match.matchState import MatchState
+from Match.playerMatchStatus import PlayerMatchStatus
 	
 class UserTableMixin:
 	def get_wins_count(self, user: User):
@@ -22,14 +26,23 @@ class UserTableMixin:
 		return self.get_wins_count(user) / self.get_total_games_played_count(user)
 	
 	def get_win_streak_count(self, user: User):
-		streak_count = 0
-		games = user.players.filter(match__state=MatchState.FINISHED).order_by('-match__end_time')
-		for game in games:
-			if game.match_winner:
-				streak_count += 1
+		win_streak = 0
+		current_streak = 0
+
+		# Query for matches where the player won
+		matches = Match.objects.filter(player_match_status=PlayerMatchStatus.WINS.value, end_ts__isnull=False).order_by('-end_ts')
+
+		for match in matches:
+			# Increment the streak if the match ended within the expected time frame
+			if current_streak == 0 or (timezone.now() - match.end_ts <= timedelta(days=1)):
+				current_streak += 1
 			else:
-				break
-		return streak_count
+				current_streak = 1
+			win_streak = max(win_streak, current_streak)
+
+		return win_streak
+
+		return win_streak
 	
 	def get_users_with_most_wins(self):
 		return  User.objects.annotate(total_wins=Count('players', filter=Q(players__match_winner=True))).order_by('-total_wins')
