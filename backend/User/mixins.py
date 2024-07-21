@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
 
 from .models import User
-from .serializers import UserInputSerializer
+from .serializers import UserInputSerializer, UserOutputSerializer
 
 class UserCreationMixin:
 	def create_user(self, request: Request) -> User | Response:
@@ -20,6 +20,21 @@ class UserCreationMixin:
 		username = inputSerializer.validated_data.get('username')
 		password = inputSerializer.validated_data.get('password')
 		return User.objects.create_user(username=username, password=password)
+
+class UserUpdatemixin:
+	def update_user(self, request: Request, user_id: int) -> Response:
+		try:
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
+		inputSerializer = UserInputSerializer(user, data=request.data, partial=True)
+		if inputSerializer.is_valid():
+			user = inputSerializer.save()
+			outputSerializer = UserOutputSerializer(user)
+			return Response(outputSerializer.data, status=status.HTTP_200_OK)
+		else:
+			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserAuthenticationMixin:
 	def authenticate_user(self, request: Request) -> User | Response:

@@ -14,7 +14,7 @@ import base64
 from django.utils.crypto import get_random_string
 
 from .models import User, ProfilePicture
-from .mixins import UserCreationMixin, UserAuthenticationMixin, UserLoginMixin, UserDeletionMixin
+from .mixins import UserCreationMixin, UserAuthenticationMixin, UserLoginMixin, UserDeletionMixin, UserUpdatemixin
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -46,7 +46,7 @@ class UserListView(APIView, UserCreationMixin):
 		outputSerializer = UserOutputSerializer(user_creation_result)
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 
-class UserDetailView(APIView, UserDeletionMixin):
+class UserDetailView(APIView, UserUpdatemixin, UserDeletionMixin):
 	def get(self, request, user_id):
 		login_user_id = request.user.id
 		try:
@@ -63,18 +63,7 @@ class UserDetailView(APIView, UserDeletionMixin):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
 	def put(self, request, user_id):
-		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-
-		inputSerializer = UserInputSerializer(user, data=request.data, partial=True)
-		if inputSerializer.is_valid():
-			user = inputSerializer.save()
-			outputSerializer = UserOutputSerializer(user)
-			return Response(outputSerializer.data)
-		else:
-			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		return self.update_user(request, user_id)
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
