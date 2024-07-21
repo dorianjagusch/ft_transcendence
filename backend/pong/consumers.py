@@ -152,7 +152,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
         
         except Exception as e:
-            print(f"An error occurred while updating match results: {e}", file=sys.stderr)
+            TournamentManager.in_progress.abort_tournament(match.tournament)
+            print(f"An error occurred while updating match results: {e}; tournament abandoned!", file=sys.stderr)
 
     @database_sync_to_async
     def start_match(self, match):
