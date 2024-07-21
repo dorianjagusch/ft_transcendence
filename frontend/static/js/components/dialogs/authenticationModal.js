@@ -43,7 +43,7 @@ export default class AuthenticationModal extends ADialog {
 						return;
 					}
 					try {
-						this.authenticateUser({username, password}, context);
+						this.authenticateUser({username, password});
 					} catch (error) {
 						this.notify(error.message, 'error');
 					}

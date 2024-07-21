@@ -14,7 +14,7 @@ from .pongPlayer import PongPlayer
 from .ball import Ball
 from Tournament.models import Tournament, TournamentPlayer
 from Tournament.managers import TournamentManager
-
+import sys
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):

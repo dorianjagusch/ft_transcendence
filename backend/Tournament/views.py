@@ -19,8 +19,6 @@ from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											validate_tournament_request
 
-import sys
-
 # Create your views here.
 class TournamentListView(APIView):
 	@method_decorator(must_be_authenticated)

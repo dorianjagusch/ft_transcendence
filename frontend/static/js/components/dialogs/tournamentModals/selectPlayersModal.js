@@ -77,7 +77,7 @@ export default class SelectPlayersModal extends ADialog {
 		return selectedPlayers;
 	}
 
-	completeTournamentData(){
+	completeTournamentData() {#
 		const players = this.getFormData();
 		if (!players) {
 			this.notify('All players must be provided');
@@ -110,21 +110,19 @@ export default class SelectPlayersModal extends ADialog {
 			},
 			false
 		);
-		this.dialog.querySelectorAll('.player-card').forEach((card) => {
-			card.addEventListener('click', (e) => {
-				e.preventDefault();
-				if (e.target.parentElement.classList.contains('add')) {
-					this.authenticateUser(
-						e.target.parentElement.parentElement.parentElement.getAttribute(
-							'data-player-id'
-						)
-					);
-				} else if (e.target.classList.contains('add')) {
-					this.authenticateUser(
-						e.target.parentElement.parentElement.getAttribute('data-player-id')
-					);
+		this.dialog.addEventListener('click', (e) => {
+			e.preventDefault();
+			// Find the closest ancestor with the 'add' class, including the target itself
+			const addButton = e.target.closest('.add');
+			if (addButton) {
+				// Assuming the structure is consistent, the grandparent element has the 'data-player-id'
+				const playerId = addButton
+					.closest('[data-player-id]')
+					.getAttribute('data-player-id');
+				if (playerId) {
+					this.authenticateUser(playerId);
 				}
-			});
+			}
 		});
 	}
 }

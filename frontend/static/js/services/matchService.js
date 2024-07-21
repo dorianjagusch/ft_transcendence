@@ -6,7 +6,7 @@ export default class MatchService extends ARequestService {
 		super();
 	}
 
-	async postPlayer({username, password}) {
+	async postPlayer({username, password}, context) {
 		return super.postRequest(
 			`${backendURL.authenticationURL}match/ `,
 			JSON.stringify({
