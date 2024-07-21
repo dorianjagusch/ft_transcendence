@@ -14,7 +14,7 @@ import base64
 from django.utils.crypto import get_random_string
 
 from .models import User, ProfilePicture
-from .mixins import UserCreationMixin, UserAuthenticationMixin, UserLoginMixin
+from .mixins import UserCreationMixin, UserAuthenticationMixin, UserLoginMixin, UserDeletionMixin
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -46,7 +46,7 @@ class UserListView(APIView, UserCreationMixin):
 		outputSerializer = UserOutputSerializer(user_creation_result)
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 
-class UserDetailView(APIView):
+class UserDetailView(APIView, UserDeletionMixin):
 	def get(self, request, user_id):
 		login_user_id = request.user.id
 		try:
@@ -79,23 +79,7 @@ class UserDetailView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
 	def delete(self, request, user_id):
-		try:
-			logout(request)
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-		except:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user.username = "deleted_user_" + str(user_id + 42)
-		user.set_password(get_random_string(length=30))
-		user.is_active = False
-		user.is_staff = False
-		user.is_superuser = False
-		user.insertTS = None
-		user.last_login = None
-		user.is_online = False
-		user.save()
-		return Response(status=status.HTTP_204_NO_CONTENT)
+		return self.delete_user(request, user_id)
 
 class UserProfilePictureView(APIView):
 	@method_decorator(csrf_exempt)

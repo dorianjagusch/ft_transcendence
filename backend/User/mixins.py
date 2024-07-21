@@ -1,7 +1,8 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.utils.crypto import get_random_string
 
 from .models import User
 from .serializers import UserInputSerializer
@@ -38,3 +39,23 @@ class UserLoginMixin:
 	def login_user(self, request: Request, user: User) -> None:
 		login(request, user)
 		request.session['is_authenticated'] = True
+
+class UserDeletionMixin:
+	def delete_user(self, request: Request, user_id: int) -> Response:
+		try:
+			logout(request)
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		except:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+		user.username = "deleted_user_" + str(user_id + 42)
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insertTS = None
+		user.last_login = None
+		user.is_online = False
+		user.save()
+		return Response(status=status.HTTP_204_NO_CONTENT)
