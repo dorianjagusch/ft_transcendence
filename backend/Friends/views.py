@@ -9,6 +9,7 @@ from .friendShipStatus import FriendShipStatus
 from shared_utilities.decorators import must_be_authenticated, \
 									must_be_body_user_id, \
 									valid_serializer_in_body
+import base64
 
 class FriendsListView(APIView):
 	@method_decorator(must_be_authenticated)
@@ -18,6 +19,9 @@ class FriendsListView(APIView):
 			return Response({"message": "Expected to get parameter 'friendship_status'"}, status=status.HTTP_400_BAD_REQUEST)
 		user_id = request.user.id
 		friends = Friend.objects.get_user_friends(user_id, friendship_status)
+
+		if not friends:
+			friends = []
 		serializer = UserOutputSerializer(friends, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -31,15 +35,19 @@ class FriendsListView(APIView):
 		try:
 			friend = Friend.objects.create_friendship(user_id, friend_id)
 		except Exception as e:
+			# TODO: ADD ERROR for conflict 409 if friendship in the desired direction already exists
 			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		serializer = FriendOutputSerializer(friend)
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class FriendshipDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def delete(self, request, friend_id):
 		user_id = request.user.id
 		try:
 			Friend.objects.delete_friendship(user_id, friend_id)
 		except Exception as e:
+			# TODO: 404 if friendship does not exist
 			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		return Response(status=status.HTTP_204_NO_CONTENT)
+

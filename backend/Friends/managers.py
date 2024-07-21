@@ -3,6 +3,7 @@ from .friendShipStatus import FriendShipStatus
 from User.models import User
 from django.db import transaction
 
+
 class FriendsManager(models.Manager):
 	def get_user_friends(self, user_id, friendship_status):
 		user_friends = self.filter(user_id=user_id).values_list('friend_id', flat=True)
@@ -23,7 +24,7 @@ class FriendsManager(models.Manager):
 		friends = User.objects.filter(id__in=friends_to_get)
 		return friends
 
-	def get_friendship_status(self, user_id, friend_id):
+	def get_friendship_status(self, user_id: int, friend_id: int):
 		user_friend = self.filter(user_id=user_id, friend_id=friend_id)
 		friend_user = self.filter(user_id=friend_id, friend_id=user_id)
 		if user_friend.exists() and friend_user.exists():
@@ -53,5 +54,3 @@ class FriendsManager(models.Manager):
 				user_friend.delete()
 			if friend_user.exists():
 				friend_user.delete()
-
-

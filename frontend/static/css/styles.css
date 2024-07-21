@@ -1,5 +1,6 @@
 :root {
 	--blue-700: hsl(213, 96%, 9%);
+	--blue-600: hsl(213, 29%, 13%);
 	--blue-400: hsl(195, 79%, 30%);
 	--blue-100: hsl(173, 100%, 93%);
 
@@ -8,8 +9,9 @@
 	--decline-color: hsl(0, 63%, 55%);
 
 	--bg-color: var(--blue-700);
-	--fg-color: var(--blue-400);
-	--border-color: var(-x-blue-150);
+	--bg-inactive: var(--blue-600);
+	--fg-color: var(--blue-400);;
+	--border-color: var(--blue-100);
 
 	--fs-xlarge: 5rem;
 	--fs-large: 3rem;
@@ -176,6 +178,9 @@ h1 {
 	background-color: var(--fg-color);
 }
 
+.bg-inactive{
+	background-color: var(--bg-inactive);
+}
 /* Scrollable elements */
 
 ::-webkit-scrollbar {
@@ -268,17 +273,17 @@ nav img {
 	width: 5em;
 }
 
-.notification{
+.notification {
 	container-name: notification;
 	container-type: inline-size;
 	font-weight: 700;
 	background-color: transparent;
-	width: 100%
+	width: 100%;
 }
 
-@container notification (width >= 24ch){
-	.notification{
-		font-size: var(--fs-small)
+@container notification (width >= 24ch) {
+	.notification {
+		font-size: var(--fs-small);
 	}
 }
 
@@ -308,7 +313,7 @@ nav img {
 }
 
 .border {
-	border: calc(var(--fs-small) / 2) solid var(--border-color);
+	border: calc(var(--fs-small) / 2) var(--border-color) solid;
 	border-radius: 1em;
 }
 
@@ -618,7 +623,8 @@ input[type='checkbox']:is(:hover, :focus),
 input[type='image']:is(:hover, :focus),
 textarea:is(:hover, :focus),
 select:is(:hover, :focus) {
-	border: 3px solid black;
+	box-sizing: border-box;
+	outline: 3px solid black;
 }
 
 input[type='button']:is(:focus, :hover),
@@ -633,7 +639,7 @@ button:is(:focus, :hover) {
 	height: 3.75em;
 	width: 100%;
 	color: inherit;
-	border: solid 0.25em;
+	outline: solid 0.25em;
 }
 
 .primary-btn {
@@ -660,12 +666,12 @@ button:is(:focus, :hover) {
 }
 
 .decline-btn,
-.add-btn {
+.add-btn,
+.close-btn {
 	background-color: var(--bg-color);
 }
 
 .decline-btn {
-	background-color: var(--bg-color);
 	padding: 0.8rem 2em;
 	color: white;
 	border-color: var(--decline-color);
@@ -684,13 +690,13 @@ button:is(:focus, :hover) {
 }
 
 .check-btn {
-	background-size: 70%;
+	background-size: 50%;
 	background-color: var(--accept-color);
 	background-image: url('../assets/img/tickmark.png');
 }
 
 .x-btn {
-	background-size: 60%;
+	background-size: 40%;
 	background-color: var(--decline-color);
 	background-image: url('../assets/img/x.png');
 }
@@ -983,10 +989,10 @@ button:is(:focus, :hover) {
 .profile.dashboard {
 	grid-template-areas:
 		'title title title title title title title'
-		'profile-img profile-img placements placements placements placements placements'
+		'profile-img profile-img placements placements placements summary summary'
 		'about about about stats stats stats stats'
-		'history history history graph-1 graph-1 graph-1 graph-1'
-		'history history history graph-2 graph-2 graph-2 graph-2';
+		'history history history graph-1 graph-1 graph-1 graph-1 '
+		'history history history graph-2 graph-2 graph-2 graph-2 ';
 
 	grid-template-rows: 0.1fr repeat(4, 1fr);
 	grid-template-columns: repeat(7, min(1fr, 150px));
@@ -1041,8 +1047,12 @@ button:is(:focus, :hover) {
 	display: grid;
 }
 
-.profile.dashboard .stats {
-	grid-area: stats;
+.profile.dashboard .stats-1 {
+	grid-area: stats-1;
+}
+
+.profile.dashboard .stats-2 {
+	grid-area: stats-2;
 }
 
 .dashboard .stat-entry {
@@ -1108,7 +1118,6 @@ button:is(:focus, :hover) {
 	font-size: var(--fs-small);
 }
 
-
 aside {
 	width: 30%;
 	height: 100svh;
@@ -1133,10 +1142,240 @@ aside > * {
 	border-radius: 0.5em;
 }
 
-aside > button{
+aside > button {
 	padding: 0.75em;
 }
 
 aside[active] {
-	transform : translateX(-100%);
+	transform: translateX(-100%);
+}
+
+.player-info {
+	gap: 1em;
+	border-radius: 1em;
+	background-color: var(--fg-color);
+	padding: 2em;
+}
+
+.player-info h3 {
+	align-self: center;
+}
+
+.player-info img {
+	border-radius: 0.8em;
+}
+
+.opponent-selection h3 {
+	text-align: center;
+}
+
+dialog {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--fg-color);
+	border-radius: 1em;
+	padding: 2em;
+	color: var(--text-color);
+}
+
+.authenticate-user-modal > form {
+	gap: 3em;
+}
+
+dialog::backdrop {
+	background-color: hsl(0 0% 0% / 0.5);
+}
+
+dialog .x-btn {
+	position: absolute;
+	top: calc(var(--page-padding) / 2);
+	right: calc(var(--page-padding) / 2);
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+}
+
+.authenticate-user-modal > form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2em;
+}
+
+.vs {
+	font-size: var(--fs-xlarge);
+	text-align: center;
+	padding: 0;
+}
+
+/* Radio buttons */
+.menu-item:has(input[type='radio'] + label) {
+	display: flex;
+	justify-content: space-around;
+}
+
+input[type='radio'] {
+	margin: 0;
+	appearance: none;
+}
+
+input[type='radio'] + label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+input[type='radio'] + label::after {
+	content: '';
+}
+
+.radio-item:has(input[type='radio']) {
+	position: relative;
+	margin-bottom: 1em;
+}
+
+p:has(+ .menu-item > input[type='radio']) {
+	margin-block: 2em;
+}
+
+*:has(input[type='radio']) {
+	margin-bottom: 1em;
+}
+
+.radio-item:has(input[type='radio'])::before {
+	position: absolute;
+	content: '';
+	border-radius: 5px;
+	width: 2em;
+	height: 2em;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--bg-color);
+}
+
+.radio-item:has(input[type='radio']:checked)::before {
+	outline: calc(var(--fs-small) / 3) solid white;
+}
+
+p:has(+ .menu-item) {
+	margin-block: 1em;
+}
+
+dialog h3 {
+	text-align: center;
+	margin-bottom: 2em;
+}
+
+.summary-modal,
+.player-modal {
+
+	&:has(.player-4){
+		padding-inline: 10vw;
+	}
+
+	& .player-list.player-4 {
+		grid-template-columns: 1fr;
+	};
+
+	& .player-list.player-8 {
+		grid-template-columns: 1fr 1fr;
+	};
+
+	& .player-list {
+		display: grid;
+		margin: 0;
+		width: 100%;
+		gap: 1em;
+		padding: 0;
+		padding-bottom: 1em;
+
+		& .player-card {
+			width: 100%;
+			padding: 1em;
+			border-radius: 1em;
+			font-size: var(--fs-small);
+			font-weight: bold;
+			justify-content: space-between;
+			box-sizing: border-box;
+
+			& > img {
+				height: 3.5em;
+				width: 3.5em;
+				border-radius: 1em;
+			}
+
+			& .button-bar {
+				width: 100%;
+				justify-content: space-between;
+			}
+
+			& button {
+				border-radius: 1em;
+				padding: 0.5em;
+				background-color: var(--bg-color);
+			}
+
+			&:hover, &:focus {
+				outline: 5px solid var(--border-color);
+			}
+		}
+
+		& button img {
+			height: 2em;
+			width: 2em;
+			background-color: var(--bg-color);
+		}
+
+		& .button-bar {
+			width: 100%;
+			flex-wrap: nowrap;
+			justify-content: space-between;
+		}
+	}
+}
+
+.summary-modal .player-list .player-card{
+		font-size: var(--fs-medium);
+		justify-content: space-around;
+	}
+
+
+.search-friends-modal{
+	& .menu-item{
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5em;
+	}
+
+	& .friend-result{
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1em;
+		padding: 1em;
+		overflow-y: scroll;
+		border-radius: 1em;
+		margin-bottom: 1em;
+
+		&:hover{
+			outline: 5px solid var(--border-color);
+		}
+
+		&  > img{
+			width: 2.5em;
+			height: 2.5em;
+			border-radius: 1em;
+		}
+
+		& button{
+			font-size: var(--fs-small);
+		}
+	}
 }

@@ -1,4 +1,3 @@
-import {setNavbar} from './components/navbar.js';
 import routes from './route.js';
 import constants from './constants.js';
 
@@ -52,8 +51,13 @@ const router = async () => {
 	}
 	const view = new match.route.view(getParams(match));
 	document.querySelector('main').removeAttribute('class');
-	setNavbar(isLoggedOut);
 	view.getHTML();
 };
+
+window.addEventListener('load', () => {
+	if (!sessionStorage.getItem('isLoggedInSession')) {
+		localStorage.clear();
+	}
+});
 
 export {navigateTo, router};

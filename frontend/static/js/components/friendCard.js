@@ -1,17 +1,14 @@
-const friendCard = (friend, navigateTo) => {
+const friendCard = (friend) => {
 	const friendCard = document.createElement('button');
 	friendCard.className = 'scroll-element user-card';
 
-	const userId = document.createElement('div');
-	userId.className = 'user-id';
-	user.setAttribute('data-id', friend.id);
-	user.setAttribute('data-visible', 'false');
-
-	const imgElement = document.createElement('img');
-	imgElement.src = friend.img;
+	friendCard.setAttribute('data-id', friend.id);;
 
 	const userCardText = document.createElement('div');
 	userCardText.className = 'user-card-text';
+
+	const friendImg = document.createElement('img');
+	friendImg.src = friend.img;
 
 	const userName = document.createElement('div');
 	userName.className = 'user-name';
@@ -24,10 +21,8 @@ const friendCard = (friend, navigateTo) => {
 	userCardText.appendChild(userName);
 	userCardText.appendChild(userStatus);
 
-	friendCard.appendChild(imgElement);
+	friendCard.appendChild(friendImg);
 	friendCard.appendChild(userCardText);
-	friendCard.appendChild(userId);
-	friendCard.addEventListener('click', () => navigateTo(friend));
 
 	return friendCard;
 };

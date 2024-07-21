@@ -1,9 +1,9 @@
 
-class NotImplentedError extends Error {
+class NotImplementedError extends Error {
 	constructor(message) {
 		super(message);
 		this.name = "NotImplementedError";
 	}
 }
 
-export default NotImplentedError;
+export default NotImplementedError;

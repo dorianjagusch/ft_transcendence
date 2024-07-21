@@ -1,14 +1,8 @@
-const setNavbar = (isLoggedOut) => {
-	const navPartitions = document.querySelectorAll('.nav-partition');
-	navPartitions.forEach((partition) => {
-		const isVisible = partition.classList.contains('logged-out') ? isLoggedOut : !isLoggedOut;
-		partition.setAttribute('data-visible', isVisible);
-	});
-	document.querySelector('#user').innerHTML = localStorage.getItem('username');
-};
+import getProfilePicture from './profilePicture.js';
 
 const toggleSideBar = (e) => {
 	e.preventDefault();
+	e.stopPropagation();
 	document.querySelector('aside').toggleAttribute('active');
 };
 
@@ -31,13 +25,10 @@ const navbarItem = (link, type, content) => {
 	return navbarItem;
 };
 
-const Navbar = (username) => {
-	const nav = document.createElement('nav');
-	const ul = document.createElement('ul');
 
+const createdLoggedInSection = () => {
 	const loggedInSection = document.createElement('div');
 	loggedInSection.classList.add('nav-partition', 'logged-in');
-	loggedInSection.setAttribute('data-visible', 'true');
 
 	const leaderboardItem = navbarItem('/leaderboard', 'text', 'Leaderboard');
 	loggedInSection.appendChild(leaderboardItem);
@@ -47,21 +38,18 @@ const Navbar = (username) => {
 
 	const friendsItem = navbarItem('/friends', 'text', 'Friends');
 	loggedInSection.appendChild(friendsItem);
+	return loggedInSection;
+};
 
-	ul.appendChild(loggedInSection);
-
-	const notificationSection = document.createElement('p');
-	notificationSection.classList.add('notification');
-	ul.appendChild(notificationSection);
-
+const createUserSection = async () => {
 	const userSection = document.createElement('div');
 	userSection.classList.add('nav-partition', 'logged-in');
-	userSection.setAttribute('data-visible', 'true');
 
-	const userImageItem = navbarItem('/dashboard', 'image', './static/assets/img/default-user.png');
+	const userImage = await getProfilePicture(localStorage.getItem('user_id'));
+	const userImageItem = navbarItem('/dashboard', 'image', userImage);
 	userSection.appendChild(userImageItem);
 
-	const userLinkItem = navbarItem('/user', 'text', username);
+	const userLinkItem = navbarItem('/user', 'text', localStorage.getItem('username'));
 	userLinkItem.id = 'user';
 	userSection.appendChild(userLinkItem);
 
@@ -70,23 +58,47 @@ const Navbar = (username) => {
 	gearItem.querySelector('img').setAttribute('id', 'menu');
 	userSection.appendChild(gearItem);
 
-	ul.appendChild(userSection);
+	return userSection;
+};
 
+const createLoggedOutSection = () => {
 	const loggedOutSection = document.createElement('div');
 	loggedOutSection.classList.add('nav-partition', 'logged-out');
-	loggedOutSection.setAttribute('data-visible', 'false');
 
 	const loginItem = navbarItem('/login', 'text', 'Login');
 	loggedOutSection.appendChild(loginItem);
 
 	const registerItem = navbarItem('/register', 'text', 'Register');
 	loggedOutSection.appendChild(registerItem);
+	return loggedOutSection;
+};
 
-	ul.appendChild(loggedOutSection);
+const Navbar = async () => {
+	const nav = document.createElement('nav');
+	const ul = document.createElement('ul');
+
+	if (localStorage.getItem('isLoggedIn') === 'true') {
+		const loggedInSection = createdLoggedInSection();
+		ul.appendChild(loggedInSection);
+
+		const notificationSection = document.createElement('p');
+		notificationSection.classList.add('notification');
+		ul.appendChild(notificationSection);
+
+		const userSection = await createUserSection();
+		ul.appendChild(userSection);
+	} else {
+		const notificationSection = document.createElement('p');
+		notificationSection.classList.add('notification');
+		ul.appendChild(notificationSection);
+
+		const loggedOutSection = createLoggedOutSection();
+		ul.appendChild(loggedOutSection);
+	}
 
 	nav.appendChild(ul);
 
-	return nav;
+	document.querySelector('header').appendChild(nav);
 };
 
-export {Navbar, setNavbar};
+export {Navbar};

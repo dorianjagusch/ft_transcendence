@@ -6,8 +6,14 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from .validators import validate_image
+from django.core.exceptions import ValidationError
+import mimetypes
+import imghdr
+import base64
+from django.utils.crypto import get_random_string
 
-from .models import User
+from .models import User, ProfilePicture
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -17,6 +23,13 @@ from shared_utilities.decorators import must_be_authenticated, \
 
 class UserListView(APIView):
 	def get(self, request):
+		if request.user.is_authenticated and request.GET.get("username_contains"):
+			username_contains = request.GET.get("username_contains")
+			users = User.objects.filter(username__contains=username_contains).exclude(id=request.user.id)
+			## add error handling if either user doesn't exits or user is not authenticated
+			serializer = UserFriendOutputSerializer(users, many=True, context={'request': request})
+			return Response(serializer.data, status=status.HTTP_200_OK)
+
 		users = User.objects.all()
 		serializer = UserOutputSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
@@ -50,7 +63,7 @@ class UserDetailView(APIView):
 			serializer = UserOutputSerializer(user)
 			return Response(serializer.data)
 		friendship = Friend.objects.get_friendship_status(login_user_id, user.id)
-		serializer = UserFriendOutputSerializer(user, friendship=friendship)
+		serializer = UserFriendOutputSerializer(user, context={'request': request})
 		return Response(serializer.data)
 
 	@method_decorator(must_be_authenticated)
@@ -79,8 +92,61 @@ class UserDetailView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		except:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user.delete()
+		user.username = "deleted_user_" + str(user_id + 42)
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insertTS = None
+		user.last_login = None
+		user.is_online = False
+		user.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserProfilePictureView(APIView):
+	@method_decorator(csrf_exempt)
+	@method_decorator(must_be_authenticated)
+	@method_decorator(must_be_url_user)
+	def post(self, request, user_id):
+		try:
+			user = User.objects.get(pk=user_id)
+		except User.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
+		if 'file' not in request.FILES:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+		file = request.FILES['file']
+
+		try:
+			validate_image(file)
+		except ValidationError as e:
+			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+		try:
+			profile_picture = ProfilePicture.objects.get(user=user)
+			profile_picture.picture = file
+		except ProfilePicture.DoesNotExist:
+			profile_picture = ProfilePicture(user=user, picture=file)
+		profile_picture.save()
+		return Response(status=status.HTTP_200_OK)
+
+	@method_decorator(must_be_authenticated)
+	def get(self, request, user_id):
+		try:
+			user = User.objects.get(pk=user_id)
+			profile_picture = ProfilePicture.objects.filter(user=user).first()
+			if not profile_picture:
+				return Response({'image': ''}, status=status.HTTP_200_OK)
+
+			image_path = profile_picture.picture.path
+			with open(image_path, "rb") as image_file:
+				image_data = image_file.read()
+				encoded_image = base64.b64encode(image_data).decode('utf-8')
+				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
+		except ProfilePicture.DoesNotExist:
+			return Response({'image': ''}, status=status.HTTP_200_OK)
+		except FileNotFoundError:
+			return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserLoginView(APIView):
 	@method_decorator(csrf_exempt)
@@ -95,7 +161,7 @@ class UserLoginView(APIView):
 			login(request, user)
 			# set additional session data if necessary
 			request.session['is_authenticated'] = True
-			return Response({"message": "User login successful"}, status=status.HTTP_202_ACCEPTED)
+			return Response(UserOutputSerializer(user).data, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 

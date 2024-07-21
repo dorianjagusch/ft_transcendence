@@ -28,10 +28,11 @@ const GameCard = (game, imgFront, imgBack) => {
 
 	section.appendChild(modalContainer);
 
-	const createTournamentBtn = document.createElement('button');
-	createTournamentBtn.classList.add('primary-btn');
-	createTournamentBtn.textContent = 'Create Tournament';
-	section.appendChild(createTournamentBtn);
+	const tournamentBtn = document.createElement('button');
+	tournamentBtn.classList.add('primary-btn');
+	tournamentBtn.classList.add('tournament-button');
+	tournamentBtn.textContent = 'Create Tournament';
+	section.appendChild(tournamentBtn);
 
 	return section;
 };

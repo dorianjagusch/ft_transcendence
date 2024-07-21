@@ -15,10 +15,12 @@ const statObj1 = {
 	},
 };
 
+
 const placementObj1 = {
 	game: 'Pong',
 	place: 1,
 };
+
 
 const historyObj1 = {
 	game: 'Pong',
@@ -31,7 +33,7 @@ const historyObj2 = {
 	score: 100,
 };
 
-const historyObj4 = {
+const historyObj3 = {
 	game: 'Pong',
 	date: '2021-01-04',
 	score: 100,
@@ -51,7 +53,7 @@ const userData = {
 		//[historyObj, ...] | null
 		historyObj1,
 		historyObj2,
-		historyObj4,
+		historyObj3,
 	],
 };
 

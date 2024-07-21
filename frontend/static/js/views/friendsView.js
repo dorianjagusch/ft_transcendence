@@ -1,9 +1,11 @@
 import {friendCard} from '../components/friendCard.js';
 import {requestCard} from '../components/requestCard.js';
-import {scrollContainer} from '../components/scrollContainer.js';
+import {scrollContainer, populateInnerScroller} from '../components/scrollContainer.js';
+import SearchFriendsModal from '../components/dialogs/searchFriendsModal.js';
 import FriendService from '../services/friendService.js';
 import constants from '../constants.js';
 import AView from './AView.js';
+import getProfilePicture from '../components/profilePicture.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -13,18 +15,20 @@ export default class extends AView {
 		this.acceptHandler = this.acceptHandler.bind(this);
 		this.declineHandler = this.declineHandler.bind(this);
 		this.profileHandler = this.profileHandler.bind(this);
+		this.mapResponse = this.mapResponse.bind(this);
+		this.populateScroller = this.populateScroller.bind(this);
 	}
 
-	profileHandler(friend) {
-		super.navigateTo(`/profile/${friend.id}`);
+	profileHandler(friendId) {
+		super.navigateTo(`/profile/${friendId}`);
 	}
 
-	acceptHandler(friend) {
+	acceptHandler(friendId) {
 		const data = {
-			friend_id: friend.id,
+			friend_id: friendId,
 		};
 		try {
-			friendService.postRequest(data).then(() => {
+			this.friendService.postRequest(data).then(() => {
 				super.notify('Friendship created successfully.');
 				super.navigateTo('/friends');
 			});
@@ -33,9 +37,9 @@ export default class extends AView {
 		}
 	}
 
-	declineHandler(friend) {
+	declineHandler(friendId) {
 		try {
-			friendService.deleteRequest(friend.id).then(() => {
+			this.friendService.deleteRequest(friendId).then(() => {
 				super.notify('Friendship declined successfully.');
 				super.navigateTo('/friends');
 			});
@@ -44,67 +48,109 @@ export default class extends AView {
 		}
 	}
 
-	createFriendScroller(friendsArray, card, tokens, identifier) {
+	openSearchFriendsmodal() {
+		const modal = document.querySelector('.search-friends-modal');
+		modal.showModal();
+	}
+
+	createScroller(friendsArray, card, tokens, identifier) {
 		let scroller = scrollContainer(friendsArray, (friend) => card(friend, this.profileHandler));
 		scroller.classList.add(tokens, identifier);
+		scroller.addEventListener('click', (e) => {
+			e.preventDefault();
+			if (e.target.classList.contains('check-btn')) {
+				e.stopPropagation();
+				this.acceptHandler(e.target.closest('.scroll-element').dataset.id);
+			}
+			if (e.target.classList.contains('x-btn')) {
+				e.stopPropagation();
+				this.declineHandler(e.target.closest('.scroll-element').dataset.id);
+			}
+			if (e.target.classList.contains('scroll-element')) {
+				e.stopPropagation();
+				this.profileHandler(e.target.closest('.scroll-element').dataset.id);
+			}
+		});
 		return scroller;
 	}
 
-	createRequestScroller(friendsArray, card, tokens, identifier) {
-		let scroller = scrollContainer(friendsArray, (friend) =>
-			card(friend, this.acceptHandler, this.declineHandler, this.profileHandler)
-		);
-		scroller.classList.add(tokens, identifier);
-		return scroller;
+	async mapResponse(response) {
+		const promises = response.map(async (element) => {
+			try {
+				const profileImg = await getProfilePicture(element.id);
+				const userData = {
+					id: element.id,
+					username: element.username,
+					status: element.is_online ? 'online' : 'offline',
+					img: profileImg,
+				};
+				return userData;
+			} catch (error) {
+				console.log('Error getting the profile picture element: ', error);
+				return null;
+			}
+		});
+		return await Promise.all(promises);
+	}
+
+	async populateScroller(scrollerSelector, card, statusFilter) {
+		const scroller = document.querySelector(`${scrollerSelector} > ul`);
+		const data = await this.friendService.getAllRequest(statusFilter);
+		const userData = await this.mapResponse(data);
+		populateInnerScroller(userData, scroller, card);
 	}
 
 	async getHTML() {
 		let acceptedFriends = [];
 		let pendingFriends = [];
-
-		try {
-			const acceptedPromise = this.friendService.getAllRequest(
-				constants.FRIENDSHIPSTATUS.FRIEND
-			);
-			const pendingPromise = this.friendService.getAllRequest(
-				constants.FRIENDSHIPSTATUS.PENDINGRECEIVED
-			);
-
-			const acceptedResponse = await acceptedPromise;
-			acceptedFriends = acceptedResponse.map((element) => ({
-				id: element.id,
-				username: element.username,
-				img: 'https://unsplash.it/200/200',
-				status: element.is_online ? 'online' : 'offline',
-			}));
-
-			const pendingResponse = await pendingPromise;
-			pendingFriends = pendingResponse.map((element) => ({
-				id: element.id,
-				username: element.username,
-				img: 'https://unsplash.it/200/200',
-				status: element.is_online ? 'online' : 'offline',
-			}));
-		} catch (error) {
-			console.error('An error occured when retrieving your friends', error);
-		}
-
-		const friendTitle = document.createElement('h2');
-		friendTitle.textContent = 'Friends';
-		const friendScroller = this.createFriendScroller(
+		let friendScroller = this.createScroller(
 			acceptedFriends,
 			friendCard,
 			'friends',
 			'bg-secondary'
 		);
-		const requestTitle = document.createElement('h2');
-		requestTitle.textContent = 'Friend Requests';
-		const requestScroller = this.createRequestScroller(
+		let requestScroller = this.createScroller(
 			pendingFriends,
 			requestCard,
 			'friend-request',
 			'bg-secondary'
 		);
-		this.updateMain(friendTitle, friendScroller, requestTitle, requestScroller);
+
+		const friendTitle = document.createElement('h2');
+		friendTitle.textContent = 'Friends';
+		const requestTitle = document.createElement('h2');
+		requestTitle.textContent = 'Friend Requests';
+
+		const searchFriendsSection = document.createElement('section');
+		searchFriendsSection.classList.add('search-friends');
+		const searchFriendsButton = document.createElement('button');
+		searchFriendsButton.classList.add('primary-btn');
+		searchFriendsButton.textContent = 'Search Friends';
+		searchFriendsSection.appendChild(searchFriendsButton);
+		const searchFriendsModal = new SearchFriendsModal();
+		searchFriendsModal.dialog.classList.add('search-friends-modal');
+		searchFriendsButton.addEventListener('click', () => {
+			this.openSearchFriendsmodal();
+		});
+
+		this.updateMain(
+			friendTitle,
+			friendScroller,
+			requestTitle,
+			requestScroller,
+			searchFriendsSection,
+			searchFriendsModal.dialog
+		);
+
+		try {
+			await this.populateScroller('.friends', friendCard, constants.FRIENDSHIPSTATUS.FRIEND);
+			await this.populateScroller(
+				'.friend-request',
+				requestCard,
+				constants.FRIENDSHIPSTATUS.PENDINGRECEIVED
+			);
+		} catch (error) {
+			console.error('An error occured when retrieving your friends', error);
+		}
 	}
 }

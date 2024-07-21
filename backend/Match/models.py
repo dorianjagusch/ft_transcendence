@@ -1,25 +1,18 @@
 from django.db import models
 from datetime import datetime
 
-from .managers import MatchManager
-
-# Question to Meri: put into separate file?
-class MatchState(models.IntegerChoices):
-	LOBBY = 0, 'lobby'
-	IN_PROGRESS = 1, 'in_progress'
-	FINISHED = 2, 'finished'
-	ABORTED = 3, 'aborted'
-
+from .matchState import MatchState
+from Tournament.models import Tournament
 
 # Create your models here.
 class Match(models.Model):
 	state = models.IntegerField(choices=MatchState.choices, default=MatchState.LOBBY)
-	start_time = models.DateTimeField(null=True, blank=True)
-	end_time = models.DateTimeField(null=True, blank=True)
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+	start_ts = models.DateTimeField(null=True, blank=True)
+	end_ts = models.DateTimeField(null=True, blank=True)
+	insert_ts = models.DateTimeField(auto_now_add=True)
+	update_ts = models.DateTimeField(auto_now=True)
 
-	objects = MatchManager()
+	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
 	def start_match(self):
 		if self.state == MatchState.LOBBY.value:
@@ -41,9 +34,6 @@ class Match(models.Model):
 
 	def __str__(self):
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
-		return f'Match {self.pk} - {self.get_state_display()}'
+		return f'Match {self.id} - {self.get_state_display()}'
 
-	# for later
-	# tournament_id = models.ForeignKey(Tournament, related_name='tournament_id', null=True, blank=True, on_delete=models.SET_NULL)
-	# tournament_phase_id = models.ForeignKey(TournamentPhase, related_name='tournament_phase_id', null=True, blank=True, on_delete=models.SET_NULL)
 

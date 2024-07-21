@@ -1,7 +1,7 @@
 import backendURL from '../constants.js';
-import ArequestService from './ArequestService.js';
+import ARequestService from './ARequestService.js';
 
-class UserService extends ArequestService {
+class UserService extends ARequestService {
 	constructor() {
 		super();
 	}
@@ -10,8 +10,12 @@ class UserService extends ArequestService {
 		return super.getRequest(`${backendURL.userURL}${id}`);
 	}
 
-	async getAllRequest() {
-		return super.getAllRequest(`${backendURL.userURL}`);
+	async getAllRequest(params) {
+		const url = new URL(backendURL.userURL);
+		Object.entries(params).forEach(([key, value]) => {
+			url.searchParams.append(key, value);
+		});
+		return super.getAllRequest(`${url}`);
 	}
 
 	async postRequest({username, password}) {

@@ -1,5 +1,4 @@
 import {router, navigateTo} from './router.js';
-import logoutService from './services/logoutService.js';
 
 window.addEventListener('popstate', router);
 
