@@ -14,6 +14,7 @@ import base64
 from django.utils.crypto import get_random_string
 
 from .models import User, ProfilePicture
+from .mixins import UserAuthenticationMixin, UserLoginMixin
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -149,22 +150,15 @@ class UserProfilePictureView(APIView):
 		except FileNotFoundError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
-class UserLoginView(APIView):
+class UserLoginView(APIView, UserAuthenticationMixin, UserLoginMixin):
 	@method_decorator(csrf_exempt)
 	def post(self, request):
-		username_input = request.data.get('username')
-		password_input = request.data.get('password')
-		if not username_input or not password_input:
-			return Response({"message": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+		user_authentication_result = self.authenticate_user(request)
+		if not isinstance(user_authentication_result, User):
+			return user_authentication_result
 
-		user = authenticate(request, username=username_input, password=password_input)
-		if user is not None:
-			login(request, user)
-			# set additional session data if necessary
-			request.session['is_authenticated'] = True
-			return Response(UserOutputSerializer(user).data, status=status.HTTP_202_ACCEPTED)
-		else:
-			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+		self.login_user(request, user_authentication_result)
+		return Response(UserOutputSerializer(user_authentication_result).data, status=status.HTTP_202_ACCEPTED)
 
 class UserLogoutView(APIView):
 	@method_decorator(must_be_authenticated)
