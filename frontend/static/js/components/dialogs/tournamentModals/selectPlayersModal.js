@@ -4,16 +4,16 @@ import selectPlayersForm from '../../formComponents/selectPlayersForm.js';
 import TournamentService from '../../../services/tournamentService.js';
 
 export default class SelectPlayersModal extends ADialog {
-	constructor(parentDataHandler, tournamentData) {
-		super(new selectPlayersForm(tournamentData), new TournamentService());
+	constructor(parentDataHandler, {tournament, tournament_player}) {
+		super(new selectPlayersForm({tournament, tournament_player}), new TournamentService());
 		this.authenticateUser = this.authenticateUser.bind(this);
 		this.getFormData = this.getFormData.bind(this);
 		this.onDataReceived = parentDataHandler;
 		this.receiveUserData = this.receiveUserData.bind(this);
-		this.numberOfPlayers = tournamentData.player_amount;
-		this.tournamentName = tournamentData.name;
-		this.player_ids = tournamentData.player_ids;
-		this.tournamentId = tournamentData.id;
+		this.numberOfPlayers = tournament.player_amount;
+		this.tournamentName = tournament.name;
+		this.tournamentId = tournament.tournament_id;
+		this.tournamentHostId = tournament_player.id;
 		this.adjustAuthenticationModal = this.adjustAuthenticationModal.bind(this);
 		this.appendEventlistenters();
 	}
@@ -29,7 +29,7 @@ export default class SelectPlayersModal extends ADialog {
 	authenticateUser(playerId) {
 		let authenticationModal = document.querySelector(`[data-modal-${playerId}]`);
 		if (!authenticationModal) {
-			authenticationModal = new AuthenticationModal(this.receiveUserData);
+			authenticationModal = new AuthenticationModal(TournamentService, this.receiveUserData);
 			authenticationModal.dialog.classList.add('authenticate-user-modal', 'bg-primary');
 			authenticationModal.dialog.setAttribute(`data-modal-id`, playerId);
 			authenticationModal.dialog.classList.remove('bg-secondary');
@@ -60,7 +60,7 @@ export default class SelectPlayersModal extends ADialog {
 
 	getFormData() {
 		const form = this.form.getForm();
-		const playerCards = document.querySelectorAll('[data-user-selected="true"]');
+		const playerCards = form.querySelectorAll('[data-user-selected="true"]');
 		if (playerCards.length !== parseInt(this.numberOfPlayers)) {
 			return null;
 		}
@@ -128,3 +128,7 @@ export default class SelectPlayersModal extends ADialog {
 		});
 	}
 }
+
+//TODO: this is not going to be fun, but modals and players need their individual ids. as the array does not come with
+// the POST tournament/ response. When an add-event is fired the modal id needs to be known to update the right card (the do have ids atm).
+// and when the player data comes in that card needs to be found and the data-user-id updated.

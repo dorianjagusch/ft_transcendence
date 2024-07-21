@@ -1,10 +1,9 @@
 import ADialog from './ADialog.js';
 import loginForm from '../formComponents/loginForm.js';
-import AuthenticationService from '../../services/authenticationService.js';
 
 export default class AuthenticationModal extends ADialog {
-	constructor(parentCallback) {
-		super(new loginForm(), new AuthenticationService());
+	constructor(service, parentCallback) {
+		super(new loginForm(), new service());
 		this.getFormData = this.getFormData.bind(this);
 		this.authenticateUser = this.authenticateUser.bind(this);
 		this.onDataReceived = parentCallback;
@@ -19,12 +18,13 @@ export default class AuthenticationModal extends ADialog {
 		return {username, password};
 	}
 
-	async authenticateUser(userData) {
+	async authenticateUser(dataToSend) {
 		try {
-			const tokenData = await this.service.postMatch(userData);
+			const responseData = await this.service.postPlayer(dataToSend);
+			console.log(responseData);
 			this.dialog.close();
 			if (this.onDataReceived) {
-				this.onDataReceived(tokenData);
+				this.onDataReceived(responseData);
 			}
 		} catch (error) {
 			this.notify(error.message, 'error');
@@ -43,7 +43,7 @@ export default class AuthenticationModal extends ADialog {
 						return;
 					}
 					try {
-						this.authenticateUser({username, password});
+						this.authenticateUser({username, password}, context);
 					} catch (error) {
 						this.notify(error.message, 'error');
 					}

@@ -11,7 +11,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Tournament
-		fields = ['id', 'state_display']
+		fields = ['id', 'name', 'state_display', 'player_amount']
 
 class TournamentPlayerSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -53,7 +53,7 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
 			).first()
 			return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
 		return None
-	
+
 	def get_winner(self, match: Match) -> TournamentPlayerSerializer | None:
 		if match.state == MatchState.FINISHED:
 			winning_player = match.players.filter(match_winner=True).first()
@@ -115,7 +115,7 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'player_amount',
 			'next_match',
 		]
-		
+
 class TournamentSerializers:
 	default = TournamentSerializer
 	creation = TournamentCreationSerializer

@@ -65,6 +65,7 @@ export default class extends AView {
 	}
 
 	adjustSelectPlayerModal() {
+		debugger;
 		document.querySelector('main').appendChild(this.selectPlayersModal.dialog);
 		this.selectPlayersModal.dialog.classList.add('player-modal');
 		this.selectPlayersModal.dialog.classList.remove('bg-secondary');
@@ -76,10 +77,11 @@ export default class extends AView {
 
 	openSelectPlayersModal(tournamentData) {
 		this.playerNumberModal.dialog.close();
-		if (this.selectPlayersModal && this.selectPlayersModal.tournamentId === tournamentData.id) {
+		if (this.selectPlayersModal && this.selectPlayersModal.tournamentId === tournamentData.tournament_id) {
 			this.selectPlayersModal.dialog.showModal();
 			return;
 		}
+		console.log(tournamentData);
 		this.selectPlayersModal = new SelectPlayersModal(this.openSummaryModal, tournamentData);
 		this.adjustSelectPlayerModal();
 		this.selectPlayersModal.dialog.addEventListener('click', (e) => {
@@ -90,6 +92,7 @@ export default class extends AView {
 			}
 		});
 		this.selectPlayersModal.dialog.showModal();
+
 	}
 
 	async getHTML() {
@@ -106,3 +109,6 @@ export default class extends AView {
 		this.attachEventListeners();
 	}
 }
+
+
+//TODO: check that the data from tournament modal arrives correctly in selectPlayersModal (removed await in tournament service and haven't tested it further)

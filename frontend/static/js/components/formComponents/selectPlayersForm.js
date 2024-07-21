@@ -1,12 +1,14 @@
+import getProfilePicture from '../profilePicture.js';
 import AForm from './AForm.js';
 import PlayerCard from './PlayerCard.js';
 
 export default class selectPlayersForm extends AForm {
-	constructor(TournamentData) {
+	constructor({tournament, tournament_player}) {
 		super();
-		this.numberOfPlayers = TournamentData.player_amount;
-		this.tournamentName = TournamentData.name;
-		this.playerIds = TournamentData.player_ids;
+		this.numberOfPlayers = tournament.player_amount;
+		this.tournamentName = tournament.name;
+		this.tournamenHostId = tournament_player.id;
+		this.playerIds = [];
 		this.generateForm = this.generateForm.bind(this);
 	}
 
@@ -17,14 +19,13 @@ export default class selectPlayersForm extends AForm {
 		const playerList = document.createElement('section');
 		playerList.classList.add('player-list', `player-${this.numberOfPlayers}`);
 		form.appendChild(playerList);
-
+		debugger;
 		for (let i = 0; i < this.numberOfPlayers; i++) {
 			if (i == 0) {
 				const playerCard = PlayerCard(
 					localStorage.getItem('username'),
-					// localStorage.getItem('userImage')
-					'../static/assets/img/default-user.png',
-					0,
+					getProfilePicture(localStorage.getItem('user_id')),
+					this.tournamentHostId,
 					true
 				);
 				playerCard.setAttribute('data-user-selected', 'true')
@@ -34,7 +35,7 @@ export default class selectPlayersForm extends AForm {
 			const playerCard = PlayerCard(
 				'Add Participant',
 				'../static/assets/img/default-user.png',
-				this.playerIds[i-1],
+				i,
 				true
 			);
 			playerCard.classList.add('bg-inactive');

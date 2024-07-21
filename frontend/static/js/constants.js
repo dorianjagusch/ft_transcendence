@@ -7,6 +7,7 @@ const settingsURL = `${baseURL}settings/`;
 const friendURL = `${baseURL}friends/`;
 const pongURL = `${baseURL}match/`;
 const authenticationURL = `${baseURL}tokens/`;
+const tournamentURL = `${baseURL}tournaments/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];
 
@@ -33,6 +34,7 @@ export default {
 	friendURL,
 	pongURL,
 	authenticationURL,
+	tournamentURL,
 	allowedPaths,
 	FRIENDSHIPSTATUS,
 	GAMES
