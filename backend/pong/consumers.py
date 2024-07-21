@@ -5,7 +5,6 @@ import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game import PongStatus
 from .constants import *
-
 from channels.db import database_sync_to_async
 from Tokens.models import MatchToken
 from Match.models import Match
@@ -65,7 +64,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def ai_move_loop(self):
         while not self.game.game_stats.game_over:
             await self.game.ai_move_paddle(self.ai_target_y)
-            await asyncio.sleep(0.008)
+            await asyncio.sleep(0.1)
 
     async def ai_opponent_loop(self):
         while not self.game.game_stats.game_over:
