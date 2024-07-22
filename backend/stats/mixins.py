@@ -17,8 +17,8 @@ class UserTableMixin:
 		return total_losses_count
 	
 	def get_total_games_played_count(self, user : User):
-		total_game_played_count = user.players.filter(match__state=MatchState.FINISHED).count()
-		return total_game_played_count
+		total_game_played = user.players.filter(match__state=MatchState.FINISHED).count()
+		return total_game_played
 	
 	def get_win_loss_ratio(self, user : User):
 		if self.get_total_games_played_count(user) == 0:

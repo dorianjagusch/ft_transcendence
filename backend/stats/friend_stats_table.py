@@ -1,4 +1,4 @@
-class FirendsTable:
+class FriendsTable:
 	def __init__(self):
 		self.user = None
 		self.number_of_friends = None

@@ -9,7 +9,7 @@ from django.db.models import Count, Q
 from User.models import User
 from .user_stats_table import UserTable
 from .leader_board_table import LeaderBoardTable
-from .friend_stats_table import FirendsTable
+from .friend_stats_table import FriendsTable
 
 from .mixins import UserTableMixin
 from rest_framework.response import Response
@@ -19,17 +19,17 @@ class StatsView(APIView, UserTableMixin):
 		user = request.user
 		wins = self.get_wins_count(user)
 		losses = self.get_losses_count(user)
-		total_game_played = self.get_total_games_played_count(user)
+		total_games_played = self.get_total_games_played_count(user)
 		win_loss_ratio = self.get_win_loss_ratio(user)
-		wining_streak = self.get_win_streak_count(user)
+		Winning_streak = self.get_win_streak_count(user)
 		position_in_leaderboard = self.get_position_in_leaderboard(user)
-		self.user_table = UserTable(user, wins, losses, total_game_played, win_loss_ratio, wining_streak, position_in_leaderboard)
+		self.user_table = UserTable(user, wins, losses, total_games_played, win_loss_ratio, Winning_streak, position_in_leaderboard)
         # Create the Plotly figure
 		fig = go.Figure(data=[go.Table(
 			header=dict(values=['Statistic', 'Value']),
 			cells=dict(values=[
 				['Wins', 'Losses', 'Total Games Played', 'Win/Loss Ratio', 'Winning Streak', 'Position in Leaderboard'],
-				[wins, losses, total_game_played, win_loss_ratio, wining_streak, position_in_leaderboard]
+				[wins, losses, total_games_played, win_loss_ratio, Winning_streak, position_in_leaderboard]
 			])
 		)])		
 	
