@@ -23,7 +23,6 @@ class SingleMatchGuestTokenView(APIView):
 	def post(self, request):
 		host_user = request.user
 		ai_opponent = request.query_params.get('ai_opponent')
-		print(f"{ai_opponent}", file=sys.stderr)
 		if ai_opponent is not None and ai_opponent == 'true':
 			token = MatchTokenManager.create_single_match_token(host_user, None)
 			token_serializer = MatchTokenSerializer(token)

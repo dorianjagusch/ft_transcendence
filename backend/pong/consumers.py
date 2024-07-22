@@ -120,7 +120,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.player_right.match_winner = True
 
         self.player_left.save()
-        self.player_right.save()
+        if self.ai_opponent is False:
+            self.player_right.save()
 
     @database_sync_to_async
     def start_match(self, match):
