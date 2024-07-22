@@ -66,8 +66,9 @@ export default class extends AView {
 			this.navigateTo('/play');
 		}
 
-		this.attachEventListeners();
-		const pong = Pong.PongContainer();
+		this.attachObserver();
+		const pong = Pong.PongContainer(this.params.tournament_id);
 		this.updateMain(pong);
+		this.attachEventListeners();
 	}
 }

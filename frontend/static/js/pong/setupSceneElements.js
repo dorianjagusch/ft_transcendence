@@ -36,7 +36,7 @@ const createIntructions = () => {
 	return instructions;
 };
 
-const createGameOver = () => {
+const createGameOver = (isTournament) => {
 	const gameOver = document.createElement('article');
 	gameOver.setAttribute('id', 'game-over');
 	const gameOverText = document.createElement('p');
@@ -45,12 +45,8 @@ const createGameOver = () => {
 	winner.setAttribute('id', 'winner');
 
 	const newGameButton = document.createElement('button');
-	newGameButton.textContent = 'New Game';
+	newGameButton.textContent = isTournament ? 'Next Match' : 'New Game';
 	newGameButton.classList.add('new-game-button');
-	
-	newGameButton.addEventListener('click', () => {
-		window.location.reload();
-	});
 
 	gameOver.appendChild(gameOverText);
 	gameOver.appendChild(winner);
