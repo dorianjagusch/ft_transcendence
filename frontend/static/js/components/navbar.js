@@ -2,6 +2,7 @@ import getProfilePicture from './profilePicture.js';
 
 const toggleSideBar = (e) => {
 	e.preventDefault();
+	e.stopPropagation();
 	document.querySelector('aside').toggleAttribute('active');
 };
 
@@ -24,25 +25,6 @@ const navbarItem = (link, type, content) => {
 	return navbarItem;
 };
 
-const getPictureNavbarItem = (href, userSection) => {
-	try {
-		const navbarItem = document.createElement('li');
-		navbarItem.classList.add('nav-item');
-
-		const img = getProfilePicture();
-		navbarItem.appendChild(img);
-
-		const navbarLink = document.createElement('a');
-		navbarLink.href = href;
-		navbarLink.setAttribute('data-link', '');
-		navbarLink.appendChild(navbarItem);
-
-		userSection.appendChild(navbarLink);
-	} catch (error) {
-		console.log('Error getting the profile picture element: ', error);
-	}
-};
-
 const createdLoggedInSection = () => {
 	const loggedInSection = document.createElement('div');
 	loggedInSection.classList.add('nav-partition', 'logged-in');
@@ -58,11 +40,13 @@ const createdLoggedInSection = () => {
 	return loggedInSection;
 };
 
-const createUserSection = () => {
+const createUserSection = async () => {
 	const userSection = document.createElement('div');
 	userSection.classList.add('nav-partition', 'logged-in');
 
-	getPictureNavbarItem('/dashboard', userSection);
+	const userImage = await getProfilePicture(localStorage.getItem('user_id'));
+	const userImageItem = navbarItem('/dashboard', 'image', userImage);
+	userSection.appendChild(userImageItem);
 
 	const userLinkItem = navbarItem('/user', 'text', localStorage.getItem('username'));
 	userLinkItem.id = 'user';
@@ -88,32 +72,28 @@ const createLoggedOutSection = () => {
 	return loggedOutSection;
 };
 
-const Navbar = () => {
-	const nav = document.createElement('nav');
-	const ul = document.createElement('ul');
-
+const updateNavbar = async () => {
+	const ul = document.querySelector('nav ul');
+	ul.innerHTML = '';
 	if (localStorage.getItem('isLoggedIn') === 'true') {
 		const loggedInSection = createdLoggedInSection();
 		ul.appendChild(loggedInSection);
 
-		const notificationSection = document.createElement('p');
-		notificationSection.classList.add('notification');
-		ul.appendChild(notificationSection);
-
-		const userSection = createUserSection();
+		const userSection = await createUserSection();
 		ul.appendChild(userSection);
 	} else {
-		const notificationSection = document.createElement('p');
-		notificationSection.classList.add('notification');
-		ul.appendChild(notificationSection);
-
 		const loggedOutSection = createLoggedOutSection();
 		ul.appendChild(loggedOutSection);
 	}
+};
+
+const Navbar = async () => {
+	const nav = document.createElement('nav');
+	const ul = document.createElement('ul');
 
 	nav.appendChild(ul);
 
-	return nav;
+	document.querySelector('header').appendChild(nav);
 };
 
-export {Navbar};
+export {Navbar, updateNavbar};

@@ -1,7 +1,9 @@
 import {navigateTo} from '../router.js';
 import notify from '../utils/notify.js';
-import fileInputField from '../components/formComponents/fileInputField.js'
+import fileInputField from '../components/formComponents/fileInputField.js';
 import getProfilePicture from './profilePicture.js';
+import AcceptDeclineModal from './dialogs/acceptDeclineModal.js';
+import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
 const sideBarButton = (classes, text, callback) => {
@@ -22,53 +24,87 @@ const profilePictureHandler = async (file) => {
 	formData.append('file', file);
 	const userIdStr = localStorage.getItem('user_id');
 	if (!userIdStr) {
-		throw new Error("User ID is not found in local storage");
+		throw new Error('User ID is not found in local storage');
 	}
 
 	const userId = parseInt(userIdStr, 10);
 	if (isNaN(userId)) {
-		throw new Error("User ID is not a valid number");
+		throw new Error('User ID is not a valid number');
 	}
 
-	try
-	{
+	try {
 		const profilePictureService = new ProfilePictureService();
-		profilePictureService.postProfilePictureRequest(userId, formData);
+		await profilePictureService.postRequest(userId, formData);
 	} catch (error) {
 		notify(error, 'error');
 	}
-
 	navigateTo('/dashboard');
 };
 
-const SideBar = () => {
-	const aside = document.createElement('aside');
-
+const deleteAccount = async (userId) => {
 	try {
-		const img = getProfilePicture();
-		aside.appendChild(img);
+		new UserService().deleteRequest(userId);
+		localStorage.clear();
+		navigateTo('/');
+	} catch (error) {
+		notify(error, 'error');
+		navigateTo('/dashboard');
+	}
+};
+
+const SideBar = async () => {
+	const aside = document.createElement('aside');
+	const img = document.createElement('img');
+	try {
+		img.src = await getProfilePicture(localStorage.getItem('user_id'));
 	} catch (error) {
 		console.log('Error getting the profile picture element: ', error);
 	}
-
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
 
-	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile');
-	const viewProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'View profile', () => navigateTo('/dashboard'));
-	const profilePictureBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Update profile picture', () => fileInput.click());
-	const createTournamentBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Create Tournament', () => navigateTo('/tournament'));
-	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () => navigateTo('/logout'));
-	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account');
+	const editProfileBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'Edit profile'
+	);
 
+	const viewProfileBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'View profile', () => navigateTo('/dashboard')
+	);
+	const profilePictureBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'Update profile picture',
+		() => fileInput.click()
+	);
+	const createTournamentBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'Create Tournament',
+		() => navigateTo('/tournament')
+	);
+	const logoutBtn = sideBarButton
+	(['sidebar-element', 'bg-primary'],
+		'Logout',
+		() => navigateTo('/logout')
+	);
+
+	const AreYouSureModal = new AcceptDeclineModal(deleteAccount, localStorage.getItem('user_id'));
+	AreYouSureModal.form.form.querySelector('h3').textContent =
+		'Are you sure you want to delete your account?';
+	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account', () => {
+		document.querySelector;
+		AreYouSureModal.dialog.showModal();
+	});
+
+	aside.appendChild(img);
+	aside.appendChild(fileInput);
 	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
 	aside.appendChild(viewProfileBtn);
 	aside.appendChild(profilePictureBtn);
 	aside.appendChild(createTournamentBtn);
 	aside.appendChild(deleteAccountBtn);
-
-	return aside;
+	document.querySelector('body').appendChild(aside);
 };
 
 export default SideBar;

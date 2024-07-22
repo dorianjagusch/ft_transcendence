@@ -1,21 +1,23 @@
 import {navigateTo} from '../router.js';
-import {Navbar} from '../components/navbar.js';
+import {Navbar, updateNavbar} from '../components/navbar.js';
 import SideBar from '../components/sideBar.js';
 import notify from '../utils/notify.js';
 
-export default class Aview{
+export default class Aview {
 	constructor(params) {
 		this.params = params;
 		if (this.constructor == Aview) {
 			throw new Error("Abstract classes can't be instantiated.");
 		}
-		if (document.querySelector('nav')) {
-			document.querySelector('nav').remove();
+		if (!document.querySelector('nav')) {
+			Navbar();
 		}
-		document.querySelector('header').appendChild(Navbar());
-
-		if (!document.querySelector('aside') && localStorage.getItem('isLoggedIn') === 'true') {
-			document.querySelector('body').appendChild(SideBar());
+		updateNavbar();
+		if (document.querySelector('aside')) {
+			document.querySelector('aside').remove();
+		}
+		if (localStorage.getItem('isLoggedIn') === 'true') {
+			SideBar();
 		}
 	}
 

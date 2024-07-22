@@ -3,9 +3,7 @@ from .constants import *
 import math
 import random
 
-
 class PongGame:
-
     def __init__(self):
         self.vertical_distance = HALF_PLAYER_HEIGHT + HALF_BALL_SIZE
         self.horizontal_distance = HALF_PLAYER_WIDTH + HALF_BALL_SIZE
@@ -93,6 +91,9 @@ class PongGame:
         pong_stat.ball.x = PLAYGROUND_WIDTH / 2
         pong_stat.ball.y = PLAYGROUND_HEIGHT / 2
         pong_stat.ball.angle = self.generate_random_angle()
-        pong_stat.ball.speed *= SLOW_DOWN_FACTOR
-        self.collision_tolerance *= SLOW_DOWN_FACTOR
-
+        if pong_stat.ball.speed > BALL_SPEED:
+            pong_stat.ball.speed = BALL_SPEED
+            self.collision_tolerance = COLLISION_TOLERANCE
+        else:
+            pong_stat.ball.speed *= SLOW_DOWN_FACTOR
+            self.collision_tolerance *= SLOW_DOWN_FACTOR

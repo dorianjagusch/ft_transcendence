@@ -2,6 +2,7 @@ import ADialog from './ADialog.js';
 import searchResultCard from '../formComponents/searchResultCard.js';
 import UserService from '../../services/userService.js';
 import searchFriendsForm from '../formComponents/searchFriendsForm.js';
+import getProfilePicture from '../profilePicture.js';
 import FriendService from '../../services/friendService.js';
 import {navigateTo} from '../../router.js';
 import constants from '../../constants.js'; //TODO: remove once backend send relationship with search results
@@ -62,7 +63,8 @@ export default class SearchFriendsModal extends ADialog {
 			searchResults.textContent = 'No results found.';
 			return;
 		}
-		searchMatches.forEach((match) => {
+		searchMatches.forEach( async (match) => {
+			match.img = await getProfilePicture(match.id);
 			const searchResult = searchResultCard(match, this.selectButtons);
 			searchResults.appendChild(searchResult);
 		});
@@ -83,7 +85,7 @@ export default class SearchFriendsModal extends ADialog {
 		try {
 			await this.friendService.postRequest({friend_id: friendId});
 			await this.refreshSearchResults(this.searchFriendsField.value);
-			this.notify('Friend request sent.');
+			this.notify('Friend request sent.', 'success');
 		} catch (error) {
 			this.notify(error);
 		}
@@ -93,7 +95,7 @@ export default class SearchFriendsModal extends ADialog {
 		try {
 			await this.friendService.deleteRequest(friendId);
 			await this.refreshSearchResults(this.searchFriendsField.value);
-			this.notify('Friendship declined successfully.');
+			this.notify('Friendship declined successfully.', 'success');
 		} catch (error) {
 			this.notify(error);
 		}
@@ -110,11 +112,9 @@ export default class SearchFriendsModal extends ADialog {
 		searchResults.addEventListener('click', (e) => {
 			e.preventDefault();
 			if (e.target.classList.contains('accept-btn')) {
-				e.stopPropagation();
 				const friendId = e.target.closest('.friend-result').dataset.id;
 				this.addFriend(friendId);
 			} else if (e.target.classList.contains('decline-btn')) {
-				e.stopPropagation();
 				const friendId = e.target.closest('.friend-result').dataset.id;
 				this.deleteFriendRequest(friendId);
 			} else {
