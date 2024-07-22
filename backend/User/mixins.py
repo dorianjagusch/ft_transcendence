@@ -24,7 +24,6 @@ class GetUsersWithUsernameContainsMixin:
     """
     def get_all_users_with_username_contains(self, request: Request) -> QuerySet:
         username_contains = request.query_params.get("username_contains")
-        
         if not username_contains:
             return User.objects.none()
         
