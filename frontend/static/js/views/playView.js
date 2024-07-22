@@ -32,20 +32,20 @@ export default class extends AView {
 		}
 	}
 
-	adjustSummaryModal() {
+	adjustSummaryModal(tournamentName) {
 		document.querySelector('main').appendChild(this.summaryModal.dialog);
 		this.summaryModal.dialog.classList.add('summary-modal');
 		this.summaryModal.dialog.classList.remove('bg-secondary');
 		this.summaryModal.dialog.classList.add('bg-primary');
 		const summaryTitle = document.createElement('h3');
-		summaryTitle.textContent = 'Start this tournament?';
+		summaryTitle.textContent = `Start tournament ${tournamentName}?`;
 		document.querySelector('.selected-players').prepend(summaryTitle);
 	}
 
 	openSummaryModal(tournamentData) {
 		this.selectPlayersModal.dialog.close();
 		this.summaryModal = new SummaryModal(this.startTournament, tournamentData);
-		this.adjustSummaryModal();
+		this.adjustSummaryModal(tournamentData.tournamentName);
 		this.summaryModal.dialog.showModal();
 	}
 
@@ -56,13 +56,13 @@ export default class extends AView {
 		this.navigateTo(`/pong/tournaments/${matchData.id}/matches/${matchData.next_match}`);
 	}
 
-	adjustSelectPlayerModal() {
+	adjustSelectPlayerModal(tournamentName) {
 		document.querySelector('main').appendChild(this.selectPlayersModal.dialog);
 		this.selectPlayersModal.dialog.classList.add('player-modal');
 		this.selectPlayersModal.dialog.classList.remove('bg-secondary');
 		this.selectPlayersModal.dialog.classList.add('bg-primary');
 		const selectPlayerTitle = document.createElement('h3');
-		selectPlayerTitle.textContent = 'Select Players';
+		selectPlayerTitle.textContent = `Select Players for ${tournamentName}`;
 		document.querySelector('.player-selection').prepend(selectPlayerTitle);
 	}
 
@@ -72,9 +72,8 @@ export default class extends AView {
 			this.selectPlayersModal.dialog.showModal();
 			return;
 		}
-		console.log(tournamentData);
 		this.selectPlayersModal = new SelectPlayersModal(this.openSummaryModal, tournamentData);
-		this.adjustSelectPlayerModal();
+		this.adjustSelectPlayerModal(tournamentData.tournament.name);
 		this.selectPlayersModal.dialog.addEventListener('click', (e) => {
 			if (e.target.classList.contains('decline-btn')) {
 				e.preventDefault();
