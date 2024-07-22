@@ -3,7 +3,7 @@ import {GameCard} from '../components/gameCard.js';
 import TournamentModal from '../components/dialogs/tournamentModals/tournamentModal.js';
 import SelectPlayersModal from '../components/dialogs/tournamentModals/selectPlayersModal.js';
 import SummaryModal from '../components/dialogs/tournamentModals/summaryModal.js';
-import {navigateTo} from '../router.js';
+
 
 export default class extends AView {
 	constructor(params) {
@@ -51,8 +51,8 @@ export default class extends AView {
 				this.summaryModal.dialog.close();
 				console.log(tournamentData);
 				debugger;
-				// await this.summaryModal.service.patchRequest(tournamentData);
-				const matchData = await this.summaryModal.service.startTournament(tournamentData);
+				await this.summaryModal.service.patchRequest(tournamentData);
+				// const matchData = await this.summaryModal.service.startTournament(tournamentData);
 				console.log(matchData);
 				debugger;
 			} else if (e.target.classList.contains('decline-btn')) {
