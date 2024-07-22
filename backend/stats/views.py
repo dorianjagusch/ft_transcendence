@@ -43,15 +43,20 @@ class LeaderBoardView(APIView, UserTableMixin):
 		self.leader_table = LeaderBoardTable
         
 	def get(self, request):
-		users_with_most_wins = User.objects.annotate(total_wins=Count('players', filter=Q(players__match_winner=True))).order_by('-total_wins')
-		
+		# Queryset to get users with most wins
+		users_with_most_wins = User.objects.annotate(
+			total_wins=Count('players', filter=Q(players__match_winner=True))
+		).order_by('-total_wins')
+
+		# Set the users and wins attributes
 		self.leader_table.users = [user.username for user in users_with_most_wins]
 		self.leader_table.wins = [user.total_wins for user in users_with_most_wins]
-        
+
+		stats = [{"user": user, "wins": wins} for user, wins in zip(self.leader_table.users, self.leader_table.wins)]
+
 		json_response_data = {
-            "users": self.leader_table.users,
-            "wins": self.leader_table.wins
-        }
-        
+			"stats": stats
+		}
+
 		return Response(json_response_data, status=status.HTTP_200_OK)
 
