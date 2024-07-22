@@ -1,6 +1,7 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
@@ -10,6 +11,24 @@ from .models import User, ProfilePicture
 from .validators import validate_image
 from .serializers import UserInputSerializer, UserOutputSerializer
 
+class GetAllUsersMixin:
+    """
+    Mixin to get all Users.
+    """
+    def get_all_users(self) -> QuerySet:
+        return User.objects.all()
+    
+class GetUsersWithUsernameContainsMixin:
+    """
+    Mixin to get users whose username contains a specific substring.
+    """
+    def get_all_users_with_username_contains(self, request: Request) -> QuerySet:
+        username_contains = request.query_params.get("username_contains")
+        
+        if not username_contains:
+            return User.objects.none()
+        
+        return User.objects.filter(username__icontains=username_contains).exclude(id=request.user.id)
 
 class GetUserMixin:
     """

@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User
-from .mixins import CreateUserMixin, GetUserMixin, DeleteUserMixin, UpdateUserMixin, AuthenticateUserMixin, LoginUserMixin, LogoutUserMixin, IsRequestFromSpecificUserMixin, SaveUserProfilePictureMixin, GetProfilePictureMixin
+from .mixins import GetAllUsersMixin, GetUsersWithUsernameContainsMixin, CreateUserMixin, GetUserMixin, DeleteUserMixin, UpdateUserMixin, AuthenticateUserMixin, LoginUserMixin, LogoutUserMixin, IsRequestFromSpecificUserMixin, SaveUserProfilePictureMixin, GetProfilePictureMixin
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -14,16 +14,14 @@ from shared_utilities.decorators import must_be_authenticated, \
 	 								must_be_url_user, \
 									valid_serializer_in_body
 
-class UserListView(APIView, CreateUserMixin):
+class UserListView(APIView, GetAllUsersMixin, GetUsersWithUsernameContainsMixin, CreateUserMixin):
 	def get(self, request: Request) -> Response:
 		if request.user.is_authenticated and request.GET.get("username_contains"):
-			username_contains = request.GET.get("username_contains")
-			users = User.objects.filter(username__contains=username_contains).exclude(id=request.user.id)
-			## add error handling if either user doesn't exits or user is not authenticated
+			users = self.get_all_users_with_username_contains(request)
 			serializer = UserFriendOutputSerializer(users, many=True, context={'request': request})
 			return Response(serializer.data, status=status.HTTP_200_OK)
 
-		users = User.objects.all()
+		users = self.get_all_users()
 		serializer = UserOutputSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
