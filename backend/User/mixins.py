@@ -4,8 +4,11 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login
 from .models import User
 
+import sys
+
 class UserAuthenticationMixin:
 	def authenticate_user(self, request: Request) -> User | Response:
+		print("\tUserAuthenticationMixin", file=sys.stderr)
 		username = request.data.get('username', None)
 		password = request.data.get('password', None)
 

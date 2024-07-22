@@ -16,11 +16,13 @@ from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											valid_serializer_in_body
 import sys
+from User.mixins import UserAuthenticationMixin
 
 # Create your views here.
-class SingleMatchGuestTokenView(APIView):
+class SingleMatchGuestTokenView(APIView, UserAuthenticationMixin):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):
+		print("\tSingleMatchGuestTokenView", file=sys.stderr)
 		host_user = request.user
 		ai_opponent = request.query_params.get('ai_opponent')
 		if ai_opponent is not None and ai_opponent == 'true':
@@ -31,9 +33,12 @@ class SingleMatchGuestTokenView(APIView):
 				'guest_user': ''
 			}, status=status.HTTP_201_CREATED)
 
-		username = request.data.get('username')
-		password = request.data.get('password')
-		guest_user = authenticate(username=username, password=password)
+		# username = request.data.get('username')
+		# password = request.data.get('password')
+		# guest_user = authenticate(username=username, password=password)
+		guest_user = self.authenticate_user(request)
+		if not isinstance(guest_user, User):
+			return guest_user
 		if guest_user is not None:
 			token = MatchTokenManager.create_single_match_token(host_user, guest_user)
 			token_serializer = MatchTokenSerializer(token)
