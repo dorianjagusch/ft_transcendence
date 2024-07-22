@@ -29,8 +29,8 @@ from User.views import UserDetailView, \
 						UserLogoutView
 
 from Friends.views import FriendsListView, \
-						FriendshipDetailView, \
-						FriendProfilePictureView
+						FriendshipDetailView
+
 
 from Tokens.views import SingleMatchGuestTokenView
 
@@ -60,7 +60,6 @@ urlpatterns = [
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
-	path('friends/<int:user_id>/profile_pictures/', FriendProfilePictureView.as_view()),
 
 	# Tokens views
 	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
