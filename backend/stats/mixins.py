@@ -6,6 +6,9 @@ from django.utils import timezone
 from Match.models import Match
 from Match.matchState import MatchState
 from Match.playerMatchStatus import PlayerMatchStatus
+from .leader_board_table import LeaderBoardTable
+from rest_framework.response import Response
+from rest_framework import status
 	
 class UserTableMixin:
 	def get_wins_count(self, user: User):
@@ -50,3 +53,20 @@ class UserTableMixin:
 			if ranked_user.id == user.id:
 				return index + 1  # Positions are 1-based
 		return None  # Return None if user is not found in the leaderboard
+	
+	def leader_table_response(self):
+		self.leader_table = LeaderBoardTable
+		users_with_most_wins = User.objects.annotate(
+			total_wins=Count('players', filter=Q(players__match_winner=True))
+		).order_by('-total_wins')
+
+		self.leader_table.users = [user.username for user in users_with_most_wins]
+		self.leader_table.wins = [user.total_wins for user in users_with_most_wins]
+
+		stats = [{"user": user, "wins": wins} for user, wins in zip(self.leader_table.users, self.leader_table.wins)]
+
+		json_response_data = {
+			"stats": stats
+		}
+
+		return Response(json_response_data, status=status.HTTP_200_OK)
