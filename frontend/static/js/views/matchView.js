@@ -79,7 +79,7 @@ export default class extends Aview {
 		const playerLeft = PlayerInfo(playerInfo);
 		const opponentSelection = OpponentSelection();
 
-		const acceptDeclineModal = new AcceptDeclineModal();
+		const acceptDeclineModal = new AcceptDeclineModal(this.navigateTo, '/pong');
 		acceptDeclineModal.dialog.classList.add('confirm-choice-modal');
 
 		const authenticationModal = new AuthenticationModal(this.attachPlayerInfo);

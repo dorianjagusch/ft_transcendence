@@ -4,17 +4,17 @@ import PongService from "../../services/pongService.js";
 import { navigateTo } from "../../router.js";
 
 export default class AcceptDeclineModal extends ADialog {
-	constructor() {
+	constructor(callback, ...callbackArgs) {
 		super(new AcceptForm(), new PongService());
-		this.appendEventlistenters();
+		this.appendEventlistenters(callback, callbackArgs);
 	}
 
-	appendEventlistenters() {
+	appendEventlistenters(callback, callbackArgs) {
 		this.dialog.addEventListener('click', (e) => {
 			e.preventDefault();
 			if (e.target.classList.contains('accept-btn')) {
 				this.dialog.close();
-				navigateTo('/pong');
+				callback(callbackArgs);
 			} else if (e.target.classList.contains('decline-btn')) {
 				this.dialog.close();
 			}

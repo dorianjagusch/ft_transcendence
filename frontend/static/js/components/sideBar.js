@@ -2,6 +2,8 @@ import {navigateTo} from '../router.js';
 import notify from '../utils/notify.js';
 import fileInputField from '../components/formComponents/fileInputField.js';
 import getProfilePicture from './profilePicture.js';
+import AcceptDeclineModal from './dialogs/acceptDeclineModal.js';
+import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
 const sideBarButton = (classes, text, callback) => {
@@ -39,6 +41,17 @@ const profilePictureHandler = async (file) => {
 	navigateTo('/dashboard');
 };
 
+const deleteAccount = async (userId) => {
+	try {
+		new UserService().deleteRequest(userId);
+		localStorage.clear();
+		navigateTo('/');
+	} catch (error) {
+		notify(error, 'error');
+		navigateTo('/dashboard');
+	}
+};
+
 const SideBar = async () => {
 	const aside = document.createElement('aside');
 	const img = document.createElement('img');
@@ -48,9 +61,16 @@ const SideBar = async () => {
 		console.log('Error getting the profile picture element: ', error);
 	}
 	const fileInput = fileInputField(profilePictureHandler);
-	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile');
-	const viewProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'View profile', () =>
-		navigateTo('/dashboard')
+	aside.appendChild(fileInput);
+
+	const editProfileBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'Edit profile'
+	);
+
+	const viewProfileBtn = sideBarButton(
+		['sidebar-element', 'bg-primary'],
+		'View profile', () => navigateTo('/dashboard')
 	);
 	const profilePictureBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
@@ -62,10 +82,19 @@ const SideBar = async () => {
 		'Create Tournament',
 		() => navigateTo('/tournament')
 	);
-	const logoutBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Logout', () =>
-		navigateTo('/logout')
+	const logoutBtn = sideBarButton
+	(['sidebar-element', 'bg-primary'],
+		'Logout',
+		() => navigateTo('/logout')
 	);
-	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account');
+
+	const AreYouSureModal = new AcceptDeclineModal(deleteAccount, localStorage.getItem('user_id'));
+	AreYouSureModal.form.form.querySelector('h3').textContent =
+		'Are you sure you want to delete your account?';
+	const deleteAccountBtn = sideBarButton(['sidebar-element', 'error'], 'Delete account', () => {
+		document.querySelector;
+		AreYouSureModal.dialog.showModal();
+	});
 
 	aside.appendChild(img);
 	aside.appendChild(fileInput);

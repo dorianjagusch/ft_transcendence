@@ -6,7 +6,7 @@ export default class AcceptForm extends AForm {
 	}
 
 	generateForm() {
-		const header = document.createElement('h2');
+		const header = document.createElement('h3');
 		header.textContent = 'So you think you can pong?';
 
 		const buttonBar = document.createElement('div');
