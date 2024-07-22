@@ -51,6 +51,8 @@ export default class extends AView {
 
 	startTournament(matchData) {
 		document.querySelector('.summary-modal').close();
+		if (matchData.token)
+			localStorage.setItem('token', matchData.token);
 		this.navigateTo(`/pong/tournaments/${matchData.id}/matches/${matchData.next_match}`);
 	}
 
