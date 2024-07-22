@@ -10,12 +10,8 @@ import sys
 class MatchSetupManager:
 	@staticmethod
 	def create_match_and_its_players(match_token: MatchToken) -> Match | None:
-		if not isinstance(match_token, MatchToken):
-			raise TypeError((f'match_token must be an MatchToken, not {type(match_token).__name__}'))
-
 		try:
 			with transaction.atomic():
-				# modify later to take into consideration tournament data
 				match = Match.objects.create()
 				
 				Player.objects.create(

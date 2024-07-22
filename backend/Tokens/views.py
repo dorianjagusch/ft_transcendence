@@ -10,6 +10,7 @@ from User.serializers import UserInputSerializer, \
 								UserOutputSerializer
 
 from .models import MatchToken
+from .managers import MatchTokenManager
 from .serializers import MatchTokenSerializer
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
@@ -23,7 +24,7 @@ class SingleMatchGuestTokenView(APIView):
 	def post(self, request, ai_opponent):
 		host_user = request.user
 		if ai_opponent is not None and ai_opponent == 'true':
-			token = MatchToken.objects.create_single_match_token(host_user, null)
+			token = MatchTokenManager.create_single_match_token(host_user, None)
 			return Response({
 				'token': token_serializer.data,
 				'guest_user': ''
@@ -33,7 +34,7 @@ class SingleMatchGuestTokenView(APIView):
 		password = request.data.get('password')
 		guest_user = authenticate(username=username, password=password)
 		if guest_user is not None:
-			token = MatchToken.objects.create_single_match_token(host_user, guest_user)
+			token = MatchTokenManager.create_single_match_token(host_user, guest_user)
 			token_serializer = MatchTokenSerializer(token)
 			user_serializer = UserOutputSerializer(guest_user)
 			return Response({
