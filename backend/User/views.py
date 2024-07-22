@@ -1,20 +1,12 @@
-from functools import partial
-from urllib import request
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from .validators import validate_image
-from django.core.exceptions import ValidationError
-import mimetypes
-import imghdr
-import base64
-from django.utils.crypto import get_random_string
 
-from .models import User, ProfilePicture
-from .mixins import UserCreationMixin, UserAuthenticationMixin, UserLoginMixin, UserDeletionMixin, UserUpdatemixin
+from .models import User
+from .mixins import UserMixin
 from Friends.models import Friend
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
 
@@ -22,7 +14,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 	 								must_be_url_user, \
 									valid_serializer_in_body
 
-class UserListView(APIView, UserCreationMixin):
+class UserListView(APIView, UserMixin):
 	def get(self, request):
 		if request.user.is_authenticated and request.GET.get("username_contains"):
 			username_contains = request.GET.get("username_contains")
@@ -39,25 +31,25 @@ class UserListView(APIView, UserCreationMixin):
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
 	def post(self, request):
 
-		user_creation_result = self.create_user(request)
-		if not isinstance(user_creation_result, User):
-			return user_creation_result
+		result = self.create_user(request)
+		if not isinstance(result, User):
+			return result
 
-		outputSerializer = UserOutputSerializer(user_creation_result)
+		outputSerializer = UserOutputSerializer(result)
 		return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 
-class UserDetailView(APIView, UserUpdatemixin, UserDeletionMixin):
+class UserDetailView(APIView, UserMixin):
 	def get(self, request, user_id):
-		login_user_id = request.user.id
-		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-		if user.id == login_user_id:
-			serializer = UserOutputSerializer(user)
+		result = self.get_user(user_id)
+		if not isinstance(result, User):
+			return result
+
+		if self.is_request_from_specific_user(request, user_id):
+			serializer = UserOutputSerializer(result)
 			return Response(serializer.data)
-		friendship = Friend.objects.get_friendship_status(login_user_id, user.id)
-		serializer = UserFriendOutputSerializer(user, context={'request': request})
+		
+		friendship = Friend.objects.get_friendship_status(request.user.id, result.id) # what is this line for?
+		serializer = UserFriendOutputSerializer(result, context={'request': request})
 		return Response(serializer.data)
 
 	@method_decorator(must_be_authenticated)
@@ -70,67 +62,32 @@ class UserDetailView(APIView, UserUpdatemixin, UserDeletionMixin):
 	def delete(self, request, user_id):
 		return self.delete_user(request, user_id)
 
-class UserProfilePictureView(APIView):
+class UserProfilePictureView(APIView, UserMixin):
 	@method_decorator(csrf_exempt)
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
 	def post(self, request, user_id):
-		try:
-			user = User.objects.get(pk=user_id)
-		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-
-		if 'file' not in request.FILES:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
-		file = request.FILES['file']
-
-		try:
-			validate_image(file)
-		except ValidationError as e:
-			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
-
-		try:
-			profile_picture = ProfilePicture.objects.get(user=user)
-			profile_picture.picture = file
-		except ProfilePicture.DoesNotExist:
-			profile_picture = ProfilePicture(user=user, picture=file)
-		profile_picture.save()
-		return Response(status=status.HTTP_200_OK)
+		return self.save_profile_picture(request, user_id)
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
 	def get(self, request, user_id):
-		try:
-			user = User.objects.get(pk=user_id)
-			profile_picture = ProfilePicture.objects.filter(user=user).first()
-			if not profile_picture:
-				return Response({'image': ''}, status=status.HTTP_200_OK)
+		return self.get_profile_picture(user_id)
 
-			image_path = profile_picture.picture.path
-			with open(image_path, "rb") as image_file:
-				image_data = image_file.read()
-				encoded_image = base64.b64encode(image_data).decode('utf-8')
-				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
-		except ProfilePicture.DoesNotExist:
-			return Response({'image': ''}, status=status.HTTP_200_OK)
-		except FileNotFoundError:
-			return Response(status=status.HTTP_404_NOT_FOUND)
-
-class UserLoginView(APIView, UserAuthenticationMixin, UserLoginMixin):
+class UserLoginView(APIView, UserMixin):
 	@method_decorator(csrf_exempt)
 	def post(self, request):
-		user_authentication_result = self.authenticate_user(request)
-		if not isinstance(user_authentication_result, User):
-			return user_authentication_result
+		result = self.authenticate_user(request)
+		if not isinstance(result, User):
+			return result
 
-		self.login_user(request, user_authentication_result)
-		return Response(UserOutputSerializer(user_authentication_result).data, status=status.HTTP_202_ACCEPTED)
+		self.login_user(request, result)
+		return Response(UserOutputSerializer(result).data, status=status.HTTP_202_ACCEPTED)
 
-class UserLogoutView(APIView):
+class UserLogoutView(APIView, UserMixin):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):
-		logout(request)
-		return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
+		return self.logout_user(request) # what happens if the user is not logged in?
 
 # admin stuff, for debugging
 class UserAdminDetailsView(APIView):
