@@ -49,11 +49,6 @@ export default class TournamentService extends ARequestService {
 		return super.patchRequest(backendURL.tournamentURL, context.tournamentId);
 	}
 
-	// TODO: remove this method and swap it with patch Request
-	// async startTournament(context) {
-	// 	return super.postRequest(`${backendURL.tournamentURL}${context.tournamentId}`);
-	// }
-
 	async putRequest() {
 		throw new NotImplementedError('PUT not implemented for TournamentService');
 	}
