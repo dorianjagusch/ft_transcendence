@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 
 from User.models import User
-from User.mixins import UserAuthenticationMixin
+from User.mixins import AuthenticateUserMixin
 from User.serializers import UserInputSerializer, \
 								UserOutputSerializer
 
@@ -17,7 +17,7 @@ from shared_utilities.decorators import must_be_authenticated, \
 											valid_serializer_in_body
 
 # Create your views here.
-class SingleMatchGuestTokenView(APIView, UserAuthenticationMixin):
+class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
