@@ -65,12 +65,13 @@ export default class extends AView {
 	}
 
 	startTournament(tournamentData) {
+		console.log(tournamentData);
+		debugger;
+
 		// this.navigateTo(`/tournament/${tournamentData.id}/match/${tournamentData.match_id}`);
-		this.navigateTo('/pong');
 	}
 
 	adjustSelectPlayerModal() {
-		debugger;
 		document.querySelector('main').appendChild(this.selectPlayersModal.dialog);
 		this.selectPlayersModal.dialog.classList.add('player-modal');
 		this.selectPlayersModal.dialog.classList.remove('bg-secondary');
