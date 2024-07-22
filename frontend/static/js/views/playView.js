@@ -11,6 +11,7 @@ export default class extends AView {
 		this.setTitle('Play');
 		this.openSelectPlayersModal = this.openSelectPlayersModal.bind(this);
 		this.openSummaryModal = this.openSummaryModal.bind(this);
+		this.startTournament = this.startTournament.bind(this);
 	}
 
 	attachEventListeners() {
@@ -45,30 +46,12 @@ export default class extends AView {
 		this.selectPlayersModal.dialog.close();
 		this.summaryModal = new SummaryModal(this.startTournament, tournamentData);
 		this.adjustSummaryModal();
-		this.summaryModal.dialog.addEventListener('click', async (e) => {
-			if (e.target.classList.contains('accept-btn')) {
-				e.preventDefault();
-				this.summaryModal.dialog.close();
-				console.log(tournamentData);
-				debugger;
-				await this.summaryModal.service.patchRequest(tournamentData);
-				// const matchData = await this.summaryModal.service.startTournament(tournamentData);
-				console.log(matchData);
-				debugger;
-			} else if (e.target.classList.contains('decline-btn')) {
-				e.preventDefault();
-				this.summaryModal.dialog.close();
-				this.selectPlayersModal.dialog.showModal();
-			}
-		});
 		this.summaryModal.dialog.showModal();
 	}
 
-	startTournament(tournamentData) {
-		console.log(tournamentData);
-		debugger;
-
-		// this.navigateTo(`/tournament/${tournamentData.id}/match/${tournamentData.match_id}`);
+	startTournament(matchData) {
+		document.querySelector('.summary-modal').close();
+		this.navigateTo(`/pong/tournaments/${matchData.id}/matches/${matchData.next_match}`);
 	}
 
 	adjustSelectPlayerModal() {

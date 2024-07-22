@@ -42,7 +42,7 @@ export default class TournamentService extends ARequestService {
 	}
 
 	async patchRequest(context) {
-		return super.patchRequest(`${backendURL.tournamentURL}${context.tournamentId}/`);
+		return super.patchRequest(backendURL.tournamentURL, context.tournamentId);
 	}
 
 	// TODO: remove this method and swap it with patch Request
