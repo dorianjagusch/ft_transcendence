@@ -12,14 +12,18 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from backend.urls import websocket_urlpatterns
 
-
+# Set the default settings module for the 'django' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
+# Define the ASGI application that will route requests to different protocols (remember to change to https and wss later)
 application = ProtocolTypeRouter({
-    # Just HTTP and ws for now. (We can add other protocols later.)
+    # HTTP protocol routing
     "http": django_asgi_app,
-	"websocket": URLRouter(websocket_urlpatterns)
+    
+    # WebSocket protocol routing
+    "websocket": URLRouter(websocket_urlpatterns),
 })
