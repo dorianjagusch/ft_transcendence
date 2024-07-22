@@ -37,7 +37,6 @@ class ChatSocket {
 	}
 
 	handleError(e) {
-		console.error('Chat socket error:', e);
 		if (this.chatSocket && chatSocket.readyState == WebSocket.OPEN) {
 			chatSocket.close();
 		}
