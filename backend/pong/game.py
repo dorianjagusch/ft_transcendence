@@ -1,19 +1,23 @@
 from .constants import *
 import math
 from .game_logic import PongGame
-from .player import Player
+from .pongPlayer import PongPlayer
 from .ball import Ball
 from .game_stats import GameStats
+import asyncio
 
 class PongStatus:
-    def __init__(self):
+    def __init__(self, ball, player_left, player_right):
         # Initialize game state
-        self.player_left = Player(WALL_MARGIN)
-        self.player_right = Player(PLAYGROUND_WIDTH - WALL_MARGIN)
-        self.ball = Ball()
+        self.player_left = player_left
+        self.player_right = player_right
+        self.ball = ball
         self.game_stats = GameStats()
+        self.ai_opponent = False
         self.game = PongGame()
 
+    def use_ai_opponent(self):
+        self.ai_opponent = True
 
     def update_positions(self, move):
         if not self.game_stats.game_started and move == START_PAUSE_GAME:
@@ -22,16 +26,72 @@ class PongStatus:
             self.player_left.y = self.game.move_player(self.player_left.y, PLAYER_MOVEMENT_UNIT)
         elif move == PLAYER_LEFT_DOWN:
             self.player_left.y = self.game.move_player(self.player_left.y, -PLAYER_MOVEMENT_UNIT)
-        elif move == PLAYER_RIGHT_UP:
-            self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
-        elif move == PLAYER_RIGHT_DOWN:
-            self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
-        self.player_right.y = self.game.check_boundary(self.player_right.y)
+
+        if self.ai_opponent is False:
+            if move == PLAYER_RIGHT_UP:
+                self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
+            elif move == PLAYER_RIGHT_DOWN:
+                self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+            self.player_right.y = self.game.check_boundary(self.player_right.y)
         self.player_left.y = self.game.check_boundary(self.player_left.y)
         self.game.update_ball_position(self)
 
+    async def ai_move_paddle(self, target_y):
+        if abs(self.player_right.y - target_y) > AI_PADDLE_TOLERANCE:
+            if self.player_right.y <= target_y:
+                self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
+            elif self.player_right.y >= target_y:
+                self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+            self.player_right.y = self.game.check_boundary(self.player_right.y)
+
     def update_ball_position(self):
         self.game.update_ball_position(self)
+
+    def calculate_ai_steps(self):
+        angle = self.ball.angle % (2 * math.pi)
+        if math.pi / 2 <= angle <= 3 * math.pi / 2:
+            return PLAYGROUND_HEIGHT // 2
+
+        # Calculate the x and y components of the speed
+        speed_x = math.cos(self.ball.angle) * self.ball.speed
+        speed_y = math.sin(self.ball.angle) * self.ball.speed
+
+        ball_x = self.ball.x
+        ball_y = self.ball.y
+        while ball_x < self.player_right.x:
+            # Calculate the time until the next vertical wall collision
+            if speed_x != 0:
+                time_to_vertical_wall = (PLAYGROUND_WIDTH - ball_x) / speed_x if speed_x > 0 else ball_x / -speed_x
+            else:
+                time_to_vertical_wall = float('inf')
+
+            # Calculate the time until the next horizontal wall collision
+            if speed_y != 0:
+                time_to_horizontal_wall = (PLAYGROUND_HEIGHT - ball_y) / speed_y if speed_y > 0 else ball_y / -speed_y
+            else:
+                time_to_horizontal_wall = float('inf')
+
+            # Find the minimum time to the next collision
+            time_to_collision = min(time_to_vertical_wall, time_to_horizontal_wall)
+
+            # Update the ball's position
+            ball_x += speed_x * time_to_collision
+            ball_y += speed_y * time_to_collision
+
+            # Check for collisions with walls and update the speed components
+            if ball_x >= PLAYGROUND_WIDTH or ball_x <= 0:
+                speed_x = -speed_x
+                ball_x = max(min(ball_x, PLAYGROUND_WIDTH), 0)
+
+            if ball_y >= PLAYGROUND_HEIGHT or ball_y <= 0:
+                speed_y = -speed_y
+                ball_y = max(min(ball_y, PLAYGROUND_HEIGHT), 0)
+
+            # If the ball has reached or passed the paddle, stop the loop
+            if ball_x >= self.player_right.x:
+                break
+
+        return ball_y
 
     def get_consts(self):
         game_consts = {

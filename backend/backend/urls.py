@@ -30,8 +30,8 @@ from User.views import UserDetailView, \
 						UserAdminDetailsView
 
 from Friends.views import FriendsListView, \
-						FriendshipDetailView, \
-						FriendProfilePictureView
+						FriendshipDetailView
+
 
 from Tokens.views import SingleMatchGuestTokenView
 
@@ -63,7 +63,6 @@ urlpatterns = [
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
 	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
-	path('friends/<int:user_id>/profile_pictures/', FriendProfilePictureView.as_view()),
 
 	# Tokens views
 	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
@@ -72,7 +71,6 @@ urlpatterns = [
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 
-
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
@@ -80,7 +78,6 @@ urlpatterns = [
 	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
 	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
-
 
 	# Stats Views
 	path('stats/', StatsView.as_view()),

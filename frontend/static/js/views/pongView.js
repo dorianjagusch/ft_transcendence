@@ -16,6 +16,30 @@ export default class extends AView {
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 	}
 
+	scrollToCanvas(mutation) {
+		if (!mutation.addedNodes) {
+			return;
+		}
+		mutation.addedNodes.forEach((node) => {
+			if (node.tagName === 'CANVAS') {
+				document.querySelector('canvas').scrollIntoView({behavior: 'smooth', block: 'center'});
+			}
+		});
+	}
+
+	checkForPongClosing(mutation) {
+		if (!mutation.removedNodes) {
+			return;
+		}
+		mutation.removedNodes.forEach((node) => {
+			if (node.id != 'pong') {
+				return;
+			}
+			this.chatSocket.handleClose();
+			observer.disconnect();
+		});
+	}
+
 	attachEventListeners() {
 		document.querySelectorAll('.nav-link').forEach((link) => {
 			link.addEventListener('click', this.chatSocket.handleClose);
@@ -23,21 +47,13 @@ export default class extends AView {
 
 		window.addEventListener('beforeunload', this.chatSocket.handleClose);
 
-
-		// TODO unnest the conditionals in the loop
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
-				if (mutation.removedNodes) {
-					mutation.removedNodes.forEach((node) => {
-						if (node.id = "pong") {
-							this.chatSocket.handleClose();
-							observer.disconnect();
-						}
-					});
-				}
+				this.checkForPongClosing(mutation);
+				this.scrollToCanvas(mutation);
 			}
 		});
-		observer.observe(document.body, {childList: true, subtree: true});
+		observer.observe(document.body.querySelector('main'), {childList: true, subtree: true});
 	}
 
 	async getHTML() {
@@ -51,8 +67,8 @@ export default class extends AView {
 			this.navigateTo('/play');
 		}
 
+		this.attachEventListeners();
 		const pong = Pong.PongContainer();
 		this.updateMain(pong);
-		this.attachEventListeners();
 	}
 }
