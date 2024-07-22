@@ -24,8 +24,6 @@ export default class extends Aview {
 		const data = await this.authenticationService.postAiMatch({ai_opponent: true});
 		localStorage.setItem('opponent', 'AI');
 		localStorage.setItem('token', data.token.token);
-		console.log('token: ');
-		console.log(data.token.token);
 		this.navigateTo('/pong');
 	}
 
