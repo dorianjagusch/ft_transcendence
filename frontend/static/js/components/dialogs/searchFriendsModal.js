@@ -85,7 +85,7 @@ export default class SearchFriendsModal extends ADialog {
 		try {
 			await this.friendService.postRequest({friend_id: friendId});
 			await this.refreshSearchResults(this.searchFriendsField.value);
-			this.notify('Friend request sent.');
+			this.notify('Friend request sent.', 'success');
 		} catch (error) {
 			this.notify(error);
 		}
@@ -95,7 +95,7 @@ export default class SearchFriendsModal extends ADialog {
 		try {
 			await this.friendService.deleteRequest(friendId);
 			await this.refreshSearchResults(this.searchFriendsField.value);
-			this.notify('Friendship declined successfully.');
+			this.notify('Friendship declined successfully.', 'success');
 		} catch (error) {
 			this.notify(error);
 		}
@@ -112,11 +112,9 @@ export default class SearchFriendsModal extends ADialog {
 		searchResults.addEventListener('click', (e) => {
 			e.preventDefault();
 			if (e.target.classList.contains('accept-btn')) {
-				e.stopPropagation();
 				const friendId = e.target.closest('.friend-result').dataset.id;
 				this.addFriend(friendId);
 			} else if (e.target.classList.contains('decline-btn')) {
-				e.stopPropagation();
 				const friendId = e.target.closest('.friend-result').dataset.id;
 				this.deleteFriendRequest(friendId);
 			} else {

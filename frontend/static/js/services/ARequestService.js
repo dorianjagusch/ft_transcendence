@@ -1,6 +1,7 @@
 import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
 import customErrors from '../exceptions/customErrors.js';
+import { navigateTo } from '../router.js';
 
 class ARequestService {
 	constructor() {
@@ -23,6 +24,11 @@ class ARequestService {
 		try {
 			const response = await request;
 			if (!response.ok) {
+				if (response.status === 401) {
+					localStorage.clear();
+					navigateTo('/login');
+					return;
+				}
 				this.throwCustomError(response.status, response.statusText);
 			}
 			return response.json();

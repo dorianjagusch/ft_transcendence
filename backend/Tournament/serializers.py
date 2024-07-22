@@ -19,12 +19,19 @@ class TournamentPlayerSerializer(serializers.ModelSerializer):
 		fields = ['id', 'user', 'display_name']
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
+	tournament_match_id = serializers.SerializerMethodField()
+	state = serializers.CharField(source='get_state_display', read_only=True)
 	tournament_player_left = serializers.SerializerMethodField()
 	tournament_player_right = serializers.SerializerMethodField()
 	winner = serializers.SerializerMethodField()
 	class Meta:
 		model = Match
-		fields = ['id', 'tournament_player_left', 'tournament_player_right', 'winner']
+		fields = ['tournament_match_id', 'id', 'state', 'tournament_player_left', 'tournament_player_right', 'winner']
+
+	def get_tournament_match_id(self, match: Match) -> int:
+		matches = match.tournament.matches.all().order_by('id')
+		match_ids = list(matches.values_list('id', flat=True))
+		return match_ids.index(match.id)
 
 	def get_tournament_player_left(self, match: Match) -> TournamentPlayerSerializer | None:
 		first_player = match.players.first()
@@ -94,10 +101,7 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 		return data
 	
 class TournamentInProgressSerializer(serializers.ModelSerializer):
-	state_display = serializers.CharField(source='get_state_display', read_only=True)
-	tournament_players = TournamentPlayerSerializer(many=True, read_only=True)
-	matches = TournamentMatchSerializer(many=True, read_only=True)
-	next_match = serializers.SerializerMethodField()
+	state = serializers.CharField(source='get_state_display', read_only=True)
 
 	class Meta:
 		model = Tournament
@@ -106,29 +110,14 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'host_user',
 			'name',
 			'state',
-			'state_display',
 			'expire_ts',
 			'player_amount',
-			'tournament_players',
-			'matches',
 			'next_match',
 		]
-		
-	def get_next_match(self, tournament: Tournament) -> ReturnDict | None:
-		try:
-			tournament_matches = Match.objects.filter(tournament=tournament).order_by('id')
-			next_match = tournament_matches[tournament.next_match]
-			serializer = TournamentMatchSerializer(next_match)
-			# remove 'winner' from serializer
-			if 'winner' in serializer.fields:
-				serializer.fields.pop('winner')
-			return serializer.data
-
-		except Match.DoesNotExist:
-			return None
 		
 class TournamentSerializers:
 	default = TournamentSerializer
 	creation = TournamentCreationSerializer
 	in_progress = TournamentInProgressSerializer
 	player = TournamentPlayerSerializer
+	match = TournamentMatchSerializer
