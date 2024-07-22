@@ -71,7 +71,6 @@ urlpatterns = [
 	path('match/', MatchView.as_view()),
 	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 
-
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
@@ -79,7 +78,6 @@ urlpatterns = [
 	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
 	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
-
 
 	# Stats Views
 	path('stats/', StatsView.as_view()),

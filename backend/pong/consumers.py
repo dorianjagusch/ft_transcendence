@@ -10,11 +10,10 @@ from Tokens.models import MatchToken
 from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
-from .pongPlayer import PongPlayer
-from .ball import Ball
 from Tournament.models import Tournament, TournamentPlayer
 from Tournament.managers import TournamentManager
-import sys
+from .pongPlayer import PongPlayer
+from .ball import Ball
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -95,33 +94,26 @@ class PongConsumer(AsyncWebsocketConsumer):
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             with transaction.atomic():
-                match_token = MatchToken.objects.get(token=token)
-                if not match_token.is_active or match_token.is_expired():
-                    return False
+              match_token = MatchToken.objects.get(token=token)
+              if not match_token.is_active or match_token.is_expired():
+                  return False
 
-                match_token.is_active = False
-                match_token.save()
+              match_token.is_active = False
+              match_token.save()
 
-                self.match = Match.objects.get(pk=match_id)
-                players = Player.objects.filter(match=self.match).order_by('id')
-                if players.count() != 2:
-                    return False
-                self.player_left = players[0]
-                self.player_right = players[1]
+              self.match = Match.objects.get(pk=match_id)
+              self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+              if match_token.user_right_side is not None:
+                  self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+              else:
+                  self.ai_opponent = True
+              return True
 
-            self.match = Match.objects.get(pk=match_id)
-            self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
-            if match_token.user_right_side is not None:
-                self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
-            else:
-                self.ai_opponent = True
-            return True
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
             return False
 
     @database_sync_to_async
     def save_match_results(self):
-        print("save_match_results", file=sys.stderr)
         self.match.state = MatchState.FINISHED
 
         # Save scores when the game is over
@@ -146,7 +138,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             self.abort_match(self.match)
 
-    # @database_sync_to_async
     def update_tournament_data_with_match_results(self, match: Match):
         try:
             if not match.tournament:
@@ -171,7 +162,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
 
         except Exception as e:
-            print(f"An error occurred while updating match results: {e}", file=sys.stderr)
+            TournamentManager.in_progress.abort_tournament(match.tournament)
 
     @database_sync_to_async
     def start_match(self, match):

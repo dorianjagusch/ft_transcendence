@@ -48,7 +48,7 @@ export default class extends AView {
 
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
-				this.checkForPongClosing(mutation);
+				this.checkForPongClosing(mutation, observer);
 				this.scrollToCanvas(mutation);
 			}
 		});
