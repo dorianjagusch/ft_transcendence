@@ -45,7 +45,6 @@ class SingleMatchGuestTokenView(APIView):
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(MatchTokenSerializer))
 	def put(self, request):
