@@ -111,9 +111,18 @@ class PongConsumer(AsyncWebsocketConsumer):
             return False
 
     @database_sync_to_async
-    def save_match_final_results(self):
+    def save_match_results(self):
+        self.match.state = MatchState.FINISHED
+
+        # Save scores when the game is over
         self.player_left.score = self.game.player_left.score
         self.player_right.score = self.game.player_right.score
+
+        # Determine and save the winner
+        if self.game.player_left.score > self.game.player_right.score:
+            self.player_left.match_winner = True
+        else:
+            self.player_right.match_winner = True
 
         try:
             with transaction.atomic():
