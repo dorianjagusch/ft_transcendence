@@ -12,6 +12,7 @@ from .exceptions import TournamentSetupException, \
 							TournamentInProgressException
 from .tournamentState import TournamentState
 from User.models import User
+from User.mixins import AuthenticateUserMixin
 from Tokens.models import MatchToken
 from Tokens.managers import MatchTokenManager
 from Match.matchState import MatchState
@@ -74,7 +75,7 @@ class TournamentDetailView(APIView):
 		TournamentManager.in_progress.abort_tournament(tournament)
 		return Response({"message": "Tournament has been aborted."}, status=status.HTTP_200_OK)
 
-class TournamentPlayerListView(APIView):
+class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -86,21 +87,17 @@ class TournamentPlayerListView(APIView):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(validate_tournament_request([TournamentState.LOBBY]))
 	def post(self, request, tournament_id):
-		username = request.data.get('username', None)
-		password = request.data.get('password', None)
-		display_name = request.data.get('display_name', None)
-		if not username or not password:
-			return Response({"error": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
-		user = authenticate(username=username, password=password)
-		if user is None:
-			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+		result = self.authenticate_user(request)
+		if not isinstance(result, User):
+			return result
 
 		tournament = Tournament.objects.get(id=tournament_id)
 		if tournament.players.count() >= tournament.player_amount:
 			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
+		display_name = request.data.get('display_name')
 		try:
-			tournament_player = TournamentManager.players.create_tournament_player(tournament, user, display_name)
+			tournament_player = TournamentManager.players.create_tournament_player(tournament, result, display_name)
 			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
