@@ -51,22 +51,28 @@ class TournamentDetailView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
-	@method_decorator(validate_tournament_request([TournamentState.LOBBY]))
-	def post(self, request, tournament_id):
+	@method_decorator(validate_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
+	def patch(self, request, tournament_id):
 		tournament = Tournament.objects.get(id=tournament_id)
-		try:
-			TournamentManager.setup.start_tournament(tournament)
-			serializer = TournamentSerializers.in_progress(tournament)
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		except Exception as e:
-			return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+		if tournament.state == TournamentState.LOBBY:
+			try:
+				TournamentManager.setup.start_tournament(tournament)
+				serializer = TournamentSerializers.in_progress(tournament)
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			except Exception as e:
+				return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+
+		elif tournament.state == TournamentState.IN_PROGRESS:
+			TournamentManager.in_progress.abort_tournament(tournament)
+			return Response({"message": "Tournament has been aborted."}, status=status.HTTP_200_OK)
+
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(validate_tournament_request([TournamentState.LOBBY, TournamentState.IN_PROGRESS]))
 	def delete(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		TournamentManager.in_progress.abort_tournament(tournament)
-		return Response({"message": "Tournament has been abandoned."}, status=status.HTTP_200_OK)
+		return Response({"message": "Tournament has been aborted."}, status=status.HTTP_200_OK)
 
 class TournamentPlayerListView(APIView):
 	def get(self, request, tournament_id):
