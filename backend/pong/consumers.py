@@ -56,6 +56,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.send_positions()
             await self.save_match_final_results()
             await self.close()
+            return
 
         await self.send_positions()
 
