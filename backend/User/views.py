@@ -49,7 +49,6 @@ class UserDetailView(APIView, GetUserMixin, IsRequestFromSpecificUserMixin, Upda
             serializer = UserOutputSerializer(result)
             return Response(serializer.data)
         
-        friendship = Friend.objects.get_friendship_status(request.user.id, result.id) # not used currrently, remove?
         serializer = UserFriendOutputSerializer(result, context={'request': request})
         return Response(serializer.data)
 
