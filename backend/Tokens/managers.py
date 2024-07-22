@@ -6,7 +6,7 @@ from Match.models import Match
 
 class MatchTokenManager(models.Manager):
 	@staticmethod
-	def create_match_token(user_left_side: User, user_right_side: User) -> MatchToken:
+	def create_match_token(user_left_side: User, user_right_side: User | None) -> MatchToken:
 		match_token = MatchToken.objects.create(
 			user_left_side=user_left_side,
 			user_right_side=user_right_side
@@ -14,7 +14,7 @@ class MatchTokenManager(models.Manager):
 		return match_token
 	
 	@staticmethod
-	def create_single_match_token(host_user: User, guest_user: User) -> MatchToken:
+	def create_single_match_token(host_user: User, guest_user: User | None) -> MatchToken:
 		return MatchTokenManager.create_match_token(host_user, guest_user)
 
 	@staticmethod

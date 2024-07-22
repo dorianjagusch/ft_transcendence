@@ -24,7 +24,7 @@ class SingleMatchGuestTokenView(APIView):
 	def post(self, request, ai_opponent):
 		host_user = request.user
 		if ai_opponent is not None and ai_opponent == 'true':
-			token = MatchToken.objects.create_single_match_token(host_user, null)
+			token = MatchTokenManager.create_single_match_token(host_user, None)
 			return Response({
 				'token': token_serializer.data,
 				'guest_user': ''
