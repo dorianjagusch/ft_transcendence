@@ -102,14 +102,11 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.match = Match.objects.get(pk=match_id)
             self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
             if match_token.user_right_side is not None:
-                print(f"set up right player as: {match_token.user_right_side}", file=sys.stderr)
                 self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
             else:
-                print("set up ai opponent", file=sys.stderr)
                 self.ai_opponent = True
             return True
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist) as e:
-            print(f"issue with {e.messages[0]}", file=sys.stderr)
             return False
 
     @database_sync_to_async
