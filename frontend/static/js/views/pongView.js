@@ -55,12 +55,8 @@ export default class extends AView {
 	}
 
 	attachEventListeners() {
-		debugger;
 		document.querySelector('.new-game-button').addEventListener('click', async () => {
-			debugger
 			const nextMatch = await this.tournamentService.getNextMatch(this.params);
-			console.log(nextMatch);
-			debugger;
 			this.navigateTo(`/pong/tournaments/${this.params.tournament_id}/matches/${nextMatch}`);
 		});
 

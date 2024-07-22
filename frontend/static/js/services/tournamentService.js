@@ -34,7 +34,6 @@ export default class TournamentService extends ARequestService {
 	}
 
 	async postPlayer(tournamentData, context) {
-		console.log(JSON.stringify(tournamentData), context);
 		const response = super.postRequest(
 			`${backendURL.tournamentURL}${context.tournamentId}/players/`,
 			JSON.stringify({

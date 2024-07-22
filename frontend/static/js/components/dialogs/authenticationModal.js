@@ -21,7 +21,6 @@ export default class AuthenticationModal extends ADialog {
 	async authenticateUser(dataToSend) {
 		try {
 			const responseData = await this.service.postPlayer(dataToSend, this.context);
-			console.log(responseData);
 			this.dialog.close();
 			if (this.onDataReceived) {
 				this.onDataReceived(responseData);
