@@ -24,12 +24,14 @@ export default class extends AView {
 		}
 		mutation.addedNodes.forEach((node) => {
 			if (node.tagName === 'CANVAS') {
-				document.querySelector('canvas').scrollIntoView({behavior: 'smooth', block: 'center'});
+				document
+					.querySelector('canvas')
+					.scrollIntoView({behavior: 'smooth', block: 'center'});
 			}
 		});
 	}
 
-	checkForPongClosing(mutation) {
+	checkForPongClosing(mutation, observer) {
 		if (!mutation.removedNodes) {
 			return;
 		}
@@ -42,13 +44,7 @@ export default class extends AView {
 		});
 	}
 
-	attachEventListeners() {
-		document.querySelectorAll('.nav-link').forEach((link) => {
-			link.addEventListener('click', this.chatSocket.handleClose);
-		});
-
-		window.addEventListener('beforeunload', this.chatSocket.handleClose);
-
+	attachObserver() {
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
 				this.checkForPongClosing(mutation, observer);
