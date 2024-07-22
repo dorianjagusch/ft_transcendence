@@ -2,7 +2,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, login
-
 from .models import User
 
 class UserAuthenticationMixin:
@@ -12,7 +11,7 @@ class UserAuthenticationMixin:
 
 		if not username or not password:
 			return Response({"message": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
-		
+
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			return user

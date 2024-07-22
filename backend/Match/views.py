@@ -15,7 +15,7 @@ class MatchView(APIView):
     @method_decorator(must_be_authenticated)
     def get(self, request):
         token_str = request.query_params.get('token')
-        if not token_str:
+        if not token_str or token_str == 'null':
             return Response({'error': 'Token parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
