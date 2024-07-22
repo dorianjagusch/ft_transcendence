@@ -139,7 +139,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             self.abort_match(self.match)
 
-    # @database_sync_to_async
     def update_tournament_data_with_match_results(self, match: Match):
         try:
             if not match.tournament:
