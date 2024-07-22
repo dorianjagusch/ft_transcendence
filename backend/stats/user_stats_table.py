@@ -4,6 +4,6 @@ class UserTable:
 		self.wins = wins
 		self.losses = losses
 		self.total_games_played = total_games_played
-		self.win_loss_ratioa = win_loss_ratio
+		self.win_loss_ratio = win_loss_ratio
 		self.Winning_streak = Winning_streak
 		self.position_in_leaderboard = position_in_leaderboard
