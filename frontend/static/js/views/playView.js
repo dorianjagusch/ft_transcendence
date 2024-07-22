@@ -45,11 +45,16 @@ export default class extends AView {
 		this.selectPlayersModal.dialog.close();
 		this.summaryModal = new SummaryModal(this.startTournament, tournamentData);
 		this.adjustSummaryModal();
-		this.summaryModal.dialog.addEventListener('click', (e) => {
+		this.summaryModal.dialog.addEventListener('click', async (e) => {
 			if (e.target.classList.contains('accept-btn')) {
 				e.preventDefault();
 				this.summaryModal.dialog.close();
-				this.startTournament(tournamentData);
+				console.log(tournamentData);
+				debugger;
+				// await this.summaryModal.service.patchRequest(tournamentData);
+				const matchData = await this.summaryModal.service.startTournament(tournamentData);
+				console.log(matchData);
+				debugger;
 			} else if (e.target.classList.contains('decline-btn')) {
 				e.preventDefault();
 				this.summaryModal.dialog.close();

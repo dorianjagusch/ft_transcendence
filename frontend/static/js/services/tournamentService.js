@@ -29,10 +29,10 @@ export default class TournamentService extends ARequestService {
 		return response;
 	}
 
-	async postPlayer(tournamentData) {
-		console.log(JSON.stringify(tournamentData));
+	async postPlayer(tournamentData, context) {
+		console.log(JSON.stringify(tournamentData), context);
 		const response = super.postRequest(
-			`${backendURL.tournamentURL}${tournamentData.tournamentId}/players/`,
+			`${backendURL.tournamentURL}${context.tournamentId}/players/`,
 			JSON.stringify({
 				username: tournamentData.username,
 				password: tournamentData.password,
@@ -41,11 +41,20 @@ export default class TournamentService extends ARequestService {
 		return response;
 	}
 
+	async patchRequest(context) {
+		return super.patchRequest(`${backendURL.tournamentURL}${context.tournamentId}/`);
+	}
+
+	// TODO: remove this method and swap it with patch Request
+	async startTournament(context) {
+		return super.postRequest(`${backendURL.tournamentURL}${context.tournamentId}`);
+	}
+
 	async putRequest() {
 		throw new NotImplementedError('PUT not implemented for TournamentService');
 	}
 
-	async deleteRequest() {
-		throw new NotImplementedError('DELETE not implemented for TournamentService');
+	async deleteTournamentPlayer(context) {
+		super.deleteRequest(`${backendURL.tournamentURL}${context.tournamentId}/players/${context.playerId}`);
 	}
 }

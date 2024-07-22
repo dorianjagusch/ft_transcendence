@@ -99,6 +99,18 @@ class ARequestService {
 		return this.checkResponseWithBody(request);
 	}
 
+	async patchRequest(url, id) {
+		const request = fetch(`${url}${id}`, {
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json',
+			},
+			credentials: 'include',
+		});
+		return this.checkResponseWithBody(request);
+	}
+
 	async deleteRequest(url) {
 		const request = fetch(`${url}`, {
 			method: 'DELETE',
