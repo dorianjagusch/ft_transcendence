@@ -13,7 +13,6 @@ from .mixins import (
     SaveUserProfilePictureMixin, GetProfilePictureMixin
 )
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
-from Friends.models import Friend
 from shared_utilities.decorators import must_be_authenticated, must_be_url_user, valid_serializer_in_body
 
 
