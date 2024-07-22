@@ -27,7 +27,7 @@ export default class AuthenticationModal extends ADialog {
 				this.onDataReceived(tokenData);
 			}
 		} catch (error) {
-			this.notify(error.message);
+			this.notify(error.message, 'error');
 		}
 	}
 
@@ -39,13 +39,13 @@ export default class AuthenticationModal extends ADialog {
 					e.preventDefault();
 					const {username, password} = this.getFormData();
 					if (!username || !password) {
-						this.notify('Provide a username and password.');
+						this.notify('Provide a username and password.'), 'error';
 						return;
 					}
 					try {
 						this.authenticateUser({username, password});
 					} catch (error) {
-						this.notify(error.message);
+						this.notify(error.message, 'error');
 					}
 				} else if (e.target.classList.contains('decline-btn')) {
 					this.dialog.close();

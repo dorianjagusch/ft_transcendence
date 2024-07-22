@@ -1,5 +1,5 @@
 import {navigateTo} from '../router.js';
-import {Navbar} from '../components/navbar.js';
+import {Navbar, updateNavbar} from '../components/navbar.js';
 import SideBar from '../components/sideBar.js';
 import notify from '../utils/notify.js';
 
@@ -9,11 +9,10 @@ export default class Aview {
 		if (this.constructor == Aview) {
 			throw new Error("Abstract classes can't be instantiated.");
 		}
-
-		if (document.querySelector('nav')) {
-			document.querySelector('nav').remove();
+		if (!document.querySelector('nav')) {
+			Navbar();
 		}
-		Navbar();
+		updateNavbar();
 		if (document.querySelector('aside')) {
 			document.querySelector('aside').remove();
 		}
