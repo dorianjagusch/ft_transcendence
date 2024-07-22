@@ -94,7 +94,7 @@ class TournamentPlayerListView(APIView):
 			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
-			tournament_player = TournamentManager.players.create_tournament_player(tournament, user, display_name)
+			tournament_player = TournamentManager.players.create_tournament_player(tournament, user, display_name or username)
 			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
