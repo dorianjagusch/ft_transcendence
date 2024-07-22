@@ -3,13 +3,9 @@ from rest_framework.views import APIView
 import plotly.graph_objects as go
 import plotly.io as pio
 from django.http import HttpResponse
-from django.db.models import Count, Q
-from User.models import User
 from .user_stats_table import UserTable
 from .friend_stats_table import FriendsTable
-
 from .mixins import UserTableMixin
-from rest_framework.response import Response
 
 class StatsView(APIView, UserTableMixin):	
 	def get(self, request):
@@ -34,7 +30,3 @@ class StatsView(APIView, UserTableMixin):
 		svg_str = fig.to_image(format="svg").decode("utf-8")
 
 		return HttpResponse(svg_str, content_type='image/svg+xml')
-
-class LeaderBoardView(APIView, UserTableMixin):    
-	def get(self, request):
-		return self.leader_table_response()

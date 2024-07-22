@@ -21,7 +21,6 @@ from django.conf import settings
 
 from pong.consumers import PongConsumer
 
-# add app views here
 from User.views import UserDetailView, \
 						UserListView, \
 						UserProfilePictureView, \
@@ -32,21 +31,19 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
-
 from Tokens.views import SingleMatchGuestTokenView
 
 from Match.views import MatchView, \
 							LaunchTestMatchView
-
 
 from Tournament.views import TournamentListView, \
 								TournamentDetailView, \
 								TournamentPlayerListView, \
 								TournamentPlayerDetailView
 
-from stats.views import StatsView, \
-							LeaderBoardView
+from stats.views import StatsView
 
+from leaderboard.views import LeaderBoardView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
