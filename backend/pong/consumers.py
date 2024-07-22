@@ -114,7 +114,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_match_results(self):
-        print("save_match_results", file=sys.stderr)
         self.match.state = MatchState.FINISHED
 
         # Save scores when the game is over
@@ -164,7 +163,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         
         except Exception as e:
             TournamentManager.in_progress.abort_tournament(match.tournament)
-            print(f"An error occurred while updating match results: {e}; tournament abandoned!", file=sys.stderr)
 
     @database_sync_to_async
     def start_match(self, match):
