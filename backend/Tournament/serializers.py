@@ -111,7 +111,7 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'name',
 			'state',
 			'expire_ts',
-			'player_amount',
+			'player_amount', #information about the players about to play in the match
 			'next_match',
 		]
 
