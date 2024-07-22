@@ -43,7 +43,7 @@ from Tournament.views import TournamentListView, \
 
 from stats.views import StatsView
 
-from leaderboard.views import LeaderBoardView
+from leaderboard.views import LeaderboardListView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -76,7 +76,7 @@ urlpatterns = [
 
 	# Stats Views
 	path('stats/', StatsView.as_view()),
-	path('leaderboard/', LeaderBoardView.as_view()),
+	path('leaderboard/', LeaderboardListView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
