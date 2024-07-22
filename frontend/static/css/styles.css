@@ -1196,6 +1196,7 @@ aside[active] {
 
 .player-info img {
 	border-radius: 0.8em;
+	width: 10em;
 }
 
 .opponent-selection h3 {
