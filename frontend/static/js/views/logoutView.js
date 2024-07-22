@@ -10,16 +10,14 @@ export default class extends AView {
 	async getHTML() {
 		const logoutService = new LogoutService();
 		try {
-			 await logoutService.postRequest();
+			await logoutService.postRequest();
 			localStorage.clear();
-			localStorage.setItem('isLoggedIn', false);
-			sessionStorage.setItem('isLoggedInSession', false);
 			document.cookie.split(';').forEach((c) => {
 				document.cookie = c
 					.replace(/^ +/, '')
 					.replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
 			});
-			this.notify("You are now logged out.", 'success')
+			this.notify('You are now logged out.', 'success');
 		} catch (error) {
 			if (!error.status) {
 				this.notify(error);
