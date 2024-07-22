@@ -29,18 +29,15 @@ class UserTableMixin:
 		win_streak = 0
 		current_streak = 0
 
-		# Query for matches where the player won
-		matches = Match.objects.filter(player_match_status=PlayerMatchStatus.WINS.value, end_ts__isnull=False).order_by('-end_ts')
+		# Retrieve all matches for the given user where they have played and the match is finished
+		matches = Match.objects.filter(players__user=user, state=MatchState.FINISHED).order_by('-end_ts')
 
 		for match in matches:
-			# Increment the streak if the match ended within the expected time frame
-			if current_streak == 0 or (timezone.now() - match.end_ts <= timedelta(days=1)):
+			if match.player_match_status == PlayerMatchStatus.WINS.value:
 				current_streak += 1
+				win_streak = max(win_streak, current_streak)
 			else:
-				current_streak = 1
-			win_streak = max(win_streak, current_streak)
-
-		return win_streak
+				current_streak = 0
 
 		return win_streak
 	
