@@ -34,52 +34,48 @@ export default class SelectPlayersModal extends ADialog {
 		authenticationModal.form.form.prepend(authenticationTitle);
 	}
 
-	authenticateUser(playerId) {
-		let authenticationModal = document.querySelector(`[data-modal-${playerId}]`);
-		if (!authenticationModal) {
-			authenticationModal = new AuthenticationModal(TournamentService, this.receiveUserData);
-			authenticationModal.dialog.classList.add('authenticate-user-modal', 'bg-primary');
-			authenticationModal.dialog.setAttribute(`data-modal-id`, playerId);
-			authenticationModal.dialog.classList.remove('bg-secondary');
-			const main = document.querySelector('main');
-			document.querySelector('main').appendChild(authenticationModal.dialog);
-			this.adjustAuthenticationModal(authenticationModal);
-		}
+	authenticateUser(modalId) {
+		const authenticationModal = new AuthenticationModal(
+			TournamentService,
+			this.receiveUserData,
+			{
+				tournamentId: this.tournamentId,
+			}
+		);
+		authenticationModal.dialog.classList.add('authenticate-user-modal', 'bg-primary');
+		authenticationModal.dialog.classList.remove('bg-secondary');
+		authenticationModal.dialog.setAttribute('data-modal-id', modalId);
+		document.querySelector('main').appendChild(authenticationModal.dialog);
+		this.adjustAuthenticationModal(authenticationModal);
 		authenticationModal.dialog.showModal();
 	}
 
-	updateCard(userData) {
-		const clickedCard = document.querySelector(`[data-player-id="${userData.player_id}"]`);
-		clickedCard.querySelector('.player-name').textContent = userData.username;
-		clickedCard.querySelector('.player-img').src = userData.img;
-		// TODO: make cog visible
-		clickedCard.querySelector('.toggle-user > img').src = '../static/assets/img/minus.png';
-		clickedCard.setAttribute('data-user-selected', 'true');
-		clickedCard.classList.remove('bg-inactive');
-	}
-
-	receiveUserData(userData) {
-		const authenticationModal = document.querySelector(
-			`[data-modal-id="${userData.player_id}"]`
-		);
-		authenticationModal.close();
-		this.updateCard(userData);
+	async receiveUserData(userData) {
+		try {
+			await userData;
+		} catch (error) {
+			this.notify(error.message);
+			return;
+		}
+		userData.img = await getProfilePicture(userData.user);
+		document.querySelector('.authenticate-user-modal').remove();
+		const clickedCard = document.querySelector(`[data-fetching]`);
+		this.updateCard(clickedCard, userData);
 	}
 
 	getFormData() {
 		const form = this.form.getForm();
-		const playerCards = form.querySelectorAll('[data-user-selected="true"]');
+		const playerCards = form.querySelectorAll('[data-player-id]');
 		if (playerCards.length !== parseInt(this.numberOfPlayers)) {
 			return null;
 		}
-		const selectedPlayers = [];
-		playerCards.forEach((playerCard) => {
+		const selectedPlayers = Array.from(playerCards).map((playerCard) => {
 			if (playerCard.getAttribute('data-user-selected') === 'true') {
-				selectedPlayers.push({
+				return {
 					username: playerCard.querySelector('.player-name').textContent,
 					img: playerCard.querySelector('.player-img').src,
 					playerId: playerCard.getAttribute('data-player-id'),
-				});
+				};
 			}
 		});
 		return selectedPlayers;
