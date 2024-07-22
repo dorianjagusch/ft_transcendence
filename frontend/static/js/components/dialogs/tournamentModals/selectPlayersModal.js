@@ -2,19 +2,27 @@ import ADialog from '../ADialog.js';
 import AuthenticationModal from '../authenticationModal.js';
 import selectPlayersForm from '../../formComponents/selectPlayersForm.js';
 import TournamentService from '../../../services/tournamentService.js';
+import getProfilePicture from '../../profilePicture.js';
+import {updateCard, resetCard} from '../../formComponents/PlayerCard.js';
 
 export default class SelectPlayersModal extends ADialog {
 	constructor(parentDataHandler, {tournament, tournament_player}) {
 		super(new selectPlayersForm({tournament, tournament_player}), new TournamentService());
-		this.authenticateUser = this.authenticateUser.bind(this);
-		this.getFormData = this.getFormData.bind(this);
 		this.onDataReceived = parentDataHandler;
-		this.receiveUserData = this.receiveUserData.bind(this);
 		this.numberOfPlayers = tournament.player_amount;
 		this.tournamentName = tournament.name;
-		this.tournamentId = tournament.tournament_id;
+		this.tournamentId = tournament.id;
 		this.tournamentHostId = tournament_player.id;
+
+		this.authenticateUser = this.authenticateUser.bind(this);
+		this.getFormData = this.getFormData.bind(this);
+		this.receiveUserData = this.receiveUserData.bind(this);
 		this.adjustAuthenticationModal = this.adjustAuthenticationModal.bind(this);
+		this.updateCard = updateCard.bind(this);
+		this.resetCard = resetCard.bind(this);
+		this.deletePlayer = this.deletePlayer.bind(this);
+		this.addPlayer = this.addPlayer.bind(this);
+
 		this.appendEventlistenters();
 	}
 
@@ -91,6 +99,28 @@ export default class SelectPlayersModal extends ADialog {
 		return tournamentData;
 	}
 
+	addPlayer(playerButton) {
+		const targetModal = playerButton.closest('[data-modal-id]');
+		targetModal.setAttribute('data-fetching', '');
+		const modalId = targetModal.getAttribute('data-modal-id');
+		if (targetModal) {
+			this.authenticateUser(modalId);
+		}
+	}
+
+	async deletePlayer(playerButton) {
+		const targetModal = playerButton.closest('[data-modal-id]');
+		const playerId = targetModal.getAttribute('data-player-id');
+		try {
+			const context = {tournamentId: this.tournamentId, playerId};
+			await this.service.deleteTournamentPlayer(context);
+		} catch (error) {
+			this.notify(error.message);
+		}
+		targetModal.removeAttribute('data-player-id');
+		this.resetCard(targetModal);
+	}
+
 	appendEventlistenters() {
 		this.dialog.addEventListener(
 			'click',
@@ -112,16 +142,15 @@ export default class SelectPlayersModal extends ADialog {
 		);
 		this.dialog.addEventListener('click', (e) => {
 			e.preventDefault();
-			// Find the closest ancestor with the 'add' class, including the target itself
-			const addButton = e.target.closest('.add');
-			if (addButton) {
-				// Assuming the structure is consistent, the grandparent element has the 'data-player-id'
-				const playerId = addButton
-					.closest('[data-player-id]')
-					.getAttribute('data-player-id');
-				if (playerId) {
-					this.authenticateUser(playerId);
-				}
+			if (e.target.closest('decline-btn') || e.target.closest('x-btn')) {
+				this.dialog.remove();
+			}
+			const playerButton = e.target.closest('.toggle-user');
+			if (playerButton?.classList.contains('add')) {
+				this.addPlayer(playerButton);
+			}
+			if (playerButton?.classList.contains('remove')) {
+				this.deletePlayer(playerButton);
 			}
 		});
 	}
