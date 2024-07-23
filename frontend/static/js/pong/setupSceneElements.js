@@ -60,7 +60,7 @@ const createGameOver = () => {
 	const newGameButton = document.createElement('button');
 	newGameButton.textContent = 'New Game';
 	newGameButton.classList.add('new-game-button');
-	
+
 	newGameButton.addEventListener('click', () => {
 		window.location.reload();
 	});
