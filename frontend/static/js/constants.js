@@ -11,18 +11,25 @@ const tournamentURL = `${baseURL}tournaments/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];
 
-const problemWithFetchMsg = "There was a problem with the fetch operation: ";
+const problemWithFetchMsg = 'There was a problem with the fetch operation: ';
 
 const FRIENDSHIPSTATUS = {
 	FRIEND: 'friend',
 	NOTFRIEND: 'not-friend',
 	PENDINGSENT: 'pending-sent',
-	PENDINGRECEIVED: 'pending-received'
+	PENDINGRECEIVED: 'pending-received',
+};
+
+const MATCHSTATUS = {
+	LOBBY: 'lobby',
+	IN_PROGRESS: 'in_progress',
+	FINISHED: 'finished',
+	ABORTED: 'aborted',
 };
 
 const GAMES = {
-	"Pong": 0
-}
+	Pong: 0,
+};
 
 export default {
 	baseURL,
@@ -37,5 +44,7 @@ export default {
 	tournamentURL,
 	allowedPaths,
 	FRIENDSHIPSTATUS,
-	GAMES
+	MATCHSTATUS,
+	problemWithFetchMsg,
+	GAMES,
 };
