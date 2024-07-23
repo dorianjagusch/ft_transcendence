@@ -37,7 +37,7 @@ class ChatSocket {
 	}
 
 	handleError(e) {
-		if (this.chatSocket && chatSocket.readyState == WebSocket.OPEN) {
+		if (this.chatSocket && this.chatSocket.readyState == WebSocket.OPEN) {
 			chatSocket.close();
 		}
 		this.removeEventListeners();
