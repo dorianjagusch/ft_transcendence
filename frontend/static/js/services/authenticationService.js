@@ -10,7 +10,7 @@ export default class AuthenticationService extends ARequestService {
 
 	async postMatch({username, password}) {
 		return super.postRequest(
-			`${backendURL.authenticationURL}match/ `, //${urlParams ? `/${urlParams}` : ''}`,
+			`${backendURL.authenticationURL}match/`,
 			JSON.stringify({
 				username: username,
 				password: password,

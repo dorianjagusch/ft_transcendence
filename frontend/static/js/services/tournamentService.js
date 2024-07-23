@@ -17,8 +17,8 @@ export default class TournamentService extends ARequestService {
 		return response;
 	}
 
-	async getNextMatch(context) {
-		return super.getRequest(`${backendURL.tournamentURL}${context.tournament_id}/matches/${context.match_id}`);
+	async getTournamentMatches(context) {
+		return super.getRequest(`${backendURL.tournamentURL}${context.tournament_id}/matches/`);
 	}
 
 	async postRequest(data) {
