@@ -52,6 +52,11 @@ class ChatSocket {
 			}
 		}
 		this.chatSocket.send(e.key);
+		if (e.key == "Enter" && this.game){
+			Array.from(document.querySelectorAll('.instructions')).forEach(instruction => {
+				instruction.style.display = 'none';
+			})
+		}
 	}
 
 	removeEventListeners() {
