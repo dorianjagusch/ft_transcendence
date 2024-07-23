@@ -31,11 +31,15 @@ class GetUsersWithUsernameContainsMixin:
         return User.objects.filter(username__icontains=username_contains).exclude(id=request.user.id)
 
 class GetUserMixin:
-    """
-    Mixin to get a user by ID.
-    """
-    def get_user(self, user_id: int) -> User | Response:
-        return get_object_or_404(User, pk=user_id)
+	"""
+	Mixin to get a user by ID.
+	"""
+	def get_user(self, user_id: int) -> User | Response:
+		result = get_object_or_404(User, pk=user_id)
+		if not isinstance(result, User):
+				return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+		
+		return result
 
 
 class CreateUserMixin:
@@ -55,19 +59,19 @@ class CreateUserMixin:
         return User.objects.create_user(username=username, password=password)
 
 
-class UpdateUserMixin:
+class UpdateUserMixin(GetUserMixin):
     """
     Mixin to update a user by ID.
     """
     def update_user(self, request: Request, user_id: int) -> Response:
-        user = get_object_or_404(User, pk=user_id)
-        if not isinstance(user, User):
-            return user
+        result = self.get_user(user_id)
+        if not isinstance(result, User):
+            return result
 
-        input_serializer = UserInputSerializer(user, data=request.data, partial=True)
+        input_serializer = UserInputSerializer(result, data=request.data, partial=True)
         if input_serializer.is_valid():
             input_serializer.save()
-            output_serializer = UserOutputSerializer(user)
+            output_serializer = UserOutputSerializer(result)
             return Response(output_serializer.data, status=status.HTTP_200_OK)
         return Response(input_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -116,30 +120,30 @@ class DeleteUserMixin:
 			logout(request)
 		except Exception:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		user = get_object_or_404(User, pk=user_id)
-		if not isinstance(user, User):
-				return user
+		result = get_object_or_404(User, pk=user_id)
+		if not isinstance(result, User):
+				return result
 
-		user.username = f"deleted_user_{user_id + 42}"
-		user.set_password(get_random_string(length=30))
-		user.is_active = False
-		user.is_staff = False
-		user.is_superuser = False
-		user.insertTS = None
-		user.last_login = None
-		user.is_online = False
-		user.save()
+		result.username = f"deleted_user_{user_id + 42}"
+		result.set_password(get_random_string(length=30))
+		result.is_active = False
+		result.is_staff = False
+		result.is_superuser = False
+		result.insertTS = None
+		result.last_login = None
+		result.is_online = False
+		result.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SaveUserProfilePictureMixin:
+class SaveUserProfilePictureMixin(GetUserMixin):
     """
     Mixin to save a user's profile picture.
     """
     def save_profile_picture(self, request: Request, user_id: int) -> Response:
-        user = get_object_or_404(User, pk=user_id)
-        if not isinstance(user, User):
-             return user
+        result = self.get_user(user_id)
+        if not isinstance(result, User):
+             return result
 
         if 'file' not in request.FILES:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -152,35 +156,36 @@ class SaveUserProfilePictureMixin:
             return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            profile_picture = ProfilePicture.objects.get(user=user)
+            profile_picture = ProfilePicture.objects.get(user=result)
             profile_picture.picture = file
         except ProfilePicture.DoesNotExist:
-            profile_picture = ProfilePicture(user=user, picture=file)
+            profile_picture = ProfilePicture(user=result, picture=file)
         
         profile_picture.save()
         return Response(status=status.HTTP_200_OK)
 
 
-class GetProfilePictureMixin:
-    """
-    Mixin to get a user's profile picture.
-    """
-    def get_profile_picture(self, user_id: int) -> Response:
-        try:
-            user = get_object_or_404(User, pk=user_id)
-            if not isinstance(user, User):
-                 return user
-            profile_picture = ProfilePicture.objects.filter(user=user).first()
-            if not profile_picture:
-                return Response({'image': ''}, status=status.HTTP_200_OK)
+class GetProfilePictureMixin(GetUserMixin):
+	"""
+	Mixin to get a user's profile picture.
+	"""
+	def get_profile_picture(self, user_id: int) -> Response:
+		try:
+			result = self.get_user(user_id)
+			if not isinstance(result, User):
+				return result
+		
+			profile_picture = ProfilePicture.objects.filter(user=result).first()
+			if not profile_picture:
+				return Response({'image': ''}, status=status.HTTP_200_OK)
 
-            image_path = profile_picture.picture.path
-            with open(image_path, "rb") as image_file:
-                image_data = image_file.read()
-                encoded_image = base64.b64encode(image_data).decode('utf-8')
-                return Response({'image': encoded_image}, status=status.HTTP_200_OK)
-        except FileNotFoundError:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+			image_path = profile_picture.picture.path
+			with open(image_path, "rb") as image_file:
+				image_data = image_file.read()
+				encoded_image = base64.b64encode(image_data).decode('utf-8')
+				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
+		except FileNotFoundError:
+			return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class IsRequestFromSpecificUserMixin:

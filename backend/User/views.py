@@ -40,15 +40,15 @@ class UserListView(APIView, GetAllUsersMixin, GetUsersWithUsernameContainsMixin,
 
 class UserDetailView(APIView, GetUserMixin, IsRequestFromSpecificUserMixin, UpdateUserMixin, DeleteUserMixin):
     def get(self, request: Request, user_id: int) -> Response:
-        user = self.get_user(user_id)
-        if not isinstance(user, User):
-            return Response({'message': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+        result = self.get_user(user_id)
+        if not isinstance(result, User):
+            return result
 
         if self.is_request_from_specific_user(request, user_id):
-            serializer = UserOutputSerializer(user)
+            serializer = UserOutputSerializer(result)
             return Response(serializer.data)
         
-        serializer = UserFriendOutputSerializer(user, context={'request': request})
+        serializer = UserFriendOutputSerializer(result, context={'request': request})
         return Response(serializer.data)
 
     @method_decorator(must_be_authenticated)
