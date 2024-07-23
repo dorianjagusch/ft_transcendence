@@ -1,6 +1,5 @@
 from django.db import models
 from datetime import datetime
-
 from .matchState import MatchState
 from Tournament.models import Tournament
 from .playerMatchStatus import PlayerMatchStatus

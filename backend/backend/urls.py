@@ -34,7 +34,6 @@ from Friends.views import FriendsListView, \
 from Tokens.views import SingleMatchGuestTokenView
 
 from Match.views import MatchView, \
-							LaunchTestMatchView, \
 							MatchHistory
 
 from Tournament.views import TournamentListView, \
@@ -68,7 +67,6 @@ urlpatterns = [
 
 	# Match Views
 	path('match/', MatchView.as_view()),
-	path('match/test/', LaunchTestMatchView.as_view()), # TEMPORARY
 	path('matches/', MatchHistory.as_view()),
 
 	# Tournament views

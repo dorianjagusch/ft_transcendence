@@ -13,23 +13,24 @@ class MatchSetupManager:
 		try:
 			with transaction.atomic():
 				match = Match.objects.create()
-				
+
 				Player.objects.create(
 					user_id=match_token.user_left_side.id,
 					match=match,
 					score=0,
 					match_winner=False
 				)
-				
-				Player.objects.create(
-					user_id=match_token.user_right_side.id,
-					match=match,
-					score=0,
-					match_winner=False
-				)
+
+				if match_token.user_right_side is not None:
+					Player.objects.create(
+						user_id=match_token.user_right_side.id,
+						match=match,
+						score=0,
+						match_winner=False
+					)
 
 		except Exception as e:
 			print(f"An error occurred: {e}", file=sys.stderr)
 			return None
-		
+
 		return match
