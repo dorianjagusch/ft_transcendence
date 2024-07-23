@@ -21,7 +21,7 @@ export default class AuthenticationModal extends ADialog {
 
 	async authenticateUser(userData) {
 		try {
-			const tokenData = await this.service.postMatch(userData);
+			const tokenData = await this.service.postMatch(userData, false);
 			this.dialog.close();
 			if (this.onDataReceived) {
 				this.onDataReceived(tokenData);
