@@ -25,17 +25,15 @@ class UserTableMixin:
 	
 	def get_win_streak_count(self, user: User):
 		win_streak = 0
-		current_streak = 0
 
 		# Retrieve all matches for the given user where they have played and the match is finished
 		matches = Match.objects.filter(players__user=user, state=MatchState.FINISHED).order_by('-end_ts')
 
 		for match in matches:
 			if match.player_match_status == PlayerMatchStatus.WINS.value:
-				current_streak += 1
-				win_streak = max(win_streak, current_streak)
+				win_streak += 1
 			else:
-				current_streak = 0
+				break
 
 		return win_streak
 	
