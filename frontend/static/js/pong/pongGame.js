@@ -24,7 +24,7 @@ class PongGame {
 	}
 
 	initializeRenderer(constants) {
-		this.sizeFactor = window.innerWidth / constants.game.width * 0.8;
+		this.sizeFactor = (window.innerWidth / constants.game.width) * 0.8;
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(
 			Math.floor(window.innerWidth * 0.8),

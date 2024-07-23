@@ -11,11 +11,9 @@ const createScoreBoard = () => {
 	scores.setAttribute('id', 'score-board');
 	const leftPlayerScore = PlayerScore('left');
 	const colon = document.createElement('span');
-	colon.textContent = ':';
 	const rightPlayerScore = PlayerScore('right');
 
 	scores.appendChild(leftPlayerScore);
-	scores.appendChild(colon);
 	scores.appendChild(rightPlayerScore);
 
 	return scores;
@@ -28,8 +26,23 @@ const playerInstructions = (player, upkey, downkey) => {
 	return instruction;
 };
 
+const startGameInstructions = () => {
+	const instructions = document.createElement('article');
+	instructions.setAttribute('id', 'start-instructions');
+	instructions.classList.add('flex-col', 'instructions');
+	const startGame = document.createElement('p');
+	startGame.textContent = 'Press Enter to start the game.';
+	const intruction3D = document.createElement('p');
+	intruction3D.textContent = 'Press space to make the game 3D.';
+	instructions.appendChild(startGame);
+	instructions.appendChild(intruction3D);
+	return instructions;
+};
+
 const createIntructions = () => {
 	const instructions = document.createElement('article');
+	instructions.classList.add('flex-col', 'instructions');
+
 	instructions.setAttribute('id', 'instructions');
 	instructions.appendChild(playerInstructions('Player 1', 'w', 's'));
 	instructions.appendChild(playerInstructions('Player 2', 'o', 'l'));
@@ -59,4 +72,4 @@ const createGameOver = () => {
 	return gameOver;
 };
 
-export default {createScoreBoard, createIntructions, createGameOver};
+export default {createScoreBoard, createIntructions, createGameOver, startGameInstructions};
