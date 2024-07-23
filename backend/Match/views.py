@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from django.shortcuts import redirect, get_object_or_404
-import sys
 
 from .managers import MatchSetupManager
 from .serializers import MatchSerializer
