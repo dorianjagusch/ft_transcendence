@@ -75,7 +75,7 @@ urlpatterns = [
 	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
 
 	# Stats Views
-	path('stats/', StatsView.as_view()),
+	path('users/<int:user_id>/stats/', StatsView.as_view()),
 	path('leaderboard/', LeaderboardListView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
