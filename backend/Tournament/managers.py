@@ -154,7 +154,7 @@ class TournamentInProgressManager:
     def abort_tournament_matches(tournament: Tournament):
         tournament_matches = Match.objects.filter(
             tournament=tournament
-        ).order_by('tournament_match_id')
+        ).order_by('id')
 
         for match in tournament_matches:
             if match.state in [MatchState.LOBBY, MatchState.IN_PROGRESS]:
