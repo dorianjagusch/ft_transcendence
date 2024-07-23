@@ -43,7 +43,7 @@ class MatchHistory(APIView):
         user_id = request.query_params.get('user_id')
         user = get_object_or_404(User, pk = user_id)
         if not isinstance(user, User):
-            return Response({"message": "User not found"})
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         player_instances = user.players.all()
         matches = [player.match for player in player_instances]
         print (matches, file=sys.stderr)
