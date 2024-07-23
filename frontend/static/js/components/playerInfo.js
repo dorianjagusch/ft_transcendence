@@ -11,6 +11,8 @@ const PlayerInfo = ({username, img, wins, losses}) => {
 
 	const imgElement = document.createElement('img');
 	imgElement.src = img;
+	imgElement.alt = 'Profile Picture';
+	imgElement.classList.add('profile-picture');
 	section.appendChild(imgElement);
 
 	const winsDiv = StatLine('wins', 'Wins: ', wins);

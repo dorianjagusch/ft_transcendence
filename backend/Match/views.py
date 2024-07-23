@@ -10,6 +10,7 @@ from .managers import MatchSetupManager
 from .serializers import MatchSerializer
 from User.views import User
 from Tokens.models import MatchToken
+from Tokens.managers import MatchTokenManager
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated
 
@@ -42,7 +43,7 @@ class MatchView(APIView):
 class LaunchTestMatchView(APIView):
 	@method_decorator(must_be_authenticated)
 	def get(self, request):
-		token = MatchToken.objects.create_single_match_token(request.user, request.user)
+		token = MatchTokenManager.create_single_match_token(request.user, request.user)
 		match = MatchSetupManager.create_match_and_its_players(token)
 		if not match:
 			return Response({'error': 'Something went wrong when creating the match and players'}, status=status.HTTP_403_FORBIDDEN)

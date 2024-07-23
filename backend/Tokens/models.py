@@ -4,7 +4,6 @@ from datetime import timedelta
 from django.utils import timezone
 
 from User.models import User
-from .managers import MatchTokenManager
 
 class AbstractToken(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -29,5 +28,3 @@ class AbstractToken(models.Model):
 class MatchToken(AbstractToken):
     user_left_side = models.ForeignKey(User, related_name='match_token_left', on_delete=models.CASCADE)
     user_right_side = models.ForeignKey(User, related_name='match_token_right', null=True, on_delete=models.CASCADE)
-
-    objects = MatchTokenManager()

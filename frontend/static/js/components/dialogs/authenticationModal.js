@@ -1,6 +1,6 @@
 import ADialog from './ADialog.js';
 import loginForm from '../formComponents/loginForm.js';
-import AuthenticationService from '../../services/AuthenticationService.js';
+import AuthenticationService from '../../services/authenticationService.js';
 
 export default class AuthenticationModal extends ADialog {
 	constructor(parentCallback) {
@@ -19,22 +19,15 @@ export default class AuthenticationModal extends ADialog {
 		return {username, password};
 	}
 
-	async authenticateUser(guestUser) {
+	async authenticateUser(userData) {
 		try {
-			const guestData = {
-				username: guestUser.username,
-				img: './static/assets/img/default-user.png',
-				wins: 20, //needed for matches
-				losses: 0, //needed for matches both are just in the mock data, but are expected for stats of individual match display
-				player_id: this.dialog.getAttribute('data-modal-id'),
-			};
-			// const guestData = await this.service.postRequest(guestUser);
+			const tokenData = await this.service.postMatch(userData);
 			this.dialog.close();
 			if (this.onDataReceived) {
-				this.onDataReceived(guestData);
+				this.onDataReceived(tokenData);
 			}
 		} catch (error) {
-			this.notify(error.message);
+			this.notify(error.message, 'error');
 		}
 	}
 
@@ -46,13 +39,13 @@ export default class AuthenticationModal extends ADialog {
 					e.preventDefault();
 					const {username, password} = this.getFormData();
 					if (!username || !password) {
-						this.notify('Provide a username and password.');
+						this.notify('Provide a username and password.'), 'error';
 						return;
 					}
 					try {
 						this.authenticateUser({username, password});
 					} catch (error) {
-						this.notify(error.message);
+						this.notify(error.message, 'error');
 					}
 				} else if (e.target.classList.contains('decline-btn')) {
 					this.dialog.close();

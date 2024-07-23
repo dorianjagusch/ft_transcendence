@@ -6,43 +6,44 @@ from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 
 from User.models import User
+from User.mixins import UserAuthenticationMixin
 from User.serializers import UserInputSerializer, \
 								UserOutputSerializer
 
 from .models import MatchToken
+from .managers import MatchTokenManager
 from .serializers import MatchTokenSerializer
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											valid_serializer_in_body
 
 # Create your views here.
-class SingleMatchGuestTokenView(APIView):
+class SingleMatchGuestTokenView(APIView, UserAuthenticationMixin):
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_not_be_username)
 	@method_decorator(valid_serializer_in_body(UserInputSerializer))
-	def post(self, request, ai_opponent):
+	def post(self, request, ai_opponent=None):
 		host_user = request.user
 		if ai_opponent is not None and ai_opponent == 'true':
-			token = MatchToken.objects.create_single_match_token(host_user, null)
+			token = MatchTokenManager.create_single_match_token(host_user, None)
 			return Response({
 				'token': token_serializer.data,
 				'guest_user': ''
 			}, status=status.HTTP_201_CREATED)
 
-		username = request.data.get('username')
-		password = request.data.get('password')
-		guest_user = authenticate(username=username, password=password)
-		if guest_user is not None:
-			token = MatchToken.objects.create_single_match_token(host_user, guest_user)
-			token_serializer = MatchTokenSerializer(token)
-			user_serializer = UserOutputSerializer(guest_user)
-			return Response({
-				'token': token_serializer.data,
-				'guest_user': user_serializer.data
-			}, status=status.HTTP_201_CREATED)
-		else:
-			return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-
+		guest_authentication_result = self.authenticate_user(request)
+		if not isinstance(guest_authentication_result, User):
+			return guest_authentication_result
+		
+		token = MatchTokenManager.create_single_match_token(host_user, guest_authentication_result)
+		token_serializer = MatchTokenSerializer(token)
+		user_serializer = UserOutputSerializer(guest_authentication_result)
+		return Response({
+			'token': token_serializer.data,
+			'guest_user': user_serializer.data
+		}, status=status.HTTP_201_CREATED)
+  
+  
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(MatchTokenSerializer))
 	def put(self, request):

@@ -10,7 +10,7 @@
 
 	--bg-color: var(--blue-700);
 	--bg-inactive: var(--blue-600);
-	--fg-color: var(--blue-400);;
+	--fg-color: var(--blue-400);
 	--border-color: var(--blue-100);
 
 	--fs-xlarge: 5rem;
@@ -24,6 +24,7 @@
 
 	--animation-timing: 500ms;
 	--rotation: 40deg;
+	--notification-duration: 2000ms;
 }
 
 @media screen and (max-width: 800px) {
@@ -178,7 +179,7 @@ h1 {
 	background-color: var(--fg-color);
 }
 
-.bg-inactive{
+.bg-inactive {
 	background-color: var(--bg-inactive);
 }
 /* Scrollable elements */
@@ -269,21 +270,53 @@ nav ul > * {
 }
 
 nav img {
-	border-radius: 50%;
-	width: 5em;
+	border-radius: 100%;
+	max-width: 3em;
+	max-height: 2em;
 }
 
 .notification {
-	container-name: notification;
-	container-type: inline-size;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, 0);
+
 	font-weight: 700;
-	background-color: transparent;
-	width: 100%;
+	text-align: center;
+	background-color: var(--fg-color);
+	border-radius: 0 0 1em 1em;
+	width: 50%;
+	border: 5px solid var(--border-color);
+	border-top: none;
+	padding: 2em;
+	animation: slide-down var(--animation-timing) ease,
+		stay var(--notification-duration) var(--animation-timing),
+		slide-up var(--animation-timing)
+			calc(var(--notification-duration) + var(--animation-timing)) ease forwards;
 }
 
-@container notification (width >= 24ch) {
-	.notification {
-		font-size: var(--fs-small);
+@keyframes slide-down {
+	0% {
+		top: -100%;
+	}
+	100% {
+		top: 0;
+	}
+}
+
+@keyframes stay {
+	0%,
+	100% {
+		top: 0;
+	}
+}
+
+@keyframes slide-up {
+	0% {
+		top: 0;
+	}
+	100% {
+		top: -100%;
 	}
 }
 
@@ -1163,6 +1196,7 @@ aside[active] {
 
 .player-info img {
 	border-radius: 0.8em;
+	width: 10em;
 }
 
 .opponent-selection h3 {
@@ -1271,20 +1305,23 @@ dialog h3 {
 	margin-bottom: 2em;
 }
 
+dialog .notification {
+	text-align: center;
+}
+
 .summary-modal,
 .player-modal {
-
-	&:has(.player-4){
+	&:has(.player-4) {
 		padding-inline: 10vw;
 	}
 
 	& .player-list.player-4 {
 		grid-template-columns: 1fr;
-	};
+	}
 
 	& .player-list.player-8 {
 		grid-template-columns: 1fr 1fr;
-	};
+	}
 
 	& .player-list {
 		display: grid;
@@ -1320,7 +1357,8 @@ dialog h3 {
 				background-color: var(--bg-color);
 			}
 
-			&:hover, &:focus {
+			&:hover,
+			&:focus {
 				outline: 5px solid var(--border-color);
 			}
 		}
@@ -1339,21 +1377,20 @@ dialog h3 {
 	}
 }
 
-.summary-modal .player-list .player-card{
-		font-size: var(--fs-medium);
-		justify-content: space-around;
-	}
+.summary-modal .player-list .player-card {
+	font-size: var(--fs-medium);
+	justify-content: space-around;
+}
 
-
-.search-friends-modal{
-	& .menu-item{
+.search-friends-modal {
+	& .menu-item {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 1.5em;
 	}
 
-	& .friend-result{
+	& .friend-result {
 		display: flex;
 		flex-wrap: nowrap;
 		justify-content: space-between;
@@ -1364,17 +1401,17 @@ dialog h3 {
 		border-radius: 1em;
 		margin-bottom: 1em;
 
-		&:hover{
+		&:hover {
 			outline: 5px solid var(--border-color);
 		}
 
-		&  > img{
+		& > img {
 			width: 2.5em;
 			height: 2.5em;
 			border-radius: 1em;
 		}
 
-		& button{
+		& button {
 			font-size: var(--fs-small);
 		}
 	}

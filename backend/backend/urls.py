@@ -40,7 +40,9 @@ from Match.views import MatchView, \
 from Tournament.views import TournamentListView, \
 								TournamentDetailView, \
 								TournamentPlayerListView, \
-								TournamentPlayerDetailView
+								TournamentPlayerDetailView, \
+								TournamentMatchListView, \
+								TournamentMatchDetailView
 
 from stats.views import StatsView
 
@@ -74,6 +76,8 @@ urlpatterns = [
 	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
 	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
+	path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
+	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
 
 	# Stats Views
 	path('users/<int:user_id>/stats/', StatsView.as_view()),
