@@ -43,7 +43,7 @@ class TournamentDetailView(APIView):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 		if request.user == tournament.host_user and tournament.state == TournamentState.IN_PROGRESS:
 			serializer = TournamentSerializers.in_progress(tournament)
 		else:
@@ -78,7 +78,7 @@ class TournamentPlayerListView(APIView):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 		tournament_players = tournament.players.all().order_by('id')
 		tournament_players_serializers = TournamentSerializers.player(tournament_players, many=True)
 		return Response(tournament_players_serializers.data, status=status.HTTP_200_OK)
@@ -90,14 +90,14 @@ class TournamentPlayerListView(APIView):
 		password = request.data.get('password', None)
 		display_name = request.data.get('display_name', None)
 		if not username or not password:
-			return Response({"error": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 		user = authenticate(username=username, password=password)
 		if user is None:
 			return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
 		tournament = Tournament.objects.get(id=tournament_id)
 		if tournament.players.count() >= tournament.player_amount:
-			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 			tournament_player = TournamentManager.players.create_tournament_player(tournament, user, display_name)
@@ -133,7 +133,7 @@ class TournamentMatchListView(APIView):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 		tournament_matches = tournament.matches.all().order_by('id')
 		tournament_match_serializers = TournamentSerializers.match(tournament_matches, many=True)
 		return Response(tournament_match_serializers.data, status=status.HTTP_200_OK)
@@ -142,10 +142,10 @@ class TournamentMatchDetailView(APIView):
 	def get(self, request, tournament_id, tournament_match_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found"}, status=status.HTTP_404_NOT_FOUND)
 		tournament_matches = tournament.matches.all().order_by('id')
 		if tournament_match_id >= tournament_matches.count():
-			return Response(f"Tournament {tournament_id} does not have {tournament_match_id} match", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message": f"Tournament {tournament_id} does not have {tournament_match_id} match"}, status=status.HTTP_404_NOT_FOUND)
 
 		if request.user == tournament.host_user \
 			and tournament.state == TournamentState.IN_PROGRESS \
@@ -157,10 +157,10 @@ class TournamentMatchDetailView(APIView):
 
 			except TournamentInProgressException as e:
 				TournamentManager.in_progress.abort_tournament(tournament)
-				return Response(f"{str(e)}; tournament aborted!", status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message" : f"{str(e)}; tournament aborted!"}, status=status.HTTP_400_BAD_REQUEST)
 
 			if tournament_matches[tournament_match_id].state != TournamentState.LOBBY:
-				return Response({"error": f"The tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message": f"The tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
 			next_match = tournament_matches[tournament_match_id]
 			token = MatchTokenManager.create_tournament_match_token(next_match)
 			pong_match_url = f'ws://localhost:8080/pong/{next_match.id}?token={token.token}'
