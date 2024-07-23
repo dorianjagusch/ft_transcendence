@@ -56,4 +56,4 @@ class SingleMatchGuestTokenView(APIView, UserAuthenticationMixin):
 				token.save()
 				return Response({"message": "Token is now expired"}, status=status.HTTP_200_OK)
 		except MatchToken.DoesNotExist:
-			return Response({"message": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Token was not found"}, status=status.HTTP_400_BAD_REQUEST)

@@ -26,18 +26,18 @@ class MatchView(APIView):
             return Response({"message": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
         if not token.is_active or token.is_expired():
-            return Response({"message": "Expired token"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": "Expired token"}, status=status.HTTP_403_FORBIDDEN)
         if token.user_left_side.id != request.user.id:
-            return Response({"message": "You are not the host user in the token"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"message": "You are not the host user in the token"}, status=status.HTTP_401_UNAUTHORIZED)
 
         match = MatchSetupManager.create_match_and_its_players(token)
 
         if not match:
-            return Response({"message": "Something went wrong when creating the match and players"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"message": "Something went wrong when creating the match and players"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
         return Response(pong_match_url, status=status.HTTP_200_OK)
-    
+
 class MatchHistory(APIView):
      def get(self, request):
         user_id = request.query_params.get('user_id')

@@ -31,13 +31,15 @@ class TournamentListView(APIView):
 
 		try:
 			tournament = TournamentManager.setup.create_tournament_and_tournament_player_for_host(tournament_creation_serializer.validated_data)
+			if not tournament:
+				return Response({"message" : "Tournament was not found"}, status=status.HTTP_404_NOT_FOUND)
 			host_tournament_player_serializer = TournamentSerializers.player(tournament.players.all().first())
 			return Response({
 				'tournament_id': tournament.id,
 				'tournament_player': host_tournament_player_serializer.data
 			}, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({"message": str(e)},status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TournamentDetailView(APIView):
 	def get(self, request, tournament_id):
