@@ -10,6 +10,7 @@ import pongPage from './views/pongView.js';
 import leaderBoard from './views/leaderboardView.js';
 import show404Page from './views/404View.js';
 import matchPage from './views/matchView.js';
+import previewPage from './views/matchPreview.js';
 
 export default [
 	{ path: '/404', view: show404Page },
@@ -24,5 +25,6 @@ export default [
 	{ path: '/pong/tournaments/:tournament_id/matches/:match_id', view: pongPage },
 	{ path: '/leaderboard', view: leaderBoard },
 	{ path: '/profile/:id', view: profilePage },
-	{ path: '/match', view: matchPage}
+	{ path: '/match', view: matchPage},
+	{ path: '/preview/:tournament_id/matches/:match_id', view: previewPage}
 ];
