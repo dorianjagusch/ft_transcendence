@@ -2,7 +2,6 @@ from User.models import User
 from django.db.models import Count, Q
 from Match.models import Match
 from Match.matchState import MatchState
-from Match.playerMatchStatus import PlayerMatchStatus
 
 	
 class UserTableMixin:
