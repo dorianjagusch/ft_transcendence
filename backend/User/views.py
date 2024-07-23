@@ -70,7 +70,6 @@ class UserProfilePictureView(APIView, SaveUserProfilePictureMixin, GetProfilePic
         return self.save_profile_picture(request, user_id)
 
     @method_decorator(must_be_authenticated)
-    @method_decorator(must_be_url_user)
     def get(self, request: Request, user_id: int) -> Response:
         return self.get_profile_picture(user_id)
 
