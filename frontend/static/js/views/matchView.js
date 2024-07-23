@@ -21,10 +21,15 @@ export default class extends Aview {
 	}
 
 	async createAiMatch() {
-		const data = await this.authenticationService.postAiMatch({ai_opponent: true});
-		localStorage.setItem('opponent', 'AI');
-		localStorage.setItem('token', data.token.token);
-		this.navigateTo('/pong');
+		try {
+			const data = await this.authenticationService.postAiMatch({ai_opponent: true});
+			localStorage.setItem('opponent', 'AI');
+			localStorage.setItem('token', data.token.token);
+			this.navigateTo('/pong');
+		} catch (error) {
+			this.notify('Error creating AI match');
+			this.navigateTo('/match');
+		}
 	}
 
 	attachEventListeners() {
@@ -59,6 +64,7 @@ export default class extends Aview {
 	async attachPlayerInfo(tokenData) {
 		this.token = tokenData.token.token;
 		this.opponent = tokenData.guest_user
+		// Proper error handling
 		this.opponent.img = await getProfilePicture(this.opponent.id);
 		const playerRight = PlayerInfo(this.opponent);
 
