@@ -14,20 +14,20 @@ class Match(models.Model):
 	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
 	def start_match(self):
-		if self.state == MatchState.LOBBY.value:
-			self.state = MatchState.IN_PROGRESS.value
+		if self.state == MatchState.LOBBY:
+			self.state = MatchState.IN_PROGRESS
 			self.start_time = datetime.now()
 			self.save()
 
 	def finish_match(self):
-		if self.state == MatchState.IN_PROGRESS.value:
-			self.state = MatchState.FINISHED.value
+		if self.state == MatchState.IN_PROGRESS:
+			self.state = MatchState.FINISHED
 			self.end_time = datetime.now()
 			self.save()
 
 	def abort_match(self):
-		if self.state in [MatchState.LOBBY.value, MatchState.IN_PROGRESS.value]:
-			self.state = MatchState.ABORTED.value
+		if self.state in [MatchState.LOBBY, MatchState.IN_PROGRESS]:
+			self.state = MatchState.ABORTED
 			self.end_time = datetime.now()
 			self.save()
 
