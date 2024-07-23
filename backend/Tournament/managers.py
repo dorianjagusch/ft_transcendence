@@ -149,7 +149,6 @@ class TournamentInProgressManager:
 
     @staticmethod
     def abort_tournament(tournament: Tournament) -> None:
-        print("abort tournament")
         tournament.abort_tournament()
         TournamentInProgressManager.abort_tournament_matches(tournament)
 
