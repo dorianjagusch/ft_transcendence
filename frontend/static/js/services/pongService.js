@@ -13,12 +13,14 @@ class PongService extends ARequestService {
 		return super.getRequest(url);
 	}
 
-	async getTournamentMatchRequest(params) {
-		if (!params.tournament_id || !params.match_id) {
+	async getMatchRequest(params) {
+		const matchToken = localStorage.getItem('token');
+		if (!params.tournament_id || !params.match_id || matchToken === "undefined") {
 			throw new Error('Tournament and match id are required and a match token fetched');
 		}
 		const path =`${params.tournament_id}/matches/${params.match_id}`;
 		const url = new URL(path, backendURL.tournamentURL);
+		url.searchParams.append('token', matchToken);
 		return super.getRequest(url);
 	}
 
