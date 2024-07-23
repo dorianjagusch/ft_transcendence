@@ -1113,10 +1113,11 @@ button:is(:focus, :hover) {
 
 #pong > #score-board {
 	position: absolute;
+	justify-content: space-around;
 }
 
 #pong > #score-board > * {
-	font-size: var(--fs-xlarge);
+	font-size: var(--fs-large);
 }
 
 #pong > canvas {
@@ -1149,6 +1150,13 @@ button:is(:focus, :hover) {
 	justify-content: space-between;
 	order: 3;
 	font-size: var(--fs-small);
+}
+
+#pong > #start-instructions{
+	position: absolute;
+	font-size: var(--fs-medium);
+	justify-items: center;
+	align-items: center;
 }
 
 aside {
