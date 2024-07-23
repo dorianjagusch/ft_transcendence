@@ -10,4 +10,4 @@ class MatchSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Match
-		fields = ['id', 'state', 'state_display', 'start_time', 'end_time', 'created_at', 'updated_at']
+		fields = ['id', 'state', 'state_display', 'start_ts', 'end_ts', 'insert_ts', 'update_ts']

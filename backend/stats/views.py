@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .user_stats_table import UserTable
-from .friend_stats_table import FriendsTable
 from .mixins import UserTableMixin
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated
@@ -27,14 +26,13 @@ class StatsView(APIView, UserTableMixin):
 		position_in_leaderboard = self.get_position_in_leaderboard(user)
 		self.user_table = UserTable(user, wins, losses, total_games_played, win_loss_ratio, winning_streak, position_in_leaderboard)
         
-		# Construct the JSON response
 		data = {
-			'Wins': wins,
-			'Losses': losses,
-			'Total Games Played': total_games_played,
-			'Win/Loss Ratio': win_loss_ratio,
-			'Winning Streak': winning_streak,
-			'Position in Leaderboard': position_in_leaderboard
+			'wins': wins,
+			'losses': losses,
+			'total_games_played': total_games_played,
+			'win_loss_ratio': win_loss_ratio,
+			'winning_streak': winning_streak,
+			'position_in_leaderboard': position_in_leaderboard
 		}
 
 		return Response(data, status=status.HTTP_200_OK)
