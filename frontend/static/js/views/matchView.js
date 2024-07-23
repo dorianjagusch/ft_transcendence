@@ -23,7 +23,7 @@ export default class extends Aview {
 	async createAiMatch() {
 		const data = await this.matchService.postAiMatch({ai_opponent: true});
 		localStorage.setItem('opponent', 'AI');
-		localStorage.setItem('token', this.token);
+		localStorage.setItem('token', data.token.token);
 		this.navigateTo('/pong');
 	}
 
