@@ -11,12 +11,6 @@ class Match(models.Model):
     update_ts = models.DateTimeField(auto_now=True)
 
     tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
-
-    player_match_status = models.CharField(
-        max_length=10,
-        choices=PlayerMatchStatus.choices(),
-        default=PlayerMatchStatus.NONE.value
-    )
     
     def start_match(self):
         if self.state == MatchState.LOBBY.value:

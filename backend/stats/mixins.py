@@ -30,7 +30,7 @@ class UserTableMixin:
 		matches = Match.objects.filter(players__user=user, state=MatchState.FINISHED).order_by('-end_ts')
 
 		for match in matches:
-			if match.player_match_status == PlayerMatchStatus.WINS.value:
+			if match.players.filter(user=user).first().match_winner == True:
 				win_streak += 1
 			else:
 				break
