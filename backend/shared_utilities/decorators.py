@@ -86,7 +86,7 @@ def valid_serializer_in_body(serializer_class, **kwargs):
 				serializer.is_valid(raise_exception=True)
 			except serializers.ValidationError as e:
 				return Response({'message': "Non-valid JSON object in request body.",'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+			
 			return view_func(*args, **kwargs)
 		return wrapper
 	return decorator
@@ -135,9 +135,8 @@ def validate_tournament_request(tournament_states: Iterable[TournamentState]):
 				return HttpResponseForbidden("You are not authorized to modify this resource.")
 
 			if tournament.state not in tournament_states:
-				#TODO: 409 Conflict
 				return HttpResponseForbidden(f"Cannot modify this resource because tournament state is not in '{tournament_states}'.")
-
+			
 			try:
 				TournamentInProgressManager.raise_error_if_tournament_has_expired(tournament)
 				TournamentInProgressManager.raise_error_if_inactive_user_in_tournament(tournament)
@@ -145,7 +144,7 @@ def validate_tournament_request(tournament_states: Iterable[TournamentState]):
 			except TournamentInProgressException as e:
 				TournamentInProgressManager.abort_tournament(tournament)
 				return HttpResponseForbidden(f"{str(e)}; tournament aborted!")
-
+			
 			return view_func(*args, **kwargs)
 		return wrapper
 	return decorator
