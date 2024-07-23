@@ -34,7 +34,7 @@ class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 		if not isinstance(guest_authentication_result, User):
 			return guest_authentication_result
 		
-		token = MatchToken.objects.create_single_match_token(host_user, guest_authentication_result)
+		token = MatchTokenManager.create_single_match_token(host_user, guest_authentication_result)
 		token_serializer = MatchTokenSerializer(token)
 		user_serializer = UserOutputSerializer(guest_authentication_result)
 		return Response({
