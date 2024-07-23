@@ -2,6 +2,7 @@
 from django.db import transaction
 import json
 import asyncio
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game import PongStatus
 from .constants import *
@@ -47,7 +48,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
     async def disconnect(self, close_code):
-        pass
+        await sync_to_async(self.match.abort_match)()
+        await self.close()
 
     async def receive(self, text_data):
         key_press = text_data.strip()
@@ -125,12 +127,13 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.player_left.match_winner = True
         else:
             self.player_right.match_winner = True
-        
+
         try:
             with transaction.atomic():
                 self.match.save()
                 self.player_left.save()
-                self.player_right.save()
+                if self.ai_opponent is False:
+                    self.player_right.save()
 
                 if self.match.tournament:
                     self.update_tournament_data_with_match_results(self.match)
@@ -142,15 +145,15 @@ class PongConsumer(AsyncWebsocketConsumer):
         try:
             if not match.tournament:
                 return
-            
+
             winning_player = match.players.filter(match_winner=True).first()
 
             # this shouldn't happen, but in case, abort tournament
             if not winning_player:
                 TournamentManager.in_progress.abort_tournament(match.tournament)
-            
+
             with transaction.atomic():
-            
+
                 winning_tournament_player = TournamentPlayer.objects.get(
                     tournament=match.tournament,
                     user=winning_player.user
@@ -160,7 +163,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 match.tournament.save()
 
                 TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
-        
+
         except Exception as e:
             TournamentManager.in_progress.abort_tournament(match.tournament)
 
