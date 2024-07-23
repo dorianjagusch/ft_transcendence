@@ -1,7 +1,6 @@
 import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
-import customErrors from '../exceptions/customErrors.js';
-import { navigateTo } from '../router.js';
+import {navigateTo} from '../router.js';
 
 class ARequestService {
 	constructor() {
