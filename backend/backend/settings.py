@@ -81,6 +81,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+APPEND_SLASH = True
 
 TEMPLATES = [
     {
