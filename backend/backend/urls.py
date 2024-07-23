@@ -66,8 +66,8 @@ urlpatterns = [
 	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
 
 	# Match Views
-	path('match/', MatchView.as_view()),
-	path('matches/', MatchHistory.as_view()),
+	path('matches/', MatchView.as_view()),
+	path('matches/history/', MatchHistory.as_view()),
 
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
