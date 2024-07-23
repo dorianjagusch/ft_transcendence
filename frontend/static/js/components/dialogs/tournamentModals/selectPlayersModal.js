@@ -151,3 +151,7 @@ export default class SelectPlayersModal extends ADialog {
 		});
 	}
 }
+
+//TODO: this is not going to be fun, but modals and players need their individual ids. as the array does not come with
+// the POST tournament/ response. When an add-event is fired the modal id needs to be known to update the right card (the do have ids atm).
+// and when the player data comes in that card needs to be found and the data-user-id updated.
