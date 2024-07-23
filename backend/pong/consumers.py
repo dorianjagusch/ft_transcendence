@@ -2,6 +2,7 @@
 from django.db import transaction
 import json
 import asyncio
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game import PongStatus
 from .constants import *
@@ -47,7 +48,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
     async def disconnect(self, close_code):
-        pass
+        await sync_to_async(self.match.abort_match)()
+        await self.close()
 
     async def receive(self, text_data):
         key_press = text_data.strip()
@@ -130,7 +132,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             with transaction.atomic():
                 self.match.save()
                 self.player_left.save()
-                self.player_right.save()
+                if self.ai_opponent is False:
+                    self.player_right.save()
 
                 if self.match.tournament:
                     self.update_tournament_data_with_match_results(self.match)
