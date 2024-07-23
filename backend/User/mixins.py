@@ -179,8 +179,6 @@ class GetProfilePictureMixin:
                 image_data = image_file.read()
                 encoded_image = base64.b64encode(image_data).decode('utf-8')
                 return Response({'image': encoded_image}, status=status.HTTP_200_OK)
-        except ProfilePicture.DoesNotExist:
-            return Response({'image': ''}, status=status.HTTP_200_OK)
         except FileNotFoundError:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
