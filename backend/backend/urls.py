@@ -52,7 +52,7 @@ urlpatterns = [
 
 	# User views
 	path('users/', UserListView.as_view()),
-	path('users/<int:user_id>', UserDetailView.as_view()),
+	path('users/<int:user_id>/', UserDetailView.as_view()),
 	path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
 	path('login/', UserLoginView.as_view()),
 	path('logout/', UserLogoutView.as_view()),
@@ -60,7 +60,7 @@ urlpatterns = [
 
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
-	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
+	path('friends/<int:friend_id>/', FriendshipDetailView.as_view()),
 
 	# Tokens views
 	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
@@ -71,11 +71,11 @@ urlpatterns = [
 
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
-	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
+	path('tournaments/<int:tournament_id>/', TournamentDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
-	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
+	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>/', TournamentPlayerDetailView.as_view()),
 	path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
-	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
+	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>/', TournamentMatchDetailView.as_view()),
 
 	# Stats Views
 	path('users/<int:user_id>/stats/', StatsView.as_view()),
@@ -84,5 +84,5 @@ urlpatterns = [
 
 
 websocket_urlpatterns = [
-    path('pong/<int:match_id>', PongConsumer.as_asgi()),
+	path('pong/<int:match_id>/', PongConsumer.as_asgi()),
 ]
