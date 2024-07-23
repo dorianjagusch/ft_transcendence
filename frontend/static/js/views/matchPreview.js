@@ -19,7 +19,7 @@ export default class extends Aview {
 		if (startButton) {
 			startButton.addEventListener('click', () => {
 				this.navigateTo(
-					`/pong/${this.params.tournament_id}/matches/${this.params.match_id}`
+					`/pong/tournaments/${this.params.tournament_id}/matches/${this.params.match_id}`
 				);
 			});
 		}
@@ -48,7 +48,7 @@ export default class extends Aview {
 	async getCurrentMatchData() {
 		const matchData = await this.tournamentService.getTournamentMatches(this.params);
 		debugger;
-		return matchData.find((match) => match.state === constants.MATCHSTATUS.LOBBY);
+		return matchData.find(match => match.state === constants.MATCHSTATUS.LOBBY || match.state === constants.MATCHSTATUS.ABORTED); //TODO change to just lobby
 	}
 
 	async getHTML() {
@@ -59,9 +59,12 @@ export default class extends Aview {
 		try {
 			debugger;
 			matchData = await this.getCurrentMatchData();
-			playerLeft = await this.setupPlayerInfo(matchData.tournament_player_left.user.id);
+			if (!matchData) {
+				return '<h1>No match data found</h1>';
+			}
+			playerLeft = await this.setupPlayerInfo(matchData.tournament_player_left.user);
 			console.log(playerLeft);
-			playerRight = await this.setupPlayerInfo(matchData.tournament_player_right.user.id);
+			playerRight = await this.setupPlayerInfo(matchData.tournament_player_right.user);
 		} catch (error) {
 			console.log(error);
 		}
