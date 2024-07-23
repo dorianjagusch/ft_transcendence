@@ -47,7 +47,6 @@ export default class extends Aview {
 
 	async getCurrentMatchData() {
 		const matchData = await this.tournamentService.getTournamentMatches(this.params);
-		debugger;
 		return matchData.find(match => match.state === constants.MATCHSTATUS.LOBBY || match.state === constants.MATCHSTATUS.ABORTED); //TODO change to just lobby
 	}
 
@@ -57,7 +56,6 @@ export default class extends Aview {
 		let matchData = null;
 		// TODO: Add stats to userService
 		try {
-			debugger;
 			matchData = await this.getCurrentMatchData();
 			if (!matchData) {
 				return '<h1>No match data found</h1>';
