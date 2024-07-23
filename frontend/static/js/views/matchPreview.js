@@ -47,8 +47,8 @@ export default class extends Aview {
 
 	async getCurrentMatchData() {
 		const matchData = await this.tournamentService.getTournamentMatches(this.params);
-		matchData.find((match) => match.state === constants.MATCHSTATUS.LOBBY);
-		return matchData;
+		debugger;
+		return matchData.find((match) => match.state === constants.MATCHSTATUS.LOBBY);
 	}
 
 	async getHTML() {
@@ -57,6 +57,7 @@ export default class extends Aview {
 		let matchData = null;
 		// TODO: Add stats to userService
 		try {
+			debugger;
 			matchData = await this.getCurrentMatchData();
 			playerLeft = await this.setupPlayerInfo(matchData.tournament_player_left.user.id);
 			console.log(playerLeft);

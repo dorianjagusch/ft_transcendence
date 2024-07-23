@@ -73,7 +73,6 @@ export default class extends AView {
 		let matchUrl = null;
 		try {
 			if (this.params.tournament_id && this.params.match_id) {
-				debugger;
 				matchUrl = await this.pongService.getTournamentMatchRequest(this.params);
 			} else {
 				matchUrl = await this.pongService.getRequest();

@@ -50,7 +50,6 @@ export default class extends Aview {
 		if (startButton) {
 			startButton.addEventListener('click', () => {
 				localStorage.setItem('token', this.token);
-				localStorage.setItem('opponent', JSON.stringify(this.opponent)); //TODO: Encrypt data
 				this.navigateTo('/pong');
 			});
 		}
