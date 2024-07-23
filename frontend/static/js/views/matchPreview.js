@@ -25,7 +25,7 @@ export default class extends Aview {
 		}
 	}
 
-	async continueButton() {
+	continueButton() {
 		const container = document.createElement('div');
 		const vs = document.createElement('h2');
 		vs.classList.add('vs');
