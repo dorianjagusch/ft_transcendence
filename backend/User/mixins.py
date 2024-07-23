@@ -5,6 +5,7 @@ from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 import base64
 
 from .models import User, ProfilePicture
@@ -34,11 +35,7 @@ class GetUserMixin:
     Mixin to get a user by ID.
     """
     def get_user(self, user_id: int) -> User | Response:
-        try:
-            user = User.objects.get(pk=user_id)
-            return user
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return get_object_or_404(User, pk=user_id)
 
 
 class CreateUserMixin:
@@ -63,14 +60,13 @@ class UpdateUserMixin:
     Mixin to update a user by ID.
     """
     def update_user(self, request: Request, user_id: int) -> Response:
-        try:
-            user = User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        user = get_object_or_404(User, pk=user_id)
+        if not isinstance(user, User):
+            return user
 
         input_serializer = UserInputSerializer(user, data=request.data, partial=True)
         if input_serializer.is_valid():
-            user = input_serializer.save()
+            input_serializer.save()
             output_serializer = UserOutputSerializer(user)
             return Response(output_serializer.data, status=status.HTTP_200_OK)
         return Response(input_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -112,28 +108,28 @@ class LogoutUserMixin:
 
 
 class DeleteUserMixin:
-    """
-    Mixin to delete a user by ID.
-    """
-    def delete_user(self, request: Request, user_id: int) -> Response:
-        try:
-            logout(request)
-            user = User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+	"""
+	Mixin to delete a user by ID.
+	"""
+	def delete_user(self, request: Request, user_id: int) -> Response:
+		try:
+			logout(request)
+		except Exception:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+		user = get_object_or_404(User, pk=user_id)
+		if not isinstance(user, User):
+				return user
 
-        user.username = f"deleted_user_{user_id + 42}"
-        user.set_password(get_random_string(length=30))
-        user.is_active = False
-        user.is_staff = False
-        user.is_superuser = False
-        user.insertTS = None
-        user.last_login = None
-        user.is_online = False
-        user.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+		user.username = f"deleted_user_{user_id + 42}"
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insertTS = None
+		user.last_login = None
+		user.is_online = False
+		user.save()
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SaveUserProfilePictureMixin:
@@ -141,10 +137,9 @@ class SaveUserProfilePictureMixin:
     Mixin to save a user's profile picture.
     """
     def save_profile_picture(self, request: Request, user_id: int) -> Response:
-        try:
-            user = User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        user = get_object_or_404(User, pk=user_id)
+        if not isinstance(user, User):
+             return user
 
         if 'file' not in request.FILES:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -172,7 +167,9 @@ class GetProfilePictureMixin:
     """
     def get_profile_picture(self, user_id: int) -> Response:
         try:
-            user = User.objects.get(pk=user_id)
+            user = get_object_or_404(User, pk=user_id)
+            if not isinstance(user, User):
+                 return user
             profile_picture = ProfilePicture.objects.filter(user=user).first()
             if not profile_picture:
                 return Response({'image': ''}, status=status.HTTP_200_OK)
