@@ -31,7 +31,6 @@ class UserService extends ARequestService {
 	async putRequest(id, {username, password}) {
 		return super.putRequest(
 			`${backendURL.userURL}${id}`,
-			id,
 			JSON.stringify({
 				username: username,
 				password: password,

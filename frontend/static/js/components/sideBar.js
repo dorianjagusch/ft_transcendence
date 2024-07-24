@@ -42,7 +42,7 @@ const profilePictureHandler = async (file) => {
 	navigateTo('/dashboard');
 };
 
-const updateUser = async (user_id) => {
+const updateUser = async (userId) => {
     let savebleUsername = localStorage.getItem('username');
     let saveblePassword = '';
 
@@ -50,16 +50,16 @@ const updateUser = async (user_id) => {
     const password = document.getElementById('current-password').value;
     const repeatPassword = document.getElementById('password').value;
 
-    if (username !== '' && username !== currentUserName) {
+    if (username !== '' && username !== savebleUsername) {
         savebleUsername = username;
     }
 
     if (password !== '' && password !== repeatPassword) {
-        this.notify('Passwords do not match', 'error');
+        notify('Passwords do not match', 'error');
         return;
     }
 
-    if (password !== '' && password !== currentPassword) {
+    if (password !== '' && repeatPassword !== '') {
         saveblePassword = password;
     }
 
@@ -70,11 +70,12 @@ const updateUser = async (user_id) => {
 
     const userService = new UserService();
     try {
-        await userService.putRequest(user_id, data);
-        this.notify('User updated successfully.');
-        localStorage.setItem('username', savebleUsername);
+        await userService.putRequest(userId, data);
+        notify('User updated successfully.');
+		if (username === savebleUsername)
+        	localStorage.setItem('username', savebleUsername);
     } catch (error) {
-		this.notify(error);
+		notify(error);
     }
 	navigateTo('/dashboard');
 };

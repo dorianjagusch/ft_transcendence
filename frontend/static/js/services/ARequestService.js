@@ -81,8 +81,8 @@ class ARequestService {
 		return this.checkResponseWithBody(request, logoutOn401);
 	}
 
-	async putRequest(url, id, jsonBody, logoutOn401 = true) {
-		const request = fetch(`${url}${id}`, {
+	async putRequest(url, jsonBody, logoutOn401 = true) {
+		const request = fetch(`${url}`, {
 			method: 'PUT',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
