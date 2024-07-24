@@ -7,7 +7,6 @@ from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 import base64
-import sys
 from .models import User, ProfilePicture
 from .validators import validate_image
 from .serializers import UserInputSerializer, UserOutputSerializer
@@ -84,7 +83,6 @@ class UpdateUserMixin:
 			outputSerializer = UserOutputSerializer(result)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
-			print(f"{str(e)}", file=sys.stderr)
 			return Response({"message": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
