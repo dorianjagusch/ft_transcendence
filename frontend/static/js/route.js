@@ -10,7 +10,7 @@ import pongPage from './views/pongView.js';
 import leaderBoard from './views/leaderboardView.js';
 import show404Page from './views/404View.js';
 import matchPage from './views/matchView.js';
-import previewPage from './views/PreviewMatchView.js';
+import previewPage from './views/previewMatchView.js';
 
 export default [
 	{ path: '/404', view: show404Page },
