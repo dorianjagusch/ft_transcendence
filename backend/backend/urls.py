@@ -25,7 +25,6 @@ from django.conf.urls.static import static
 
 from pong.consumers import PongConsumer
 
-# User views
 from User.views import (
     UserDetailView,
     UserListView,
@@ -35,22 +34,18 @@ from User.views import (
     UserAdminDetailsView
 )
 
-# Friends views
 from Friends.views import (
     FriendsListView,
     FriendshipDetailView
 )
 
-# Tokens views
 from Tokens.views import SingleMatchGuestTokenView
 
-# Match views
 from Match.views import (
     MatchView,
     MatchHistory
 )
 
-# Tournament views
 from Tournament.views import (
     TournamentListView,
     TournamentDetailView,
@@ -60,48 +55,50 @@ from Tournament.views import (
     TournamentMatchDetailView
 )
 
-# Stats views
-from stats.views import (
-    StatsView,
-    LeaderboardListView
-)
+from stats.views import StatsView
+
+from leaderboard.views import LeaderboardListView
+    
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # User views
-    path('users/', UserListView.as_view(), name='user-list'),
-    path('users/<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
-    path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view(), name='user-profile-pictures'),
-    path('login/', UserLoginView.as_view(), name='user-login'),
-    path('logout/', UserLogoutView.as_view(), name='user-logout'),
-    path('admins/', UserAdminDetailsView.as_view(), name='user-admin-details'),
+    path('users/', UserListView.as_view()),
+    path('users/<int:user_id>/', UserDetailView.as_view()),
+    path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
+    path('login/', UserLoginView.as_view()),
+    path('logout/', UserLogoutView.as_view()),
+    path('admins/', UserAdminDetailsView.as_view()),
 
     # Friends views
-    path('friends/', FriendsListView.as_view(), name='friends-list'),
-    path('friends/<int:friend_id>/', FriendshipDetailView.as_view(), name='friendship-detail'),
+    path('friends/', FriendsListView.as_view()),
+    path('friends/<int:friend_id>/', FriendshipDetailView.as_view()),
 
     # Tokens views
-    path('tokens/match/', SingleMatchGuestTokenView.as_view(), name='single-match-guest-token'),
+    path('tokens/match/', SingleMatchGuestTokenView.as_view()),
 
 	# Match Views
 	path('match/', MatchView.as_view()),
 	path('matches/', MatchHistory.as_view()),
 
     # Tournament views
-    path('tournaments/', TournamentListView.as_view(), name='tournament-list'),
-    path('tournaments/<int:tournament_id>/', TournamentDetailView.as_view(), name='tournament-detail'),
-    path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view(), name='tournament-player-list'),
-    path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>/', TournamentPlayerDetailView.as_view(), name='tournament-player-detail'),
-    path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view(), name='tournament-match-list'),
-    path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>/', TournamentMatchDetailView.as_view(), name='tournament-match-detail'),
+    path('tournaments/', TournamentListView.as_view()),
+    path('tournaments/<int:tournament_id>/', TournamentDetailView.as_view()),
+    path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
+    path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>/', TournamentPlayerDetailView.as_view()),
+    path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
+    path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>/', TournamentMatchDetailView.as_view()),
 
-	# Stats Views
+	# stats Views
 	path('users/<int:user_id>/stats/', StatsView.as_view()),
+	
+    # leaderboard Views
 	path('leaderboard/', LeaderboardListView.as_view()),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # WebSocket URL patterns
 websocket_urlpatterns = [
-    path('pong/<int:match_id>/', PongConsumer.as_asgi(), name='pong-consumer'),
+    path('pong/<int:match_id>/', PongConsumer.as_asgi()),
 ]
