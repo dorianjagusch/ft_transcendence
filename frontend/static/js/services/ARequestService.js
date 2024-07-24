@@ -1,7 +1,6 @@
 import constants from '../constants.js';
 import getCookie from '../utils/getCookie.js';
-import customErrors from '../exceptions/customErrors.js';
-import { navigateTo } from '../router.js';
+import {navigateTo} from '../router.js';
 
 class ARequestService {
 	constructor() {
@@ -10,26 +9,17 @@ class ARequestService {
 		}
 	}
 
-	throwCustomError(errorCode, errorText) {
-		const errorMap = {
-			401: customErrors.unauthorized_401,
-			409: customErrors.conflict_409,
-		};
 
-		const errorClass = errorMap[errorCode] || Error;
-		throw new errorClass(errorText);
-	}
-
-	async checkResponseWithBody(request) {
+	async checkResponseWithBody(request, logoutOn401 = true) {
 		try {
 			const response = await request;
 			if (!response.ok) {
-				if (response.status === 401) {
+				if (response.status === 401 && logoutOn401) {
 					localStorage.clear();
 					navigateTo('/login');
 					return;
 				}
-				this.throwCustomError(response.status, response.statusText);
+				throw new Error(response.message);
 			}
 			return response.json();
 		} catch (error) {
@@ -41,10 +31,15 @@ class ARequestService {
 		}
 	}
 
-	async checkResponseNoBody(request) {
+	async checkResponseNoBody(request, logoutOn401 = true) {
 		try {
 			const response = await request;
 			if (!response.ok) {
+				if (response.status === 401) {
+					localStorage.clear();
+					navigateTo('/login');
+					return;
+				}
 				throw new Error('Error: ' + response.status);
 			}
 			return '';
@@ -57,21 +52,21 @@ class ARequestService {
 		}
 	}
 
-	async getRequest(url) {
+	async getRequest(url, logoutOn401 = true) {
 		const request = fetch(`${url}`, {
 			credentials: 'include',
 		});
-		return this.checkResponseWithBody(request);
+		return this.checkResponseWithBody(request, logoutOn401);
 	}
 
-	async getAllRequest(url) {
+	async getAllRequest(url, logoutOn401 = true) {
 		const request = fetch(`${url}`, {
 			credentials: 'include',
 		});
-		return this.checkResponseWithBody(request);
+		return this.checkResponseWithBody(request, logoutOn401);
 	}
 
-	async postRequest(url, jsonBody) {
+	async postRequest(url, jsonBody, logoutOn401 = true) {
 		const request = fetch(`${url}`, {
 			method: 'POST',
 			headers: {
@@ -82,10 +77,10 @@ class ARequestService {
 			credentials: 'include',
 		});
 
-		return this.checkResponseWithBody(request);
+		return this.checkResponseWithBody(request, logoutOn401);
 	}
 
-	async putRequest(url, id, jsonBody) {
+	async putRequest(url, id, jsonBody, logoutOn401 = true) {
 		const request = fetch(`${url}${id}`, {
 			method: 'PUT',
 			headers: {
@@ -96,10 +91,10 @@ class ARequestService {
 			credentials: 'include',
 		});
 
-		return this.checkResponseWithBody(request);
+		return this.checkResponseWithBody(request, logoutOn401);
 	}
 
-	async deleteRequest(url) {
+	async deleteRequest(url, logoutOn401 = true) {
 		const request = fetch(`${url}`, {
 			method: 'DELETE',
 			headers: {
@@ -109,7 +104,7 @@ class ARequestService {
 			credentials: 'include',
 		});
 
-		return this.checkResponseNoBody(request);
+		return this.checkResponseNoBody(request, logoutOn401);
 	}
 }
 

@@ -77,7 +77,7 @@ export default class SelectPlayersModal extends ADialog {
 		return selectedPlayers;
 	}
 
-	completeTournamentData(){
+	completeTournamentData() {
 		const players = this.getFormData();
 		if (!players) {
 			this.notify('All players must be provided');
