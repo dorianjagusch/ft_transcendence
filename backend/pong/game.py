@@ -37,11 +37,10 @@ class PongStatus:
         self.game.update_ball_position(self)
 
     async def ai_move_paddle(self, target_y):
-        if abs(self.player_right.y - target_y) > AI_PADDLE_TOLERANCE:
-            if self.player_right.y <= target_y:
-                self.player_right.y = self.game.move_player(self.player_right.y, PLAYER_MOVEMENT_UNIT)
-            elif self.player_right.y >= target_y:
-                self.player_right.y = self.game.move_player(self.player_right.y, -PLAYER_MOVEMENT_UNIT)
+        error = target_y - self.player_right.y
+        if abs(error) > AI_PADDLE_TOLERANCE:
+            movement = math.copysign(min(abs(error), PLAYER_MOVEMENT_UNIT), error)
+            self.player_right.y = self.game.move_player(self.player_right.y, movement)
             self.player_right.y = self.game.check_boundary(self.player_right.y)
 
     def update_ball_position(self):
