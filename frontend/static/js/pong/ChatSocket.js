@@ -37,7 +37,7 @@ class ChatSocket {
 	}
 
 	handleError(e) {
-		if (this.chatSocket && chatSocket.readyState == WebSocket.OPEN) {
+		if (this.chatSocket && this.chatSocket.readyState == WebSocket.OPEN) {
 			chatSocket.close();
 		}
 		this.removeEventListeners();
@@ -52,6 +52,11 @@ class ChatSocket {
 			}
 		}
 		this.chatSocket.send(e.key);
+		if (e.key == "Enter" && this.game){
+			Array.from(document.querySelectorAll('.instructions')).forEach(instruction => {
+				instruction.style.display = 'none';
+			})
+		}
 	}
 
 	removeEventListeners() {
