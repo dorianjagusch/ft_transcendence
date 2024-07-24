@@ -16,7 +16,7 @@ class StatsView(APIView, UserTableMixin):
 	def get(self, request, user_id):
 		user = User.objects.filter(id = user_id).first()
 		if not user:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({"message": "User was not found"}, status=status.HTTP_404_NOT_FOUND)
 		wins = self.get_wins_count(user)
 		losses = self.get_losses_count(user)
 		total_games_played = self.get_total_games_played_count(user)
@@ -24,7 +24,7 @@ class StatsView(APIView, UserTableMixin):
 		winning_streak = self.get_win_streak_count(user)
 		position_in_leaderboard = self.get_position_in_leaderboard(user)
 		self.user_table = UserTable(user, wins, losses, total_games_played, win_loss_ratio, winning_streak, position_in_leaderboard)
-        
+
 		data = {
 			'wins': wins,
 			'losses': losses,
