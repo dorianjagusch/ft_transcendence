@@ -42,41 +42,64 @@ const profilePictureHandler = async (file) => {
 	navigateTo('/dashboard');
 };
 
-const updateUser = async (userId) => {
-    let savebleUsername = localStorage.getItem('username');
-    let saveblePassword = '';
+let updateUser = async (userId) => {
+	let savebleUsername = localStorage.getItem('username');
+	let saveblePassword = '';
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('current-password').value;
-    const repeatPassword = document.getElementById('password').value;
+	let usernameField = document.getElementById('username');
+	let currentPasswordField = document.getElementById('current-password');
+	let newPasswordField = document.getElementById('password');
 
-    if (username !== '' && username !== savebleUsername) {
-        savebleUsername = username;
-    }
+	const username = usernameField.value;
+	const password = currentPasswordField.value;
+	const repeatPassword = newPasswordField.value;
 
-    if (password !== '' && password !== repeatPassword) {
-        notify('Passwords do not match', 'error');
-        return;
-    }
+	if (username !== '' && username !== savebleUsername) {
+		savebleUsername = username;
+	}
 
-    if (password !== '' && repeatPassword !== '') {
-        saveblePassword = password;
-    }
+	if (password === '' && username === '') {
+		notify('No new password or new username provided', 'error');
+		return;
+	}
 
-    const data = {
-        username: savebleUsername,
-        password: saveblePassword,
-    };
+	if (password !== '' && password !== repeatPassword) {
+		notify('Passwords do not match', 'error');
+		return;
+	}
 
-    const userService = new UserService();
-    try {
-        await userService.putRequest(userId, data);
-        notify('User updated successfully.');
+	if (password !== '' && repeatPassword !== '') {
+		saveblePassword = password;
+	}
+
+	const data = {
+		username: savebleUsername,
+		password: saveblePassword,
+	};
+
+	const userService = new UserService();
+	try {
+		await userService.putRequest(userId, data);
+		notify('User updated successfully.');
 		if (username === savebleUsername)
-        	localStorage.setItem('username', savebleUsername);
-    } catch (error) {
+			localStorage.setItem('username', savebleUsername);
+
+		if (saveblePassword !== '') {
+			usernameField.value = '';
+			currentPasswordField.value = '';
+			newPasswordField.value = '';
+			localStorage.clear();
+			navigateTo('/logout');
+		}
+
+	} catch (error) {
 		notify(error);
-    }
+	}
+
+	usernameField.value = '';
+	currentPasswordField.value = '';
+	newPasswordField.value = '';
+
 	navigateTo('/dashboard');
 };
 
