@@ -9,19 +9,20 @@ class ARequestService {
 		}
 	}
 
-
 	async checkResponseWithBody(request, logoutOn401 = true) {
 		try {
 			const response = await request;
-			if (!response.ok) {
-				if (response.status === 401 && logoutOn401) {
-					localStorage.clear();
-					navigateTo('/login');
-					return;
-				}
-				throw new Error(response.message);
+			if (response.ok) {
+				return response.json();
 			}
-			return response.json();
+			console.log();
+			if (response.status === 401 && logoutOn401) {
+				localStorage.clear();
+				navigateTo('/login');
+				return;
+			}
+
+			throw new Error(response.message);
 		} catch (error) {
 			if (error instanceof TypeError) {
 				console.error(constants.problemWithFetchMsg, error);
@@ -40,7 +41,7 @@ class ARequestService {
 					navigateTo('/login');
 					return;
 				}
-				throw new Error('Error: ' + response.status);
+				throw new Error('Error: ' + response.message);
 			}
 			return '';
 		} catch (error) {
@@ -92,6 +93,18 @@ class ARequestService {
 		});
 
 		return this.checkResponseWithBody(request, logoutOn401);
+	}
+
+	async patchRequest(url, id) {
+		const request = fetch(`${url}${id}`, {
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'application/json',
+			},
+			credentials: 'include',
+		});
+		return this.checkResponseWithBody(request);
 	}
 
 	async deleteRequest(url, logoutOn401 = true) {

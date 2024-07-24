@@ -1,8 +1,6 @@
 import ADialog from "./ADialog.js";
 import AcceptForm from "../formComponents/acceptDeclineForm.js";
 
-import { navigateTo } from "../../router.js";
-
 export default class AcceptDeclineModal extends ADialog {
 	constructor(callback, ...callbackArgs) {
 		super(new AcceptForm(), null);

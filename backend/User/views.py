@@ -12,6 +12,7 @@ import mimetypes
 import imghdr
 import base64
 from django.utils.crypto import get_random_string
+from django.shortcuts import get_object_or_404
 
 from .models import User, ProfilePicture
 from .mixins import UserAuthenticationMixin, UserLoginMixin
@@ -135,8 +136,8 @@ class UserProfilePictureView(APIView):
 
 	@method_decorator(must_be_authenticated)
 	def get(self, request, user_id):
+		user = get_object_or_404(User, pk=user_id)
 		try:
-			user = User.objects.get(pk=user_id)
 			profile_picture = ProfilePicture.objects.filter(user=user).first()
 			if not profile_picture:
 				return Response({"image": ""}, status=status.HTTP_200_OK)

@@ -75,6 +75,9 @@ export default class extends AView {
 	}
 
 	async mapResponse(response) {
+		if (!response){
+			return [];
+		}
 		const promises = response.map(async (element) => {
 			try {
 				const profileImg = await getProfilePicture(element.id);

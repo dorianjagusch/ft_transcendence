@@ -5,7 +5,7 @@ import searchFriendsForm from '../formComponents/searchFriendsForm.js';
 import getProfilePicture from '../profilePicture.js';
 import FriendService from '../../services/friendService.js';
 import {navigateTo} from '../../router.js';
-import constants from '../../constants.js'; //TODO: remove once backend send relationship with search results
+import constants from '../../constants.js';
 
 export default class SearchFriendsModal extends ADialog {
 	constructor() {
