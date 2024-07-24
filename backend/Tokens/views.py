@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
-from User.mixins import UserAuthenticationMixin
+
 from User.models import User
+from User.mixins import AuthenticateUserMixin
 from User.serializers import UserInputSerializer, \
 								UserOutputSerializer
 from .models import MatchToken
@@ -14,10 +15,8 @@ from .serializers import MatchTokenSerializer
 from shared_utilities.decorators import must_be_authenticated, \
 											must_not_be_username, \
 											valid_serializer_in_body
-import sys
 
-# Create your views here.
-class SingleMatchGuestTokenView(APIView, UserAuthenticationMixin):
+class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):
 		host_user = request.user
@@ -30,13 +29,13 @@ class SingleMatchGuestTokenView(APIView, UserAuthenticationMixin):
 				'guest_user': ''
 			}, status=status.HTTP_201_CREATED)
 
-		guest_authentication_result = self.authenticate_user(request)
-		if not isinstance(guest_authentication_result, User):
-			return guest_authentication_result
+		result = self.authenticate_user(request)
+		if not isinstance(result, User):
+			return result
 
-		token = MatchTokenManager.create_single_match_token(host_user, guest_authentication_result)
+		token = MatchTokenManager.create_single_match_token(host_user, result)
 		token_serializer = MatchTokenSerializer(token)
-		user_serializer = UserOutputSerializer(guest_authentication_result)
+		user_serializer = UserOutputSerializer(result)
 		return Response({
 			'token': token_serializer.data,
 			'guest_user': user_serializer.data
