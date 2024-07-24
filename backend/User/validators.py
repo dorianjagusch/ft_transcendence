@@ -2,15 +2,6 @@ from django.core.exceptions import ValidationError
 import os
 
 def validate_image(file):
-    """
-    Validate the uploaded image file.
-    
-    Parameters:
-    file (InMemoryUploadedFile): The uploaded file.
-
-    Raises:
-    ValidationError: If the file does not meet the validation criteria.
-    """
     valid_mime_types = ['image/jpeg', 'image/png', 'image/gif']
     valid_file_extensions = ['.jpg', '.jpeg', '.png', '.gif']
     max_file_size = 2097152  # 2MB
