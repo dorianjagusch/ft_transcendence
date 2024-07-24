@@ -1,5 +1,6 @@
 import ChatSocket from '../pong/ChatSocket.js';
 import PongService from '../services/pongService.js';
+import TournamentService from '../services/tournamentService.js';
 import Pong from '../pong/pong.js';
 import AView from './AView.js';
 
@@ -12,6 +13,8 @@ export default class extends AView {
 		this.setTitle('Pong');
 		this.chatSocket = null;
 		this.pongService = new PongService();
+		this.tournamentService = new TournamentService();
+		this.attachObserver = this.attachObserver.bind(this);
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 	}
 
@@ -21,12 +24,14 @@ export default class extends AView {
 		}
 		mutation.addedNodes.forEach((node) => {
 			if (node.tagName === 'CANVAS') {
-				document.querySelector('canvas').scrollIntoView({behavior: 'smooth', block: 'center'});
+				document
+					.querySelector('canvas')
+					.scrollIntoView({behavior: 'smooth', block: 'center'});
 			}
 		});
 	}
 
-	checkForPongClosing(mutation) {
+	checkForPongClosing(mutation, observer) {
 		if (!mutation.removedNodes) {
 			return;
 		}
@@ -39,13 +44,7 @@ export default class extends AView {
 		});
 	}
 
-	attachEventListeners() {
-		document.querySelectorAll('.nav-link').forEach((link) => {
-			link.addEventListener('click', this.chatSocket.handleClose);
-		});
-
-		window.addEventListener('beforeunload', this.chatSocket.handleClose);
-
+	attachObserver() {
 		const observer = new MutationObserver((mutationsList, observer) => {
 			for (let mutation of mutationsList) {
 				this.checkForPongClosing(mutation, observer);
@@ -55,10 +54,28 @@ export default class extends AView {
 		observer.observe(document.body.querySelector('main'), {childList: true, subtree: true});
 	}
 
+	attachEventListeners() {
+		document.querySelector('.new-game-button').addEventListener('click', async () => {
+			const nextMatch = await this.tournamentService.getNextMatch(this.params);
+			this.navigateTo(`/pong/tournaments/${this.params.tournament_id}/matches/${nextMatch}`);
+		});
+
+		document.querySelectorAll('.nav-link').forEach((link) => {
+			link.addEventListener('click', this.chatSocket.handleClose);
+		});
+
+		window.addEventListener('beforeunload', this.chatSocket.handleClose);
+	}
+
 	async getHTML() {
 		let matchUrl = null;
 		try {
-			matchUrl = await this.pongService.getRequest();
+			if (this.params.tournament_id && this.params.match_id) {
+				matchUrl = await this.pongService.getMatchRequest(this.params);
+			} else {
+				matchUrl = await this.pongService.getRequest();
+			}
+			localStorage.removeItem('token');
 			this.chatSocket = new ChatSocket(matchUrl);
 			this.chatSocket.connect();
 		} catch (error) {
@@ -66,8 +83,9 @@ export default class extends AView {
 			this.navigateTo('/play');
 		}
 
-		this.attachEventListeners();
-		const pong = Pong.PongContainer();
+		this.attachObserver();
+		const pong = Pong.PongContainer(this.params.tournament_id);
 		this.updateMain(pong);
+		this.attachEventListeners();
 	}
 }

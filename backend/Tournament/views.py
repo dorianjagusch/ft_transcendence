@@ -28,23 +28,25 @@ class TournamentListView(APIView):
 
 		tournament_creation_serializer = TournamentSerializers.creation(data=body_data)
 		if not tournament_creation_serializer.is_valid():
-			return Response({'error': 'invalid request for tournament creation'}, status=status.HTTP_400_BAD_REQUEST)
-		
+			return Response({"message": "Invalid request for tournament creation"}, status=status.HTTP_400_BAD_REQUEST)
+
 		try:
 			tournament = TournamentManager.setup.create_tournament_and_tournament_player_for_host(tournament_creation_serializer.validated_data)
+			if not tournament:
+				return Response({"message" : "Tournament was not found"}, status=status.HTTP_404_NOT_FOUND)
 			host_tournament_player_serializer = TournamentSerializers.player(tournament.players.all().first())
 			return Response({
-				'tournament_id': tournament.id,
+				'tournament': TournamentSerializers.default(tournament).data,
 				'tournament_player': host_tournament_player_serializer.data
-			}, status=status.HTTP_201_CREATED) 
+			}, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({'error': str(e)},status=status.HTTP_403_FORBIDDEN)
-		
+			return Response({"message": str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class TournamentDetailView(APIView):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 		if request.user == tournament.host_user and tournament.state == TournamentState.IN_PROGRESS:
 			serializer = TournamentSerializers.in_progress(tournament)
 		else:
@@ -61,7 +63,7 @@ class TournamentDetailView(APIView):
 				serializer = TournamentSerializers.in_progress(tournament)
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			except Exception as e:
-				return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+				return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 		elif tournament.state == TournamentState.IN_PROGRESS:
 			TournamentManager.in_progress.abort_tournament(tournament)
@@ -79,7 +81,7 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 		tournament_players = tournament.players.all().order_by('id')
 		tournament_players_serializers = TournamentSerializers.player(tournament_players, many=True)
 		return Response(tournament_players_serializers.data, status=status.HTTP_200_OK)
@@ -93,23 +95,24 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 
 		tournament = Tournament.objects.get(id=tournament_id)
 		if tournament.players.count() >= tournament.player_amount:
-			return Response({"error": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
-		display_name = request.data.get('display_name')
+    username = result.username
+		display_name = request.data.get('display_name', None)
 		try:
-			tournament_player = TournamentManager.players.create_tournament_player(tournament, result, display_name)
+			tournament_player = TournamentManager.players.create_tournament_player(tournament, result, display_name or username)
 			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
+			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class TournamentPlayerDetailView(APIView):
 	def get(self, request, tournament_id, tournamentplayer_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
 		if not tournament_player:
-			return Response({'error': f'Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}'}, status=status.HTTP_404_NOT_FOUND)
-		
+			return Response({"message": f"Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}"}, status=status.HTTP_404_NOT_FOUND)
+
 		tournament_player_serializer = TournamentSerializers.player(tournament_player)
 		return Response(tournament_player_serializer.data, status=status.HTTP_200_OK)
 
@@ -119,10 +122,10 @@ class TournamentPlayerDetailView(APIView):
 		tournament = Tournament.objects.get(id=tournament_id)
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
 		if not tournament_player:
-			return Response({'error': f'Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}'}, status=status.HTTP_404_NOT_FOUND)
-		
+			return Response({"message": f"Tournament {tournament.id} does not have tournamentplayer with id {tournamentplayer_id}"}, status=status.HTTP_404_NOT_FOUND)
+
 		if tournament_player.user == request.user:
-			return Response({'error': 'Cannot delete host tournament player'}, status=status.HTTP_404_NOT_FOUND)
+			return Response({"message": "Cannot delete host tournament player"}, status=status.HTTP_404_NOT_FOUND)
 		tournament_player.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -130,7 +133,7 @@ class TournamentMatchListView(APIView):
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found.", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 		tournament_matches = tournament.matches.all().order_by('id')
 		tournament_match_serializers = TournamentSerializers.match(tournament_matches, many=True)
 		return Response(tournament_match_serializers.data, status=status.HTTP_200_OK)
@@ -139,11 +142,11 @@ class TournamentMatchDetailView(APIView):
 	def get(self, request, tournament_id, tournament_match_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		if not tournament:
-			return Response(f"Tournament {tournament_id} not found", status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : f"Tournament {tournament_id} not found"}, status=status.HTTP_404_NOT_FOUND)
 		tournament_matches = tournament.matches.all().order_by('id')
 		if tournament_match_id >= tournament_matches.count():
-			return Response(f"Tournament {tournament_id} does not have {tournament_match_id} match", status=status.HTTP_404_NOT_FOUND)
-		
+			return Response({"message": f"Tournament {tournament_id} does not have {tournament_match_id} match"}, status=status.HTTP_404_NOT_FOUND)
+
 		if request.user == tournament.host_user \
 			and tournament.state == TournamentState.IN_PROGRESS \
 			and tournament_matches.filter(state=TournamentState.FINISHED).count() == tournament_match_id:
@@ -154,10 +157,10 @@ class TournamentMatchDetailView(APIView):
 
 			except TournamentInProgressException as e:
 				TournamentManager.in_progress.abort_tournament(tournament)
-				return Response(f"{str(e)}; tournament aborted!", status=status.HTTP_403_FORBIDDEN)
+				return Response({"message" : f"{str(e)}; tournament aborted!"}, status=status.HTTP_400_BAD_REQUEST)
 
 			if tournament_matches[tournament_match_id].state != TournamentState.LOBBY:
-				return Response({"error": f"the tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message": f"The tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
 			next_match = tournament_matches[tournament_match_id]
 			token = MatchTokenManager.create_tournament_match_token(next_match)
 			pong_match_url = f'ws://localhost:8080/pong/{next_match.id}?token={token.token}'

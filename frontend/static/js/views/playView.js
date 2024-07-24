@@ -3,7 +3,7 @@ import {GameCard} from '../components/gameCard.js';
 import TournamentModal from '../components/dialogs/tournamentModals/tournamentModal.js';
 import SelectPlayersModal from '../components/dialogs/tournamentModals/selectPlayersModal.js';
 import SummaryModal from '../components/dialogs/tournamentModals/summaryModal.js';
-import {navigateTo} from '../router.js';
+
 
 export default class extends AView {
 	constructor(params) {
@@ -11,6 +11,7 @@ export default class extends AView {
 		this.setTitle('Play');
 		this.openSelectPlayersModal = this.openSelectPlayersModal.bind(this);
 		this.openSummaryModal = this.openSummaryModal.bind(this);
+		this.startTournament = this.startTournament.bind(this);
 	}
 
 	attachEventListeners() {
@@ -31,57 +32,48 @@ export default class extends AView {
 		}
 	}
 
-	adjustSummaryModal() {
+	adjustSummaryModal(tournamentName) {
 		document.querySelector('main').appendChild(this.summaryModal.dialog);
 		this.summaryModal.dialog.classList.add('summary-modal');
 		this.summaryModal.dialog.classList.remove('bg-secondary');
 		this.summaryModal.dialog.classList.add('bg-primary');
 		const summaryTitle = document.createElement('h3');
-		summaryTitle.textContent = 'Start this tournament?';
+		summaryTitle.textContent = `Start tournament ${tournamentName}?`;
 		document.querySelector('.selected-players').prepend(summaryTitle);
 	}
 
 	openSummaryModal(tournamentData) {
 		this.selectPlayersModal.dialog.close();
 		this.summaryModal = new SummaryModal(this.startTournament, tournamentData);
-		this.adjustSummaryModal();
-		this.summaryModal.dialog.addEventListener('click', (e) => {
-			if (e.target.classList.contains('accept-btn')) {
-				e.preventDefault();
-				this.summaryModal.dialog.close();
-				this.startTournament(tournamentData);
-			} else if (e.target.classList.contains('decline-btn')) {
-				e.preventDefault();
-				this.summaryModal.dialog.close();
-				this.selectPlayersModal.dialog.showModal();
-			}
-		});
+		this.adjustSummaryModal(tournamentData.tournamentName);
 		this.summaryModal.dialog.showModal();
 	}
 
-	startTournament(tournamentData) {
-		// this.navigateTo(`/tournament/${tournamentData.id}/match/${tournamentData.match_id}`);
-		this.navigateTo('/pong');
+	startTournament(matchData) {
+		document.querySelector('.summary-modal').close();
+		if (matchData.token)
+			localStorage.setItem('token', matchData.token);
+		this.navigateTo(`/pong/tournaments/${matchData.id}/matches/${matchData.next_match}`);
 	}
 
-	adjustSelectPlayerModal() {
+	adjustSelectPlayerModal(tournamentName) {
 		document.querySelector('main').appendChild(this.selectPlayersModal.dialog);
 		this.selectPlayersModal.dialog.classList.add('player-modal');
 		this.selectPlayersModal.dialog.classList.remove('bg-secondary');
 		this.selectPlayersModal.dialog.classList.add('bg-primary');
 		const selectPlayerTitle = document.createElement('h3');
-		selectPlayerTitle.textContent = 'Select Players';
+		selectPlayerTitle.textContent = `Select Players for ${tournamentName}`;
 		document.querySelector('.player-selection').prepend(selectPlayerTitle);
 	}
 
 	openSelectPlayersModal(tournamentData) {
 		this.playerNumberModal.dialog.close();
-		if (this.selectPlayersModal && this.selectPlayersModal.tournamentId === tournamentData.id) {
+		if (this.selectPlayersModal && this.selectPlayersModal.tournamentId === tournamentData.tournament_id) {
 			this.selectPlayersModal.dialog.showModal();
 			return;
 		}
 		this.selectPlayersModal = new SelectPlayersModal(this.openSummaryModal, tournamentData);
-		this.adjustSelectPlayerModal();
+		this.adjustSelectPlayerModal(tournamentData.tournament.name);
 		this.selectPlayersModal.dialog.addEventListener('click', (e) => {
 			if (e.target.classList.contains('decline-btn')) {
 				e.preventDefault();
@@ -90,6 +82,7 @@ export default class extends AView {
 			}
 		});
 		this.selectPlayersModal.dialog.showModal();
+
 	}
 
 	async getHTML() {
@@ -106,3 +99,6 @@ export default class extends AView {
 		this.attachEventListeners();
 	}
 }
+
+
+//TODO: check that the data from tournament modal arrives correctly in selectPlayersModal (removed await in tournament service and haven't tested it further)

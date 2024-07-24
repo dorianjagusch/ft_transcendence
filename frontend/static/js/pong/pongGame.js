@@ -24,7 +24,7 @@ class PongGame {
 	}
 
 	initializeRenderer(constants) {
-		this.sizeFactor = window.innerWidth / constants.game.width * 0.8;
+		this.sizeFactor = (window.innerWidth / constants.game.width) * 0.8;
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(
 			Math.floor(window.innerWidth * 0.8),
@@ -122,18 +122,38 @@ class PongGame {
 	createMaterials() {
 		const materials = {
 			default: new THREE.MeshBasicMaterial({color: 0xffffff}),
-			plane: new THREE.MeshLambertMaterial({color: 0x333333}),
-			playerLeft: new THREE.MeshLambertMaterial({color: 0xff0000}),
-			playerRight: new THREE.MeshLambertMaterial({color: 0x0000ff}),
+			plane: new THREE.MeshLambertMaterial({color: 0x444444}),
+			playerLeft: new THREE.MeshLambertMaterial({color: 0xff2222}),
+			playerRight: new THREE.MeshLambertMaterial({color: 0x2222ff}),
 			ball: new THREE.MeshLambertMaterial({color: 0xffffff}),
 		};
 		this.materials = materials;
+	}
+
+	addLine(constants) {
+		const points = [];
+		points.push(new THREE.Vector3(constants.game.width / 2, 0, 0));
+		points.push(new THREE.Vector3(constants.game.width / 2, constants.game.height, 0));
+		const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+
+		const lineMaterial = new THREE.LineDashedMaterial({
+			color: 0xffffff,
+			dashSize: 5,
+			gapSize: 5,
+			lineWidth: 3,
+		});
+
+		const line = new THREE.Line(lineGeometry, lineMaterial);
+		line.computeLineDistances();
+
+		this.scene.add(line);
 	}
 
 	setupGame(constants) {
 		this.initializeRenderer(constants);
 		this.setupCamera(constants);
 		this.createScene();
+		this.addLine(constants);
 		this.createMaterials();
 
 		this.playerLeft = this.addObject(Player, constants, {
@@ -197,7 +217,6 @@ class PongGame {
 		this.playerLeft.object.position.setY(players.left.position.y);
 		this.playerRight.object.position.setY(players.right.position.y);
 		this.gameBall.object.position.set(ball.position.x, ball.position.y, 0);
-
 		if (this.is3D) {
 			this.gameBall.object.rotation.x += 0.1;
 			const rotationSpeed = 0.075;

@@ -21,6 +21,7 @@ export default [
 	{ path: '/friends', view: friendsPage },
 	{ path: '/play', view: playPage },
 	{ path: '/pong', view: pongPage },
+	{ path: '/pong/tournaments/:tournament_id/matches/:match_id', view: pongPage },
 	{ path: '/leaderboard', view: leaderBoard },
 	{ path: '/profile/:id', view: profilePage },
 	{ path: '/match', view: matchPage}

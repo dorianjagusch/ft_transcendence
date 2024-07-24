@@ -9,7 +9,6 @@ from User.models import User
 from User.mixins import AuthenticateUserMixin
 from User.serializers import UserInputSerializer, \
 								UserOutputSerializer
-
 from .models import MatchToken
 from .managers import MatchTokenManager
 from .serializers import MatchTokenSerializer
@@ -19,30 +18,29 @@ from shared_utilities.decorators import must_be_authenticated, \
 
 class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 	@method_decorator(must_be_authenticated)
-	@method_decorator(must_not_be_username)
-	@method_decorator(valid_serializer_in_body(UserInputSerializer))
-	def post(self, request, ai_opponent=None):
+	def post(self, request):
 		host_user = request.user
+		ai_opponent = request.query_params.get('ai_opponent')
 		if ai_opponent is not None and ai_opponent == 'true':
 			token = MatchTokenManager.create_single_match_token(host_user, None)
+			token_serializer = MatchTokenSerializer(token)
 			return Response({
 				'token': token_serializer.data,
 				'guest_user': ''
 			}, status=status.HTTP_201_CREATED)
 
-		guest_authentication_result = self.authenticate_user(request)
-		if not isinstance(guest_authentication_result, User):
-			return guest_authentication_result
-		
-		token = MatchTokenManager.create_single_match_token(host_user, guest_authentication_result)
+		result = self.authenticate_user(request)
+		if not isinstance(result, User):
+			return result
+
+		token = MatchTokenManager.create_single_match_token(host_user, result)
 		token_serializer = MatchTokenSerializer(token)
-		user_serializer = UserOutputSerializer(guest_authentication_result)
+		user_serializer = UserOutputSerializer(result)
 		return Response({
 			'token': token_serializer.data,
 			'guest_user': user_serializer.data
 		}, status=status.HTTP_201_CREATED)
 
-  
 	@method_decorator(must_be_authenticated)
 	@method_decorator(valid_serializer_in_body(MatchTokenSerializer))
 	def put(self, request):
@@ -51,10 +49,10 @@ class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 			if token.is_active == False or token.is_expired():
 				token.is_active = False
 				token.save()
-				return Response({'message': 'Token has already expired'}, status=status.HTTP_200_OK)
+				return Response({"message": "Token has already expired"}, status=status.HTTP_200_OK)
 			else:
 				token.is_active = False
 				token.save()
-				return Response({'message': 'Token is now expired'}, status=status.HTTP_200_OK)
+				return Response({"message": "Token is now expired"}, status=status.HTTP_200_OK)
 		except MatchToken.DoesNotExist:
-			return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Token was not found"}, status=status.HTTP_400_BAD_REQUEST)
