@@ -130,13 +130,13 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
         result.is_active = False
         result.is_staff = False
         result.is_superuser = False
-        result.insertTS = None
+        result.insert_ts = None
         result.last_login = None
         result.is_online = False
         result.save()
 
         self.change_tournament_player_names_to_deleted(result)
-        
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
