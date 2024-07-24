@@ -46,9 +46,9 @@ class UserListView(APIView):
 		if not inputSerializer.is_valid():
 			errors = inputSerializer.errors
 			if 'username' in errors and 'exists' in errors['username'][0]:
-				return Response(inputSerializer.errors, status=status.HTTP_409_CONFLICT)
+				return Response({"message" : "The user with given username already exists"}, status=status.HTTP_409_CONFLICT)
 			else:
-				return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message" : f"{inputSerializer.errors[0]}"}, status=status.HTTP_400_BAD_REQUEST)
 
 		username = inputSerializer.validated_data.get('username')
 		password = inputSerializer.validated_data.get('password')
@@ -62,13 +62,13 @@ class UserDetailView(APIView):
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : "The user with given id does not exist"}, status=status.HTTP_404_NOT_FOUND)
 		if user.id == login_user_id:
 			serializer = UserOutputSerializer(user)
-			return Response(serializer.data)
+			return Response(serializer.data, status=status.HTTP_200_OK)
 		friendship = Friend.objects.get_friendship_status(login_user_id, user.id)
 		serializer = UserFriendOutputSerializer(user, context={'request': request})
-		return Response(serializer.data)
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
@@ -76,15 +76,15 @@ class UserDetailView(APIView):
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : "The user with given id does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 		inputSerializer = UserInputSerializer(user, data=request.data, partial=True)
 		if inputSerializer.is_valid():
 			user = inputSerializer.save()
 			outputSerializer = UserOutputSerializer(user)
-			return Response(outputSerializer.data)
+			return Response(outputSerializer.data, status=status.HTTP_200_OK)
 		else:
-			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message" : f"{inputSerializer.errors[0]}"}, status=status.HTTP_400_BAD_REQUEST)
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)
@@ -93,9 +93,9 @@ class UserDetailView(APIView):
 			logout(request)
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : "The user with given id does not exist"}, status=status.HTTP_404_NOT_FOUND)
 		except:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message" : "Deleting the user failed"}, status=status.HTTP_400_BAD_REQUEST)
 		user.username = "deleted_user_" + str(user_id + 42)
 		user.set_password(get_random_string(length=30))
 		user.is_active = False
@@ -115,10 +115,10 @@ class UserProfilePictureView(APIView):
 		try:
 			user = User.objects.get(pk=user_id)
 		except User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : "The user with given id does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 		if 'file' not in request.FILES:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message" : "Failed to read file from request"}, status=status.HTTP_400_BAD_REQUEST)
 		file = request.FILES['file']
 
 		try:
@@ -132,7 +132,7 @@ class UserProfilePictureView(APIView):
 		except ProfilePicture.DoesNotExist:
 			profile_picture = ProfilePicture(user=user, picture=file)
 		profile_picture.save()
-		return Response(status=status.HTTP_200_OK)
+		return Response(status=status.HTTP_201_CREATED)
 
 	@method_decorator(must_be_authenticated)
 	def get(self, request, user_id):
@@ -140,17 +140,17 @@ class UserProfilePictureView(APIView):
 			user = get_object_or_404(User, pk=user_id)
 			profile_picture = ProfilePicture.objects.filter(user=user).first()
 			if not profile_picture:
-				return Response({'image': ''}, status=status.HTTP_200_OK)
+				return Response({"image": ""}, status=status.HTTP_200_OK)
 
 			image_path = profile_picture.picture.path
 			with open(image_path, "rb") as image_file:
 				image_data = image_file.read()
 				encoded_image = base64.b64encode(image_data).decode('utf-8')
-				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
+				return Response({"image": encoded_image}, status=status.HTTP_200_OK)
 		except ProfilePicture.DoesNotExist:
-			return Response({'image': ''}, status=status.HTTP_200_OK)
+			return Response({"image": ""}, status=status.HTTP_200_OK)
 		except FileNotFoundError:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+			return Response({"message" : "File not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class UserLoginView(APIView, UserAuthenticationMixin, UserLoginMixin):
 	@method_decorator(csrf_exempt)
@@ -184,4 +184,4 @@ class UserAdminDetailsView(APIView):
 			outputSerializer = UserOutputSerializer(user)
 			return Response(outputSerializer.data, status=status.HTTP_201_CREATED)
 		else:
-			return Response(inputSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message" : f"{inputSerializer.errors[0]}"}, status=status.HTTP_400_BAD_REQUEST)

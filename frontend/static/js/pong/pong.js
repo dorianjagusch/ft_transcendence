@@ -7,9 +7,11 @@ const PongContainer = (isTournament) => {
 	const points = elements.createScoreBoard();
 	const instructions = elements.createIntructions();
 	const gameOver = elements.createGameOver(isTournament);
+	const startInstructions = elements.startGameInstructions();
 	pong.appendChild(points);
 	pong.appendChild(instructions);
 	pong.appendChild(gameOver);
+	pong.appendChild(startInstructions);
 	return pong
 };
 

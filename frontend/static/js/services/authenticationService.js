@@ -8,13 +8,14 @@ export default class AuthenticationService extends ARequestService {
 		super();
 	}
 
-	async postMatch({username, password}) {
+	async postMatch({username, password}, logoutOn401 = true) {
 		return super.postRequest(
-			`${backendURL.authenticationURL}match/`,
+			`${backendURL.authenticationURL}match/ `,
 			JSON.stringify({
 				username: username,
 				password: password,
-			})
+			}),
+			logoutOn401
 		);
 	}
 
