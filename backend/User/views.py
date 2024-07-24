@@ -77,13 +77,20 @@ class UserDetailView(APIView):
 		except User.DoesNotExist:
 			return Response({"message" : "The user with given id does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
-		inputSerializer = UserInputSerializer(user, data=request.data, partial=True)
-		if inputSerializer.is_valid():
-			user = inputSerializer.save()
+		username = request.data.get('username', None)
+		password = request.data.get('password', None)
+
+		if password != None and password != '':
+			user.set_password(password)
+		if username != None and username != '':
+			user.username = username
+
+		try:
+			user.save()
 			outputSerializer = UserOutputSerializer(user)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
-		else:
-			return Response({"message" : f"{inputSerializer.errors[0]}"}, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"message" : "Issue with updating the user"}, status=status.HTTP_400_BAD_REQUEST)
 
 	@method_decorator(must_be_authenticated)
 	@method_decorator(must_be_url_user)

@@ -14,6 +14,43 @@ const sideBarButton = (classes, text, callback) => {
 	return sideBarButton;
 };
 
+const updateUserHandler = async (e) => {
+	let savebleUsername = localStorage.getItem('username');
+	let saveblePassword = '';
+
+	const username = document.getElementById('username').value;
+	const password = document.getElementById('current-password').value;
+	const repeatPassword = document.getElementById('password').value;
+
+	if (username !== '' && username !== currentUserName) {
+		savebleUsername = username;
+	}
+
+	if (password !== '' && password !== repeatPassword) {
+		this.notify('Passwords do not match', 'error');
+		return;
+	}
+
+	if (password !== '' && password !== currentPassword) {
+		saveblePassword = password;
+	}
+
+	const data = {
+		username: savebleUsername,
+		password: saveblePassword,
+	};
+
+	const userService = new UserService();
+	try {
+		await userService.putRequest(data);
+		this.notify('User updated successfully.');
+		localStorage.setItem('username', savebleUsername);
+		navigateTo('/dashboard');
+	} catch (error) {
+		this.notify(error);
+	}
+};
+
 const profilePictureHandler = async (file) => {
 	if (!file) {
 		notify('Profile picture was not given.', 'error');
