@@ -59,14 +59,14 @@ class CreateUserMixin:
         return User.objects.create_user(username=username, password=password)
 
 
-class UpdateUserMixin(GetUserMixin):
+class UpdateUserMixin:
     """
     Mixin to update a user by ID.
     """
     def update_user(self, request: Request, user_id: int) -> Response:
-        result = self.get_user(user_id)
+        result = get_object_or_404(User, pk=user_id)
         if not isinstance(result, User):
-            return result
+                return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
         input_serializer = UserInputSerializer(result, data=request.data, partial=True)
         if input_serializer.is_valid():

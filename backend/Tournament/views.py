@@ -97,7 +97,7 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 		if tournament.players.count() >= tournament.player_amount:
 			return Response({"message": "Tournament already has maximum number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
-    username = result.username
+		username = result.username
 		display_name = request.data.get('display_name', None)
 		try:
 			tournament_player = TournamentManager.players.create_tournament_player(tournament, result, display_name or username)
