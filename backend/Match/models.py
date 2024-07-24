@@ -2,8 +2,6 @@ from django.db import models
 from datetime import datetime
 from .matchState import MatchState
 from Tournament.models import Tournament
-
-# Create your models here.
 class Match(models.Model):
 
 	state = models.IntegerField(choices=MatchState.choices, default=MatchState.LOBBY)

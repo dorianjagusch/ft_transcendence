@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 import plotly.graph_objects as go
 import plotly.io as pio
-from django.http import HttpResponse
+from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Count, Q
+
+from .user_stats_table import UserTable
+from .mixins import UserTableMixin
 from User.models import User
 from shared_utilities.decorators import must_be_authenticated
 

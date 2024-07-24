@@ -136,8 +136,8 @@ class UserProfilePictureView(APIView):
 
 	@method_decorator(must_be_authenticated)
 	def get(self, request, user_id):
+		user = get_object_or_404(User, pk=user_id)
 		try:
-			user = get_object_or_404(User, pk=user_id)
 			profile_picture = ProfilePicture.objects.filter(user=user).first()
 			if not profile_picture:
 				return Response({"image": ""}, status=status.HTTP_200_OK)

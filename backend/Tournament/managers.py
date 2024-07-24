@@ -14,8 +14,6 @@ from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
 
-import sys
-
 
 class TournamentSetupManager:
     @staticmethod
@@ -37,14 +35,14 @@ class TournamentSetupManager:
             raise TournamentSetupException(e)
 
     @staticmethod
-    def setup_tournament_matches(tournament: Tournament) -> None:        
+    def setup_tournament_matches(tournament: Tournament) -> None:
         if tournament.state != TournamentState.LOBBY or tournament.next_match != 0:
             raise TournamentSetupException("Tournament is not in a valid state to set up matchups.")
-        
+
         tournament_players = list(tournament.players.all())
         if len(tournament_players) != tournament.player_amount:
             raise TournamentSetupException("The number of tournament_players does not match the expected player amount.")
-        
+
         match_amount = tournament.player_amount - 1
         if match_amount not in [3, 7]:
             raise TournamentSetupException("Match amount can only be 3 or 7.")
@@ -65,7 +63,7 @@ class TournamentSetupManager:
                     Player.objects.create(
                         user=tournament_players[i+1].user,
                         match=match
-                    )               
+                    )
 
                 # create the rest of the tournament matches
                 # the match winners will be assigned to them later
@@ -94,7 +92,7 @@ class TournamentInProgressManager:
             raise TournamentInProgressException(f"Tournament not finished in time")
 
     @staticmethod
-    def raise_error_if_inactive_user_in_tournament(tournament: Tournament) -> None:       
+    def raise_error_if_inactive_user_in_tournament(tournament: Tournament) -> None:
         tournament_players = TournamentPlayer.objects.filter(tournament=tournament)
         inactive_users = tournament_players.filter(user__is_active=False)
         if inactive_users.exists():
@@ -105,7 +103,7 @@ class TournamentInProgressManager:
         try:
             with transaction.atomic():
                 tournament = winning_tournament_player.tournament
-                
+
                 # if no next match, set user as tournament winner and finish tournament
                 if tournament.next_match >= tournament.matches.count():
                     tournament.winner = winning_tournament_player.user
@@ -131,7 +129,7 @@ class TournamentInProgressManager:
 
                 except Match.DoesNotExist:
                     raise TournamentInProgressException("No future matchup with empty player slot")
-                
+
                 for match in tournament_matches:
                     if len(Player.objects.filter(match=match)) < 2:
                         Player.objects.create(
@@ -145,7 +143,7 @@ class TournamentInProgressManager:
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while assigning the match winner to future match: {e}")
-        
+
 
     @staticmethod
     def abort_tournament(tournament: Tournament) -> None:

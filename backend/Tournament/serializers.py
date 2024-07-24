@@ -52,7 +52,7 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
 			).first()
 			return TournamentPlayerSerializer(tournament_player).data if tournament_player else None
 		return None
-	
+
 	def get_winner(self, match: Match) -> TournamentPlayerSerializer | None:
 		if match.state == MatchState.FINISHED:
 			winning_player = match.players.filter(match_winner=True).first()
@@ -75,31 +75,31 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 			'host_user_display_name',
 			'player_amount',
 		]
-	
+
 	def validate_custom_name(self, custom_name: str) -> str:
 		if custom_name == '':
 			raise serializers.ValidationError("This field may not be blank.")
 		if len(custom_name) > 30:
 			raise serializers.ValidationError("Ensure this field has no more than 30 characters.")
 		return custom_name
-	
+
 	def validate_tournament_player_amount(self, player_amount: int) -> None:
 		if player_amount not in [4, 8]:
 			raise serializers.ValidationError("Must have 4 or 8 players.")
-		
+
 	def validate(self, data):
 		tournament_name = data.get('name')
 		if tournament_name:
 			self.validate_custom_name(tournament_name)
-
+		# TODO: hostname should suffice
 		host_user_display_name = data.get('host_user_display_name')
 		if host_user_display_name:
 			self.validate_custom_name(host_user_display_name)
-		
+
 		self.validate_tournament_player_amount(data.get('player_amount'))
 
 		return data
-	
+
 class TournamentInProgressSerializer(serializers.ModelSerializer):
 	state = serializers.CharField(source='get_state_display', read_only=True)
 
@@ -111,10 +111,10 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'name',
 			'state',
 			'expire_ts',
-			'player_amount',
+			'player_amount', #information about the players about to play in the match
 			'next_match',
 		]
-		
+
 class TournamentSerializers:
 	default = TournamentSerializer
 	creation = TournamentCreationSerializer
