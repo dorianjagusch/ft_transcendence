@@ -18,5 +18,4 @@ export default class AcceptDeclineModal extends ADialog {
 			}
 		}, false);
 	}
-
 }

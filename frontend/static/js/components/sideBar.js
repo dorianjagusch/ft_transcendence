@@ -3,6 +3,7 @@ import notify from '../utils/notify.js';
 import fileInputField from '../components/formComponents/fileInputField.js';
 import getProfilePicture from './profilePicture.js';
 import AcceptDeclineModal from './dialogs/acceptDeclineModal.js';
+import UpdateUserModal from './dialogs/updateUserModal.js';
 import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
@@ -12,43 +13,6 @@ const sideBarButton = (classes, text, callback) => {
 	sideBarButton.textContent = text;
 	sideBarButton.addEventListener('click', callback);
 	return sideBarButton;
-};
-
-const updateUserHandler = async (e) => {
-	let savebleUsername = localStorage.getItem('username');
-	let saveblePassword = '';
-
-	const username = document.getElementById('username').value;
-	const password = document.getElementById('current-password').value;
-	const repeatPassword = document.getElementById('password').value;
-
-	if (username !== '' && username !== currentUserName) {
-		savebleUsername = username;
-	}
-
-	if (password !== '' && password !== repeatPassword) {
-		this.notify('Passwords do not match', 'error');
-		return;
-	}
-
-	if (password !== '' && password !== currentPassword) {
-		saveblePassword = password;
-	}
-
-	const data = {
-		username: savebleUsername,
-		password: saveblePassword,
-	};
-
-	const userService = new UserService();
-	try {
-		await userService.putRequest(data);
-		this.notify('User updated successfully.');
-		localStorage.setItem('username', savebleUsername);
-		navigateTo('/dashboard');
-	} catch (error) {
-		this.notify(error);
-	}
 };
 
 const profilePictureHandler = async (file) => {
@@ -78,6 +42,43 @@ const profilePictureHandler = async (file) => {
 	navigateTo('/dashboard');
 };
 
+const updateUser = async (user_id) => {
+    let savebleUsername = localStorage.getItem('username');
+    let saveblePassword = '';
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('current-password').value;
+    const repeatPassword = document.getElementById('password').value;
+
+    if (username !== '' && username !== currentUserName) {
+        savebleUsername = username;
+    }
+
+    if (password !== '' && password !== repeatPassword) {
+        this.notify('Passwords do not match', 'error');
+        return;
+    }
+
+    if (password !== '' && password !== currentPassword) {
+        saveblePassword = password;
+    }
+
+    const data = {
+        username: savebleUsername,
+        password: saveblePassword,
+    };
+
+    const userService = new UserService();
+    try {
+        await userService.putRequest(user_id, data);
+        this.notify('User updated successfully.');
+        localStorage.setItem('username', savebleUsername);
+    } catch (error) {
+		this.notify(error);
+    }
+	navigateTo('/dashboard');
+};
+
 const deleteAccount = async (userId) => {
 	try {
 		new UserService().deleteRequest(userId);
@@ -100,10 +101,11 @@ const SideBar = async () => {
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
 
-	const editProfileBtn = sideBarButton(
-		['sidebar-element', 'bg-primary'],
-		'Edit profile'
-	);
+	const UpdateModal = new UpdateUserModal(updateUser, localStorage.getItem('user_id'));
+	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile', () => {
+		document.body.appendChild(UpdateModal.dialog);
+		UpdateModal.dialog.showModal();
+	});
 
 	const viewProfileBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
