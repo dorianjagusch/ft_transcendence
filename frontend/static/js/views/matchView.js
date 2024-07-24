@@ -5,14 +5,14 @@ import UserService from '../services/userService.js'; // TODO: Switch out for st
 import getProfilePicture from '../components/profilePicture.js';
 import AcceptDeclineModal from '../components/dialogs/acceptDeclineModal.js';
 import AuthenticationModal from '../components/dialogs/authenticationModal.js';
-import AuthenticationService from '../services/authenticationService.js';
+import MatchService from '../services/matchService.js';
 
 export default class extends Aview {
 	constructor() {
 		super();
 		this.setTitle('Modal');
 		this.userService = new UserService();
-		this.authenticationService = new AuthenticationService();
+		this.matchService = new MatchService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
 		this.createAiMatch = this.createAiMatch.bind(this);
@@ -21,10 +21,15 @@ export default class extends Aview {
 	}
 
 	async createAiMatch() {
-		const data = await this.authenticationService.postAiMatch({ai_opponent: true});
-		localStorage.setItem('opponent', 'AI');
-		localStorage.setItem('token', this.token);
-		this.navigateTo('/pong');
+		try {
+			const data = await this.matchService.postAiMatch({ai_opponent: true});
+			localStorage.setItem('opponent', 'AI');
+			localStorage.setItem('token', data.token.token);
+			this.navigateTo('/pong');
+		} catch (error) {
+			this.notify('Error creating AI match');
+			this.navigateTo('/match');
+		}
 	}
 
 	attachEventListeners() {
@@ -59,6 +64,7 @@ export default class extends Aview {
 	async attachPlayerInfo(tokenData) {
 		this.token = tokenData.token.token;
 		this.opponent = tokenData.guest_user
+		// Proper error handling
 		this.opponent.img = await getProfilePicture(this.opponent.id);
 		const playerRight = PlayerInfo(this.opponent);
 
@@ -101,8 +107,8 @@ export default class extends Aview {
 
 		const acceptDeclineModal = new AcceptDeclineModal(this.createAiMatch);
 		acceptDeclineModal.dialog.classList.add('confirm-choice-modal');
-
-		const authenticationModal = new AuthenticationModal(this.attachPlayerInfo);
+		// TODO test that the possing of the service works for authentication modal (changed the interface)
+		const authenticationModal = new AuthenticationModal(MatchService, this.attachPlayerInfo);
 		authenticationModal.dialog.classList.add('authenticate-user-modal');
 		this.adjustForm(authenticationModal.form.form);
 

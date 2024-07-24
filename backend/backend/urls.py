@@ -47,7 +47,7 @@ from Tokens.views import SingleMatchGuestTokenView
 # Match views
 from Match.views import (
     MatchView,
-    LaunchTestMatchView
+    MatchHistory
 )
 
 # Tournament views
@@ -63,7 +63,7 @@ from Tournament.views import (
 # Stats views
 from stats.views import (
     StatsView,
-    LeaderBoardView
+    LeaderboardListView
 )
 
 urlpatterns = [
@@ -84,9 +84,9 @@ urlpatterns = [
     # Tokens views
     path('tokens/match/', SingleMatchGuestTokenView.as_view(), name='single-match-guest-token'),
 
-    # Match views
-    path('match/', MatchView.as_view(), name='match-list'),
-    path('match/test/', LaunchTestMatchView.as_view(), name='launch-test-match'),  # TEMPORARY
+	# Match Views
+	path('match/', MatchView.as_view()),
+	path('matches/', MatchHistory.as_view()),
 
     # Tournament views
     path('tournaments/', TournamentListView.as_view(), name='tournament-list'),
@@ -96,9 +96,9 @@ urlpatterns = [
     path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view(), name='tournament-match-list'),
     path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>/', TournamentMatchDetailView.as_view(), name='tournament-match-detail'),
 
-    # Stats views
-    path('stats/', StatsView.as_view(), name='stats'),
-    path('leaderboard/', LeaderBoardView.as_view(), name='leaderboard'),
+	# Stats Views
+	path('users/<int:user_id>/stats/', StatsView.as_view()),
+	path('leaderboard/', LeaderboardListView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # WebSocket URL patterns
