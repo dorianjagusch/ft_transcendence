@@ -47,7 +47,12 @@ export default class extends Aview {
 
 	async getCurrentMatchData() {
 		const matchData = await this.tournamentService.getTournamentMatches(this.params);
-		return matchData.find(match => match.state === constants.MATCHSTATUS.LOBBY || match.state === constants.MATCHSTATUS.ABORTED); //TODO change to just lobby
+		debugger;
+		return matchData.find(
+			(match) =>
+				match.state === constants.MATCHSTATUS.LOBBY ||
+				match.state === constants.MATCHSTATUS.ABORTED
+		); //TODO change to just lobby
 	}
 
 	async getHTML() {

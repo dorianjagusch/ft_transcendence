@@ -100,7 +100,6 @@ export default class extends Aview {
 
 		const acceptDeclineModal = new AcceptDeclineModal(this.createAiMatch);
 		acceptDeclineModal.dialog.classList.add('confirm-choice-modal');
-		// TODO test that the possing of the service works for authentication modal (changed the interface)
 		const authenticationModal = new AuthenticationModal(MatchService, this.attachPlayerInfo);
 		authenticationModal.dialog.classList.add('authenticate-user-modal');
 		this.adjustForm(authenticationModal.form.form);
