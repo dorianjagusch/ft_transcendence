@@ -141,6 +141,8 @@ const SideBar = async () => {
 	aside.appendChild(profilePictureBtn);
 	aside.appendChild(createTournamentBtn);
 	aside.appendChild(deleteAccountBtn);
+	aside.appendChild(AreYouSureModal.dialog);
+
 	document.querySelector('body').appendChild(aside);
 };
 

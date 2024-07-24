@@ -1,8 +1,9 @@
 import routes from './route.js';
 import constants from './constants.js';
 
-const pathToRegex = (path) =>
-	new RegExp('^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$');
+const pathToRegex = (path) =>  {
+	return new RegExp('^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$');
+};
 
 const getParams = (match) => {
 	const values = match.result.slice(1);

@@ -40,7 +40,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.game.use_ai_opponent()
                 asyncio.create_task(self.ai_opponent_loop())
                 asyncio.create_task(self.ai_move_loop())
-            self.start_match(self.match)
+            await self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
         else:
@@ -48,7 +48,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
     async def disconnect(self, close_code):
-        await sync_to_async(self.match.abort_match)()
+        await self.abort_match(self.match)
         await self.close()
 
     async def receive(self, text_data):
@@ -96,20 +96,20 @@ class PongConsumer(AsyncWebsocketConsumer):
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             with transaction.atomic():
-              match_token = MatchToken.objects.get(token=token)
-              if not match_token.is_active or match_token.is_expired():
-                  return False
+                match_token = MatchToken.objects.get(token=token)
+                if not match_token.is_active or match_token.is_expired():
+                    return False
 
-              match_token.is_active = False
-              match_token.save()
+                match_token.is_active = False
+                match_token.save()
 
-              self.match = Match.objects.get(pk=match_id)
-              self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
-              if match_token.user_right_side is not None:
-                  self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
-              else:
-                  self.ai_opponent = True
-              return True
+                self.match = Match.objects.get(pk=match_id)
+                self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+                if match_token.user_right_side is not None:
+                    self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+                else:
+                    self.ai_opponent = True
+                return True
 
         except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
             return False
@@ -167,9 +167,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             TournamentManager.in_progress.abort_tournament(match.tournament)
 
-    @database_sync_to_async
-    def start_match(self, match):
-        match.start_match()
+    async def start_match(self, match: Match):
+        await sync_to_async(match.start_match)()
 
     @database_sync_to_async
     def abort_match(self, match: Match):

@@ -1,64 +1,73 @@
+import getProfilePicture from '../profilePicture.js';
 import AForm from './AForm.js';
-import PlayerCard from './PlayerCard.js';
+import {PlayerCard} from './PlayerCard.js';
 
 export default class selectPlayersForm extends AForm {
-	constructor(TournamentData) {
+	constructor({tournament, tournament_player}) {
 		super();
-		this.numberOfPlayers = TournamentData.player_amount;
-		this.tournamentName = TournamentData.name;
-		this.playerIds = TournamentData.player_ids;
+		this.numberOfPlayers = tournament.player_amount;
+		this.tournamentName = tournament.name;
+		this.tournamentHostId = tournament_player.id;
+		this.playerIds = [];
 		this.generateForm = this.generateForm.bind(this);
 	}
 
-	generateForm() {
-		const form = document.createElement('form');
-		form.classList.add('player-selection');
+	createFormButton(type, text) {
+		const Button = document.createElement('button');
+		Button.classList.add(type);
+		Button.textContent = text;
+		Button.setAttribute('type', 'submit');
+		Button.setAttribute('formmethod', 'dialog');
+		return Button;
+	}
 
-		const playerList = document.createElement('section');
-		playerList.classList.add('player-list', `player-${this.numberOfPlayers}`);
-		form.appendChild(playerList);
-
+	createPlayerCards(playerContainer) {
 		for (let i = 0; i < this.numberOfPlayers; i++) {
 			if (i == 0) {
 				const playerCard = PlayerCard(
 					localStorage.getItem('username'),
-					// localStorage.getItem('userImage')
-					'../static/assets/img/default-user.png',
-					0,
+					this.tournamentHostId,
 					true
 				);
-				playerCard.setAttribute('data-user-selected', 'true')
-				playerList.appendChild(playerCard);
+				playerCard.setAttribute('data-user-selected', 'true');
+				playerCard.setAttribute('data-player-id', this.tournamentHostId);
+				playerContainer.appendChild(playerCard);
+				getProfilePicture(localStorage.getItem('user_id'))
+				.then((img) => {
+					playerCard.querySelector(
+						`[data-player-id="${this.tournamentHostId}"] > .player-img`
+					).src = img;
+				});
 				continue;
 			}
 			const playerCard = PlayerCard(
 				'Add Participant',
 				'../static/assets/img/default-user.png',
-				this.playerIds[i-1],
+				i,
 				true
 			);
 			playerCard.classList.add('bg-inactive');
-			playerList.appendChild(playerCard);
+			playerContainer.appendChild(playerCard);
 		}
+	}
+
+	generateForm() {
+		this.form.classList.add('player-selection');
+
+		const playerList = document.createElement('section');
+		playerList.classList.add('player-list', `player-${this.numberOfPlayers}`);
+
+		this.createPlayerCards(playerList);
 
 		const buttonBar = document.createElement('div');
 		buttonBar.classList.add('button-bar', 'flex-row');
-		form.appendChild(buttonBar);
 
-		const backButton = document.createElement('button');
-		backButton.classList.add('decline-btn');
-		backButton.textContent = 'Back';
-		backButton.setAttribute('type', 'submit');
-		backButton.setAttribute('formmethod', 'dialog');
+		const backButton = this.createFormButton('decline-btn', 'Back');
+		const continueButton = this.createFormButton('accept-btn', 'Continue');
 		buttonBar.appendChild(backButton);
-
-		const continueButton = document.createElement('button');
-		continueButton.classList.add('accept-btn');
-		continueButton.textContent = 'Continue';
-		continueButton.setAttribute('type', 'submit');
-		continueButton.setAttribute('formmethod', 'dialog');
 		buttonBar.appendChild(continueButton);
 
-		return form;
+		this.appendToForm(playerList, buttonBar);
+		return this.getForm();
 	}
 }
