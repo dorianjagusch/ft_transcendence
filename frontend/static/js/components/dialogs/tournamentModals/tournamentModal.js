@@ -18,15 +18,8 @@ export default class TournamentModal extends ADialog {
 		return {tournamentName, numberOfPlayers};
 	}
 
-	async createTournament(formData) {
-		const tournament = {
-			custom_name: formData.tournamentName,
-			id: 1,
-			player_amount: formData.numberOfPlayers,
-			player_ids: [1, 5, 3, 2, 6, 4, 7]
-		};
-		// return await this.service.postRequest(tournament);
-		return tournament;
+	async createTournament(tournamentData) {
+		return await this.service.postRequest(tournamentData);
 	}
 
 	appendEventlistenters() {

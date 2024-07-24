@@ -21,7 +21,6 @@ from django.conf import settings
 
 from pong.consumers import PongConsumer
 
-# add app views here
 from User.views import UserDetailView, \
 						UserListView, \
 						UserProfilePictureView, \
@@ -32,10 +31,10 @@ from User.views import UserDetailView, \
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
 
-
 from Tokens.views import SingleMatchGuestTokenView
 
-from Match.views import MatchView
+from Match.views import MatchView, \
+							MatchHistory
 
 from Tournament.views import TournamentListView, \
 								TournamentDetailView, \
@@ -44,9 +43,9 @@ from Tournament.views import TournamentListView, \
 								TournamentMatchListView, \
 								TournamentMatchDetailView
 
-from stats.views import StatsView, \
-							LeaderBoardView
+from stats.views import StatsView
 
+from leaderboard.views import LeaderboardListView
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -68,6 +67,7 @@ urlpatterns = [
 
 	# Match Views
 	path('match/', MatchView.as_view()),
+	path('matches/', MatchHistory.as_view()),
 
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
@@ -78,8 +78,8 @@ urlpatterns = [
 	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
 
 	# Stats Views
-	path('stats/', StatsView.as_view()),
-	path('leaderboard/', LeaderBoardView.as_view()),
+	path('users/<int:user_id>/stats/', StatsView.as_view()),
+	path('leaderboard/', LeaderboardListView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

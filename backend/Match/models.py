@@ -2,9 +2,8 @@ from django.db import models
 from datetime import datetime
 from .matchState import MatchState
 from Tournament.models import Tournament
-
-# Create your models here.
 class Match(models.Model):
+
 	state = models.IntegerField(choices=MatchState.choices, default=MatchState.LOBBY)
 	start_ts = models.DateTimeField(null=True, blank=True)
 	end_ts = models.DateTimeField(null=True, blank=True)
@@ -34,5 +33,3 @@ class Match(models.Model):
 	def __str__(self):
 		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
 		return f'Match {self.id} - {self.get_state_display()}'
-
-
