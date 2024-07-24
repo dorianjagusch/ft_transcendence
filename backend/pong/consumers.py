@@ -40,7 +40,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.game.use_ai_opponent()
                 asyncio.create_task(self.ai_opponent_loop())
                 asyncio.create_task(self.ai_move_loop())
-            self.start_match(self.match)
+            await self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
         else:
@@ -48,7 +48,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
     async def disconnect(self, close_code):
-        await sync_to_async(self.match.abort_match)()
+        await self.abort_match(self.match)
         await self.close()
 
     async def receive(self, text_data):
@@ -167,9 +167,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             TournamentManager.in_progress.abort_tournament(match.tournament)
 
-    @database_sync_to_async
-    def start_match(self, match):
-        match.start_match()
+    async def start_match(self, match: Match):
+        await sync_to_async(match.start_match)()
 
     @database_sync_to_async
     def abort_match(self, match: Match):

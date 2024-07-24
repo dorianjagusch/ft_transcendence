@@ -21,20 +21,20 @@ class Tournament(models.Model):
 	expire_ts = models.DateTimeField(null=True, blank=True)
 
 	def start_tournament(self):
-		if self.state == TournamentState.LOBBY.value:
-			self.state = TournamentState.IN_PROGRESS.value
+		if self.state == TournamentState.LOBBY:
+			self.state = TournamentState.IN_PROGRESS
 			self.start_ts = timezone.now()
 			self.save()
 
 	def finish_tournament(self):
-		if self.state == TournamentState.IN_PROGRESS.value:
-			self.state = TournamentState.FINISHED.value
+		if self.state == TournamentState.IN_PROGRESS:
+			self.state = TournamentState.FINISHED
 			self.end_ts = timezone.now()
 			self.save()
 
 	def abort_tournament(self):
-		if self.state in (TournamentState.LOBBY, TournamentState.IN_PROGRESS.value):
-			self.state = TournamentState.ABORTED.value
+		if self.state in (TournamentState.LOBBY, TournamentState.IN_PROGRESS):
+			self.state = TournamentState.ABORTED
 			self.end_ts = timezone.now()
 			self.save()
 
