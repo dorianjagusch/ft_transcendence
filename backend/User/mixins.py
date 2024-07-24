@@ -11,6 +11,7 @@ import base64
 from .models import User, ProfilePicture
 from .validators import validate_image
 from .serializers import UserInputSerializer, UserOutputSerializer
+from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
 
 class GetAllUsersMixin:
     """
@@ -111,29 +112,32 @@ class LogoutUserMixin:
         return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
 
 
-class DeleteUserMixin:
-	"""
-	Mixin to delete a user by ID.
-	"""
-	def delete_user(self, request: Request, user_id: int) -> Response:
-		try:
-			logout(request)
-		except Exception:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
-		result = get_object_or_404(User, pk=user_id)
-		if not isinstance(result, User):
-				return result
+class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
+    """
+    Mixin to delete a user by ID.
+    """
+    def delete_user(self, request: Request, user_id: int) -> Response:
+        try:
+            logout(request)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        result = get_object_or_404(User, pk=user_id)
+        if not isinstance(result, User):
+                return result
 
-		result.username = f"deleted_user_{user_id + 42}"
-		result.set_password(get_random_string(length=30))
-		result.is_active = False
-		result.is_staff = False
-		result.is_superuser = False
-		result.insertTS = None
-		result.last_login = None
-		result.is_online = False
-		result.save()
-		return Response(status=status.HTTP_204_NO_CONTENT)
+        result.username = f"deleted_user_{user_id + 42}"
+        result.set_password(get_random_string(length=30))
+        result.is_active = False
+        result.is_staff = False
+        result.is_superuser = False
+        result.insertTS = None
+        result.last_login = None
+        result.is_online = False
+        result.save()
+
+        self.change_tournament_player_names_to_deleted(result)
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SaveUserProfilePictureMixin(GetUserMixin):
