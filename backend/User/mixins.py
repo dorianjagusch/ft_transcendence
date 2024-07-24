@@ -110,7 +110,8 @@ class LogoutUserMixin:
         logout(request)
         return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
 
-
+import os
+from django.conf import settings
 class DeleteUserMixin:
 	"""
 	Mixin to delete a user by ID.
@@ -133,6 +134,9 @@ class DeleteUserMixin:
 		result.last_login = None
 		result.is_online = False
 		result.save()
+		profile_picture = ProfilePicture.objects.filter(user=result).first()
+		if profile_picture:
+			profile_picture.delete_profile_picture()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
