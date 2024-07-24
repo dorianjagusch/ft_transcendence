@@ -88,4 +88,4 @@ class UserLoginView(APIView, AuthenticateUserMixin, LoginUserMixin):
 class UserLogoutView(APIView, LogoutUserMixin):
     @method_decorator(must_be_authenticated)
     def post(self, request: Request) -> Response:
-        return self.logout_user(request) # what happens if the user is not logged in?
+        return self.logout_user(request)
