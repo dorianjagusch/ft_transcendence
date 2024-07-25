@@ -85,7 +85,7 @@ class UpdateUserMixin:
 			outputSerializer = UserOutputSerializer(result)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
 		except IntegrityError as e:
-			return Response({"message": "User with username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "User with username already exists"}, status=status.HTTP_409_CONFLICT)
 		except Exception as e:
 			return Response({"message": "Updating the user failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
