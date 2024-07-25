@@ -7,6 +7,6 @@ export default class extends ARequestService {
 	}
 
 	async getUserMatches(matchId, user_id) {
-		return await this.get(`matches/${matchId}/${user_id}`);
+		return await this.get(`${backendURL}matches/${matchId}/${user_id}`);
 	}
 }
