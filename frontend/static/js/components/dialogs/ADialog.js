@@ -35,8 +35,8 @@ export default class ADialog {
 		});
 	}
 
-	notify(message) {
-		const notification = inputNotification(message);
+	notify(message, type) {
+		const notification = inputNotification(message, type);
 		this.dialog.querySelector('h3').after(notification);
 		setTimeout(() => {
 			notification.remove();

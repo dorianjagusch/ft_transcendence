@@ -33,7 +33,7 @@ export default class extends AView {
 				super.navigateTo('/friends');
 			});
 		} catch (error) {
-			super.notify(error);
+			super.notify(error.message, 'error');
 		}
 	}
 
@@ -44,7 +44,7 @@ export default class extends AView {
 				super.navigateTo('/friends');
 			});
 		} catch (error) {
-			super.notify(error);
+			super.notify(error.message, 'error');
 		}
 	}
 
@@ -89,7 +89,7 @@ export default class extends AView {
 				};
 				return userData;
 			} catch (error) {
-				console.log('Error getting the profile picture element: ', error);
+				notify(error.message, 'error');
 				return null;
 			}
 		});

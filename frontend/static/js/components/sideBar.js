@@ -37,7 +37,7 @@ const profilePictureHandler = async (file) => {
 		const profilePictureService = new ProfilePictureService();
 		await profilePictureService.postRequest(userId, formData);
 	} catch (error) {
-		notify(error, 'error');
+		notify(error.message, 'error');
 	}
 	navigateTo('/dashboard');
 };
@@ -91,7 +91,7 @@ let updateUser = async (userId) => {
 		}
 
 	} catch (error) {
-		notify(error);
+		notify(error.message, 'error');
 		return;
 	}
 
@@ -116,7 +116,7 @@ const SideBar = async () => {
 	try {
 		img.src = await getProfilePicture(localStorage.getItem('user_id'));
 	} catch (error) {
-		console.log('Error getting the profile picture element: ', error);
+		notify(error.message, 'error');
 	}
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);

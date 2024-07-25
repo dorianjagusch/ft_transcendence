@@ -81,7 +81,7 @@ export default class extends AView {
 			this.chatSocket = new ChatSocket(matchUrl);
 			this.chatSocket.connect();
 		} catch (error) {
-			this.notify(error);
+			this.notify(error.message, 'error');
 			this.navigateTo('/play');
 		}
 

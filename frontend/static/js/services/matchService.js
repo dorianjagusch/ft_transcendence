@@ -6,13 +6,14 @@ export default class MatchService extends ARequestService {
 		super();
 	}
 
-	async postPlayer({username, password}, context) {
+	async postPlayer({username, password}, context, logoutOn401) {
 		return super.postRequest(
 			`${backendURL.authenticationURL}match/ `,
 			JSON.stringify({
 				username: username,
 				password: password,
-			})
+			}),
+			logoutOn401
 		);
 	}
 
