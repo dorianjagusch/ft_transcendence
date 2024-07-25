@@ -6,7 +6,11 @@ export default class extends ARequestService {
 		super();
 	}
 
-	async getUserMatches(matchId, user_id) {
-		return await this.get(`${backendURL}matches/${matchId}/${user_id}`);
+	async getHistoryMatches(matchId, userId) {
+		return await this.get(`${backendURL}matches/${matchId}/${userId}`);
+	}
+
+	async getMatchPlayers(matchId) {
+		return await this.get(`${backendURL}matches/${matchId}/players`);
 	}
 }
