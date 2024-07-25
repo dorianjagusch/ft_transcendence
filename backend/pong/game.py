@@ -8,7 +8,6 @@ import asyncio
 
 class PongStatus:
     def __init__(self, ball, player_left, player_right):
-        # Initialize game state
         self.player_left = player_left
         self.player_right = player_right
         self.ball = ball
@@ -51,7 +50,6 @@ class PongStatus:
         if math.pi / 2 <= angle <= 3 * math.pi / 2:
             return PLAYGROUND_HEIGHT // 2
 
-        # Calculate the x and y components of the speed
         speed_x = math.cos(self.ball.angle) * self.ball.speed
         speed_y = math.sin(self.ball.angle) * self.ball.speed
 
@@ -73,7 +71,6 @@ class PongStatus:
             # Find the minimum time to the next collision
             time_to_collision = min(time_to_vertical_wall, time_to_horizontal_wall)
 
-            # Update the ball's position
             ball_x += speed_x * time_to_collision
             ball_y += speed_y * time_to_collision
 

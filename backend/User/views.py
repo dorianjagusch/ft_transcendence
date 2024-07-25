@@ -39,6 +39,7 @@ class UserListView(APIView, GetAllUsersMixin, GetUsersWithUsernameContainsMixin,
 
 
 class UserDetailView(APIView, GetUserMixin, IsRequestFromSpecificUserMixin, UpdateUserMixin, DeleteUserMixin):
+    @method_decorator(must_be_authenticated)
     def get(self, request: Request, user_id: int) -> Response:
         result = self.get_user(user_id)
         if not isinstance(result, User):

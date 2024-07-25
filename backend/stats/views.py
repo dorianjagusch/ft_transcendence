@@ -46,7 +46,6 @@ class StatsGraphView(APIView, UserTableMixin):
 		wins = self.get_wins_count(user)
 		losses = self.get_losses_count(user)
 		total_games_played = self.get_total_games_played_count(user)
-		# If no games are played, the whole circle will be gray
 		if total_games_played == 0:
 			labels = ['No Games Played']
 			values = [1]
@@ -60,9 +59,9 @@ class StatsGraphView(APIView, UserTableMixin):
             labels=labels,
             values=values,
             marker=dict(colors=colors),
-            hole=0.3  # This is optional, it creates a donut chart if > 0
+            hole=0.3  # This creates a donut chart
         )])
-		# Convert the Plotly figure to an SVG string
 		svg_str = fig.to_image(format="svg").decode("utf-8")
 
 		return HttpResponse(svg_str, content_type='image/svg+xml')
+	

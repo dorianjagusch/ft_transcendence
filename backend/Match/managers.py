@@ -1,8 +1,7 @@
-from django.db import models, transaction, IntegrityError
+from django.db import transaction
 
 from .models import Match
 from Tokens.models import MatchToken
-from User.models import User
 from Player.models import Player
 
 import sys

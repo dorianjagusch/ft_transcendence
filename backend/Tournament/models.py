@@ -4,7 +4,6 @@ from django.utils import timezone
 from User.models import User
 from .tournamentState import TournamentState
 
-# Create your models here.
 class Tournament(models.Model):
 	host_user = models.ForeignKey(User, related_name='tournament_hosts', on_delete=models.CASCADE)
 	name = models.CharField(max_length=30, null=True, blank=True, default=None)
