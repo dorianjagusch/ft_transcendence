@@ -66,7 +66,8 @@ class ARequestService {
 					navigateTo('/login');
 					return;
 				}
-				throw new Error('Error: ' + response.message);
+				const responseJson = await response.json();
+				throw new Error(responseJson.message);
 			}
 			return '';
 		} catch (error) {

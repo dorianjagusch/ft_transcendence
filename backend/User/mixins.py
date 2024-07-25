@@ -2,6 +2,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models.query import QuerySet
+from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
@@ -83,8 +84,10 @@ class UpdateUserMixin:
 			result.save()
 			outputSerializer = UserOutputSerializer(result)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
+		except IntegrityError as e:
+			return Response({"message": "User with username already exists"}, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
-			return Response({"message": f"Updating the user failed"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Updating the user failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class AuthenticateUserMixin:
