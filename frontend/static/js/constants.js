@@ -1,4 +1,6 @@
-const baseURL = 'http://localhost:8080/';
+const protocol = 'http://';
+const location = 'localhost:8080/';
+const baseURL = `${protocol}${location}`;
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const logoutURL = `${baseURL}logout/`;
@@ -32,6 +34,8 @@ const GAMES = {
 };
 
 export default {
+	protocol,
+	location,
 	baseURL,
 	userURL,
 	loginURL,
