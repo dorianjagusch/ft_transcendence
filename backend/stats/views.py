@@ -56,7 +56,7 @@ class StatsGraphView(APIView, UserTableMixin):
 			values = [wins, losses]
 			colors = ['green', 'red']
 		
-		returnfig = go.Figure(data=[go.Pie(
+		fig = go.Figure(data=[go.Pie(
             labels=labels,
             values=values,
             marker=dict(colors=colors),
