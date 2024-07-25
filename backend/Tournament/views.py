@@ -1,23 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 
-from .models import Tournament, \
-						TournamentPlayer
+from .models import Tournament
 from .serializers import TournamentSerializers
 from .managers import TournamentManager
-from .exceptions import TournamentSetupException, \
-							TournamentInProgressException
+from .exceptions import TournamentInProgressException
 from .tournamentState import TournamentState
 from User.models import User
 from User.mixins import AuthenticateUserMixin
-from Tokens.models import MatchToken
 from Tokens.managers import MatchTokenManager
-from Match.matchState import MatchState
 from shared_utilities.decorators import must_be_authenticated, \
-											must_not_be_username, \
 											validate_tournament_request
 
 class TournamentListView(APIView):
