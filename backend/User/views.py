@@ -7,9 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import User
 from .mixins import (
-    GetAllUsersMixin, GetUsersWithUsernameContainsMixin, CreateUserMixin, 
-    GetUserMixin, DeleteUserMixin, UpdateUserMixin, AuthenticateUserMixin, 
-    LoginUserMixin, LogoutUserMixin, IsRequestFromSpecificUserMixin, 
+    GetAllUsersMixin, GetUsersWithUsernameContainsMixin, CreateUserMixin,
+    GetUserMixin, DeleteUserMixin, UpdateUserMixin, AuthenticateUserMixin,
+    LoginUserMixin, LogoutUserMixin, IsRequestFromSpecificUserMixin,
     SaveUserProfilePictureMixin, GetProfilePictureMixin
 )
 from .serializers import UserOutputSerializer, UserInputSerializer, UserFriendOutputSerializer
@@ -47,7 +47,7 @@ class UserDetailView(APIView, GetUserMixin, IsRequestFromSpecificUserMixin, Upda
         if self.is_request_from_specific_user(request, user_id):
             serializer = UserOutputSerializer(result)
             return Response(serializer.data)
-        
+
         serializer = UserFriendOutputSerializer(result, context={'request': request})
         return Response(serializer.data)
 

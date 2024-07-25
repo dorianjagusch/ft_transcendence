@@ -27,6 +27,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
         self.game = PongStatus(self.ball, self.player_left, self.player_right)
+        self.match_ended_normally = False
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
@@ -48,7 +49,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
     async def disconnect(self, close_code):
-        await self.abort_match(self.match)
+        if not self.match_ended_normally:
+            await self.abort_match(self.match)
         await self.close()
 
     async def receive(self, text_data):
@@ -137,6 +139,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
                 if self.match.tournament:
                     self.update_tournament_data_with_match_results(self.match)
+
+                self.match_ended_normally = True
 
         except Exception as e:
             self.abort_match(self.match)
