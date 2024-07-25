@@ -35,6 +35,10 @@ from Tokens.views import SingleMatchGuestTokenView
 from Match.views import MatchView, \
 							MatchHistory
 
+from Player.views import PlayerListView, \
+							PlayerDetailView, \
+							MatchPlayerListView
+
 from Tournament.views import TournamentListView, \
 								TournamentDetailView, \
 								TournamentPlayerListView, \
@@ -67,6 +71,11 @@ urlpatterns = [
 	# Match Views
 	path('match/', MatchView.as_view()),
 	path('matches/', MatchHistory.as_view()),
+
+	# Player views
+	path('players/', PlayerListView.as_view()),
+	path('players/<int:player_id>', PlayerDetailView.as_view()),
+	path('matches/<int:match_id>/players/', MatchPlayerListView.as_view()),
 
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
