@@ -14,7 +14,7 @@ from shared_utilities.decorators import must_be_authenticated
 class StatsView(APIView, UserTableMixin):
 	@method_decorator(must_be_authenticated)
 	def get(self, request, user_id):
-		user = User.objects.filter(id = user_id).first()
+		user = User.objects.filter(id = user_id, is_active=True).first()
 		if not user:
 			return Response({"message": "User was not found"}, status=status.HTTP_404_NOT_FOUND)
 		wins = self.get_wins_count(user)
