@@ -3,6 +3,7 @@ import notify from '../utils/notify.js';
 import fileInputField from '../components/formComponents/fileInputField.js';
 import getProfilePicture from './profilePicture.js';
 import AcceptDeclineModal from './dialogs/acceptDeclineModal.js';
+import UpdateUserModal from './dialogs/updateUserModal.js';
 import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
@@ -41,6 +42,67 @@ const profilePictureHandler = async (file) => {
 	navigateTo('/dashboard');
 };
 
+let updateUser = async (userId) => {
+	let savebleUsername = localStorage.getItem('username');
+	let saveblePassword = '';
+
+	let usernameField = document.getElementById('username');
+	let currentPasswordField = document.getElementById('current-password');
+	let newPasswordField = document.getElementById('password');
+
+	const username = usernameField.value;
+	const password = currentPasswordField.value;
+	const repeatPassword = newPasswordField.value;
+
+	if (username !== '' && username !== savebleUsername) {
+		savebleUsername = username;
+	}
+
+	if (password === '' && username === '') {
+		notify('No new password or new username provided', 'error');
+		return;
+	}
+
+	if (password !== '' && password !== repeatPassword) {
+		notify('Passwords do not match', 'error');
+		return;
+	}
+
+	if (password !== '' && repeatPassword !== '') {
+		saveblePassword = password;
+	}
+
+	const data = {
+		username: savebleUsername,
+		password: saveblePassword,
+	};
+
+	const userService = new UserService();
+	try {
+		await userService.putRequest(userId, data);
+		notify('User updated successfully.');
+		if (username === savebleUsername)
+			localStorage.setItem('username', savebleUsername);
+
+		if (saveblePassword !== '') {
+			usernameField.value = '';
+			currentPasswordField.value = '';
+			newPasswordField.value = '';
+			localStorage.clear();
+			navigateTo('/logout');
+		}
+
+	} catch (error) {
+		notify(error);
+	}
+
+	usernameField.value = '';
+	currentPasswordField.value = '';
+	newPasswordField.value = '';
+
+	navigateTo('/dashboard');
+};
+
 const deleteAccount = async (userId) => {
 	try {
 		new UserService().deleteRequest(userId);
@@ -63,10 +125,11 @@ const SideBar = async () => {
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
 
-	const editProfileBtn = sideBarButton(
-		['sidebar-element', 'bg-primary'],
-		'Edit profile'
-	);
+	const UpdateModal = new UpdateUserModal(updateUser, localStorage.getItem('user_id'));
+	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile', () => {
+		document.body.appendChild(UpdateModal.dialog);
+		UpdateModal.dialog.showModal();
+	});
 
 	const viewProfileBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
