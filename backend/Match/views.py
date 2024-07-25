@@ -39,6 +39,7 @@ class MatchView(APIView):
         return Response(pong_match_url, status=status.HTTP_200_OK)
 
 class MatchHistory(APIView):
+    @method_decorator(must_be_authenticated)
      def get(self, request):
         user_id = request.query_params.get('user_id')
         user = get_object_or_404(User, pk = user_id)
@@ -46,7 +47,6 @@ class MatchHistory(APIView):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         player_instances = user.players.all()
         matches = [player.match for player in player_instances]
-        # print (matches, file=sys.stderr)
         serializer = MatchSerializer(matches, many = True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

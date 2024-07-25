@@ -43,6 +43,7 @@ class TournamentListView(APIView):
 			return Response({"message": "Creating a tournament failed"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TournamentDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -78,6 +79,7 @@ class TournamentDetailView(APIView):
 		return Response({"message": "Tournament has been aborted."}, status=status.HTTP_200_OK)
 
 class TournamentPlayerListView(APIView, AuthenticateUserMixin):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -107,6 +109,7 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 			return Response({"message": "Creating a tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 class TournamentPlayerDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id, tournamentplayer_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
@@ -130,6 +133,7 @@ class TournamentPlayerDetailView(APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class TournamentMatchListView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -139,6 +143,7 @@ class TournamentMatchListView(APIView):
 		return Response(tournament_match_serializers.data, status=status.HTTP_200_OK)
 
 class TournamentMatchDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id, tournament_match_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		if not tournament:
