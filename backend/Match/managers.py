@@ -63,6 +63,11 @@ class MatchSetupManager:
 		else:
 			return Response({"message": "Invalid number of players"}, status=status.HTTP_400_BAD_REQUEST)
 
-		match_details = { 'winner' : winner, 'loser' : loser }
+		match_details = {
+			'winner' : winner,
+			'loser' : loser,
+			'ball_max_speed' : match.ball_max_speed,
+			'ball_contacts' : match.ball_contacts
+			}
 		return Response(match_details, status=status.HTTP_200_OK)
 

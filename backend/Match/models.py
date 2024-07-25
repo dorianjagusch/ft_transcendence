@@ -9,6 +9,8 @@ class Match(models.Model):
 	end_ts = models.DateTimeField(null=True, blank=True)
 	insert_ts = models.DateTimeField(auto_now_add=True)
 	update_ts = models.DateTimeField(auto_now=True)
+	ball_contacts = models.IntegerField(default=0)
+	ball_max_speed = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
 
 	tournament = models.ForeignKey(Tournament, related_name='matches', null=True, blank=True, default=None, on_delete=models.CASCADE)
 
