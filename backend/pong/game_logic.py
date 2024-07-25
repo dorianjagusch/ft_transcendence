@@ -65,12 +65,13 @@ class PongGame:
         ball_y = pong_stat.ball.y
         impact_point = ball_y - player_y
         normalized_impact_point = impact_point / HALF_PLAYER_HEIGHT
-        new_angle = normalized_impact_point * MAX_BOUNCE_ANGLE_RAD * 2
+        bounce_angle = normalized_impact_point * MAX_BOUNCE_ANGLE_RAD
 
-        if self.half_pi <= pong_stat.ball.angle < 3 * self.half_pi:
-            pong_stat.ball.angle = (new_angle)
+        if pong_stat.ball.x < PLAYGROUND_WIDTH / 2:
+            pong_stat.ball.angle = (2 * math.pi - bounce_angle) % (2 * math.pi)
         else:
-            pong_stat.ball.angle = (math.pi - new_angle)
+            pong_stat.ball.angle = (math.pi - bounce_angle) % (2 * math.pi)
+
         pong_stat.ball.speed *= SPEED_UP_FACTOR
         self.collision_tolerance *= SPEED_UP_FACTOR
 

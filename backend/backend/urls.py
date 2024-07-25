@@ -25,8 +25,7 @@ from User.views import UserDetailView, \
 						UserListView, \
 						UserProfilePictureView, \
 						UserLoginView, \
-						UserLogoutView, \
-						UserAdminDetailsView
+						UserLogoutView
 
 from Friends.views import FriendsListView, \
 						FriendshipDetailView
@@ -56,7 +55,6 @@ urlpatterns = [
 	path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
 	path('login/', UserLoginView.as_view()),
 	path('logout/', UserLogoutView.as_view()),
-	path('admins/', UserAdminDetailsView.as_view()),
 
 	# Friends views
 	path('friends/', FriendsListView.as_view()),
