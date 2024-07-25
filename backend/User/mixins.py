@@ -151,32 +151,32 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
 
 
 class SaveUserProfilePictureMixin(GetUserMixin):
-	"""
-	Mixin to save a user's profile picture.
-	"""
-	def save_profile_picture(self, request: Request, user_id: int) -> Response:
-		result = self.get_user(user_id)
-		if not isinstance(result, User):
-			 return result
+    """
+    Mixin to save a user's profile picture.
+    """
+    def save_profile_picture(self, request: Request, user_id: int) -> Response:
+        result = self.get_user(user_id)
+        if not isinstance(result, User):
+                return result
 
-		if 'file' not in request.FILES:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+        if 'file' not in request.FILES:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-		file = request.FILES['file']
+        file = request.FILES['file']
 
-		try:
-			validate_image(file)
-		except ValidationError as e:
-			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            validate_image(file)
+        except ValidationError as e:
+            return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-		try:
-			profile_picture = ProfilePicture.objects.get(user=result)
-			profile_picture.picture = file
-		except ProfilePicture.DoesNotExist:
-			profile_picture = ProfilePicture(user=result, picture=file)
+        try:
+            profile_picture = ProfilePicture.objects.get(user=result)
+            profile_picture.picture = file
+        except ProfilePicture.DoesNotExist:
+            profile_picture = ProfilePicture(user=result, picture=file)
 
-		profile_picture.save()
-		return Response(status=status.HTTP_200_OK)
+        profile_picture.save()
+        return Response(status=status.HTTP_200_OK)
 
 
 class GetProfilePictureMixin(GetUserMixin):
