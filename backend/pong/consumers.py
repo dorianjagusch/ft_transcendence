@@ -98,22 +98,28 @@ class PongConsumer(AsyncWebsocketConsumer):
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             with transaction.atomic():
-                match_token = MatchToken.objects.get(token=token)
-                if not match_token.is_active or match_token.is_expired():
+                match_token = MatchToken.objects.filter(token=token).first()
+                if not match_token or not match_token.is_active or match_token.is_expired():
                     return False
 
                 match_token.is_active = False
                 match_token.save()
 
-                self.match = Match.objects.get(pk=match_id)
+                self.match = Match.objects.filter(pk=match_id).first()
+                if not self.match:
+                    return False
                 self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+                if not self.player_left:
+                    return False
                 if match_token.user_right_side is not None:
                     self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+                    if not self.player_right:
+                        return False
                 else:
                     self.ai_opponent = True
                 return True
 
-        except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
+        except Exception:
             return False
 
     @database_sync_to_async

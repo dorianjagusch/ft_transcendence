@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 import plotly.graph_objects as go
-import plotly.io as pio
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -15,7 +14,7 @@ from shared_utilities.decorators import must_be_authenticated
 class StatsView(APIView, UserTableMixin):
 	@method_decorator(must_be_authenticated)
 	def get(self, request, user_id):
-		user = User.objects.filter(id = user_id).first()
+		user = User.objects.filter(id = user_id, is_active=True).first()
 		if not user:
 			return Response({"message": "User was not found"}, status=status.HTTP_404_NOT_FOUND)
 		wins = self.get_wins_count(user)
@@ -65,3 +64,32 @@ class StatsGraphView(APIView, UserTableMixin):
 
 		return HttpResponse(svg_str, content_type='image/svg+xml')
 	
+class MatchScoreGraphView(APIView, UserTableMixin):
+	@method_decorator(must_be_authenticated)
+	def get (self, request, user_id):
+		user = User.objects.filter(id = user_id).first()
+		if not user:
+			return Response({"message": "User was not found"}, status=status.HTTP_404_NOT_FOUND)
+		scores = self.get_last_5_game_scores(user)
+		match_ids = [score['match_id'] for score in scores]
+		match_scores = [score['score'] for score in scores]
+		match_colors = ['green' if score['win'] else 'red' for score in scores]
+		
+		fig = go.Figure(data=[go.Bar(
+			x=match_ids,
+			y=match_scores,
+			marker_color=match_colors,
+			text=match_scores, 
+            textposition='inside',
+		)])
+
+		fig.update_layout(
+			title='Last 5 Match Scores',
+			xaxis_title='Match ID',
+			yaxis_title='Score',
+			xaxis=dict(showticklabels=False)
+		)
+
+		svg_str = fig.to_image(format="svg").decode("utf-8")
+
+		return HttpResponse(svg_str, content_type='image/svg+xml')
