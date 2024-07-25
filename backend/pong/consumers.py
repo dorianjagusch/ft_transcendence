@@ -105,8 +105,12 @@ class PongConsumer(AsyncWebsocketConsumer):
                 match_token.is_active = False
                 match_token.save()
 
-                self.match = Match.objects.get(pk=match_id)
+                self.match = Match.objects.filter(pk=match_id).first()
+                if not self.match:
+                    return False
                 self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+                if not self.player_left:
+                    return False
                 if match_token.user_right_side is not None:
                     self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
                 else:
