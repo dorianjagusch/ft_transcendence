@@ -1,12 +1,16 @@
 import AView from './AView.js';
 import {PlayerInfo} from '../components/playerInfo.js';
 import TournamentService from '../services/tournamentService.js';
+import MatchService from '../services/matchService.js';
+import PlayerService from '../services/playerService.js';
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Tournament Winner');
 		this.tournamentService = new TournamentService();
+		this.matchService = new MatchService();
+		this.PlayerService = new PlayerService();
 	}
 
 	async getHTML() {
