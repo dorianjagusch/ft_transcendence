@@ -4,9 +4,6 @@ import TournamentService from '../services/tournamentService.js';
 import Pong from '../pong/pong.js';
 import AView from './AView.js';
 
-/*TODO: Let it take parameters to distingish between match and tournament
-		expect /tournament/id/match/id or /match/id*/
-
 export default class extends AView {
 	constructor(params) {
 		super(params);
@@ -16,6 +13,7 @@ export default class extends AView {
 		this.tournamentService = new TournamentService();
 		this.attachObserver = this.attachObserver.bind(this);
 		this.attachEventListeners = this.attachEventListeners.bind(this);
+		this.checkForPongClosing = this.checkForPongClosing.bind(this);
 	}
 
 	scrollToCanvas(mutation) {
@@ -39,8 +37,8 @@ export default class extends AView {
 			if (node.id != 'pong') {
 				return;
 			}
-			this.chatSocket.handleClose();
-			observer.disconnect();
+			this.chatSocket?.handleClose();
+			observer?.disconnect();
 		});
 	}
 
@@ -56,8 +54,12 @@ export default class extends AView {
 
 	attachEventListeners() {
 		document.querySelector('.new-game-button').addEventListener('click', async () => {
-			const nextMatch = await this.tournamentService.getNextMatch(this.params);
-			this.navigateTo(`/pong/tournaments/${this.params.tournament_id}/matches/${nextMatch}`);
+			if (this.params?.tournament_id) {
+				const match_id = parseInt(this.params.match_id) + 1;
+				this.navigateTo(`/preview/${this.params.tournament_id}/matches/${match_id}`);
+			} else {
+				this.navigateTo(`/match`);
+			}
 		});
 
 		document.querySelectorAll('.nav-link').forEach((link) => {
@@ -71,11 +73,11 @@ export default class extends AView {
 		let matchUrl = null;
 		try {
 			if (this.params.tournament_id && this.params.match_id) {
-				matchUrl = await this.pongService.getMatchRequest(this.params);
+				matchUrl = await this.pongService.getTournamentMatchRequest(this.params);
 			} else {
 				matchUrl = await this.pongService.getRequest();
+				localStorage.removeItem('token');
 			}
-			localStorage.removeItem('token');
 			this.chatSocket = new ChatSocket(matchUrl);
 			this.chatSocket.connect();
 		} catch (error) {
