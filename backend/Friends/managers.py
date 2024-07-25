@@ -60,9 +60,9 @@ class FriendsManager(models.Manager):
 			if friend_user.exists():
 				friend_user.delete()
 
-	def delete_user_friendships(self, user_id: int) -> None:
-		user_friends = self.filter(user_id=user_id)
-		friends_user = self.filter(friend_id=user_id)
+	def delete_user_friendships(self, user: User) -> None:
+		user_friends = self.filter(user=user)
+		friends_user = self.filter(friend=user)
 
 		try:
 			with transaction.atomic():

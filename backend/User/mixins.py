@@ -13,7 +13,7 @@ from .models import User, ProfilePicture
 from .validators import validate_image
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
-from Friends.managers import FriendsManager
+from Friends.models import Friend
 
 class GetAllUsersMixin:
     """
@@ -151,7 +151,7 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
         result.save()
 
         self.change_tournament_player_names_to_deleted(result)
-        FriendsManager.delete_user_friendships(user_id)
+        Friend.objects.delete_user_friendships(result)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
