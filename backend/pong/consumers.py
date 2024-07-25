@@ -113,6 +113,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                     return False
                 if match_token.user_right_side is not None:
                     self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+                    if not self.player_right:
+                        return False
                 else:
                     self.ai_opponent = True
                 return True
