@@ -37,8 +37,8 @@ export default class extends AView {
 			if (node.id != 'pong') {
 				return;
 			}
-			this.chatSocket.handleClose();
-			observer.disconnect();
+			this.chatSocket?.handleClose();
+			observer?.disconnect();
 		});
 	}
 
