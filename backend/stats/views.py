@@ -78,13 +78,16 @@ class MatchScoreGraphView(APIView, UserTableMixin):
 		fig = go.Figure(data=[go.Bar(
 			x=match_ids,
 			y=match_scores,
-			marker_color=match_colors
+			marker_color=match_colors,
+			text=match_scores, 
+            textposition='inside',
 		)])
 
 		fig.update_layout(
 			title='Last 5 Match Scores',
 			xaxis_title='Match ID',
-			yaxis_title='Score'
+			yaxis_title='Score',
+			xaxis=dict(showticklabels=False)
 		)
 
 		svg_str = fig.to_image(format="svg").decode("utf-8")
