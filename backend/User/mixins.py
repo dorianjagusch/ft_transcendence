@@ -84,7 +84,7 @@ class UpdateUserMixin:
 			outputSerializer = UserOutputSerializer(result)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
-			return Response({"message": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": f"Updating the user failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AuthenticateUserMixin:
