@@ -1,17 +1,17 @@
 import notify from '../../utils/notify.js';
 
 function validateFile(file) {
-	//const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-	//if (!validImageTypes.includes(file.type)) {
-	//	notify('Please select a valid image file (JPEG, PNG, JPG).', 'error');
-	//	return false;
-	//}
+	const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+	if (!validImageTypes.includes(file.type)) {
+		notify('Please select a valid image file (JPEG, PNG, JPG).', 'error');
+		return false;
+	}
 
-	//const maxSizeInBytes = 2097152;
-	//if (file.size > maxSizeInBytes) {
-	//	notify('Please select an image smaller than 2MB.', 'error');
-	//	return false;
-	//}
+	const maxSizeInBytes = 2097152;
+	if (file.size > maxSizeInBytes) {
+		notify('Please select an image smaller than 2MB.', 'error');
+		return false;
+	}
 
 	return true;
 }
