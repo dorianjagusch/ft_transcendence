@@ -51,7 +51,8 @@ class ChatSocket {
 				this.game.display2D();
 			}
 		}
-		this.chatSocket.send(e.key);
+		if (this.chatSocket && this.chatSocket.readyState == WebSocket.OPEN)
+			this.chatSocket.send(e.key);
 		if (e.key == "Enter" && this.game){
 			Array.from(document.querySelectorAll('.instructions')).forEach(instruction => {
 				instruction.style.display = 'none';

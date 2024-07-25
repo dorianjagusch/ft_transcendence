@@ -1,23 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 
-from .models import Tournament, \
-						TournamentPlayer
+from .models import Tournament
 from .serializers import TournamentSerializers
 from .managers import TournamentManager
-from .exceptions import TournamentSetupException, \
-							TournamentInProgressException
+from .exceptions import TournamentInProgressException
 from .tournamentState import TournamentState
 from User.models import User
 from User.mixins import AuthenticateUserMixin
-from Tokens.models import MatchToken
 from Tokens.managers import MatchTokenManager
-from Match.matchState import MatchState
 from shared_utilities.decorators import must_be_authenticated, \
-											must_not_be_username, \
 											validate_tournament_request
 
 class TournamentListView(APIView):
@@ -40,9 +34,10 @@ class TournamentListView(APIView):
 				'tournament_player': host_tournament_player_serializer.data
 			}, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({"message": str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			return Response({"message": "Creating a tournament failed"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TournamentDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -63,7 +58,7 @@ class TournamentDetailView(APIView):
 				serializer = TournamentSerializers.in_progress(tournament)
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			except Exception as e:
-				return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message": "Updating the tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 		elif tournament.state == TournamentState.IN_PROGRESS:
 			TournamentManager.in_progress.abort_tournament(tournament)
@@ -78,6 +73,7 @@ class TournamentDetailView(APIView):
 		return Response({"message": "Tournament has been aborted."}, status=status.HTTP_200_OK)
 
 class TournamentPlayerListView(APIView, AuthenticateUserMixin):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -104,9 +100,10 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Creating a tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 class TournamentPlayerDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id, tournamentplayer_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		tournament_player = tournament.players.filter(id=tournamentplayer_id).first()
@@ -130,6 +127,7 @@ class TournamentPlayerDetailView(APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class TournamentMatchListView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id):
 		tournament = Tournament.objects.filter(id=tournament_id).first()
 		if not tournament:
@@ -139,6 +137,7 @@ class TournamentMatchListView(APIView):
 		return Response(tournament_match_serializers.data, status=status.HTTP_200_OK)
 
 class TournamentMatchDetailView(APIView):
+	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id, tournament_match_id):
 		tournament = Tournament.objects.get(id=tournament_id)
 		if not tournament:

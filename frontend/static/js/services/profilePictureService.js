@@ -20,7 +20,7 @@ export default class ProfilePictureService extends ARequestService {
 			body: data,
 			credentials: 'include',
 		});
-		const responseData = this.checkResponseWithBody(postRequest);
+		const responseData = this.checkResponseWithNonJsonBody(postRequest);
 		return responseData;
 	}
 }

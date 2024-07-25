@@ -27,6 +27,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
         self.game = PongStatus(self.ball, self.player_left, self.player_right)
+        self.match_ended_normally = False
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
@@ -48,7 +49,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
     async def disconnect(self, close_code):
-        await self.abort_match(self.match)
+        if not self.match_ended_normally:
+            await self.abort_match(self.match)
         await self.close()
 
     async def receive(self, text_data):
@@ -96,22 +98,28 @@ class PongConsumer(AsyncWebsocketConsumer):
     def authenticate_match_token_and_fetch_match_and_players(self, token, match_id):
         try:
             with transaction.atomic():
-                match_token = MatchToken.objects.get(token=token)
-                if not match_token.is_active or match_token.is_expired():
+                match_token = MatchToken.objects.filter(token=token).first()
+                if not match_token or not match_token.is_active or match_token.is_expired():
                     return False
 
                 match_token.is_active = False
                 match_token.save()
 
-                self.match = Match.objects.get(pk=match_id)
+                self.match = Match.objects.filter(pk=match_id).first()
+                if not self.match:
+                    return False
                 self.player_left = Player.objects.filter(match=self.match, user_id=match_token.user_left_side).first()
+                if not self.player_left:
+                    return False
                 if match_token.user_right_side is not None:
                     self.player_right = Player.objects.filter(match=self.match, user_id=match_token.user_right_side).first()
+                    if not self.player_right:
+                        return False
                 else:
                     self.ai_opponent = True
                 return True
 
-        except (MatchToken.DoesNotExist, Match.DoesNotExist, Player.DoesNotExist):
+        except Exception:
             return False
 
     @database_sync_to_async
@@ -137,6 +145,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
                 if self.match.tournament:
                     self.update_tournament_data_with_match_results(self.match)
+
+                self.match_ended_normally = True
 
         except Exception as e:
             self.abort_match(self.match)

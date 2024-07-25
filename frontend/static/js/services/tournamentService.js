@@ -17,8 +17,8 @@ export default class TournamentService extends ARequestService {
 		return response;
 	}
 
-	async getNextMatch(context) {
-		return super.getRequest(`${backendURL.tournamentURL}${context.tournament_id}/matches/${context.match_id}`);
+	async getTournamentMatches(context) {
+		return super.getRequest(`${backendURL.tournamentURL}${context.tournament_id}/matches/`);
 	}
 
 	async postRequest(data) {
@@ -33,13 +33,14 @@ export default class TournamentService extends ARequestService {
 		return response;
 	}
 
-	async postPlayer(tournamentData, context) {
+	async postPlayer(tournamentData, context, logoutOn401) {
 		const response = super.postRequest(
 			`${backendURL.tournamentURL}${context.tournamentId}/players/`,
 			JSON.stringify({
 				username: tournamentData.username,
 				password: tournamentData.password,
-			})
+			}),
+			logoutOn401
 		);
 		return response;
 	}

@@ -9,20 +9,45 @@ class ARequestService {
 		}
 	}
 
-	async checkResponseWithBody(request, logoutOn401 = true) {
+	async checkResponseWithNonJsonBody(request, logoutOn401 = true) {
 		try {
 			const response = await request;
 			if (response.ok) {
-				return response.json();
+				return response;
 			}
-			console.log();
+
 			if (response.status === 401 && logoutOn401) {
 				localStorage.clear();
 				navigateTo('/login');
 				return;
 			}
 
-			throw new Error(response.message);
+			const responseJson = await response.json();
+			throw new Error(responseJson.message);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				console.error(constants.problemWithFetchMsg, error);
+			} else {
+				throw error;
+			}
+		}
+	}
+
+	async checkResponseWithBody(request, logoutOn401 = true) {
+		try {
+			const response = await request;
+			const responseJson = await response.json();
+			if (response.ok) {
+				return responseJson;
+			}
+
+			if (response.status === 401 && logoutOn401) {
+				localStorage.clear();
+				navigateTo('/login');
+				return;
+			}
+
+			throw new Error(responseJson.message);
 		} catch (error) {
 			if (error instanceof TypeError) {
 				console.error(constants.problemWithFetchMsg, error);
@@ -41,7 +66,8 @@ class ARequestService {
 					navigateTo('/login');
 					return;
 				}
-				throw new Error('Error: ' + response.message);
+				const responseJson = await response.json();
+				throw new Error(responseJson.message);
 			}
 			return '';
 		} catch (error) {
@@ -81,8 +107,8 @@ class ARequestService {
 		return this.checkResponseWithBody(request, logoutOn401);
 	}
 
-	async putRequest(url, id, jsonBody, logoutOn401 = true) {
-		const request = fetch(`${url}${id}`, {
+	async putRequest(url, jsonBody, logoutOn401 = true) {
+		const request = fetch(`${url}`, {
 			method: 'PUT',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),

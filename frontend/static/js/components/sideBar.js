@@ -3,6 +3,7 @@ import notify from '../utils/notify.js';
 import fileInputField from '../components/formComponents/fileInputField.js';
 import getProfilePicture from './profilePicture.js';
 import AcceptDeclineModal from './dialogs/acceptDeclineModal.js';
+import UpdateUserModal from './dialogs/updateUserModal.js';
 import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 
@@ -36,8 +37,65 @@ const profilePictureHandler = async (file) => {
 		const profilePictureService = new ProfilePictureService();
 		await profilePictureService.postRequest(userId, formData);
 	} catch (error) {
-		notify(error, 'error');
+		notify(error.message, 'error');
 	}
+	navigateTo('/dashboard');
+};
+
+let updateUser = async (userId) => {
+	let savebleUsername = localStorage.getItem('username');
+	let saveblePassword = '';
+
+	let usernameField = document.getElementById('username');
+	let currentPasswordField = document.getElementById('current-password');
+	let newPasswordField = document.getElementById('password');
+
+	const username = usernameField.value;
+	const password = currentPasswordField.value;
+	const repeatPassword = newPasswordField.value;
+
+	if (username !== '' && username !== savebleUsername) {
+		savebleUsername = username;
+	}
+
+	if (password === '' && username === '') {
+		notify('No new password or new username provided', 'error');
+		return;
+	}
+
+	if (password !== '' && password !== repeatPassword) {
+		notify('Passwords do not match', 'error');
+		return;
+	}
+
+	if (password !== '' && repeatPassword !== '') {
+		saveblePassword = password;
+	}
+
+	const data = {
+		username: savebleUsername,
+		password: saveblePassword,
+	};
+
+	const userService = new UserService();
+	try {
+		await userService.putRequest(userId, data);
+		if (username === savebleUsername)
+			localStorage.setItem('username', savebleUsername);
+
+		if (saveblePassword !== '') {
+			notify('User updated successfully. Please log in again.');
+			localStorage.clear();
+			navigateTo('/logout');
+			return;
+		}
+
+	} catch (error) {
+		notify(error.message, 'error');
+		return;
+	}
+
+	notify('User updated successfully.');
 	navigateTo('/dashboard');
 };
 
@@ -58,20 +116,17 @@ const SideBar = async () => {
 	try {
 		img.src = await getProfilePicture(localStorage.getItem('user_id'));
 	} catch (error) {
-		console.log('Error getting the profile picture element: ', error);
+		notify(error.message, 'error');
 	}
 	const fileInput = fileInputField(profilePictureHandler);
 	aside.appendChild(fileInput);
 
-	const editProfileBtn = sideBarButton(
-		['sidebar-element', 'bg-primary'],
-		'Edit profile'
-	);
+	const UpdateModal = new UpdateUserModal(updateUser, localStorage.getItem('user_id'));
+	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile', () => {
+		aside.appendChild(UpdateModal.dialog);
+		UpdateModal.dialog.showModal();
+	});
 
-	const viewProfileBtn = sideBarButton(
-		['sidebar-element', 'bg-primary'],
-		'View profile', () => navigateTo('/dashboard')
-	);
 	const profilePictureBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
 		'Update profile picture',
@@ -100,7 +155,6 @@ const SideBar = async () => {
 	aside.appendChild(fileInput);
 	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
-	aside.appendChild(viewProfileBtn);
 	aside.appendChild(profilePictureBtn);
 	aside.appendChild(createTournamentBtn);
 	aside.appendChild(deleteAccountBtn);

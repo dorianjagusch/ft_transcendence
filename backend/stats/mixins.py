@@ -37,7 +37,7 @@ class UserTableMixin:
 		return win_streak
 	
 	def get_users_with_most_wins(self):
-		return  User.objects.annotate(total_wins=Count('players', filter=Q(players__match_winner=True))).order_by('-total_wins')
+		return  User.objects.filter(is_active=True).annotate(total_wins=Count('players', filter=Q(players__match_winner=True))).order_by('-total_wins')
 
 	def get_position_in_leaderboard(self, user: User):
 		users_with_most_wins = self.get_users_with_most_wins()
