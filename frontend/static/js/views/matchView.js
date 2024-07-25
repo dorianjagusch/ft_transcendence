@@ -5,14 +5,14 @@ import UserService from '../services/userService.js'; // TODO: Switch out for st
 import getProfilePicture from '../components/profilePicture.js';
 import AcceptDeclineModal from '../components/dialogs/acceptDeclineModal.js';
 import AuthenticationModal from '../components/dialogs/authenticationModal.js';
-import MatchService from '../services/matchService.js';
+import AuthenticationService from '../services/authenticationService.js';
 
 export default class extends Aview {
 	constructor() {
 		super();
 		this.setTitle('Modal');
 		this.userService = new UserService();
-		this.matchService = new MatchService();
+		this.authenticationService = new AuthenticationService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
 		this.createAiMatch = this.createAiMatch.bind(this);
@@ -22,8 +22,7 @@ export default class extends Aview {
 
 	async createAiMatch() {
 		try {
-			const data = await this.matchService.postAiMatch({ai_opponent: true});
-			localStorage.setItem('opponent', 'AI');
+			const data = await this.authenticationService.postAiMatch({ai_opponent: true});
 			localStorage.setItem('token', data.token.token);
 			this.navigateTo('/pong');
 		} catch (error) {
@@ -106,7 +105,10 @@ export default class extends Aview {
 
 		const acceptDeclineModal = new AcceptDeclineModal(this.createAiMatch);
 		acceptDeclineModal.dialog.classList.add('confirm-choice-modal');
-		const authenticationModal = new AuthenticationModal(MatchService, this.attachPlayerInfo);
+		const authenticationModal = new AuthenticationModal(
+			AuthenticationService,
+			this.attachPlayerInfo
+		);
 		authenticationModal.dialog.classList.add('authenticate-user-modal');
 		this.adjustForm(authenticationModal.form.form);
 
