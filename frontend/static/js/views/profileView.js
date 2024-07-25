@@ -70,7 +70,7 @@ export default class extends AView {
 			super.notify('Friendship created successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {
-			super.notify(error);
+			super.notify(error.message, 'error');
 		}
 	}
 
@@ -80,7 +80,7 @@ export default class extends AView {
 			super.notify('Friendship declined successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {
-			super.notify(error);
+			super.notify(error.message, 'error');
 		}
 	}
 
@@ -99,7 +99,7 @@ export default class extends AView {
 			userResponse = await this.userService.getRequest(this.friendId);
 			userResponse.img = await getProfilePicture(this.friendId);
 		} catch (error) {
-			console.notify(error);
+			console.notify(error.message, 'error');
 			this.navigateTo('/friends');
 		}
 

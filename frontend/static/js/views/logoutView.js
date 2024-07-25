@@ -20,11 +20,11 @@ export default class extends AView {
 			this.notify('You are now logged out.', 'success');
 		} catch (error) {
 			if (!error.status) {
-				this.notify(error);
+				this.notify(error.message, 'error');
 			} else if ((error.status = 401)) {
 				this.notify('Session expired, please login.', 'error');
 			} else {
-				this.notify(error);
+				this.notify(error.message, 'error');
 			}
 		}
 		this.navigateTo('/login');

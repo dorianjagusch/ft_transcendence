@@ -30,7 +30,7 @@ export default class extends AView {
 			} else if (error.status === 401) {
 				this.notify("Username or password is incorrect. Try again.", 'error');
 			} else {
-				this.notify(error);
+				this.notify(error.message, 'error');
 			}
 		}
 	};
