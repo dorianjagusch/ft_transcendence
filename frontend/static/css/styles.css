@@ -103,6 +103,7 @@ label,
 select,
 textarea {
 	line-height: 1.1;
+	margin-bottom: 0.3em;
 }
 
 button {
@@ -1311,6 +1312,11 @@ p:has(+ .menu-item) {
 dialog h3 {
 	text-align: center;
 	margin-bottom: 2em;
+}
+
+dialog h5 {
+	text-align: center;
+	margin-bottom: 1em;
 }
 
 dialog .notification {
