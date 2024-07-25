@@ -8,7 +8,7 @@ class User(AbstractBaseUser):
 	password = models.CharField('password', max_length=128, null=False, blank=False)
 	is_active = models.BooleanField('active', default=True)
 	is_superuser = models.BooleanField('is_superuser', default=False)
-	insertTS = models.DateTimeField('insertTS', auto_now_add=True, blank=True, null=True)
+	insert_ts = models.DateTimeField('insert_ts', auto_now_add=True, blank=True, null=True)
 	last_login = models.DateTimeField('last_login', blank=True, null=True)
 	is_online = models.BooleanField('is_online', default=False)
 
