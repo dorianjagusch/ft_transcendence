@@ -9,6 +9,29 @@ class ARequestService {
 		}
 	}
 
+	async checkResponseWithNonJsonBody(request, logoutOn401 = true) {
+		try {
+			const response = await request;
+			if (response.ok) {
+				return response;
+			}
+			console.log();
+			if (response.status === 401 && logoutOn401) {
+				localStorage.clear();
+				navigateTo('/login');
+				return;
+			}
+
+			throw new Error(response.message);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				console.error(constants.problemWithFetchMsg, error);
+			} else {
+				throw error;
+			}
+		}
+	}
+
 	async checkResponseWithBody(request, logoutOn401 = true) {
 		try {
 			const response = await request;
