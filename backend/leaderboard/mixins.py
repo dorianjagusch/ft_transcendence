@@ -7,7 +7,7 @@ from User.models import User
 class LeaderBoardTableMixin:
 	def leader_table_response(self):
 			self.leader_table = LeaderBoardTable
-			users_with_most_wins = User.objects.annotate(
+			users_with_most_wins = User.objects.filter(is_active=True).annotate(
 				total_wins=Count('players', filter=Q(players__match_winner=True))
 			).order_by('-total_wins')
 
