@@ -20,6 +20,7 @@ export default class extends AView {
 		this.userService = new UserService();
 		this.friendService = new FriendService();
 		this.acceptHandler = this.acceptHandler.bind(this);
+		this.removeHandler = this.removeHandler.bind(this);
 		this.declineHandler = this.declineHandler.bind(this);
 		this.selectButtons = this.selectButtons.bind(this);
 		this.friendId = params.id;
@@ -28,7 +29,13 @@ export default class extends AView {
 	selectButtons(relationship) {
 		switch (relationship) {
 			case constants.FRIENDSHIPSTATUS.FRIEND:
-				return null;
+				return [
+					{
+						className: 'decline-btn',
+						textContent: 'Remove friend',
+						handler: this.removeHandler,
+					},
+				];
 			case constants.FRIENDSHIPSTATUS.NOTFRIEND:
 				return [
 					{
@@ -52,7 +59,11 @@ export default class extends AView {
 						textContent: 'Decline',
 						handler: this.declineHandler,
 					},
-					{className: 'accept-btn', textContent: 'Accept', handler: this.acceptHandler},
+					{
+						className: 'accept-btn',
+						textContent: 'Accept',
+						handler: this.acceptHandler
+					},
 				];
 			default:
 				return null;
@@ -66,11 +77,20 @@ export default class extends AView {
 
 		try {
 			await this.friendService.postRequest(data);
-			//TODO: distinguish between creating a new friendship and accepting a pending request
 			super.notify('Friendship created successfully.');
 			super.navigateTo(`/profile/${this.friendId}`);
 		} catch (error) {
 			super.notify(error.message, 'error');
+		}
+	}
+
+	async removeHandler() {
+		try {
+			await this.friendService.deleteRequest(this.friendId);
+			super.notify('Friendship deleted.');
+			super.navigateTo(`/profile/${this.friendId}`);
+		} catch (error) {
+			super.notify(error);
 		}
 	}
 
