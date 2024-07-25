@@ -87,7 +87,7 @@ export default class SearchFriendsModal extends ADialog {
 			await this.refreshSearchResults(this.searchFriendsField.value);
 			this.notify('Friend request sent.', 'success');
 		} catch (error) {
-			this.notify(error);
+			this.notify(error.message, 'error');
 		}
 	}
 
@@ -97,7 +97,7 @@ export default class SearchFriendsModal extends ADialog {
 			await this.refreshSearchResults(this.searchFriendsField.value);
 			this.notify('Friendship declined successfully.', 'success');
 		} catch (error) {
-			this.notify(error);
+			this.notify(error.message, 'error');
 		}
 	}
 
