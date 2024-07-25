@@ -50,9 +50,10 @@ export default class extends Aview {
 		const matchData = await this.tournamentService.getTournamentMatches(this.params);
 		debugger;
 		return matchData.find(
-			(match) =>
-				match.state === constants.MATCHSTATUS.LOBBY ||
-				match.state === constants.MATCHSTATUS.ABORTED
+			(match) =>{
+				return match.state === constants.MATCHSTATUS.LOBBY
+			} //||
+				// match.state === constants.MATCHSTATUS.ABORTED
 		); //TODO change to just lobby
 	}
 
