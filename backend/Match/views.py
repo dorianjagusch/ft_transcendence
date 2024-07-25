@@ -37,8 +37,8 @@ class MatchView(APIView):
       
       
 class MatchHistoryView(APIView):
-     @method_decorator(must_be_authenticated)
-     def get(self, request):
+    @method_decorator(must_be_authenticated)
+    def get(self, request):
         user_id = request.query_params.get('user_id')
         user = get_object_or_404(User, pk = user_id)
         if not isinstance(user, User):
