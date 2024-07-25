@@ -1,7 +1,5 @@
-from functools import partial
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.request import Request
 from rest_framework import status
 from django.shortcuts import redirect, get_object_or_404
 
@@ -9,7 +7,6 @@ from .managers import MatchSetupManager
 from .serializers import MatchSerializer
 from User.views import User
 from Tokens.models import MatchToken
-from Tokens.managers import MatchTokenManager
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated
 

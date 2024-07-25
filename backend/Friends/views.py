@@ -48,7 +48,6 @@ class FriendshipDetailView(APIView):
 		except Friend.DoesNotExist:
 			return Response({"message": "Friendship does not exist"}, status=status.HTTP_404_BAD_REQUEST)
 		except Exception as e:
-			# TODO: 404 if friendship does not exist
 			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 		return Response(status=status.HTTP_204_NO_CONTENT)
 

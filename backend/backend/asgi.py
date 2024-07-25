@@ -19,7 +19,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django_asgi_app = get_asgi_application()
 
 application = ProtocolTypeRouter({
-    # Just HTTP and ws for now. (We can add other protocols later.)
     "http": django_asgi_app,
 	"websocket": URLRouter(websocket_urlpatterns)
 })
