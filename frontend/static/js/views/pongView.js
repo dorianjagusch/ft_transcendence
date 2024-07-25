@@ -61,13 +61,11 @@ export default class extends AView {
 		const matchesPlayed = tournamentData.reduce((acc, match) => {
 			return match.state === constants.MATCHSTATUS.FINISHED ? acc + 1 : acc;
 		}, 0);
-		debugger;
-		return matchesPlayed === tournamentData.length - 1;
+		return matchesPlayed === (tournamentData.length - 1);
 	}
 
 	attachEventListeners() {
 		document.querySelector('.new-game-button').addEventListener('click', async () => {
-			debugger;
 			if (!this.params?.tournament_id) {
 				this.navigateTo(`/winner/match/${parseWStoMatchId(this.matchUrl)}`);
 				return;

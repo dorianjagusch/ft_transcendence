@@ -34,8 +34,8 @@ class MatchView(APIView):
 
         pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
         return Response(pong_match_url, status=status.HTTP_200_OK)
-      
-      
+
+
 class MatchHistoryView(APIView):
     @method_decorator(must_be_authenticated)
     def get(self, request):

@@ -10,6 +10,8 @@ const friendURL = `${baseURL}friends/`;
 const pongURL = `${baseURL}match/`;
 const authenticationURL = `${baseURL}tokens/`;
 const tournamentURL = `${baseURL}tournaments/`;
+const matchURL = `${baseURL}matches/`;
+const playerUrl = `${baseURL}players/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];
 

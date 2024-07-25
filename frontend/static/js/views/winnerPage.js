@@ -21,7 +21,7 @@ export default class extends AView {
 				this.notify(error.message);
 			}
 		} else {
-			this.matchRequest
+			this.matchService()
 		}
 		const congratsElement = document.createElement('h2');
 		congratsElement.textContent = 'Congratulations!';
