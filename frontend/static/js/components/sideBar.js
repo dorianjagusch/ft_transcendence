@@ -80,26 +80,21 @@ let updateUser = async (userId) => {
 	const userService = new UserService();
 	try {
 		await userService.putRequest(userId, data);
-		notify('User updated successfully.');
 		if (username === savebleUsername)
 			localStorage.setItem('username', savebleUsername);
 
 		if (saveblePassword !== '') {
-			usernameField.value = '';
-			currentPasswordField.value = '';
-			newPasswordField.value = '';
+			notify('User updated successfully. Please log in again.');
 			localStorage.clear();
 			navigateTo('/logout');
+			return;
 		}
 
 	} catch (error) {
 		notify(error);
 	}
 
-	usernameField.value = '';
-	currentPasswordField.value = '';
-	newPasswordField.value = '';
-
+	notify('User updated successfully.');
 	navigateTo('/dashboard');
 };
 
@@ -127,14 +122,10 @@ const SideBar = async () => {
 
 	const UpdateModal = new UpdateUserModal(updateUser, localStorage.getItem('user_id'));
 	const editProfileBtn = sideBarButton(['sidebar-element', 'bg-primary'], 'Edit profile', () => {
-		document.body.appendChild(UpdateModal.dialog);
+		aside.appendChild(UpdateModal.dialog);
 		UpdateModal.dialog.showModal();
 	});
 
-	const viewProfileBtn = sideBarButton(
-		['sidebar-element', 'bg-primary'],
-		'View profile', () => navigateTo('/dashboard')
-	);
 	const profilePictureBtn = sideBarButton(
 		['sidebar-element', 'bg-primary'],
 		'Update profile picture',
@@ -163,7 +154,6 @@ const SideBar = async () => {
 	aside.appendChild(fileInput);
 	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
-	aside.appendChild(viewProfileBtn);
 	aside.appendChild(profilePictureBtn);
 	aside.appendChild(createTournamentBtn);
 	aside.appendChild(deleteAccountBtn);
