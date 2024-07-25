@@ -47,14 +47,14 @@ class UserTableMixin:
 		return None  # Return None if user is not found in the leaderboard
 	
 	def get_last_5_game_scores(self, user: User):
-		# Assuming the Match model has a 'score' field that stores the score of the match
 		last_5_matches = Match.objects.filter(players__user=user, state=MatchState.FINISHED).order_by('-end_ts')[:5]
 		scores = []
 		for match in last_5_matches:
 			player_match = match.players.filter(user=user).first()
 			scores.append({
 				'match_id': match.id,
-				'score': player_match.score,  # Adjust based on your actual score field
+				'score': player_match.score,
 				'win': player_match.match_winner
 			})
 		return scores
+	
