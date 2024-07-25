@@ -43,6 +43,11 @@ class FriendsManager(models.Manager):
 		return self.get(id=friendship_id)
 
 	def create_friendship(self, user_id, friend_id):
+		potential_friend = User.objects.filter(pk=friend_id).first()
+		if not potential_friend:
+			raise Exception("User to be added as friend does not exist.")
+		if not potential_friend.is_active:
+			raise Exception("Cannot add deleted user as friend.")
 		return self.create(user_id=user_id, friend_id=friend_id)
 
 	def delete_friendship(self, user_id, friend_id):
@@ -54,3 +59,14 @@ class FriendsManager(models.Manager):
 				user_friend.delete()
 			if friend_user.exists():
 				friend_user.delete()
+
+	def delete_user_friendships(self, user_id: int) -> None:
+		user_friends = self.filter(user_id=user_id)
+		friends_user = self.filter(friend_id=user_id)
+
+		try:
+			with transaction.atomic():
+				user_friends.delete()
+				friends_user.delete()
+		except Exception:
+			pass

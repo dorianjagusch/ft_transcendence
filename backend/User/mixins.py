@@ -7,10 +7,12 @@ from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 import base64
+
 from .models import User, ProfilePicture
 from .validators import validate_image
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
+from Friends.managers import FriendsManager
 
 class GetAllUsersMixin:
     """
@@ -146,6 +148,7 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
         result.save()
 
         self.change_tournament_player_names_to_deleted(result)
+        FriendsManager.delete_user_friendships(user_id)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
