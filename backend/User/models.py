@@ -35,4 +35,11 @@ class ProfilePicture(models.Model):
 			file_path = os.path.join(settings.MEDIA_ROOT, self.picture.name)
 			if os.path.exists(file_path):
 				os.remove(file_path)
-			self.delete()
+			self.picture = None
+			self.save()
+
+	def update_profile_picture(self, new_image):
+		if self.picture:
+			self.delete_profile_picture()
+		self.picture = new_image
+		self.save()

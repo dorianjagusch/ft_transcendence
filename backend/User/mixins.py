@@ -152,6 +152,7 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
         profile_picture = ProfilePicture.objects.filter(user=result).first()
         if profile_picture:
             profile_picture.delete_profile_picture()
+            profile_picture.delete()
 
         self.change_tournament_player_names_to_deleted(result)
         Friend.objects.delete_user_friendships(result)
@@ -180,11 +181,10 @@ class SaveUserProfilePictureMixin(GetUserMixin):
 
         try:
             profile_picture = ProfilePicture.objects.get(user=result)
-            profile_picture.picture = file
+            profile_picture.update_profile_picture(file)
         except ProfilePicture.DoesNotExist:
             profile_picture = ProfilePicture(user=result, picture=file)
-
-        profile_picture.save()
+            profile_picture.save()
         return Response(status=status.HTTP_200_OK)
 
 
