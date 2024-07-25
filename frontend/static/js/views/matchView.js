@@ -62,7 +62,7 @@ export default class extends Aview {
 
 	async attachPlayerInfo(tokenData) {
 		this.token = tokenData.token.token;
-		this.opponent = tokenData.guest_user
+		this.opponent = tokenData.guest_user;
 		// Proper error handling
 		this.opponent.img = await getProfilePicture(this.opponent.id);
 		const playerRight = PlayerInfo(this.opponent);
