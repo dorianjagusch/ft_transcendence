@@ -43,7 +43,8 @@ from Tournament.views import TournamentListView, \
 								TournamentMatchDetailView
 
 from stats.views import StatsView, \
-						StatsGraphView
+						StatsGraphView, \
+						MatchScoreGraphView
 
 from leaderboard.views import LeaderboardListView
 
@@ -79,7 +80,8 @@ urlpatterns = [
 	# Stats Views
 	path('users/<int:user_id>/stats/', StatsView.as_view()),
 	path('leaderboard/', LeaderboardListView.as_view()),
-	path('users/<int:user_id>/graphs/', StatsGraphView.as_view())
+	path('users/<int:user_id>/graphs/', StatsGraphView.as_view()),
+	path('users/<int:user_id>/matches_graph', MatchScoreGraphView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
