@@ -13,11 +13,11 @@ from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
 
 class GetAllUsersMixin:
-	"""
-	Mixin to get all Users.
-	"""
-	def get_all_users(self) -> QuerySet:
-		return User.objects.all()
+    """
+    Mixin to get all Users.
+    """
+    def get_all_users(self) -> QuerySet:
+        return User.objects.filter(is_active=True)
 
 class GetUsersWithUsernameContainsMixin:
 	"""
@@ -28,18 +28,18 @@ class GetUsersWithUsernameContainsMixin:
 		if not username_contains:
 			return User.objects.none()
 
-		return User.objects.filter(username__icontains=username_contains).exclude(id=request.user.id)
+		return User.objects.filter(username__icontains=username_contains, is_active=True).exclude(id=request.user.id)
 
 class GetUserMixin:
 	"""
 	Mixin to get a user by ID.
 	"""
 	def get_user(self, user_id: int) -> User | Response:
-		result = get_object_or_404(User, pk=user_id)
-		if not isinstance(result, User):
+		user = User.objects.filter(pk=user_id, is_active=True).first()
+		if not isinstance(user, User):
 				return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
-		return result
+		return user
 
 
 class CreateUserMixin:
@@ -84,7 +84,7 @@ class UpdateUserMixin:
 			outputSerializer = UserOutputSerializer(result)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
-			return Response({"message": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": f"Updating the user failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AuthenticateUserMixin:
