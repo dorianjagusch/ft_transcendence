@@ -92,6 +92,7 @@ let updateUser = async (userId) => {
 
 	} catch (error) {
 		notify(error);
+		return;
 	}
 
 	notify('User updated successfully.');
