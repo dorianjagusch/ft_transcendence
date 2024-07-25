@@ -29,5 +29,5 @@ export default [
 	{ path: '/match', view: matchPage},
 	{ path: '/preview/:tournament_id/matches/:match_id', view: previewPage},
 	{ path: '/winner/match/:match_id', view: winnerPage},
-	{ path: '/winner/tournament/:tournament_id', view: winnerPage},
+	{ path: '/winner/tournaments/:tournament_id', view: winnerPage},
 ];
