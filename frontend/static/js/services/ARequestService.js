@@ -15,14 +15,15 @@ class ARequestService {
 			if (response.ok) {
 				return response;
 			}
-			console.log();
+
 			if (response.status === 401 && logoutOn401) {
 				localStorage.clear();
 				navigateTo('/login');
 				return;
 			}
 
-			throw new Error(response.message);
+			const responseJson = await response.json();
+			throw new Error(responseJson.message);
 		} catch (error) {
 			if (error instanceof TypeError) {
 				console.error(constants.problemWithFetchMsg, error);
@@ -35,17 +36,18 @@ class ARequestService {
 	async checkResponseWithBody(request, logoutOn401 = true) {
 		try {
 			const response = await request;
+			const responseJson = await response.json();
 			if (response.ok) {
-				return response.json();
+				return responseJson;
 			}
-			console.log();
+
 			if (response.status === 401 && logoutOn401) {
 				localStorage.clear();
 				navigateTo('/login');
 				return;
 			}
 
-			throw new Error(response.message);
+			throw new Error(responseJson.message);
 		} catch (error) {
 			if (error instanceof TypeError) {
 				console.error(constants.problemWithFetchMsg, error);

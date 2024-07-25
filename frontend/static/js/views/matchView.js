@@ -99,7 +99,7 @@ export default class extends Aview {
 			userData.img = await getProfilePicture(userData.id);
 			playerLeft = PlayerInfo(userData);
 		} catch (error) {
-			console.log(error);
+			notify(error, 'error');
 		}
 
 		const opponentSelection = OpponentSelection();
