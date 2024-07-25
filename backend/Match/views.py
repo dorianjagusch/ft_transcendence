@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import redirect, get_object_or_404
-
+from .models import Match
 from .managers import MatchSetupManager
 from .serializers import MatchSerializer
 from User.views import User
@@ -48,3 +48,14 @@ class MatchHistory(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class MatchDetailView(APIView):
+    @method_decorator(must_be_authenticated)
+    def get(self, request, match_id):
+        return MatchSetupManager.get_match_details(match_id)
+
+#{
+#	'winner' : 'username',
+#	'loser' : 'username',
+#	'ball_contacts' : '',
+#	'ball_max_speed' : ''
+#}
