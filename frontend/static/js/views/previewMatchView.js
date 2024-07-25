@@ -65,10 +65,9 @@ export default class extends Aview {
 				return '<h1>No match data found</h1>';
 			}
 			playerLeft = await this.setupPlayerInfo(matchData.tournament_player_left.user);
-			console.log(playerLeft);
 			playerRight = await this.setupPlayerInfo(matchData.tournament_player_right.user);
 		} catch (error) {
-			console.log(error);
+			notify(error, 'error');
 		}
 
 		const continueButton = this.continueButton();

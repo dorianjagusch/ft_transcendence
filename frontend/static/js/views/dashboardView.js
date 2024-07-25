@@ -23,7 +23,7 @@ export default class extends AView {
 		try {
 			profileImage = profileImg(await getProfilePicture(localStorage.getItem('user_id')));
 		} catch (error) {
-			console.log('Error getting the profile picture element: ', error);
+			notify(error, 'error');
 		}
 
 		const userPlacement = arrayToElementsList(

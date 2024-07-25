@@ -34,7 +34,7 @@ class TournamentListView(APIView):
 				'tournament_player': host_tournament_player_serializer.data
 			}, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({"message": str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			return Response({"message": "Creating a tournament failed"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TournamentDetailView(APIView):
 	def get(self, request, tournament_id):
@@ -57,7 +57,7 @@ class TournamentDetailView(APIView):
 				serializer = TournamentSerializers.in_progress(tournament)
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			except Exception as e:
-				return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message": "Updating the tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 		elif tournament.state == TournamentState.IN_PROGRESS:
 			TournamentManager.in_progress.abort_tournament(tournament)
@@ -98,7 +98,7 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Creating a tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 class TournamentPlayerDetailView(APIView):
 	def get(self, request, tournament_id, tournamentplayer_id):

@@ -45,7 +45,7 @@ export default class extends AView {
 			this.notify('User created successfully. Please login.');
 			this.navigateTo('/login');
 		} catch (error) {
-			this.notify(error);
+			this.notify(error.message, 'error');
 		}
 	};
 

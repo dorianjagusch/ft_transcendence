@@ -35,7 +35,7 @@ class FriendsListView(APIView):
 		try:
 			friend = Friend.objects.create_friendship(user_id, friend_id)
 		except Exception as e:
-			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Failed to create a friendship"}, status=status.HTTP_400_BAD_REQUEST)
 		serializer = FriendOutputSerializer(friend)
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -48,6 +48,6 @@ class FriendshipDetailView(APIView):
 		except Friend.DoesNotExist:
 			return Response({"message": "Friendship does not exist"}, status=status.HTTP_404_BAD_REQUEST)
 		except Exception as e:
-			return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Deleting the friendship failed"}, status=status.HTTP_400_BAD_REQUEST)
 		return Response(status=status.HTTP_204_NO_CONTENT)
 

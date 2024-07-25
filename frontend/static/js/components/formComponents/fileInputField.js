@@ -1,9 +1,9 @@
 import notify from '../../utils/notify.js';
 
 function validateFile(file) {
-	const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+	const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 	if (!validImageTypes.includes(file.type)) {
-		notify('Please select a valid image file (JPEG, PNG, GIF).', 'error');
+		notify('Please select a valid image file (JPEG, PNG, JPG).', 'error');
 		return false;
 	}
 
