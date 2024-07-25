@@ -17,7 +17,6 @@ export default class extends Aview {
 	attachEventListeners() {
 		const startButton = document.querySelector('.start-btn');
 		if (startButton) {
-			debugger;
 			startButton.addEventListener('click', () => {
 				this.navigateTo(
 					`/pong/tournaments/${this.params.tournament_id}/matches/${this.params.match_id}`
@@ -48,13 +47,11 @@ export default class extends Aview {
 
 	async getCurrentMatchData() {
 		const matchData = await this.tournamentService.getTournamentMatches(this.params);
-		debugger;
 		return matchData.find(
 			(match) =>{
 				return match.state === constants.MATCHSTATUS.LOBBY
-			} //||
-				// match.state === constants.MATCHSTATUS.ABORTED
-		); //TODO change to just lobby
+			}
+		);
 	}
 
 	async getHTML() {
