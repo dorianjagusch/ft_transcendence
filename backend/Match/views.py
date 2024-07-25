@@ -46,7 +46,6 @@ class MatchHistory(APIView):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         player_instances = user.players.all()
         matches = [player.match for player in player_instances]
-        # print (matches, file=sys.stderr)
         serializer = MatchSerializer(matches, many = True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
