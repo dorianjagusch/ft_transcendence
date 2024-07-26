@@ -11,6 +11,7 @@ import leaderBoard from './views/leaderboardView.js';
 import show404Page from './views/404View.js';
 import matchPage from './views/matchView.js';
 import previewPage from './views/previewMatchView.js';
+import winnerPage from './views/winnerPage.js';
 
 export default [
 	{ path: '/404', view: show404Page },
@@ -26,5 +27,7 @@ export default [
 	{ path: '/leaderboard', view: leaderBoard },
 	{ path: '/profile/:id', view: profilePage },
 	{ path: '/match', view: matchPage},
-	{ path: '/preview/:tournament_id/matches/:match_id', view: previewPage}
+	{ path: '/preview/:tournament_id/matches/:match_id', view: previewPage},
+	{ path: '/winner/match/:match_id', view: winnerPage},
+	{ path: '/winner/tournaments/:tournament_id', view: winnerPage},
 ];
