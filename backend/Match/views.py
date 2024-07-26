@@ -53,10 +53,3 @@ class MatchDetailView(APIView):
     @method_decorator(must_be_authenticated)
     def get(self, request, match_id):
         return MatchSetupManager.get_match_details(match_id)
-
-#{
-#	'winner' : 'username',
-#	'loser' : 'username',
-#	'ball_contacts' : '',
-#	'ball_max_speed' : ''
-#}
