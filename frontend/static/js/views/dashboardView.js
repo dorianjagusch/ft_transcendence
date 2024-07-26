@@ -17,6 +17,11 @@ export default class extends AView {
 	}
 
 	async getHTML() {
+		if (localStorage.getItem('isLoggedIn') === 'false') {
+			this.navigateTo('/login');
+			return;
+		}
+
 		const title = profileTitle('Your Stats');
 
 		let profileImage;

@@ -73,6 +73,7 @@ const createLoggedOutSection = () => {
 
 	const registerItem = navbarItem('/register', 'text', 'Register');
 	loggedOutSection.appendChild(registerItem);
+	localStorage.setItem('isLoggedIn', 'false');
 	return loggedOutSection;
 };
 
