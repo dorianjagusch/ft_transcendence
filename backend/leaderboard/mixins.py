@@ -14,8 +14,10 @@ class LeaderBoardTableMixin:
 			self.leader_table.users = [user.username for user in users_with_most_wins]
 			self.leader_table.wins = [user.total_wins for user in users_with_most_wins]
 
-			stats = [{"user": user, "wins": wins, "place": index + 1} for index, (user, wins) in enumerate(zip(self.leader_table.users, self.leader_table.wins))]
+			stats = [{"user": user, "wins": wins} for user, wins in zip(self.leader_table.users, self.leader_table.wins)]
 
-			json_response_data = stats
+			json_response_data = {
+				"stats": stats
+			}
 
 			return Response(json_response_data, status=status.HTTP_200_OK)
