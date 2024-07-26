@@ -16,16 +16,6 @@ export default class extends AView {
 		welcomeSection.appendChild(welcomeTitle);
 		welcomeSection.appendChild(welcomeSubtext);
 
-		const leaderBoardTitle = document.createElement('h2');
-		leaderBoardTitle.textContent = 'Leaderboard';
-		const leaderBoardScroller = scrollContainer(null, smallPlacementCard, 'leaderboard');
-
-		const pongButton = document.createElement('button');
-		pongButton.textContent = 'Play Pong';
-		pongButton.addEventListener('click', () => {
-			this.navigateTo('/pong');
-		});
-
-		this.updateMain(welcomeSection, leaderBoardTitle, leaderBoardScroller, pongButton);
+		this.updateMain(welcomeSection);
 	}
 }
