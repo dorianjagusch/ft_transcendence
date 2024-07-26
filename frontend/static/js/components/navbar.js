@@ -84,7 +84,8 @@ const updateNavbar = async () => {
 		ul.appendChild(loggedInSection);
 
 		const userSection = await createUserSection();
-		ul.appendChild(userSection);
+		if (userSection && !ul.querySelector('.user-section'))
+			ul.appendChild(userSection);
 	} else {
 		const loggedOutSection = createLoggedOutSection();
 		ul.appendChild(loggedOutSection);
