@@ -26,7 +26,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ai_opponent = False
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
-        self.game = PongStatus(self.ball, self.player_left, self.player_right)
+        self.ball_contacts = 0
+        self.ball_max_speed = 0.0
+        self.game = PongStatus(self.ball, self.player_left, self.player_right, self.ball_contacts, self.ball_max_speed)
         self.match_ended_normally = False
 
     async def connect(self):
@@ -119,6 +121,9 @@ class PongConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_match_results(self):
         self.match.state = MatchState.FINISHED
+        ball_stats = self.game.get_ball_stats()
+        self.match.ball_contacts = ball_stats['ball_contacts']
+        self.match.ball_max_speed = ball_stats['ball_max_speed']
 
         # Save scores when the game is over
         self.player_left.score = self.game.player_left.score
