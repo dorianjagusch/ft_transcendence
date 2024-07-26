@@ -42,22 +42,26 @@ const createdLoggedInSection = () => {
 
 const createUserSection = async () => {
 	const userSection = document.createElement('div');
-	userSection.classList.add('nav-partition', 'logged-in');
+	userSection.classList.add('nav-partition', 'logged-in', 'user-section');
 
-	const userImage = await getProfilePicture(localStorage.getItem('user_id'));
-	const userImageItem = navbarItem('/dashboard', 'image', userImage);
-	userSection.appendChild(userImageItem);
+	try {
+		const userImage = await getProfilePicture(localStorage.getItem('user_id'));
+		const userImageItem = navbarItem('/dashboard', 'image', userImage);
+		userSection.appendChild(userImageItem);
 
-	const userLinkItem = navbarItem('/user', 'text', localStorage.getItem('username'));
-	userLinkItem.id = 'user';
-	userSection.appendChild(userLinkItem);
+		const userLinkItem = navbarItem('/user', 'text', localStorage.getItem('username'));
+		userLinkItem.id = 'user';
+		userSection.appendChild(userLinkItem);
 
-	const gearItem = navbarItem('', 'image', './static/assets/img/gear.png');
-	gearItem.addEventListener('click', toggleSideBar);
-	gearItem.querySelector('img').setAttribute('id', 'menu');
-	userSection.appendChild(gearItem);
+		const gearItem = navbarItem('', 'image', './static/assets/img/gear.png');
+		gearItem.addEventListener('click', toggleSideBar);
+		gearItem.querySelector('img').setAttribute('id', 'menu');
+		userSection.appendChild(gearItem);
 
-	return userSection;
+		return userSection;
+	} catch (error) {
+		return null;
+	}
 };
 
 const createLoggedOutSection = () => {
@@ -69,6 +73,7 @@ const createLoggedOutSection = () => {
 
 	const registerItem = navbarItem('/register', 'text', 'Register');
 	loggedOutSection.appendChild(registerItem);
+	localStorage.setItem('isLoggedIn', 'false');
 	return loggedOutSection;
 };
 
@@ -80,7 +85,8 @@ const updateNavbar = async () => {
 		ul.appendChild(loggedInSection);
 
 		const userSection = await createUserSection();
-		ul.appendChild(userSection);
+		if (userSection && !ul.querySelector('.user-section'))
+			ul.appendChild(userSection);
 	} else {
 		const loggedOutSection = createLoggedOutSection();
 		ul.appendChild(loggedOutSection);

@@ -98,6 +98,7 @@ export default class extends AView {
 		} catch (error) {
 			this.notify(error.message, 'error');
 			this.navigateTo('/play');
+			return;
 		}
 
 		this.attachObserver();
