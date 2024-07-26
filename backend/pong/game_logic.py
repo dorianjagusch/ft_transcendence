@@ -91,8 +91,12 @@ class PongGame:
     def handle_wall_collision(self, pong_stat, wall):
         if wall == 'left':
             pong_stat.player_right.score += 1
+            pong_stat.player_right.y = PLAYGROUND_HEIGHT / 2
+            pong_stat.player_left.y = PLAYGROUND_HEIGHT / 2
         elif wall == 'right':
             pong_stat.player_left.score += 1
+            pong_stat.player_right.y = PLAYGROUND_HEIGHT / 2
+            pong_stat.player_left.y = PLAYGROUND_HEIGHT / 2
 
         if pong_stat.player_left.score == WINNING_SCORE:
             pong_stat.game_stats.game_over = True
