@@ -14,6 +14,9 @@ from Tokens.managers import MatchTokenManager
 from shared_utilities.decorators import must_be_authenticated, \
 											validate_tournament_request
 
+
+import sys
+
 class TournamentListView(APIView):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):
@@ -58,7 +61,7 @@ class TournamentDetailView(APIView):
 				serializer = TournamentSerializers.in_progress(tournament)
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			except Exception as e:
-				return Response({"message": "Updating the tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 		elif tournament.state == TournamentState.IN_PROGRESS:
 			TournamentManager.in_progress.abort_tournament(tournament)
