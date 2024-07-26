@@ -34,7 +34,7 @@ export default class extends AView {
 		userPlacement.classList.add('flex-col');
 		const userDescription = profileDescription(userData.user.description);
 
-		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'column');
+		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'col');
 		userHistory.classList.add('play-history');
 
 		const userSummary = profileSummaryStats(userData.stats);

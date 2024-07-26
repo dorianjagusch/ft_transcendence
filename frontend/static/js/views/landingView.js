@@ -1,6 +1,4 @@
 import AView from './AView.js';
-import {scrollContainer} from '../components/scrollContainer.js';
-import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 
 export default class extends AView {
 	constructor(params) {
