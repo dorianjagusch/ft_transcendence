@@ -20,7 +20,7 @@ export default class PlayerService extends ARequestService {
 	}
 
 	async patchRequest(context) {
-		throw new NotImplementedError('PUT not implemented for PlayerService');
+		throw new NotImplementedError('PATCH not implemented for PlayerService');
 	}
 
 	async putRequest() {
@@ -28,6 +28,6 @@ export default class PlayerService extends ARequestService {
 	}
 
 	async deleteRequest(context) {
-		throw new NotImplementedError('PUT not implemented for PlayerService');
+		throw new NotImplementedError('DELETE not implemented for PlayerService');
 	}
 }
