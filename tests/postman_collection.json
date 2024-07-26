@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "d68fcdc8-4b27-42e5-b4e5-ad0094f847d6",
+		"_postman_id": "c7015771-7a47-434d-9842-18288290efe0",
 		"name": "Rest API tests",
 		"description": "A collection of REST API tests for the backend.\n\nBe aware that the tests need to be run in order, so always run the User requests -folders before creating friendships, for example.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33991974"
+		"_exporter_id": "34213706"
 	},
 	"item": [
 		{
@@ -3358,6 +3358,1838 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Test matches",
+			"item": [
+				{
+					"name": "Login User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 202\", function () {",
+									"    pm.expect(pm.response.code).to.equal(202);",
+									"});",
+									"",
+									"// Test to check if the response contains the 'csrftoken' and 'sessionid' cookies",
+									"pm.test(\"Response contains 'csrftoken' and 'sessionid' cookies\", function() {",
+									"    pm.expect(pm.response.headers.has('Set-Cookie')).to.be.true;",
+									"    var setCookieHeaders = pm.response.headers.all().filter(header => header.key === 'Set-Cookie');",
+									"    var cookieValues = setCookieHeaders.map(header => header.value);",
+									"    pm.expect(cookieValues.join()).to.include('csrftoken').and.to.include('sessionid');",
+									"});",
+									"",
+									"// Extract the CSRF token from cookies",
+									"var xsrfCookie = pm.cookies.get(\"csrftoken\");",
+									"pm.environment.set(\"csrftoken_1\", xsrfCookie);",
+									"",
+									"// Extract the session ID from cookies",
+									"var sessionIdCookie = pm.cookies.get(\"sessionid\");",
+									"pm.environment.set(\"sessionid_1\", sessionIdCookie);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username_1}}\",\n    \"password\": \"{{password_1}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/login/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get AI match token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"// Updated test to check if the token field exists in the response body",
+									"pm.test(\"Response has token field\", function() {",
+									"    pm.expect(pm.response.json().token).to.exist;",
+									"});",
+									"",
+									"// Store the value of the \"token\" field in the Test environment as the \"ai_match_token\" variable",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"ai_match_token\", jsonData.token.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username_1}}\",\n    \"password\": \"{{password_1}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/match/?ai_opponent=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"match",
+								""
+							],
+							"query": [
+								{
+									"key": "ai_opponent",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get AI match url (valid)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/match/?token={{ai_match_token}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{ai_match_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get AI match url (invalid, already used to get URL)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 403\", function () {",
+									"    pm.expect(pm.response.code).to.equal(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/match/?token={{ai_match_token}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{ai_match_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get match token (User 2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"// Updated test to check if the token field exists in the response body",
+									"pm.test(\"Response has token field\", function() {",
+									"    pm.expect(pm.response.json().token).to.exist;",
+									"});",
+									"",
+									"// Store the value of the \"token\" field in the Test environment as the \"match_token\" variable",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"match_token\", jsonData.token.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username_2}}\",\n    \"password\": \"{{password_2}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get match url (User 2, valid)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/match/?token={{match_token}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{match_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get match token (User 3)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"// Updated test to check if the token field exists in the response body",
+									"pm.test(\"Response has token field\", function() {",
+									"    pm.expect(pm.response.json().token).to.exist;",
+									"});",
+									"",
+									"// Store the value of the \"token\" field in the Test environment as the \"match_token\" variable",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"match_token\", jsonData.token.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username_3}}\",\n    \"password\": \"{{password_3}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalidate token (User 3)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{match_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tokens/match/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tokens",
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get match url (User 3, invalid token)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Pre-Request Script",
+									"// Get the cookie values from the environment variables",
+									"const sessionId = pm.environment.get('sessionid_1');",
+									"const csrftoken = pm.environment.get('csrftoken_1');",
+									"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+									"",
+									"// Set the cookie for the request if it exists",
+									"if (sessionId && csrftoken) {",
+									"    pm.request.headers.add({",
+									"        key: 'Cookie',",
+									"        value: cookieValues",
+									"    });",
+									"    ",
+									"    // Also set the CSRF token in the headers",
+									"    pm.request.headers.add({",
+									"        key: 'X-CSRFToken',",
+									"        value: csrftoken",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 403\", function () {",
+									"    pm.expect(pm.response.code).to.equal(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/match/?token={{match_token}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"match",
+								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{match_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Test backend's match views.  \nUsers 1, 2 and 3 are used in these tests."
+		},
+		{
+			"name": "Test tournaments",
+			"item": [
+				{
+					"name": "4 player tournaments",
+					"item": [
+						{
+							"name": "Login User 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 202\", function () {",
+											"    pm.expect(pm.response.code).to.equal(202);",
+											"});",
+											"",
+											"// Test to check if the response contains the 'csrftoken' and 'sessionid' cookies",
+											"pm.test(\"Response contains 'csrftoken' and 'sessionid' cookies\", function() {",
+											"    pm.expect(pm.response.headers.has('Set-Cookie')).to.be.true;",
+											"    var setCookieHeaders = pm.response.headers.all().filter(header => header.key === 'Set-Cookie');",
+											"    var cookieValues = setCookieHeaders.map(header => header.value);",
+											"    pm.expect(cookieValues.join()).to.include('csrftoken').and.to.include('sessionid');",
+											"});",
+											"",
+											"// Extract the CSRF token from cookies",
+											"var xsrfCookie = pm.cookies.get(\"csrftoken\");",
+											"pm.environment.set(\"csrftoken_1\", xsrfCookie);",
+											"",
+											"// Extract the session ID from cookies",
+											"var sessionIdCookie = pm.cookies.get(\"sessionid\");",
+											"pm.environment.set(\"sessionid_1\", sessionIdCookie);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username_1}}\",\n    \"password\": \"{{password_1}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/login/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "start tournament (invalid, no player_amount)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.equal(400);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"host_user_display_name\": \"tournament_host_user\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "start tournament (invalid, invalid player_amount)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.equal(400);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"player_amount\": 3,\n    \"host_user_display_name\": \"tournament_host_user\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "start tournament (valid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"// Store the value of the \"tournament.id\" field in the Test environment as the \"tournament_id\" variable",
+											"var jsonData = pm.response.json();",
+											"pm.environment.set(\"tournament_id\", jsonData.tournament.id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"host_user_display_name\": \"tournament_host_user\",\n    \"player_amount\": 4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add User 2 to tournament",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username_2}}\",\n    \"password\": \"{{password_2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add User 3 to tournament",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username_3}}\",\n    \"password\": \"{{password_3}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add User 4 to tournament",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"// Store the value of the \"tournament.id\" field in the Test environment as the \"tournament_id\" variable",
+											"var jsonData = pm.response.json();",
+											"pm.environment.set(\"tournament_player_id\", jsonData.id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username_4}}\",\n    \"password\": \"{{password_4}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "remove User 4 from tournament",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 204\", function () {",
+											"    pm.expect(pm.response.code).to.equal(204);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/{{tournament_player_id}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										"{{tournament_player_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "start tournament (invalid, not enough players)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.equal(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add User 4 to tournament Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"// Store the value of the \"tournament.id\" field in the Test environment as the \"tournament_id\" variable",
+											"var jsonData = pm.response.json();",
+											"pm.environment.set(\"tournament_player_id\", jsonData.id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username_4}}\",\n    \"password\": \"{{password_4}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add User 5 to tournament (invalid, player limit))",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.equal(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username_5}}\",\n    \"password\": \"{{password_5}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "start tournament (valid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get tournament players",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get tournament matches",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/players/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"players",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get next_match url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}/matches/{{next_match}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}",
+										"matches",
+										"{{next_match}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "abort tournament",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.equal(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Pre-Request Script",
+											"// Get the cookie values from the environment variables",
+											"const sessionId = pm.environment.get('sessionid_1');",
+											"const csrftoken = pm.environment.get('csrftoken_1');",
+											"const cookieValues = 'csrftoken=' + csrftoken + '; sessionid=' + sessionId;",
+											"",
+											"// Set the cookie for the request if it exists",
+											"if (sessionId && csrftoken) {",
+											"    pm.request.headers.add({",
+											"        key: 'Cookie',",
+											"        value: cookieValues",
+											"    });",
+											"    ",
+											"    // Also set the CSRF token in the headers",
+											"    pm.request.headers.add({",
+											"        key: 'X-CSRFToken',",
+											"        value: csrftoken",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/tournaments/{{tournament_id}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournament_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "Test backend's tournament views.\n\nUsers 1, 2, 3, 4 and 5 used in these tests."
 		}
 	],
 	"event": [
