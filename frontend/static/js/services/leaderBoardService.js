@@ -1,4 +1,5 @@
 import ARequestService from "./ARequestService.js";
+import backendURL from "../constants.js";
 
 export default class LeaderBoardService extends ARequestService {
 
@@ -7,7 +8,7 @@ export default class LeaderBoardService extends ARequestService {
 	}
 
 	async getLeaderBoard() {
-		return super.getRequest('leaderboard/');
+		return super.getRequest(`${backendURL.leaderboardURL}`);
 	}
 
 }
