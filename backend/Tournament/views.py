@@ -14,9 +14,6 @@ from Tokens.managers import MatchTokenManager
 from shared_utilities.decorators import must_be_authenticated, \
 											validate_tournament_request
 
-
-import sys
-
 class TournamentListView(APIView):
 	@method_decorator(must_be_authenticated)
 	def post(self, request):

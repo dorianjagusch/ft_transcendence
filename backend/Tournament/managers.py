@@ -14,8 +14,6 @@ from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
 
-import sys
-
 class TournamentSetupManager:
     @staticmethod
     def create_tournament_and_tournament_player_for_host(validated_data: TournamentCreationSerializer.validated_data):
