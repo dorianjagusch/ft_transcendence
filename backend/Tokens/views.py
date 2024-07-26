@@ -26,7 +26,6 @@ class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 			token_serializer = MatchTokenSerializer(token)
 			return Response({
 				'token': token_serializer.data,
-				'guest_user': ''
 			}, status=status.HTTP_201_CREATED)
 
 		result = self.authenticate_user(request)
