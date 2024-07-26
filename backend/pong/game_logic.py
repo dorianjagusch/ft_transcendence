@@ -4,11 +4,13 @@ import math
 import random
 
 class PongGame:
-    def __init__(self):
+    def __init__(self, ball_contacts, ball_max_speed):
         self.vertical_distance = HALF_PLAYER_HEIGHT + HALF_BALL_SIZE
         self.horizontal_distance = HALF_PLAYER_WIDTH + HALF_BALL_SIZE
         self.collision_tolerance = COLLISION_TOLERANCE
         self.half_pi = math.pi / 2
+        self.ball_contacts = ball_contacts
+        self.ball_max_speed = ball_max_speed
 
     def generate_random_angle(self):
         while True:
@@ -74,6 +76,17 @@ class PongGame:
 
         pong_stat.ball.speed *= SPEED_UP_FACTOR
         self.collision_tolerance *= SPEED_UP_FACTOR
+        if pong_stat.ball.speed > self.ball_max_speed:
+            self.ball_max_speed = pong_stat.ball.speed
+        self.ball_contacts += 1
+
+    def get_ball_stats(self):
+        ball_stats = {
+            'ball_contacts' : self.ball_contacts,
+            'ball_max_speed' : self.ball_max_speed
+        }
+
+        return ball_stats
 
     def handle_wall_collision(self, pong_stat, wall):
         if wall == 'left':

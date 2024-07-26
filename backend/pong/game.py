@@ -7,13 +7,15 @@ from .game_stats import GameStats
 import asyncio
 
 class PongStatus:
-    def __init__(self, ball, player_left, player_right):
+    def __init__(self, ball, player_left, player_right, ball_contacts, ball_max_speed):
         self.player_left = player_left
         self.player_right = player_right
         self.ball = ball
         self.game_stats = GameStats()
         self.ai_opponent = False
-        self.game = PongGame()
+        self.ball_contacts = ball_contacts
+        self.ball_max_speed = ball_max_speed
+        self.game = PongGame(self.ball_contacts, self.ball_max_speed)
 
     def use_ai_opponent(self):
         self.ai_opponent = True
@@ -105,6 +107,10 @@ class PongStatus:
             }
         }
         return game_consts
+
+    def get_ball_stats(self):
+        ball_stats = self.game.get_ball_stats()
+        return ball_stats
 
     def get_game_state(self):
         game_state = {
