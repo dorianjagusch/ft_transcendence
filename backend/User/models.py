@@ -1,7 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.conf import settings
+import os
 
 from .managers import UserManager
+
 
 class User(AbstractBaseUser):
 	username = models.CharField('username', max_length=30, null=False, blank=False, unique=True)
@@ -26,3 +29,17 @@ class ProfilePicture(models.Model):
 
 	def __str__(self):
 		return f"{self.user.username}'s Profile Picture"
+
+	def delete_profile_picture(self):
+		if self.picture:
+			file_path = os.path.join(settings.MEDIA_ROOT, self.picture.name)
+			if os.path.exists(file_path):
+				os.remove(file_path)
+			self.picture = None
+			self.save()
+
+	def update_profile_picture(self, new_image):
+		if self.picture:
+			self.delete_profile_picture()
+		self.picture = new_image
+		self.save()

@@ -33,7 +33,8 @@ from Friends.views import FriendsListView, \
 from Tokens.views import SingleMatchGuestTokenView
 
 from Match.views import MatchView, \
-							MatchHistoryView
+						MatchHistory, \
+						MatchDetailViewView
 
 from Player.views import PlayerListView, \
 							PlayerDetailView, \
@@ -77,6 +78,7 @@ urlpatterns = [
 	path('players/', PlayerListView.as_view()),
 	path('players/<int:player_id>', PlayerDetailView.as_view()),
 	path('matches/<int:match_id>/players/', MatchPlayerListView.as_view()),
+	path('matches/<int:match_id>/', MatchDetailView.as_view()),
 
 	# Tournament views
 	path('tournaments/', TournamentListView.as_view()),
