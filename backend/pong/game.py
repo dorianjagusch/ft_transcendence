@@ -89,11 +89,13 @@ class PongStatus:
 
         return ball_y
 
-    def get_consts(self):
+    def get_consts(self, left_name: str, right_name: str) -> dict[str, any]:
         game_consts = {
             'players': {
                 'width': 2 * HALF_PLAYER_WIDTH,
                 'height': 2 * HALF_PLAYER_HEIGHT,
+                'left_name': left_name,
+                'right_name': right_name
             },
             'ball': {
                 'size': 2 * HALF_BALL_SIZE

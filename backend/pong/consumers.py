@@ -22,7 +22,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         self.match = None
         self.player_left = PongPlayer(WALL_MARGIN)
+        self.left_name = None
         self.player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
+        self.right_name = None
         self.ai_opponent = False
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
@@ -37,6 +39,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         authenticated = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
         if authenticated:
+            await self.set_names(self.match)
             if self.ai_opponent is True:
                 self.game.use_ai_opponent()
                 asyncio.create_task(self.ai_opponent_loop())
@@ -79,7 +82,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(game_state))
 
     async def send_consts(self):
-        game_consts = self.game.get_consts()
+        game_consts = self.game.get_consts(self.left_name, self.right_name)
         await self.send(text_data=json.dumps(game_consts))
 
     async def send_positions_loop(self):
@@ -121,6 +124,19 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         except Exception:
             return False
+        
+    @database_sync_to_async
+    def set_names(self, match: Match) -> None:
+        if not match.tournament:
+            self.left_name = self.player_left.user.username
+            if not self.ai_opponent:
+                self.right_name = self.player_right.user.username
+            else:
+                self.right_name = "AI-opponent"
+        else:
+            self.left_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_left.user).first().display_name
+            self.right_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_right.user).first().display_name
+
 
     @database_sync_to_async
     def save_match_results(self):
