@@ -1,4 +1,6 @@
-const baseURL = 'http://localhost:8080/';
+const protocol = 'http://';
+const location = 'localhost:8080/';
+const baseURL = `${protocol}${location}`;
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const logoutURL = `${baseURL}logout/`;
@@ -8,6 +10,8 @@ const friendURL = `${baseURL}friends/`;
 const pongURL = `${baseURL}match/`;
 const authenticationURL = `${baseURL}tokens/`;
 const tournamentURL = `${baseURL}tournaments/`;
+const matchURL = `${baseURL}matches/`;
+const playerUrl = `${baseURL}players/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];
 
@@ -32,6 +36,8 @@ const GAMES = {
 };
 
 export default {
+	protocol,
+	location,
 	baseURL,
 	userURL,
 	loginURL,
