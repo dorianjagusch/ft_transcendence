@@ -1,14 +1,12 @@
-import ARequestService from "./ARequestService.js";
-import backendURL from "../constants.js";
+import ARequestService from './ARequestService.js';
+import backendURL from '../constants.js';
 
-
-// TODO: Extend for tournaments
 export default class AuthenticationService extends ARequestService {
 	constructor() {
 		super();
 	}
 
-	async postMatch({username, password}, logoutOn401 = true) {
+	async postPlayer({username, password}, context, logoutOn401) {
 		return super.postRequest(
 			`${backendURL.authenticationURL}match/ `,
 			JSON.stringify({
@@ -19,9 +17,7 @@ export default class AuthenticationService extends ARequestService {
 		);
 	}
 
-	async postAiMatch(URLParams) {
-		const url = new URL(`${backendURL.authenticationURL}match/`);
-		Object.keys(URLParams).forEach(key => url.searchParams.append(key, URLParams[key]));
-		return super.postRequest(url);
+	async postAiMatch() {
+		return super.postRequest(`${backendURL.authenticationURL}match/?ai_opponent=true`);
 	}
 }

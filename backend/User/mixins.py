@@ -8,17 +8,19 @@ from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 import base64
+
 from .models import User, ProfilePicture
 from .validators import validate_image
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
+from Friends.models import Friend
 
 class GetAllUsersMixin:
-	"""
-	Mixin to get all Users.
-	"""
-	def get_all_users(self) -> QuerySet:
-		return User.objects.all()
+    """
+    Mixin to get all Users.
+    """
+    def get_all_users(self) -> QuerySet:
+        return User.objects.filter(is_active=True)
 
 class GetUsersWithUsernameContainsMixin:
 	"""
@@ -29,18 +31,18 @@ class GetUsersWithUsernameContainsMixin:
 		if not username_contains:
 			return User.objects.none()
 
-		return User.objects.filter(username__icontains=username_contains).exclude(id=request.user.id)
+		return User.objects.filter(username__icontains=username_contains, is_active=True).exclude(id=request.user.id)
 
 class GetUserMixin:
 	"""
 	Mixin to get a user by ID.
 	"""
 	def get_user(self, user_id: int) -> User | Response:
-		result = get_object_or_404(User, pk=user_id)
-		if not isinstance(result, User):
+		user = User.objects.filter(pk=user_id, is_active=True).first()
+		if not isinstance(user, User):
 				return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
-		return result
+		return user
 
 
 class CreateUserMixin:
@@ -149,37 +151,38 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
         result.save()
 
         self.change_tournament_player_names_to_deleted(result)
+        Friend.objects.delete_user_friendships(result)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SaveUserProfilePictureMixin(GetUserMixin):
-	"""
-	Mixin to save a user's profile picture.
-	"""
-	def save_profile_picture(self, request: Request, user_id: int) -> Response:
-		result = self.get_user(user_id)
-		if not isinstance(result, User):
-			 return result
+    """
+    Mixin to save a user's profile picture.
+    """
+    def save_profile_picture(self, request: Request, user_id: int) -> Response:
+        result = self.get_user(user_id)
+        if not isinstance(result, User):
+                return result
 
-		if 'file' not in request.FILES:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+        if 'file' not in request.FILES:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-		file = request.FILES['file']
+        file = request.FILES['file']
 
-		try:
-			validate_image(file)
-		except ValidationError as e:
-			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            validate_image(file)
+        except ValidationError as e:
+            return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-		try:
-			profile_picture = ProfilePicture.objects.get(user=result)
-			profile_picture.picture = file
-		except ProfilePicture.DoesNotExist:
-			profile_picture = ProfilePicture(user=result, picture=file)
+        try:
+            profile_picture = ProfilePicture.objects.get(user=result)
+            profile_picture.picture = file
+        except ProfilePicture.DoesNotExist:
+            profile_picture = ProfilePicture(user=result, picture=file)
 
-		profile_picture.save()
-		return Response(status=status.HTTP_200_OK)
+        profile_picture.save()
+        return Response(status=status.HTTP_200_OK)
 
 
 class GetProfilePictureMixin(GetUserMixin):

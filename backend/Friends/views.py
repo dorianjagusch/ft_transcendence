@@ -31,7 +31,7 @@ class FriendsListView(APIView):
 		user_id = request.user.id
 		friend_id = request.data.get('friend_id')
 		if user_id == friend_id:
-			return Response({"message": "Can't add friendship for self."}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Can't add self as friend."}, status=status.HTTP_400_BAD_REQUEST)
 		try:
 			friend = Friend.objects.create_friendship(user_id, friend_id)
 		except Exception as e:
