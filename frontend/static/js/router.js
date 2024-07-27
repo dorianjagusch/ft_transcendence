@@ -1,5 +1,6 @@
 import routes from './route.js';
 import constants from './constants.js';
+import UserService from './services/userService.js';
 
 const pathToRegex = (path) =>  {
 	return new RegExp('^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$');
@@ -47,6 +48,15 @@ const router = async () => {
 		constants.allowedPaths.includes(match.route.path) &&
 		match.route.path !== '/pong'
 	) {
+		const userService = new UserService();
+		const user_id = localStorage.getItem('user_id');
+		if (user_id === null || user_id === '')
+		{
+			navigateTo('/login');
+			return;
+		}
+
+		await userService.getRequest(user_id);
 		navigateTo('/dashboard');
 		return;
 	}
