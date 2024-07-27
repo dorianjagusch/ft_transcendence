@@ -2,7 +2,7 @@ import ARequestService from './ARequestService.js';
 import backendURL from '../constants.js';
 
 export default class extends ARequestService {
-	contructor() {
+	constructor() {
 		super();
 	}
 
