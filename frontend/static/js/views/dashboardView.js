@@ -3,7 +3,6 @@ import getProfilePicture from '../components/profilePicture.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import profileImg from '../components/profileComponents/profileImg.js';
 import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
-import profileDescription from '../components/profileComponents/profileDescription.js';
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 import {scrollContainer} from '../components/scrollContainer.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
@@ -37,7 +36,6 @@ export default class extends AView {
 			smallPlacementCard
 		);
 		userPlacement.classList.add('flex-col');
-		const userDescription = profileDescription(userData.user.description);
 
 		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'column');
 		userHistory.classList.add('play-history');
@@ -50,7 +48,6 @@ export default class extends AView {
 			title,
 			profileImage,
 			userPlacement,
-			userDescription,
 			userSummary,
 			userHistory
 		);
