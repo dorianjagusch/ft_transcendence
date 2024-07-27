@@ -1,8 +1,8 @@
 import ARequestService from './ARequestService.js';
 import backendURL from '../constants.js';
 
-export default class extends ARequestService {
-	contructor() {
+export default class MatchService extends ARequestService {
+	constructor() {
 		super();
 	}
 
