@@ -204,6 +204,7 @@ h1 {
 	display: grid;
 	grid-gap: 1.5em;
 	margin: 0;
+	padding: 1em;
 }
 
 .col-scroll {
@@ -417,6 +418,7 @@ nav img {
 
 #leaderboard {
 	border-radius: 1em;
+	height: 80%
 }
 
 .placements {
@@ -425,7 +427,7 @@ nav img {
 
 .placement-card {
 	position: relative;
-	display: grid;
+	display: flex;
 	grid-template-columns: 1fr 2fr;
 	grid-template-rows: repeat(3, 1fr);
 	align-items: center;
@@ -433,17 +435,20 @@ nav img {
 	column-gap: 1em;
 	padding: 1em;
 	border-radius: 1em;
+	color: var(--text-color);
 	background-color: var(--bg-color);
 }
 
 .placement-card img {
-	max-width: 4em;
+	max-width: 3.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .placement-card .user-img {
 	position: relative;
 	border-radius: 50%;
-	grid-row: 1 / -1;
 }
 
 .placement-card .victory-wreath {
@@ -454,26 +459,13 @@ nav img {
 }
 
 .placement-card .placement {
-	grid-column: 2 / -1;
-}
+	width: 100%;}
 
 .placement-card .user {
-	grid-row: 2;
-	grid-column: 2/3;
-}
+	width: 100%;}
 
 .placement-card .wins {
-	grid-row: 3;
-	grid-column: 2/3;
-}
-
-.placement-card .medal-img {
-	position: absolute;
-	bottom: 1em;
-	right: 1em;
-	max-width: 15%;
-	min-width: 65px;
-}
+	width: 100%;}
 
 #welcome h2 {
 	font-size: 6rem;

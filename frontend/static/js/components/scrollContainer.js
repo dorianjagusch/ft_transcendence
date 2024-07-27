@@ -19,8 +19,10 @@ const scrollContainer = (elements, callback, orientation = 'row', ...classNames)
 	const outerScroller = document.createElement('section');
 	outerScroller.classList.add('scroll-container');
 
+	const snappDirection = orientation === 'row' ? 'inline' : 'block';
+	
 	const innerScroller = document.createElement('ul');
-	innerScroller.classList.add('snaps-inline',
+	innerScroller.classList.add(`snaps-${snappDirection}`,
 		`${orientation}-scroll`,
 		...classNames);
 
