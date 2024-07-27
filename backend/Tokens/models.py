@@ -10,6 +10,7 @@ class AbstractToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     is_active = models.BooleanField(default=True)
+    already_used_to_get_url = models.BooleanField(default=False)
 
     class Meta:
         abstract = True

@@ -14,20 +14,22 @@ from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
 
-
 class TournamentSetupManager:
     @staticmethod
     def create_tournament_and_tournament_player_for_host(validated_data: TournamentCreationSerializer.validated_data):
         try:
             with transaction.atomic():
                 tournament = Tournament.objects.create(
-                    name=validated_data['name'] if validated_data['name'] else None,
+                    name=validated_data.get('name', None),
                     host_user=validated_data['host_user'],
                     player_amount=validated_data['player_amount'],
                     expire_ts=timezone.now() + timedelta(TOURNAMENT_EXPIRY_TIME_SECONDS),
                 )
-
-                TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, validated_data['host_user_display_name'] if validated_data['host_user_display_name'] else None)
+                try:
+                    TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, validated_data.get('host_user_display_name', None))
+                except Exception as e:
+                    tournament.delete()
+                    raise Exception(e)
 
                 return tournament
 
