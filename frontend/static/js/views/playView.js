@@ -49,11 +49,15 @@ export default class extends AView {
 		this.summaryModal.dialog.showModal();
 	}
 
-	startTournament(matchData) {
+	startTournament(tournamentData) {matchData;
+	matchData;
+	matchData;
+	matchData;
+	matchData;
 		document.querySelector('.summary-modal').close();
-		if (matchData.token)
-			localStorage.setItem('token', matchData.token);
-		this.navigateTo(`/pong/tournaments/${matchData.id}/matches/${matchData.next_match}`); //change to preview
+		if (tournamentData.token)
+			localStorage.setItem('token', tournamentData.token);
+		this.navigateTo(`/preview/${tournamentData.id}/matches/${tournamentData.next_match}`);
 	}
 
 	adjustSelectPlayerModal(tournamentName) {
