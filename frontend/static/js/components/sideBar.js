@@ -132,11 +132,6 @@ const SideBar = async () => {
 		'Update profile picture',
 		() => fileInput.click()
 	);
-	const createTournamentBtn = sideBarButton(
-		['sidebar-element', 'bg-primary'],
-		'Create Tournament',
-		() => navigateTo('/tournament')
-	);
 	const logoutBtn = sideBarButton
 	(['sidebar-element', 'bg-primary'],
 		'Logout',
@@ -156,7 +151,6 @@ const SideBar = async () => {
 	aside.appendChild(logoutBtn);
 	aside.appendChild(editProfileBtn);
 	aside.appendChild(profilePictureBtn);
-	aside.appendChild(createTournamentBtn);
 	aside.appendChild(deleteAccountBtn);
 	aside.appendChild(AreYouSureModal.dialog);
 
