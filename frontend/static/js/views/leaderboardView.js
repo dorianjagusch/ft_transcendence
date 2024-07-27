@@ -1,7 +1,7 @@
 import {scrollContainer} from '../components/scrollContainer.js';
 import {PlacementCard} from '../components/placementCard.js';
 import AView from './AView.js';
-import LeaderBoardService from '../services/leaderBoardService.js';
+import leaderboardService from '../services/leaderboardService.js';
 import UserService from '../services/userService.js';
 import getProfilePicture from '../components/profilePicture.js';
 
@@ -9,14 +9,14 @@ export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Leaderboard');
-		this.leaderBoardService = new LeaderBoardService();
+		this.leaderBoardService = new leaderboardService();
 		this.userService = new UserService();
 		this.appendEventListeners = this.appendEventListeners.bind(this);
 	}
 
 	async getPlayers() {
 		try {
-			const playerData = await this.leaderBoardService.getLeaderBoard();
+			const playerData = await this.leaderBoardService.getRequest();
 			const players = [];
 
 			for (const [index, player] of playerData.entries()) {
