@@ -32,45 +32,26 @@ const createPlacement = ({ place }) => {
 	return placement;
 };
 
-const addMedal = ({ place }) => {
-	const medalImg = document.createElement('img');
-	switch (place) {
-		case 1:
-			medalImg.src = './static/assets/img/gold-medal.png';
-			break;
-		case 2:
-			medalImg.src = './static/assets/img/silver-medal.png';
-			break;
-		case 3:
-			medalImg.src = './static/assets/img/bronze-medal.png';
-			break;
-		default:
-	}
-	medalImg.classList.add('medal-img');
-	return medalImg;
-};
-
 function PlacementCard(entry) {
-	const placementCard = document.createElement('div');
+
+	const placementCard = document.createElement('button');
+	placementCard.setAttribute('data-user-id', entry.userId);
 	placementCard.classList.add('placement-card');
 
 	const userImg = createCardImg(entry);
 	const placement = createPlacement(entry);
-	const medalImg = addMedal(entry);
 
-	const user = document.createElement('div');
+	const user = document.createElement('h4');
 	user.classList.add('user');
 	user.textContent = entry.username;
 	const wins = document.createElement('div');
 	wins.classList.add('wins');
 	wins.textContent = `${entry.wins} wins`;
 
-	placementCard.appendChild(userImg);
 	placementCard.appendChild(placement);
-	placementCard.appendChild(medalImg);
+	placementCard.appendChild(userImg);
 	placementCard.appendChild(user);
 	placementCard.appendChild(wins);
-
 	return placementCard;
 }
 
