@@ -1,7 +1,7 @@
 import ARequestService from './ARequestService.js';
 import backendURL from '../constants.js';
 
-export default class leaderboardService extends ARequestService {
+export default class LeaderboardService extends ARequestService {
 	constructor() {
 		super();
 	}

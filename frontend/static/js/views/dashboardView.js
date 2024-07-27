@@ -1,9 +1,10 @@
 import AView from './AView.js';
+import MatchService from '../services/matchService.js';
+import PlayerService from '../services/playerService.js';
+import LeaderboardService from '../services/leaderboardService.js';
 import getProfilePicture from '../components/profilePicture.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import profileImg from '../components/profileComponents/profileImg.js';
-import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
-import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 import {scrollContainer} from '../components/scrollContainer.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import profileSummaryStats from '../components/profileComponents/profileSummaryStats.js';
@@ -13,6 +14,9 @@ export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Dashboard');
+		this.matchService = new MatchService();
+		this.PlayerService = new PlayerService();
+		this.leaderBoardService = new LeaderboardService();
 	}
 
 	async getHTML() {
@@ -24,20 +28,15 @@ export default class extends AView {
 		const title = profileTitle('Your Stats');
 
 		let profileImage;
+		let placement;
 		try {
+			placement = await this.leaderBoardService.getRequest()
 			profileImage = profileImg(await getProfilePicture(localStorage.getItem('user_id')));
 		} catch (error) {
 			notify(error, 'error');
 		}
 
-		const userPlacement = arrayToElementsList(
-			userData.placements,
-			'placements',
-			smallPlacementCard
-		);
-		userPlacement.classList.add('flex-col');
-
-		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'col');
+		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'column');
 		userHistory.classList.add('play-history');
 
 		const userSummary = profileSummaryStats(userData.stats);
@@ -47,7 +46,6 @@ export default class extends AView {
 		this.updateMain(
 			title,
 			profileImage,
-			userPlacement,
 			userSummary,
 			userHistory
 		);
