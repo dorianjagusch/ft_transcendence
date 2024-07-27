@@ -53,7 +53,7 @@ export default class extends AView {
 		document.querySelector('.summary-modal').close();
 		if (matchData.token)
 			localStorage.setItem('token', matchData.token);
-		this.navigateTo(`/pong/tournaments/${matchData.id}/matches/${matchData.next_match}`); //change to preview
+		this.navigateTo(`/preview/${matchData.id}/matches/${matchData.next_match}`);
 	}
 
 	adjustSelectPlayerModal(tournamentName) {
