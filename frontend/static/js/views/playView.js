@@ -49,15 +49,11 @@ export default class extends AView {
 		this.summaryModal.dialog.showModal();
 	}
 
-	startTournament(tournamentData) {matchData;
-	matchData;
-	matchData;
-	matchData;
-	matchData;
+	startTournament(matchData) {
 		document.querySelector('.summary-modal').close();
-		if (tournamentData.token)
-			localStorage.setItem('token', tournamentData.token);
-		this.navigateTo(`/preview/${tournamentData.id}/matches/${tournamentData.next_match}`);
+		if (matchData.token)
+			localStorage.setItem('token', matchData.token);
+		this.navigateTo(`/previewq${matchData.id}/matches/${matchData.next_match}`); //change to preview
 	}
 
 	adjustSelectPlayerModal(tournamentName) {
