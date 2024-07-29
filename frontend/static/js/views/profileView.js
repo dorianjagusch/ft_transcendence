@@ -3,7 +3,6 @@ import arrayToElementsList from '../components/profileComponents/arrayToElements
 import buttonBar from '../components/profileComponents/buttonBar.js';
 import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
-import profileDescription from '../components/profileComponents/profileDescription.js';
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
 import {profileStats} from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
@@ -109,8 +108,6 @@ export default class extends AView {
 			id: 1,
 			username: 'Username',
 			img: './static/assets/img/default-user.png',
-			description:
-				'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, aliquid! Reiciendis nobis, dolores optio eaque tempora debitis nulla vel magnam nam soluta quas doloribus sit odit eligendi architecto distinctio voluptas recusandae quos necessitatibus tenetur nisi po',
 			friendship: constants.FRIENDSHIPSTATUS.FRIEND,
 		};
 
@@ -119,7 +116,7 @@ export default class extends AView {
 			userResponse = await this.userService.getRequest(this.friendId);
 			userResponse.img = await getProfilePicture(this.friendId);
 		} catch (error) {
-			console.notify(error.message, 'error');
+			this.notify(error.message, 'error');
 			this.navigateTo('/friends');
 		}
 
@@ -188,7 +185,6 @@ export default class extends AView {
 			'user-placement',
 			smallPlacementCard
 		);
-		const userDescription = profileDescription(fakeUser.description);
 
 		const userStats =
 			friendship === 'friend'
@@ -209,7 +205,6 @@ export default class extends AView {
 			userStats,
 			userHistory,
 			userPlacement,
-			userDescription
 		);
 	}
 }

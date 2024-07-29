@@ -18,7 +18,6 @@ export default class extends AView {
 			try {
 				const tournamentData = await this.tournamentService.getTournamentMatches(this.context);
 				const winner = tournamentData[tournamentData.length - 1];
-				debugger // TODO: Need to implement getting the actual user id instead of the current player id
 				winner.img = await getProfilePicture(winner.id);
 			} catch (error) {
 				this.notify(error.message);

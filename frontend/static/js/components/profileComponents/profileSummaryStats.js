@@ -5,28 +5,27 @@ const SummaryItem = (classNames, textContent) => {
 	article.classList.add(classNames, 'bg-secondary');
 	article.textContent = textContent;
 	return article;
-}
+};
 
-const profileSummaryStats = (stats) => {
+const profileSummaryStats = ({
+	wins,
+	losses,
+	total_games_played,
+	win_loss_ratio,
+	winning_streak,
+	position_in_leaderBoard,}) => {
 	const statsList = document.createElement('section');
 	statsList.classList.add('summary');
-	let wins = 0;
-	let gamesPlayed = 0;
-	stats.forEach((stat) => {
-		wins += stat.stats.gamesWon;
-		gamesPlayed += stat.stats.gamesPlayed;
-	});
-	const losses = gamesPlayed - wins;
-
+	const RankArticle = SummaryItem('dashboard-item', `Rank ${position_in_leaderBoard || 'N/A'}`);
 	const winsArticle = SummaryItem('dashboard-item', `${wins} wins`);
 	const lossesArticle = SummaryItem('dashboard-item', `${losses} losses`);
-	const gamesPlayedArticle = SummaryItem('dashboard-item', `${gamesPlayed} games`);
+	const wlRatio = SummaryItem('dashboard-item', `W/G: ${total_games_played === 0 ? 'N/A' : win_loss_ratio}`);
+	const gamesPlayedArticle = SummaryItem('dashboard-item', `${total_games_played || 0} games played`);
+	const streak = SummaryItem('dashboard-item', `streak of ${winning_streak}`);
 
-	statsList.appendChild(winsArticle);
-	statsList.appendChild(lossesArticle);
-	statsList.appendChild(gamesPlayedArticle);
+	statsList.append(RankArticle, winsArticle, lossesArticle, wlRatio, gamesPlayedArticle, streak);
 
 	return statsList;
-}
+};
 
 export default profileSummaryStats;

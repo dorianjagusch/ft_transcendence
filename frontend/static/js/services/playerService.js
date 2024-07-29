@@ -7,11 +7,11 @@ export default class PlayerService extends ARequestService {
 	}
 
 	async getAll() {
-		return super.getRequest(backendURL.playerUrl);
+		return super.getRequest(backendURL.playerURL);
 	}
 
 	async getRequest(id) {
-		let url = `${backendURL.playerUrl}/` + (id ? id : '');
+		let url = `${backendURL.playerURL}/` + (id ? id : '');
 		return super.getRequest(url);
 	}
 

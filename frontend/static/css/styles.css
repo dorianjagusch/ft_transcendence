@@ -943,7 +943,7 @@ button:is(:focus, :hover) {
 	grid-area: play-history;
 	display: grid;
 	align-items: center;
-	height: 100%;
+	height: 80%;
 }
 
 .profile .history-list {
@@ -1015,10 +1015,9 @@ button:is(:focus, :hover) {
 .profile.dashboard {
 	grid-template-areas:
 		'title title title title title title title'
-		'profile-img profile-img placements placements placements summary summary'
-		'about about about stats stats stats stats'
-		'history history history graph-1 graph-1 graph-1 graph-1 '
-		'history history history graph-2 graph-2 graph-2 graph-2 ';
+		'profile-img summary summary summary summary summary summary'
+		'history history history history history history history'
+		'graph-1 graph-1 graph-1 graph-2 graph-2 graph-2 graph-2';
 
 	grid-template-rows: 0.1fr repeat(4, 1fr);
 	grid-template-columns: repeat(7, min(1fr, 150px));
@@ -1036,18 +1035,12 @@ button:is(:focus, :hover) {
 	align-items: center;
 }
 
-.dashboard .placements {
-	grid-area: placements;
-	height: 100%;
-}
-
 .dashboard .summary {
-	background-color: transparent;
-	padding: 0;
+	padding: var(--page-padding);
 
 	grid-area: summary;
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
 	justify-content: space-between;
 	align-items: center;
 	gap: var(--fs-medium);
@@ -1055,17 +1048,19 @@ button:is(:focus, :hover) {
 
 .dashboard .summary > * {
 	width: 100%;
+	height: 100%;
+	background-color: var(--bg-color);
 	border-radius: var(--fs-medium);
 	padding: var(--fs-medium);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	text-align: center;
-}
-
-.dashboard .about {
-	grid-area: about;
 }
 
 .dashboard .play-history {
 	grid-area: history;
+	height: 70%;
 }
 
 .dashboard .play-history ul {
@@ -1073,20 +1068,20 @@ button:is(:focus, :hover) {
 	display: grid;
 }
 
-.profile.dashboard .stats-1 {
-	grid-area: stats-1;
+/*TODO: Add accordeon to this */
+.dashboard .play-history li {
+	display: flex;
+	justify-content: space-around;
 }
 
-.profile.dashboard .stats-2 {
-	grid-area: stats-2;
-}
-
-.dashboard .stat-entry {
-	background-color: var(--bg-color);
-	padding: 0.6em 1em;
+.dashboard .play-graph-2 {
+	grid-area: graph-1;
 	width: 100%;
-	text-align: center;
-	border-radius: 1em;
+}
+
+.dashboard .play-graph-2 {
+	grid-area: graph-2;
+	width: 100%;
 }
 
 #pong {

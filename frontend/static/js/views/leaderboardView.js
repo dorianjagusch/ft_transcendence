@@ -1,7 +1,7 @@
 import {scrollContainer} from '../components/scrollContainer.js';
 import {PlacementCard} from '../components/placementCard.js';
 import AView from './AView.js';
-import LeaderBoardService from '../services/leaderBoardService.js';
+import leaderboardService from '../services/leaderboardService.js';
 import UserService from '../services/userService.js';
 import getProfilePicture from '../components/profilePicture.js';
 
@@ -9,16 +9,15 @@ export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Leaderboard');
-		this.leaderBoardService = new LeaderBoardService();
+		this.leaderBoardService = new leaderboardService();
 		this.userService = new UserService();
 		this.appendEventListeners = this.appendEventListeners.bind(this);
 	}
 
 	async getPlayers() {
 		try {
-			const playerData = await this.leaderBoardService.getLeaderBoard();
+			const playerData = await this.leaderBoardService.getRequest();
 			const players = [];
-
 			for (const [index, player] of playerData.entries()) {
 				if (player.wins == 0) {
 					break;
@@ -46,7 +45,6 @@ export default class extends AView {
 		document.querySelector('.col-scroll').addEventListener('click', (e) => {
 			e.preventDefault();
 			e.stopPropagation();
-			console.log('clicked button');
 			const card = e.target.closest('.placement-card');
 			if (!card) {
 				return;
@@ -58,9 +56,6 @@ export default class extends AView {
 
 	async getHTML() {
 		const players = await this.getPlayers();
-		if (!players) {
-			return 'No data yet';
-		}
 		const leaderBoardOne = scrollContainer(players, PlacementCard, 'col');
 		leaderBoardOne.classList.add('leaderboard', 'bg-secondary');
 		const header = document.createElement('h2');
