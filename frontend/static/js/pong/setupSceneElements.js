@@ -49,7 +49,7 @@ const createIntructions = () => {
 	return instructions;
 };
 
-const createGameOver = (isTournament) => {
+const createGameOver = () => {
 	const gameOver = document.createElement('article');
 	gameOver.setAttribute('id', 'game-over');
 	const gameOverText = document.createElement('p');
@@ -58,7 +58,7 @@ const createGameOver = (isTournament) => {
 	winner.setAttribute('id', 'winner');
 
 	const newGameButton = document.createElement('button');
-	newGameButton.textContent = isTournament ? 'Next Match' : 'New Game';
+	newGameButton.textContent = 'Continue';
 	newGameButton.classList.add('new-game-button');
 
 	gameOver.appendChild(gameOverText);

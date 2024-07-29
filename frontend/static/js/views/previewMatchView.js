@@ -1,6 +1,7 @@
 import Aview from './AView.js';
 import {PlayerInfo} from '../components/playerInfo.js';
-import UserService from '../services/userService.js'; // TODO: Switch out for stats service
+import UserService from '../services/userService.js';
+import StatsService from '../services/statsService.js';
 import getProfilePicture from '../components/profilePicture.js';
 import constants from '../constants.js';
 import TournamentService from '../services/tournamentService.js';
@@ -11,6 +12,7 @@ export default class extends Aview {
 		this.setTitle('Modal');
 		this.userService = new UserService();
 		this.tournamentService = new TournamentService();
+		this.statsService = new StatsService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 	}
 
@@ -39,8 +41,9 @@ export default class extends Aview {
 	}
 
 	async setupPlayerInfo(userId) {
-		const userData = await this.userService.getRequest(userId); // REQUEST TO /user/stats
+		const userData = await this.userService.getRequest(userId);
 		userData.img = await getProfilePicture(userId);
+		userData.stats = await this.statsService.getRequest(userId);
 		const player = PlayerInfo(userData);
 		return player;
 	}

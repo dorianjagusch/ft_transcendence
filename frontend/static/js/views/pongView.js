@@ -61,7 +61,7 @@ export default class extends AView {
 		const matchesPlayed = tournamentData.reduce((acc, match) => {
 			return match.state === constants.MATCHSTATUS.FINISHED ? acc + 1 : acc;
 		}, 0);
-		return matchesPlayed === (tournamentData.length - 1);
+		return matchesPlayed === tournamentData.length;
 	}
 
 	attachEventListeners() {
@@ -72,7 +72,7 @@ export default class extends AView {
 			}
 			const match_id = parseInt(this.params.match_id) + 1;
 			if (await this.isTournamentFinished(this.params)) {
-				this.navigateTo(`/winner/tournament/${this.params.tournament_id}`);
+				this.navigateTo(`/winner/tournaments/${this.params.tournament_id}`);
 			} else {
 				this.navigateTo(`/preview/${this.params.tournament_id}/matches/${match_id}`);
 			}
