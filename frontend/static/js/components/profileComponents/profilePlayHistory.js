@@ -1,12 +1,3 @@
-// const history = {
-// 	match_id: match.id,
-// 	opponent: opponent.username,
-// 	opponentId: opponent.id,
-// 	winner: self.score > opponent.score,
-// 	scoreSelf: self.score,
-// 	scoreOpponent: opponent.score,
-// };
-
 const profilePlayHistory = (history) => {
 	debugger;
 	if (history.length === 0) {
