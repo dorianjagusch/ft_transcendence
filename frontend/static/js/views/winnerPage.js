@@ -20,7 +20,6 @@ export default class extends AView {
 		let winner;
 		if (this.params.tournament_id) {
 			try {
-				debugger;
 				const tournamentData = await this.tournamentService.getTournamentMatches(
 					this.params
 				);
