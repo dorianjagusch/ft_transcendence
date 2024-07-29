@@ -1,37 +1,62 @@
 import AView from './AView.js';
 import {PlayerInfo} from '../components/playerInfo.js';
 import TournamentService from '../services/tournamentService.js';
-// import MatchService from '../services/matchService.js';
-// import PlayerService from '../services/playerService.js';
+import getProfilePicture from '../components/profilePicture.js';
+import StatsService from '../services/statsService.js';
+import MatchService from '../services/matchService.js';
+import UserService from '../services/userService.js';
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.setTitle('Tournament Winner');
 		this.tournamentService = new TournamentService();
-		// this.matchService = new MatchService();
-		// this.PlayerService = new PlayerService();
+		this.statsService = new StatsService();
+		this.matchService = new MatchService();
+		this.userService = new UserService();
 	}
 
 	async getHTML() {
+		let winner;
 		if (this.params.tournament_id) {
 			try {
-				const tournamentData = await this.tournamentService.getTournamentMatches(this.context);
-				const winner = tournamentData[tournamentData.length - 1];
-				winner.img = await getProfilePicture(winner.id);
+				const tournamentData = await this.tournamentService.getTournamentMatches(
+					this.params
+				);
+				winner = tournamentData[tournamentData.length - 1]?.winner;
+				winner.img = await getProfilePicture(winner.user);
+				winner.stats = await this.statsService.getRequest(winner.user);
+				winner.username = winner.username;
 			} catch (error) {
 				this.notify(error.message);
 			}
 		} else {
-			console.log ("Implement individual match handling") // TODO: Implement individual match handling
+			const players = await this.matchService.getMatchPlayers(this.params.match_id);
+			const winnerPlayer = players.find((player) => player.match_winner);
+			if (!winnerPlayer) {
+				winner = {};
+				this.aiflag = true;
+			} else {
+				const user = await this.userService.getRequest(winnerPlayer.user);
+				winner = {};
+				winner.username = user.username;
+				winner.img = await getProfilePicture(winnerPlayer.user);
+				winner.stats = await this.statsService.getRequest(winnerPlayer.user);
+			}
+		}
+		if (this.aiflag) {
+			const appologiesElement = document.createElement('h2');
+			appologiesElement.textContent = 'Better luck next time!';
+			this.updateMain(appologiesElement);
+			return;
 		}
 		const congratsElement = document.createElement('h2');
 		congratsElement.textContent = 'Congratulations!';
 		const winnerInfo = PlayerInfo(winner);
 		winnerInfo.classList.add('winner');
 		const winnerDeclaration = document.createElement('h3');
-		winnerDeclaration.textContent = `${winner.display_name} is the winner!`;
+		winnerDeclaration.textContent = `${winner.display_name ?? winner.username} is the winner!`;
 		document.querySelector('main').classList.add('flex-col');
-		this.updateMain(congratsElement,winnerInfo, winnerDeclaration);
+		this.updateMain(congratsElement, winnerInfo, winnerDeclaration);
 	}
 }
