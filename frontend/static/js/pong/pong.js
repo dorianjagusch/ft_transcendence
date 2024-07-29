@@ -1,12 +1,12 @@
 import elements from './setupSceneElements.js';
 
-const PongContainer = (isTournament) => {
+const PongContainer = () => {
 	const pong = document.createElement('section');
 	pong.id = 'pong';
 
 	const points = elements.createScoreBoard();
 	const instructions = elements.createIntructions();
-	const gameOver = elements.createGameOver(isTournament);
+	const gameOver = elements.createGameOver();
 	const startInstructions = elements.startGameInstructions();
 	pong.appendChild(points);
 	pong.appendChild(instructions);
