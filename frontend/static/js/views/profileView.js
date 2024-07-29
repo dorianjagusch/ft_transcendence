@@ -4,7 +4,6 @@ import buttonBar from '../components/profileComponents/buttonBar.js';
 import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
-import {profileStats} from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import constants from '../constants.js';
 import {scrollContainer} from '../components/scrollContainer.js';
@@ -180,17 +179,6 @@ export default class extends AView {
 
 		const buttons = this.selectButtons(friendship);
 		const actionBar = buttonBar(buttons);
-		const userPlacement = arrayToElementsList(
-			userData.placements,
-			'user-placement',
-			smallPlacementCard
-		);
-
-		const userStats =
-			friendship === 'friend'
-				? scrollContainer(userData.stats, profileStats, 'row', 'stat-list')
-				: null;
-		userStats?.classList.add('play-stats');
 
 		const userHistory =
 			friendship === 'friend'
@@ -202,9 +190,7 @@ export default class extends AView {
 			userName,
 			userImg,
 			actionBar,
-			userStats,
 			userHistory,
-			userPlacement,
 		);
 	}
 }
