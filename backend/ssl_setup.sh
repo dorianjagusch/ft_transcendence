@@ -7,7 +7,5 @@ mkdir -p /etc/ssl
 
 openssl req -newkey rsa:2048 -x509 -sha256 -days 365 -nodes \
 	-out  ${SSL_CERT_PATH}\
-	-keyout ${SSL_KEY_PATH} \
+	-keyout ${SSL_KEY_PATH}\
 	-subj "/C=FI/ST=Helsinki/L=Helsinki/O=Hive/OU=transcendence/CN=transcendence.42.fi"
-
-daphne -e ssl:443:privateKey=${SSL_KEY_PATH}:certKey=${SSL_CERT_PATH} backend.asgi:application
