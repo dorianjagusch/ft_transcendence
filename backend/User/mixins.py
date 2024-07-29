@@ -10,17 +10,17 @@ from django.shortcuts import get_object_or_404
 import base64
 
 from .models import User, ProfilePicture
-from .validators import validate_image
+from .validators import validate_image, validate_password
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
 from Friends.models import Friend
 
 class GetAllUsersMixin:
-    """
-    Mixin to get all Users.
-    """
-    def get_all_users(self) -> QuerySet:
-        return User.objects.filter(is_active=True)
+	"""
+	Mixin to get all Users.
+	"""
+	def get_all_users(self) -> QuerySet:
+		return User.objects.filter(is_active=True)
 
 class GetUsersWithUsernameContainsMixin:
 	"""
@@ -59,6 +59,10 @@ class CreateUserMixin:
 
 		username = input_serializer.validated_data.get('username')
 		password = input_serializer.validated_data.get('password')
+		try:
+			validate_password(password)
+		except ValidationError as e:
+			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 		return User.objects.create_user(username=username, password=password)
 
 
@@ -77,15 +81,18 @@ class UpdateUserMixin:
 		if not username and not password:
 			return Response({"message": "Username or password are required to update information"}, status=status.HTTP_400_BAD_REQUEST)
 
-		if password != None and password != '':
-			result.set_password(password)
-		if username != None and username != '':
-			result.username = username
 
 		try:
+			if password != None and password != '':
+				validate_password(password)
+				result.set_password(password)
+			if username != None and username != '':
+				result.username = username
 			result.save()
 			outputSerializer = UserOutputSerializer(result)
 			return Response(outputSerializer.data, status=status.HTTP_200_OK)
+		except ValidationError as e:
+			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 		except IntegrityError as e:
 			return Response({"message": "User with username already exists"}, status=status.HTTP_409_CONFLICT)
 		except Exception as e:
@@ -128,64 +135,64 @@ class LogoutUserMixin:
 
 
 class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
-    """
-    Mixin to delete a user by ID.
-    """
-    def delete_user(self, request: Request, user_id: int) -> Response:
-        try:
-            logout(request)
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        result = get_object_or_404(User, pk=user_id)
-        if not isinstance(result, User):
-                return result
+	"""
+	Mixin to delete a user by ID.
+	"""
+	def delete_user(self, request: Request, user_id: int) -> Response:
+		try:
+			logout(request)
+		except Exception:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+		result = get_object_or_404(User, pk=user_id)
+		if not isinstance(result, User):
+				return result
 
-        result.username = f"deleted_user_{user_id + 42}"
-        result.set_password(get_random_string(length=30))
-        result.is_active = False
-        result.is_staff = False
-        result.is_superuser = False
-        result.insert_ts = None
-        result.last_login = None
-        result.is_online = False
-        result.save()
-        profile_picture = ProfilePicture.objects.filter(user=result).first()
-        if profile_picture:
-            profile_picture.delete_profile_picture()
-            profile_picture.delete()
+		result.username = f"deleted_user_{user_id + 42}"
+		result.set_password(get_random_string(length=30))
+		result.is_active = False
+		result.is_staff = False
+		result.is_superuser = False
+		result.insert_ts = None
+		result.last_login = None
+		result.is_online = False
+		result.save()
+		profile_picture = ProfilePicture.objects.filter(user=result).first()
+		if profile_picture:
+			profile_picture.delete_profile_picture()
+			profile_picture.delete()
 
-        self.change_tournament_player_names_to_deleted(result)
-        Friend.objects.delete_user_friendships(result)
-		
-        return Response(status=status.HTTP_204_NO_CONTENT)
+		self.change_tournament_player_names_to_deleted(result)
+		Friend.objects.delete_user_friendships(result)
+
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SaveUserProfilePictureMixin(GetUserMixin):
-    """
-    Mixin to save a user's profile picture.
-    """
-    def save_profile_picture(self, request: Request, user_id: int) -> Response:
-        result = self.get_user(user_id)
-        if not isinstance(result, User):
-                return result
+	"""
+	Mixin to save a user's profile picture.
+	"""
+	def save_profile_picture(self, request: Request, user_id: int) -> Response:
+		result = self.get_user(user_id)
+		if not isinstance(result, User):
+				return result
 
-        if 'file' not in request.FILES:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+		if 'file' not in request.FILES:
+			return Response({"message": "File not provided in the request"}, status=status.HTTP_400_BAD_REQUEST)
 
-        file = request.FILES['file']
+		file = request.FILES['file']
 
-        try:
-            validate_image(file)
-        except ValidationError as e:
-            return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			validate_image(file)
+		except ValidationError as e:
+			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            profile_picture = ProfilePicture.objects.get(user=result)
-            profile_picture.update_profile_picture(file)
-        except ProfilePicture.DoesNotExist:
-            profile_picture = ProfilePicture(user=result, picture=file)
-            profile_picture.save()
-        return Response(status=status.HTTP_200_OK)
+		try:
+			profile_picture = ProfilePicture.objects.get(user=result)
+			profile_picture.update_profile_picture(file)
+		except ProfilePicture.DoesNotExist:
+			profile_picture = ProfilePicture(user=result, picture=file)
+			profile_picture.save()
+		return Response(status=status.HTTP_200_OK)
 
 
 class GetProfilePictureMixin(GetUserMixin):
