@@ -18,8 +18,64 @@ export default class extends AView {
 		super(params);
 		this.setTitle('Dashboard');
 		this.matchService = new MatchService();
-		this.PlayerService = new PlayerService();
+		this.playerService = new PlayerService();
 		this.leaderBoardService = new LeaderboardService();
+		this.statsService = new StatsService();
+		this.userService = new UserService();
+		this.userId = localStorage.getItem('user_id');
+	}
+
+	appendEventListeners() {
+		document.body.addEventListener('click', (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+			const item = e.target.closest('.play-history-item');
+			if (item) {
+				const userId = item.getAttribute('data-id');
+				debugger;
+				if (userId !== null){
+					this.navigateTo(`/profile/${userId}`);
+				}
+			}
+		});
+	}
+
+	async getOpponent(players) {
+		let opponent = players.find((player) => player.user != this.userId);
+		if (!opponent) {
+			opponent = {};
+			opponent.username = 'AI';
+		} else {
+			const opponentData = await this.userService.getRequest(opponent.user);
+			opponent.username = opponentData.username;
+		}
+		return opponent;
+	}
+
+	async getFinishedMatches() {
+		const allMatches = await this.matchService.getHistoryMatches(this.userId);
+		const finishedMatches = allMatches.filter(
+			(match) => match.state === constants.MATCHSTATUS.FINISHED
+		);
+		console.log(finishedMatches);
+		const matchData = await Promise.all(
+			finishedMatches.map(async (match) => {
+				const players = await this.matchService.getMatchPlayers(match.id);
+				const opponent = await this.getOpponent(players);
+				const self = players.find((player) => player.user == this.userId);
+				return {
+					match_id: match.id,
+					opponent: opponent.username,
+					opponentId: opponent.id,
+					winner: self.score > opponent.score,
+					scoreSelf: self.score,
+					scoreOpponent: opponent.score,
+					date: match.insert_ts,
+				};
+			})
+		);
+		console.log(matchData);
+		return matchData;
 	}
 
 	async getHTML() {
@@ -31,26 +87,37 @@ export default class extends AView {
 		const title = profileTitle('Your Stats');
 
 		let profileImage;
-		let placement;
+		let stats;
+		let history;
+		let winLossGraph;
+		let recentOutcomesGraph;
 		try {
-			placement = await this.leaderBoardService.getRequest()
-			profileImage = profileImg(await getProfilePicture(localStorage.getItem('user_id')));
+			profileImage = profileImg(await getProfilePicture(this.userId));
+			stats = await this.statsService.getRequest(this.userId);
+			history = await this.getFinishedMatches();
 		} catch (error) {
-			notify(error, 'error');
+			this.notify(error, 'error');
 		}
+		try {
+			winLossGraph = await this.statsService.getImage(this.userId, 'win-loss');
+			recentOutcomesGraph = await this.statsService.getImage(this.userId, 'recent-outcomes');
+		} catch (error) {
+			winLossGraph = 'No Data available yet';
+			recentOutcomesGraph = 'No Data available yet';
+		}
+		const userHistory = scrollContainer(history, profilePlayHistory, 'col');
+		userHistory.classList.add('play-history', 'bg-secondary');
+		const header = document.createElement('h2');
+		header.textContent = 'History';
+		userHistory.insertBefore(header, userHistory.firstChild);
+		const innerScroller = userHistory.querySelector('.col-scroll');
+		innerScroller.style.gridAutoRows = '5em';
 
-		const userHistory = scrollContainer(userData.playHistory, profilePlayHistory, 'column');
-		userHistory.classList.add('play-history');
-
-		const userSummary = profileSummaryStats(userData.stats);
+		const userSummary = profileSummaryStats(stats);
 
 		const main = document.querySelector('main');
 		main.classList.add('profile', 'dashboard');
-		this.updateMain(
-			title,
-			profileImage,
-			userSummary,
-			userHistory
-		);
+		this.updateMain(title, profileImage, userSummary, userHistory);
+		this.appendEventListeners();
 	}
 }
