@@ -49,7 +49,7 @@ const createUserSection = async () => {
 		const userImageItem = navbarItem('/dashboard', 'image', userImage);
 		userSection.appendChild(userImageItem);
 
-		const userLinkItem = navbarItem('/user', 'text', localStorage.getItem('username'));
+		const userLinkItem = navbarItem('/dashboard', 'text', localStorage.getItem('username'));
 		userLinkItem.id = 'user';
 		userSection.appendChild(userLinkItem);
 
