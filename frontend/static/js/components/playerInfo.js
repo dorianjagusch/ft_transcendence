@@ -15,16 +15,20 @@ const PlayerInfo = ({username, img, stats}) => {
 	imgElement.classList.add('profile-picture');
 	section.appendChild(imgElement);
 
-	const winsDiv = StatLine('wins', 'Wins: ', wins);
+	const winsDiv = StatLine('wins', 'Wins: ', stats.wins);
 	section.appendChild(winsDiv);
 
-	const lossesDiv = StatLine('losses', 'Losses: ', losses);
+	const lossesDiv = StatLine('losses', 'Losses: ', stats.losses);
 	section.appendChild(lossesDiv);
 
-	const ratioDiv = StatLine('win-loss-ratio', 'W/L ratio: ', (wins+losses)? (wins / wins+losses).toFixed(2): "NA");
+	const ratioDiv = StatLine(
+		'win-loss-ratio',
+		'W/L ratio: ',
+		stats.wins + stats.losses ? (stats.wins / (stats.wins + stats.losses)).toFixed(2) : 'NA'
+	);
 	section.appendChild(ratioDiv);
 
 	return section;
-}
+};
 
-export {PlayerInfo}
+export {PlayerInfo};
