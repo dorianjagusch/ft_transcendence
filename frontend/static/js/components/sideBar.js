@@ -6,6 +6,7 @@ import AcceptDeclineModal from './dialogs/acceptDeclineModal.js';
 import UpdateUserModal from './dialogs/updateUserModal.js';
 import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
+import validatePassword from '../utils/validatePassword.js';
 
 const sideBarButton = (classes, text, callback) => {
 	const sideBarButton = document.createElement('button');
@@ -70,6 +71,13 @@ let updateUser = async (userId) => {
 
 	if (password !== '' && repeatPassword !== '') {
 		saveblePassword = password;
+		// TODO: Use password validation
+		//try {
+		//	validatePassword(saveblePassword);
+		//} catch (error) {
+		//	notify(error.message, 'error');
+		//	return;
+		//}
 	}
 
 	const data = {
