@@ -18,6 +18,7 @@ for i in {1..30}; do
 	python manage.py migrate
 
     # Run Daphne with SSL
+	exec "$@"
     daphne -e ssl:443:privateKey=${SSL_KEY_PATH}:certKey=${SSL_CERT_PATH} backend.asgi:application
 	exit 0
   fi

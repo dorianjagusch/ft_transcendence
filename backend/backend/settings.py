@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'corsheaders', #Added for CORS header configuration
     'rest_framework',
     'backend',
-	'channels',
 	'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,6 +66,9 @@ INSTALLED_APPS = [
 	'Tournament',
 	'pong',
 	'stats',
+	
+    # moved to the end
+	'channels',
 ]
 
 MIDDLEWARE = [
@@ -120,8 +122,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 100 # session expiration time (in seconds)
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
 
 # our custom User model

@@ -19,4 +19,7 @@ RUN pip install --upgrade pip \
     &&  sh ssl_setup.sh \
 	&& chmod 755 entrypoint.sh
 
+# Set environment variables
+ENV DJANGO_SETTINGS_MODULE=backend.settings
+
 EXPOSE 8080
