@@ -1,18 +1,20 @@
 const populateInnerScroller = (elements, innerScroller, callback) => {
-
-	if (!callback){
+	if (!callback) {
 		return;
 	}
-		elements.forEach((element) => {
-			const currentCard = callback(element);
-			currentCard.classList.add('scroll-element');
-			innerScroller.appendChild(currentCard);
-		});
+	if (!elements) {
+		innerScroller.textContent = 'No data yet';
+		return
 	}
+	elements.forEach((element) => {
+		const currentCard = callback(element);
+		currentCard.classList.add('scroll-element');
+		innerScroller.appendChild(currentCard);
+	});
+};
 
 const scrollContainer = (elements, callback, orientation = 'row', ...classNames) => {
-
-	if (!elements || !callback) {
+	if (!callback) {
 		return;
 	}
 
@@ -20,11 +22,9 @@ const scrollContainer = (elements, callback, orientation = 'row', ...classNames)
 	outerScroller.classList.add('scroll-container');
 
 	const snappDirection = orientation === 'row' ? 'inline' : 'block';
-	
+
 	const innerScroller = document.createElement('ul');
-	innerScroller.classList.add(`snaps-${snappDirection}`,
-		`${orientation}-scroll`,
-		...classNames);
+	innerScroller.classList.add(`snaps-${snappDirection}`, `${orientation}-scroll`, ...classNames);
 
 	populateInnerScroller(elements, innerScroller, callback);
 
@@ -33,4 +33,4 @@ const scrollContainer = (elements, callback, orientation = 'row', ...classNames)
 	return outerScroller;
 };
 
-export { scrollContainer, populateInnerScroller };
+export {scrollContainer, populateInnerScroller};

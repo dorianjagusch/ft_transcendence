@@ -2,12 +2,15 @@ import AView from './AView.js';
 import MatchService from '../services/matchService.js';
 import PlayerService from '../services/playerService.js';
 import LeaderboardService from '../services/leaderboardService.js';
+import StatsService from '../services/statsService.js';
+import UserService from '../services/userService.js';
 import getProfilePicture from '../components/profilePicture.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
 import profileImg from '../components/profileComponents/profileImg.js';
 import {scrollContainer} from '../components/scrollContainer.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import profileSummaryStats from '../components/profileComponents/profileSummaryStats.js';
+import constants from '../constants.js';
 import userData from '../userAPIData/userAPIDashboard.js';
 
 export default class extends AView {

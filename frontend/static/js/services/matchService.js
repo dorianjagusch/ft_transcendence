@@ -6,11 +6,11 @@ export default class MatchService extends ARequestService {
 		super();
 	}
 
-	async getHistoryMatches(matchId, userId) {
-		return await this.get(`${backendURL}matches/${matchId}/${userId}`);
+	async getHistoryMatches(userId) {
+		return await super.getRequest(`${backendURL.matchURL}?user_id=${userId}`);
 	}
 
 	async getMatchPlayers(matchId) {
-		return await this.get(`${backendURL}matches/${matchId}/players`);
+		return await super.getRequest(`${backendURL.matchURL}${matchId}/players/`);
 	}
 }
