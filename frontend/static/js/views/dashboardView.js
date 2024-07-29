@@ -27,12 +27,10 @@ export default class extends AView {
 
 	appendEventListeners() {
 		document.body.addEventListener('click', (e) => {
-			e.stopPropagation();
 			e.preventDefault();
 			const item = e.target.closest('.play-history-item');
 			if (item) {
 				const userId = item.getAttribute('data-id');
-				debugger;
 				if (userId !== null){
 					this.navigateTo(`/profile/${userId}`);
 				}

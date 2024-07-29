@@ -61,7 +61,7 @@ export default class extends AView {
 		const matchesPlayed = tournamentData.reduce((acc, match) => {
 			return match.state === constants.MATCHSTATUS.FINISHED ? acc + 1 : acc;
 		}, 0);
-		return matchesPlayed === (tournamentData.length - 1);
+		return matchesPlayed === tournamentData.length;
 	}
 
 	attachEventListeners() {
