@@ -18,7 +18,6 @@ export default class extends AView {
 		try {
 			const playerData = await this.leaderBoardService.getRequest();
 			const players = [];
-
 			for (const [index, player] of playerData.entries()) {
 				if (player.wins == 0) {
 					break;
@@ -46,7 +45,6 @@ export default class extends AView {
 		document.querySelector('.col-scroll').addEventListener('click', (e) => {
 			e.preventDefault();
 			e.stopPropagation();
-			console.log('clicked button');
 			const card = e.target.closest('.placement-card');
 			if (!card) {
 				return;
@@ -58,9 +56,6 @@ export default class extends AView {
 
 	async getHTML() {
 		const players = await this.getPlayers();
-		if (!players) {
-			return 'No data yet';
-		}
 		const leaderBoardOne = scrollContainer(players, PlacementCard, 'col');
 		leaderBoardOne.classList.add('leaderboard', 'bg-secondary');
 		const header = document.createElement('h2');

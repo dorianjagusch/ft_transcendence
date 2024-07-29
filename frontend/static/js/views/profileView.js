@@ -116,7 +116,7 @@ export default class extends AView {
 			userResponse = await this.userService.getRequest(this.friendId);
 			userResponse.img = await getProfilePicture(this.friendId);
 		} catch (error) {
-			console.notify(error.message, 'error');
+			this.notify(error.message, 'error');
 			this.navigateTo('/friends');
 		}
 
