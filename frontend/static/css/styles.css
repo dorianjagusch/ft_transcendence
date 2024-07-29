@@ -855,21 +855,13 @@ button:is(:focus, :hover) {
 	align-items: center;
 }
 
-.profile.friend {
-	grid-template-areas:
-		'username placement play-history'
-		'profile-img placement play-history'
-		'profile-img play-stats play-stats'
-		'about play-stats play-stats'
-		'about play-stats play-stats';
-}
 
-.profile:not(.friend) {
+.profile {
 	grid-template-areas:
-		'username placement placement'
-		'profile-img placement placement'
-		'profile-img about about'
-		'buttons about about';
+		'username username username'
+		'profile-img play-history play-history'
+		'profile-img play-history play-history'
+		'buttons stats stats';
 }
 
 .profile > *:not(.button-bar) {
@@ -930,20 +922,10 @@ button:is(:focus, :hover) {
 	padding: var(--fs-medium);
 }
 
-.profile .user-description {
-	grid-area: about;
-	padding: var(--fs-large);
-}
-
-.user-description .description-title {
-	margin-bottom: var(--fs-medium);
-}
-
 .profile .play-history {
 	grid-area: play-history;
 	display: grid;
 	align-items: center;
-	height: 80%;
 }
 
 .profile .history-list {
