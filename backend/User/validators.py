@@ -18,11 +18,13 @@ def validate_image(file):
 		raise ValidationError('Unsupported file type. Allowed types are: jpeg, jpg, png.')
 
 def validate_password(password):
-    if len(password) < 8:
-        raise ValidationError("Password must be at least 8 characters long.")
+    # TODO: Use password validation
+    #if len(password) < 8:
+    #    raise ValidationError("Password must be at least 8 characters long.")
 
-    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-        raise ValidationError("Password must contain at least one special character.")
+    #if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+    #    raise ValidationError("Password must contain at least one special character.")
 
-    if not re.search(r'\d', password):
-        raise ValidationError("Password must contain at least one digit.")
+    #if not re.search(r'\d', password):
+    #    raise ValidationError("Password must contain at least one digit.")
+    pass
