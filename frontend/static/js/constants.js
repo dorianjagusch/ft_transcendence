@@ -1,4 +1,4 @@
-const protocol = 'http://';
+const protocol = 'https://';
 const location = 'localhost:8080/';
 const baseURL = `${protocol}${location}`;
 const userURL = `${baseURL}users/`;

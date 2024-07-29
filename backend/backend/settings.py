@@ -35,10 +35,10 @@ FILE_UPLOAD_HANDLERS = [
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^6z#%nf*!6vj*+*nxf^-+qq!by6&zb7_7u8r$_t-6+u#$5o$j='
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -120,8 +120,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 100 # session expiration time (in seconds)
-SESSION_COOKIE_HTTPONLY = False # Set to True in production
-SESSION_COOKIE_SECURE = False  # Set to True in production
+SESSION_COOKIE_HTTPONLY = True # Set to True in production
+SESSION_COOKIE_SECURE = True  # Set to True in production
 SESSION_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
 
 # our custom User model
@@ -175,8 +175,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #CSRF settings
 
 CSRF_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
-CSRF_COOKIE_HTTPONLY = False #set to true in production
-CSRF_COOKIE_SECURE = False #set to true in production
+CSRF_COOKIE_HTTPONLY = True #set to true in production
+CSRF_COOKIE_SECURE = True #set to true in production
 
 CSRF_TRUSTED_ORIGINS = [
 		'http://localhost:80',
