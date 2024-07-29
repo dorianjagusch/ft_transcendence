@@ -101,7 +101,7 @@ export default class extends Aview {
 			userData.stats = await this.statsService.getRequest(userData.id);
 			playerLeft = PlayerInfo(userData);
 		} catch (error) {
-			notify(error, 'error');
+			this.notify(error, 'error');
 		}
 
 		const opponentSelection = OpponentSelection();

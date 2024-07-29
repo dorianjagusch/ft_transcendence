@@ -14,6 +14,7 @@ class Player extends AObject3D{
 			height: constants.players.height,
 			depth: 3 * constants.ball.size,
 		};
+		this.name = this.isLeft ? constants.players.left_name : constants.players.right_name;
 		this.object = this.create(constants);
 	}
 
