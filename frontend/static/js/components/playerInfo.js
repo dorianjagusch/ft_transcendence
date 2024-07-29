@@ -1,6 +1,6 @@
-import { StatLine } from "./profileComponents/profileStats.js";
+import {StatLine} from './profileComponents/profileStats.js';
 
-const PlayerInfo = ({username, img, wins, losses}) => {
+const PlayerInfo = ({username, img, stats}) => {
 	const section = document.createElement('section');
 	section.classList.add('player-info', 'bg-secondary', 'flex-col');
 
