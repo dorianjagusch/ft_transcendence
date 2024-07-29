@@ -5,7 +5,6 @@ import getProfilePicture from '../components/profilePicture.js';
 import StatsService from '../services/statsService.js';
 import MatchService from '../services/matchService.js';
 import UserService from '../services/userService.js';
-// import PlayerService from '../services/playerService.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -15,7 +14,6 @@ export default class extends AView {
 		this.statsService = new StatsService();
 		this.matchService = new MatchService();
 		this.userService = new UserService();
-		// this.PlayerService = new PlayerService();
 	}
 
 	async getHTML() {
