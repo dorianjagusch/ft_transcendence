@@ -5,6 +5,7 @@ RUN mkdir app
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y netcat-openbsd gcc && \
+    apt install openssl \
     apt-get clean
 
 RUN apt-get install libpq-dev
