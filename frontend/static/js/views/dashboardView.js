@@ -45,7 +45,6 @@ export default class extends AView {
 		const finishedMatches = allMatches.filter(
 			(match) => match.state === constants.MATCHSTATUS.FINISHED
 		);
-		debugger;
 		const matchData = await Promise.all(
 			finishedMatches.map(async (match) => {
 				const players = await this.matchService.getMatchPlayers(match.id);
@@ -104,7 +103,6 @@ export default class extends AView {
 
 		const stats1 = document.createElement('section');
 		stats1.innerHTML = winLossGraph;
-		console.log(stats1);
 		stats1.classList.add('play-graph', 'play-graph-1');
 
 		const stats2 = document.createElement('section');
