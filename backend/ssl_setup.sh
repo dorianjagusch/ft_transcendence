@@ -3,7 +3,7 @@
 SSL_KEY_PATH="/app/ssl/certificate.key"
 SSL_CERT_PATH="/app/ssl/certificate.crt"
 
-mkdir -p /etc/ssl
+mkdir -p /app/ssl
 
 openssl req -newkey rsa:2048 -x509 -sha256 -days 365 -nodes \
 	-out  ${SSL_CERT_PATH}\
