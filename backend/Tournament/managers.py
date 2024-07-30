@@ -25,8 +25,11 @@ class TournamentSetupManager:
                     player_amount=validated_data['player_amount'],
                     expire_ts=timezone.now() + timedelta(TOURNAMENT_EXPIRY_TIME_SECONDS),
                 )
+
+                display_name = validated_data.get('host_user_display_name', None)
+                username = tournament.host_user.username
                 try:
-                    TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, validated_data.get('host_user_display_name', None))
+                    TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, display_name or username)
                 except Exception as e:
                     tournament.delete()
                     raise Exception(e)
