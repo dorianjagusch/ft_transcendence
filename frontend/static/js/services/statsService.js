@@ -27,7 +27,7 @@ export default class StatsService extends ARequestService {
 			const svgText = await response.text();
 			return svgText;
 		} catch (error) {
-			console.error("Couldn't fetch data", error);
+			throw error;
 		}
 	}
 }
