@@ -25,7 +25,7 @@ class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 			token = MatchTokenManager.create_single_match_token(host_user, None)
 			token_serializer = MatchTokenSerializer(token)
 			return Response({
-				'token': token_serializer.data,
+				"token": token_serializer.data,
 			}, status=status.HTTP_201_CREATED)
 
 		result = self.authenticate_user(request)
@@ -33,7 +33,7 @@ class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 			return result
 		
 		if result == host_user:
-			return Response({'message': 'You cannot play against yourself.',}, status=status.HTTP_403_FORBIDDEN)
+			return Response({"message": "You cannot play against yourself.",}, status=status.HTTP_403_FORBIDDEN)
 
 		token = MatchTokenManager.create_single_match_token(host_user, result)
 		token_serializer = MatchTokenSerializer(token)
@@ -51,10 +51,10 @@ class SingleMatchGuestTokenView(APIView, AuthenticateUserMixin):
 			if token.is_active == False or token.is_expired():
 				token.is_active = False
 				token.save()
-				return Response({'message': 'Token has already expired.'}, status=status.HTTP_200_OK)
+				return Response({"message": "Token has already expired."}, status=status.HTTP_200_OK)
 			else:
 				token.is_active = False
 				token.save()
-				return Response({'message': 'Token is now expired.'}, status=status.HTTP_200_OK)
+				return Response({"message": "Token is now expired."}, status=status.HTTP_200_OK)
 		except MatchToken.DoesNotExist:
-			return Response({'message': 'Token was not found.'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Token was not found."}, status=status.HTTP_400_BAD_REQUEST)
