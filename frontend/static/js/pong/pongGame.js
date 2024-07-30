@@ -140,7 +140,7 @@ class PongGame {
 			color: 0xffffff,
 			dashSize: 5,
 			gapSize: 5,
-			lineWidth: 3,
+			linewidth: 3,
 		});
 
 		const line = new THREE.Line(lineGeometry, lineMaterial);
@@ -194,7 +194,9 @@ class PongGame {
 		const gameOver = document.getElementById('game-over');
 		gameOver.querySelector('p').textContent = 'Game Over';
 		gameOver.style.display = 'grid';
-		document.getElementById('winner').textContent = `${game.winner == 'player_left' ? playerLeft.name : playerRight.name} won!`;
+		document.getElementById('winner').textContent = `${
+			game.winner == 'player_left' ? playerLeft.name : playerRight.name
+		} won!`;
 		return;
 	}
 
@@ -252,6 +254,44 @@ class PongGame {
 		this.gameBall.object.rotation.x = 0;
 		this.gameBall.object.rotation.y = 0;
 		this.plane.setVisibility(false);
+	}
+
+	dispose() {
+		for (let key in this.materials) {
+			const material = this.materials[key];
+			if (material.dispose) {
+				material.dispose();
+			}
+		}
+
+		if (this.scene) {
+			this.scene.traverse((object) => {
+				this.disposeObject(object);
+			});
+		}
+
+		const gl = this.renderer.getContext();
+		const loseContextExtension = gl.getExtension('WEBGL_lose_context');
+		if (loseContextExtension) {
+			loseContextExtension.loseContext();
+		}
+	}
+
+	disposeObject(object) {
+		if (object.geometry) {
+			object.geometry.dispose();
+		}
+		if (object.material) {
+			this.disposeMaterial(object.material);
+		}
+	}
+
+	disposeMaterial(material) {
+		if (Array.isArray(material)) {
+			material.forEach((mat) => mat.dispose());
+		} else {
+			material.dispose();
+		}
 	}
 }
 

@@ -4,7 +4,6 @@ import notify from '../utils/notify.js';
 
 class ChatSocket {
 	constructor(url) {
-
 		this.chatSocket = null;
 
 		try {
@@ -32,8 +31,7 @@ class ChatSocket {
 			this.game = new PongGame(data);
 		}
 		this.game.animate(data);
-		if (data.game && data.game.over === false)
-		{
+		if (data.game && data.game.over === false) {
 			this.startMessageTimeout();
 		}
 	}
@@ -57,6 +55,9 @@ class ChatSocket {
 		if (this.chatSocket && this.chatSocket.readyState == WebSocket.OPEN) {
 			this.chatSocket.close();
 			this.removeEventListeners();
+			if (this.game) {
+				this.game.dispose();
+			}
 			this.chatSocket = null;
 		}
 
@@ -68,13 +69,15 @@ class ChatSocket {
 			chatSocket.close();
 		}
 		this.removeEventListeners();
-
+		if (this.game) {
+			this.game.dispose();
+		}
 		setTimeout(() => navigateTo('/play'), 100);
 	}
 
 	sendKey(e) {
-		if (e.key == " " && this.game){
-			if (!this.game.is3D){
+		if (e.key == ' ' && this.game) {
+			if (!this.game.is3D) {
 				this.game.display3D();
 			} else {
 				this.game.display2D();
@@ -82,15 +85,15 @@ class ChatSocket {
 		}
 		if (this.chatSocket && this.chatSocket.readyState == WebSocket.OPEN)
 			this.chatSocket.send(e.key);
-		if (e.key == "Enter" && this.game){
-			Array.from(document.querySelectorAll('.instructions')).forEach(instruction => {
+		if (e.key == 'Enter' && this.game) {
+			Array.from(document.querySelectorAll('.instructions')).forEach((instruction) => {
 				instruction.style.display = 'none';
-			})
+			});
 		}
 	}
 
 	removeEventListeners() {
-		if (this.chatSocket){
+		if (this.chatSocket) {
 			this.chatSocket.removeEventListener('close', this.handleClose);
 			this.chatSocket.removeEventListener('error', this.handleError);
 			this.chatSocket.removeEventListener('message', this.acceptMessage);
@@ -98,21 +101,21 @@ class ChatSocket {
 		}
 	}
 
-    connect() {
-        try {
-            this.chatSocket.addEventListener('message', this.acceptMessage);
-            this.chatSocket.addEventListener('close', this.handleClose);
-            this.chatSocket.addEventListener('error', this.handleError);
-            window.addEventListener('keyup', this.sendKey);
-        } catch (error) {
-            notify('Could not connect to server', 'error');
-            this.scheduleReconnect();
-        }
-    }
+	connect() {
+		try {
+			this.chatSocket.addEventListener('message', this.acceptMessage);
+			this.chatSocket.addEventListener('close', this.handleClose);
+			this.chatSocket.addEventListener('error', this.handleError);
+			window.addEventListener('keyup', this.sendKey);
+		} catch (error) {
+			notify('Could not connect to server', 'error');
+			this.scheduleReconnect();
+		}
+	}
 
-    scheduleReconnect() {
-        setTimeout(() => this.connect(), 100);
-    }
+	scheduleReconnect() {
+		setTimeout(() => this.connect(), 100);
+	}
 }
 
 export default ChatSocket;
