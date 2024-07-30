@@ -24,6 +24,17 @@ export default class extends AView {
 		this.userId = localStorage.getItem('user_id');
 	}
 
+	appendEventListeners() {
+		const playHistoryItems = document.querySelectorAll('.play-history-main');
+		playHistoryItems.forEach((item) => {
+			item.addEventListener('click', (event) => {
+				const target = event.currentTarget;
+				const details = target.nextElementSibling;
+				details.toggleAttribute('open');
+			});
+		});
+	}
+
 	async getOpponent(players) {
 		let opponent = players.find((player) => player.user != this.userId);
 		if (!opponent) {
@@ -61,7 +72,7 @@ export default class extends AView {
 					date: match.start_ts,
 					duration: matchDetails.duration,
 					ball_contacts: matchDetails.ball_contacts,
-					ball_max_speed: matchDetails.ball_max_contacts
+					ball_max_speed: matchDetails.ball_max_speed,
 				};
 			})
 		);
@@ -116,5 +127,6 @@ export default class extends AView {
 		const main = document.querySelector('main');
 		main.classList.add('profile', 'dashboard');
 		this.updateMain(title, profileImage, userSummary, userHistory, stats1, stats2);
+		this.appendEventListeners();
 	}
 }

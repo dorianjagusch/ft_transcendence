@@ -23,6 +23,17 @@ export default class extends AView {
 		this.friendId = params.id;
 	}
 
+	appendEventListeners() {
+		const playHistoryItems = document.querySelectorAll('.play-history-main');
+		playHistoryItems.forEach((item) => {
+			item.addEventListener('click', (event) => {
+				const target = event.currentTarget;
+				const details = target.nextElementSibling;
+				details.toggleAttribute('open');
+			});
+		});
+	}
+
 	selectButtons(relationship) {
 		switch (relationship) {
 			case constants.FRIENDSHIPSTATUS.FRIEND:
@@ -172,9 +183,13 @@ export default class extends AView {
 		const buttons = this.selectButtons(friendship);
 		const actionBar = buttonBar(buttons);
 
-		const userHistory = scrollContainer(history, profilePlayHistory, 'col', 'history-list')
+		const userHistory = scrollContainer(history, profilePlayHistory, 'col', 'history-list');
 		userHistory?.classList.add('play-history');
+		const header = document.createElement('h2');
+		header.textContent = 'History';
+		userHistory.insertBefore(header, userHistory.firstChild);
 
 		this.updateMain(userName, userImg, actionBar, userHistory);
+		this.appendEventListeners();
 	}
 }
