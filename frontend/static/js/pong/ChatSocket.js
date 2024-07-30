@@ -90,7 +90,7 @@ class ChatSocket {
     }
 
     scheduleReconnect() {
-        setTimeout(() => this.connect(), this.reconnectDelay);
+        setTimeout(() => this.connect(), 1000);
     }
 }
 
