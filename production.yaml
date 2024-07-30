@@ -32,7 +32,7 @@ services:
     env_file:
       ./backend/.env
     entrypoint: ./entrypoint.sh
-    command: bash -c "python manage.py runserver 0.0.0.0:8080"
+    command: bash -c "gunicorn --bind 0.0.0.0:8080 backend.wsgi"
     depends_on:
        postgres:
          condition: service_healthy
