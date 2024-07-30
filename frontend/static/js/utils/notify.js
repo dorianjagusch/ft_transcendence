@@ -3,7 +3,7 @@ import {userNotification} from '../components/userNotification.js';
 const notify = (message, type = 'success') => {
 	userNotification(message, type);
 	setTimeout(() => {
-		document.querySelector('section .notification').remove();
+		document.querySelector('.notification-section').remove();
 	}, 3000);
 }
 

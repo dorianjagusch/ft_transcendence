@@ -30,8 +30,12 @@ export default class extends AView {
 			opponent = {};
 			opponent.username = 'AI';
 		} else {
-			const opponentData = await this.userService.getRequest(opponent.user);
-			opponent.username = opponentData.username;
+			try {
+				const opponentData = await this.userService.getRequest(opponent.user);
+				opponent.username = opponentData.username;
+			} catch (error) {
+				opponent.username = 'Deleted User';
+			}
 		}
 		return opponent;
 	}
@@ -61,7 +65,6 @@ export default class extends AView {
 				};
 			})
 		);
-
 		return matchData;
 	}
 
@@ -84,13 +87,14 @@ export default class extends AView {
 			history = await this.getFinishedMatches();
 		} catch (error) {
 			this.notify(error, 'error');
+			return;
 		}
 		try {
 			winLossGraph = await this.statsService.getImage(this.userId, 'win-loss');
 			recentOutcomesGraph = await this.statsService.getImage(this.userId, 'recent-outcomes');
 		} catch (error) {
-			winLossGraph = 'No Data available yet';
-			recentOutcomesGraph = 'No Data available yet';
+			this.notify(error, 'error');
+			return;
 		}
 
 		const userHistory = scrollContainer(history, profilePlayHistory, 'col');
@@ -98,13 +102,19 @@ export default class extends AView {
 		const header = document.createElement('h2');
 		header.textContent = 'History';
 		userHistory.insertBefore(header, userHistory.firstChild);
-		const innerScroller = userHistory.querySelector('.col-scroll');
-		innerScroller.style.gridAutoRows = '5em';
 
 		const userSummary = profileSummaryStats(stats);
 
+		const stats1 = document.createElement('section');
+		stats1.innerHTML = winLossGraph;
+		stats1.classList.add('play-graph', 'play-graph-1');
+
+		const stats2 = document.createElement('section');
+		stats2.innerHTML = recentOutcomesGraph;
+		stats2.classList.add('play-graph', 'play-graph-2');
+
 		const main = document.querySelector('main');
 		main.classList.add('profile', 'dashboard');
-		this.updateMain(title, profileImage, userSummary, userHistory);
+		this.updateMain(title, profileImage, userSummary, userHistory, stats1, stats2);
 	}
 }
