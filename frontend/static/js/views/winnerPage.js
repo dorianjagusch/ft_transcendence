@@ -33,7 +33,6 @@ export default class extends AView {
 		} else {
 			const players = await this.matchService.getMatchPlayers(this.params.match_id);
 			const winnerPlayer = players.find((player) => player.match_winner);
-			debugger;
 			if (!winnerPlayer) {
 				winner = {};
 				const appologiesElement = document.createElement('h2');

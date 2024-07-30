@@ -122,12 +122,10 @@ export default class extends AView {
 		const finishedMatches = allMatches.filter(
 			(match) => match.state === constants.MATCHSTATUS.FINISHED
 		);
-		debugger;
 		const matchData = await Promise.all(
 			finishedMatches.map(async (match) => {
 				const players = await this.matchService.getMatchPlayers(match.id);
 				const matchDetails = await this.matchService.getMatchDetails(match.id);
-				debugger
 				const opponent = await this.getOpponent(players, matchDetails);
 				const self = players.find((player) => player.user == this.friendId);
 				return {
