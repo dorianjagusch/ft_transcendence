@@ -754,8 +754,8 @@ button:is(:focus, :hover) {
 
 .game-card {
 	padding: 0;
-	height: 600px;
-	min-width: 400px;
+	height: 500px;
+	min-width: 700px;
 	position: relative;
 	transition: rotate var(--animation-timing) ease;
 	transform-style: preserve-3d;

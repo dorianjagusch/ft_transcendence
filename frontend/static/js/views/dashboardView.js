@@ -113,7 +113,6 @@ export default class extends AView {
 		const header = document.createElement('h2');
 		header.textContent = 'History';
 		userHistory.insertBefore(header, userHistory.firstChild);
-
 		const userSummary = profileSummaryStats(stats);
 
 		const stats1 = document.createElement('section');
