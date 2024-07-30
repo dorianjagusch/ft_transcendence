@@ -100,7 +100,7 @@ class TournamentPlayerListView(APIView, AuthenticateUserMixin):
 			tournament_player_serializer = TournamentSerializers.player(tournament_player)
 			return Response(tournament_player_serializer.data, status=status.HTTP_201_CREATED)
 		except Exception as e:
-			return Response({"message": "Creating a tournament failed"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"message": "Creating a tournament player failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 class TournamentPlayerDetailView(APIView):
 	@method_decorator(must_be_authenticated)
