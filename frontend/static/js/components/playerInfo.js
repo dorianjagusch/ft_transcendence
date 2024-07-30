@@ -23,8 +23,8 @@ const PlayerInfo = ({username, img, stats}) => {
 
 	const ratioDiv = StatLine(
 		'win-loss-ratio',
-		'W/L ratio: ',
-		stats.wins + stats.losses ? (stats.wins / (stats.wins + stats.losses)).toFixed(2) : 'NA'
+		'Win-ratio: ',
+		stats.wins + stats.losses ?  `${(stats.wins / (stats.wins + stats.losses)).toFixed(4) * 100}%` : 'NA'
 	);
 	section.appendChild(ratioDiv);
 
