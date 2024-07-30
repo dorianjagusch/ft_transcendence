@@ -1,4 +1,6 @@
 import PongGame from './pongGame.js';
+import {navigateTo} from '../router.js';
+import notify from '../utils/notify.js';
 
 class ChatSocket {
 	constructor(url) {
@@ -8,7 +10,8 @@ class ChatSocket {
 		try {
 			this.chatSocket = new WebSocket(url);
 		} catch (error) {
-			throw new Error('Could not connect to chat socket');
+			notify('Could not connect to server', 'error');
+			setTimeout(() => navigateTo('/play'), 100);
 		}
 
 		this.acceptMessage = this.acceptMessage.bind(this);
@@ -34,6 +37,9 @@ class ChatSocket {
 			this.removeEventListeners();
 			this.chatSocket = null;
 		}
+
+		notify('Connection closed');
+		setTimeout(() => navigateTo('/play'), 100);
 	}
 
 	handleError(e) {
@@ -41,6 +47,8 @@ class ChatSocket {
 			chatSocket.close();
 		}
 		this.removeEventListeners();
+
+		setTimeout(() => navigateTo('/play'), 100);
 	}
 
 	sendKey(e) {
@@ -69,12 +77,21 @@ class ChatSocket {
 		}
 	}
 
-	connect() {
-		this.chatSocket.addEventListener('message', this.acceptMessage);
-		this.chatSocket.addEventListener('close', this.handleClose);
-		this.chatSocket.addEventListener('error', this.handleError);
-		window.addEventListener('keyup', this.sendKey);
-	}
+    connect() {
+        try {
+            this.chatSocket.addEventListener('message', this.acceptMessage);
+            this.chatSocket.addEventListener('close', this.handleClose);
+            this.chatSocket.addEventListener('error', this.handleError);
+            window.addEventListener('keyup', this.sendKey);
+        } catch (error) {
+            notify('Could not connect to server', 'error');
+            this.scheduleReconnect();
+        }
+    }
+
+    scheduleReconnect() {
+        setTimeout(() => this.connect(), 1000);
+    }
 }
 
 export default ChatSocket;
