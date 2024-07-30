@@ -35,7 +35,10 @@ export default class extends AView {
 			const winnerPlayer = players.find((player) => player.match_winner);
 			if (!winnerPlayer) {
 				winner = {};
-				this.aiflag = true;
+				const appologiesElement = document.createElement('h2');
+				appologiesElement.textContent = 'Better luck next time!';
+				this.updateMain(appologiesElement);
+				return;
 			} else {
 				const user = await this.userService.getRequest(winnerPlayer.user);
 				winner = {};
@@ -43,12 +46,6 @@ export default class extends AView {
 				winner.img = await getProfilePicture(winnerPlayer.user);
 				winner.stats = await this.statsService.getRequest(winnerPlayer.user);
 			}
-		}
-		if (this.aiflag) {
-			const appologiesElement = document.createElement('h2');
-			appologiesElement.textContent = 'Better luck next time!';
-			this.updateMain(appologiesElement);
-			return;
 		}
 		const congratsElement = document.createElement('h2');
 		congratsElement.textContent = 'Congratulations!';

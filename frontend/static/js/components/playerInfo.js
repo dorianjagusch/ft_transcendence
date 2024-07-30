@@ -1,4 +1,4 @@
-import {StatLine} from './profileComponents/profileStats.js';
+import {StatLine} from './profileComponents/statLine.js';
 
 const PlayerInfo = ({username, img, stats}) => {
 	const section = document.createElement('section');
