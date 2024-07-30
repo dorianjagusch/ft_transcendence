@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import redirect, get_object_or_404
+from django.utils import timezone
 from .models import Match
 from .managers import MatchSetupManager
 from .serializers import MatchSerializer
@@ -9,6 +10,7 @@ from User.views import User
 from Tokens.models import MatchToken
 from django.utils.decorators import method_decorator
 from shared_utilities.decorators import must_be_authenticated
+import sys
 
 class MatchView(APIView):
     @method_decorator(must_be_authenticated)
@@ -21,7 +23,7 @@ class MatchView(APIView):
             token = MatchToken.objects.get(token=token_str)
         except Exception:
             return Response({"message": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         if token.already_used_to_get_url == True:
             return Response({"message": "Token already used to get match url."}, status=status.HTTP_403_FORBIDDEN)
         token.already_used_to_get_url = True
@@ -48,9 +50,14 @@ class MatchHistoryView(APIView):
         user = get_object_or_404(User, pk = user_id)
         if not isinstance(user, User):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        player_instances = user.players.all()
-        matches = [player.match for player in player_instances]
+        matches = Match.objects.filter(players__user=user).distinct()
         serializer = MatchSerializer(matches, many = True)
+        for match in matches:
+            if match.start_ts and timezone.is_naive(match.start_ts):
+                match.start_ts = timezone.make_aware(match.start_ts)
+            if match.end_ts and timezone.is_naive(match.end_ts):
+                match.end_ts = timezone.make_aware(match.end_ts)
+            print(f"duration: {match.duration}", file=sys.stderr)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
