@@ -15,6 +15,7 @@ from Tournament.models import Tournament, TournamentPlayer
 from Tournament.managers import TournamentManager
 from .pongPlayer import PongPlayer
 from .ball import Ball
+from django.utils import timezone
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -29,7 +30,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ai_target_y = self.player_right.y
         self.ball = Ball()
         self.ball_contacts = 0
-        self.ball_max_speed = 0.0
+        self.ball_max_speed = BALL_SPEED
         self.game = PongStatus(self.ball, self.player_left, self.player_right, self.ball_contacts, self.ball_max_speed)
         self.match_ended_normally = False
 
@@ -46,6 +47,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.game.use_ai_opponent()
                 asyncio.create_task(self.ai_opponent_loop())
                 asyncio.create_task(self.ai_move_loop())
+
+            self.match.start_time = timezone.now
             await self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
@@ -94,6 +97,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.send_positions()
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)
             if self.game.game_stats.game_over == True:
+                self.match.end_time = timezone.now
                 break
 
         await self.save_match_results()
@@ -126,7 +130,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         except Exception:
             return False
-        
+
     @database_sync_to_async
     def set_names(self, match: Match) -> None:
         if not match.tournament:
@@ -134,7 +138,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             if not self.ai_opponent:
                 self.right_name = self.player_right.user.username
             else:
-                self.right_name = "AI-opponent"
+                self.right_name = "AI"
         else:
             self.left_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_left.user).first().display_name
             self.right_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_right.user).first().display_name
@@ -142,7 +146,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_match_results(self):
-        self.match.state = MatchState.FINISHED
+        self.match.finish_match()
         ball_stats = self.game.get_ball_stats()
         self.match.ball_contacts = ball_stats['ball_contacts']
         self.match.ball_max_speed = ball_stats['ball_max_speed']

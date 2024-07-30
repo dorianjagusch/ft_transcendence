@@ -1,5 +1,4 @@
 const profilePlayHistory = (history) => {
-	debugger;
 	if (history.length === 0) {
 		return (document.createElement('p').textContent = 'No play history to display');
 	}

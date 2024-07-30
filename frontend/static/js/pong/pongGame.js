@@ -190,11 +190,11 @@ class PongGame {
 		this.renderer.render(this.scene, this.camera);
 	}
 
-	displayGameOver(game) {
+	displayGameOver(playerLeft, playerRight, game) {
 		const gameOver = document.getElementById('game-over');
 		gameOver.querySelector('p').textContent = 'Game Over';
 		gameOver.style.display = 'grid';
-		document.getElementById('winner').textContent = `${game.winner} won!`;
+		document.getElementById('winner').textContent = `${game.winner == 'player_left' ? playerLeft.name : playerRight.name} won!`;
 		return;
 	}
 
@@ -211,7 +211,7 @@ class PongGame {
 		}
 		requestAnimationFrame(this.animate);
 		if (game.over === true) {
-			this.displayGameOver(game);
+			this.displayGameOver(this.playerLeft, this.playerRight, game);
 		}
 
 		this.playerLeft.object.position.setY(players.left.position.y);

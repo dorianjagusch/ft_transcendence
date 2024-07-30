@@ -26,7 +26,7 @@ class ARequestService {
 			throw new Error(responseJson.message);
 		} catch (error) {
 			if (error instanceof TypeError) {
-				console.error(constants.problemWithFetchMsg, error);
+				throw new Error(constants.problemWithFetchMsg);
 			} else {
 				throw error;
 			}
@@ -50,7 +50,7 @@ class ARequestService {
 			throw new Error(responseJson.message);
 		} catch (error) {
 			if (error instanceof TypeError) {
-				console.error(constants.problemWithFetchMsg, error);
+				throw new Error(constants.problemWithFetchMsg);
 			} else {
 				throw error;
 			}
@@ -72,7 +72,7 @@ class ARequestService {
 			return '';
 		} catch (error) {
 			if (error instanceof TypeError) {
-				console.error(constants.problemWithFetchMsg, error);
+				throw new Error(constants.problemWithFetchMsg);
 			} else {
 				throw error;
 			}
@@ -138,7 +138,6 @@ class ARequestService {
 			method: 'DELETE',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'application/json',
 			},
 			credentials: 'include',
 		});

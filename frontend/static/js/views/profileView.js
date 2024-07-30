@@ -1,23 +1,21 @@
 import AView from './AView.js';
-import arrayToElementsList from '../components/profileComponents/arrayToElementsList.js';
 import buttonBar from '../components/profileComponents/buttonBar.js';
 import profileImg from '../components/profileComponents/profileImg.js';
 import profileTitle from '../components/profileComponents/profileTitle.js';
-import smallPlacementCard from '../components/profileComponents/smallPlacementCard.js';
-import {profileStats} from '../components/profileComponents/profileStats.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import constants from '../constants.js';
 import {scrollContainer} from '../components/scrollContainer.js';
 import UserService from '../services/userService.js';
 import FriendService from '../services/friendService.js';
+import MatchService from '../services/matchService.js';
 import getProfilePicture from '../components/profilePicture.js';
-
 
 export default class extends AView {
 	constructor(params) {
 		super(params);
 		this.userService = new UserService();
 		this.friendService = new FriendService();
+		this.matchService = new MatchService();
 		this.acceptHandler = this.acceptHandler.bind(this);
 		this.removeHandler = this.removeHandler.bind(this);
 		this.declineHandler = this.declineHandler.bind(this);
@@ -61,7 +59,7 @@ export default class extends AView {
 					{
 						className: 'accept-btn',
 						textContent: 'Accept',
-						handler: this.acceptHandler
+						handler: this.acceptHandler,
 					},
 				];
 			default:
@@ -103,14 +101,51 @@ export default class extends AView {
 		}
 	}
 
-	async getHTML() {
-		let fakeUser = {
-			id: 1,
-			username: 'Username',
-			img: './static/assets/img/default-user.png',
-			friendship: constants.FRIENDSHIPSTATUS.FRIEND,
-		};
+	async getOpponent(players) {
+		let opponent = players.find((player) => player.user != this.friendId);
+		if (!opponent) {
+			opponent = {};
+			opponent.username = 'AI';
+		} else {
+			try {
+				const opponentData = await this.userService.getRequest(opponent.user);
+				opponent.username = opponentData.username;
+			} catch (error) {
+				opponent.username = 'Deleted User';
+			}
+		}
+		return opponent;
+	}
 
+	async getFinishedMatches() {
+		const allMatches = await this.matchService.getHistoryMatches(this.friendId);
+		const finishedMatches = allMatches.filter(
+			(match) => match.state === constants.MATCHSTATUS.FINISHED
+		);
+		const matchData = await Promise.all(
+			finishedMatches.map(async (match) => {
+				const players = await this.matchService.getMatchPlayers(match.id);
+				const matchDetails = await this.matchService.getMatchDetails(match.id);
+				const opponent = await this.getOpponent(players, matchDetails);
+				const self = players.find((player) => player.user == this.friendId);
+				return {
+					match_id: match.id,
+					opponent: opponent.username,
+					winner: matchDetails.winner,
+					loser: matchDetails.loser,
+					scoreSelf: self.score,
+					scoreOpponent: opponent.username === 'AI' ? 'XX' : opponent.score,
+					date: match.start_ts,
+					duration: matchDetails.duration,
+					ball_contacts: matchDetails.ball_contacts,
+					ball_max_speed: matchDetails.ball_max_contacts,
+				};
+			})
+		);
+		return matchData;
+	}
+
+	async getHTML() {
 		let userResponse;
 		try {
 			userResponse = await this.userService.getRequest(this.friendId);
@@ -120,56 +155,12 @@ export default class extends AView {
 			this.navigateTo('/friends');
 		}
 
-		const statObj1 = {
-			game: 'Pong',
-			stats: {
-				highscore: 100,
-				gamesPlayed: 10,
-				gamesWon: 5,
-			},
-		};
-
-
-		const placementObj1 = {
-			game: 'Pong',
-			place: 1,
-		};
-
-		const historyObj1 = {
-			game: 'Pong',
-			date: '2021-01-01',
-			score: 100,
-		};
-		const historyObj2 = {
-			game: 'Pong',
-			date: '2021-01-02',
-			score: 100,
-		};
-
-		const historyObj3 = {
-			game: 'Pong',
-			date: '2021-01-04',
-			score: 100,
-		};
-
-		const userData = {
-			userResponse,
-			friendship: 'friend', // | "friend" | "not-friend" | "pending-sent" | "pending-received"
-			placements: [
-				//[placementObj, ...] | null
-				placementObj1,
-			],
-			stats: [
-				// [statObj, ...] | null
-				statObj1,
-			],
-			playHistory: [
-				//[historyObj, ...] | null
-				historyObj1,
-				historyObj2,
-				historyObj3,
-			],
-		};
+		let history;
+		try {
+			history = await this.getFinishedMatches();
+		} catch (error) {
+			history = [];
+		}
 
 		const friendship = userResponse.friendship;
 		const main = document.querySelector('main');
@@ -180,32 +171,10 @@ export default class extends AView {
 
 		const buttons = this.selectButtons(friendship);
 		const actionBar = buttonBar(buttons);
-		const userPlacement = arrayToElementsList(
-			userData.placements,
-			'user-placement',
-			smallPlacementCard
-		);
 
-		const userStats =
-			friendship === 'friend'
-				? scrollContainer(userData.stats, profileStats, 'row', 'stat-list')
-				: null;
-		userStats?.classList.add('play-stats');
-
-		const userHistory =
-			friendship === 'friend'
-				? scrollContainer(userData.playHistory, profilePlayHistory, 'col', 'history-list')
-				: null;
+		const userHistory = scrollContainer(history, profilePlayHistory, 'col', 'history-list')
 		userHistory?.classList.add('play-history');
 
-		this.updateMain(
-			userName,
-			userImg,
-			actionBar,
-			userStats,
-			userHistory,
-			userPlacement,
-		);
+		this.updateMain(userName, userImg, actionBar, userHistory);
 	}
 }
-

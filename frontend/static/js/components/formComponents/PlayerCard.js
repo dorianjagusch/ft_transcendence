@@ -12,8 +12,6 @@ const resetCard = (clickedCard) => {
 	const button = clickedCard.querySelector('.remove');
 	button.classList.toggle('add');
 	button.classList.toggle('remove');
-
-	clickedCard.querySelector('.gear').style.visibility = 'hidden';
 };
 
 const updateCard = (clickedCard, userData) => {
@@ -29,18 +27,12 @@ const updateCard = (clickedCard, userData) => {
 	button.classList.toggle('add');
 	button.classList.toggle('remove');
 
-	clickedCard.querySelector('.gear').style.visibility = '';
 };
 
 const appendPlayerButtonBar = (playerCard) => {
 	const buttonBar = document.createElement('div');
 	buttonBar.classList.add('-button-bar');
 	playerCard.appendChild(buttonBar);
-
-	const gearButton = ImageButton('./static/assets/img/gear.png');
-	gearButton.style.visibility = 'hidden';
-	gearButton.classList.add('gear');
-	buttonBar.appendChild(gearButton);
 
 	const plusButton = ImageButton('./static/assets/img/plus.png');
 	plusButton.classList.add('toggle-user', 'add');

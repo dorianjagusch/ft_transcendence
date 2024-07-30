@@ -209,7 +209,7 @@ h1 {
 
 .col-scroll {
 	grid-auto-flow: row;
-	grid-auto-rows: 28%;
+	grid-auto-rows: 13%;
 
 	overflow-y: scroll;
 	overscroll-behavior-block: contain;
@@ -234,7 +234,7 @@ h1 {
 
 .snaps-inline {
 	scroll-snap-type: inline mandatory;
-	scroll-padding-inline: 16px;
+	scroll-padding-inline: 1rem;
 }
 
 .snaps-inline > * {
@@ -855,21 +855,13 @@ button:is(:focus, :hover) {
 	align-items: center;
 }
 
-.profile.friend {
-	grid-template-areas:
-		'username placement play-history'
-		'profile-img placement play-history'
-		'profile-img play-stats play-stats'
-		'about play-stats play-stats'
-		'about play-stats play-stats';
-}
 
-.profile:not(.friend) {
+.profile {
 	grid-template-areas:
-		'username placement placement'
-		'profile-img placement placement'
-		'profile-img about about'
-		'buttons about about';
+		'username username username'
+		'profile-img play-history play-history'
+		'profile-img play-history play-history'
+		'buttons stats stats';
 }
 
 .profile > *:not(.button-bar) {
@@ -930,20 +922,8 @@ button:is(:focus, :hover) {
 	padding: var(--fs-medium);
 }
 
-.profile .user-description {
-	grid-area: about;
-	padding: var(--fs-large);
-}
-
-.user-description .description-title {
-	margin-bottom: var(--fs-medium);
-}
-
 .profile .play-history {
 	grid-area: play-history;
-	display: grid;
-	align-items: center;
-	height: 80%;
 }
 
 .profile .history-list {
@@ -1015,9 +995,9 @@ button:is(:focus, :hover) {
 .profile.dashboard {
 	grid-template-areas:
 		'title title title title title title title'
-		'profile-img summary summary summary summary summary summary'
+		'profile-img profile-img summary summary summary summary summary'
 		'history history history history history history history'
-		'graph-1 graph-1 graph-1 graph-2 graph-2 graph-2 graph-2';
+		'graph-1 graph-1 graph-1 graph-1 graph-2 graph-2 graph-2';
 
 	grid-template-rows: 0.1fr repeat(4, 1fr);
 	grid-template-columns: repeat(7, min(1fr, 150px));
@@ -1060,12 +1040,13 @@ button:is(:focus, :hover) {
 
 .dashboard .play-history {
 	grid-area: history;
-	height: 70%;
+	height: 100%;
+	max-height: 50vh;
 }
 
 .dashboard .play-history ul {
 	gap: var(--fs-medium);
-	display: grid;
+	overflow-y: scroll;
 }
 
 /*TODO: Add accordeon to this */
@@ -1074,7 +1055,13 @@ button:is(:focus, :hover) {
 	justify-content: space-around;
 }
 
-.dashboard .play-graph-2 {
+
+.dashboard .play-graph > *{
+	width: 100%;
+	height: 100%;
+}
+
+.dashboard .play-graph-1 {
 	grid-area: graph-1;
 	width: 100%;
 }

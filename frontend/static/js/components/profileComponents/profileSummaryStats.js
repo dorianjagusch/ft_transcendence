@@ -21,7 +21,7 @@ const profileSummaryStats = ({
 	const lossesArticle = SummaryItem('dashboard-item', `${losses} losses`);
 	const wlRatio = SummaryItem('dashboard-item', `W/G: ${total_games_played === 0 ? 'N/A' : win_loss_ratio}`);
 	const gamesPlayedArticle = SummaryItem('dashboard-item', `${total_games_played || 0} games played`);
-	const streak = SummaryItem('dashboard-item', `streak of ${winning_streak}`);
+	const streak = SummaryItem('dashboard-item', `Streak of ${winning_streak}`);
 
 	statsList.append(RankArticle, winsArticle, lossesArticle, wlRatio, gamesPlayedArticle, streak);
 

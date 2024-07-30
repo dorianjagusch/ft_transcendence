@@ -11,7 +11,6 @@ import {scrollContainer} from '../components/scrollContainer.js';
 import profilePlayHistory from '../components/profileComponents/profilePlayHistory.js';
 import profileSummaryStats from '../components/profileComponents/profileSummaryStats.js';
 import constants from '../constants.js';
-import userData from '../userAPIData/userAPIDashboard.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -25,29 +24,18 @@ export default class extends AView {
 		this.userId = localStorage.getItem('user_id');
 	}
 
-	appendEventListeners() {
-		document.body.addEventListener('click', (e) => {
-			e.stopPropagation();
-			e.preventDefault();
-			const item = e.target.closest('.play-history-item');
-			if (item) {
-				const userId = item.getAttribute('data-id');
-				debugger;
-				if (userId !== null){
-					this.navigateTo(`/profile/${userId}`);
-				}
-			}
-		});
-	}
-
 	async getOpponent(players) {
 		let opponent = players.find((player) => player.user != this.userId);
 		if (!opponent) {
 			opponent = {};
 			opponent.username = 'AI';
 		} else {
-			const opponentData = await this.userService.getRequest(opponent.user);
-			opponent.username = opponentData.username;
+			try {
+				const opponentData = await this.userService.getRequest(opponent.user);
+				opponent.username = opponentData.username;
+			} catch (error) {
+				opponent.username = 'Deleted User';
+			}
 		}
 		return opponent;
 	}
@@ -57,24 +45,26 @@ export default class extends AView {
 		const finishedMatches = allMatches.filter(
 			(match) => match.state === constants.MATCHSTATUS.FINISHED
 		);
-		console.log(finishedMatches);
 		const matchData = await Promise.all(
 			finishedMatches.map(async (match) => {
 				const players = await this.matchService.getMatchPlayers(match.id);
-				const opponent = await this.getOpponent(players);
+				const matchDetails = await this.matchService.getMatchDetails(match.id);
+				const opponent = await this.getOpponent(players, matchDetails);
 				const self = players.find((player) => player.user == this.userId);
 				return {
 					match_id: match.id,
 					opponent: opponent.username,
-					opponentId: opponent.id,
-					winner: self.score > opponent.score,
+					winner: matchDetails.winner,
+					loser: matchDetails.loser,
 					scoreSelf: self.score,
-					scoreOpponent: opponent.score,
-					date: match.insert_ts,
+					scoreOpponent: opponent.username === 'AI' ? 'XX' : opponent.score,
+					date: match.start_ts,
+					duration: matchDetails.duration,
+					ball_contacts: matchDetails.ball_contacts,
+					ball_max_speed: matchDetails.ball_max_contacts
 				};
 			})
 		);
-		console.log(matchData);
 		return matchData;
 	}
 
@@ -97,27 +87,34 @@ export default class extends AView {
 			history = await this.getFinishedMatches();
 		} catch (error) {
 			this.notify(error, 'error');
+			return;
 		}
 		try {
 			winLossGraph = await this.statsService.getImage(this.userId, 'win-loss');
 			recentOutcomesGraph = await this.statsService.getImage(this.userId, 'recent-outcomes');
 		} catch (error) {
-			winLossGraph = 'No Data available yet';
-			recentOutcomesGraph = 'No Data available yet';
+			this.notify(error, 'error');
+			return;
 		}
+
 		const userHistory = scrollContainer(history, profilePlayHistory, 'col');
 		userHistory.classList.add('play-history', 'bg-secondary');
 		const header = document.createElement('h2');
 		header.textContent = 'History';
 		userHistory.insertBefore(header, userHistory.firstChild);
-		const innerScroller = userHistory.querySelector('.col-scroll');
-		innerScroller.style.gridAutoRows = '5em';
 
 		const userSummary = profileSummaryStats(stats);
 
+		const stats1 = document.createElement('section');
+		stats1.innerHTML = winLossGraph;
+		stats1.classList.add('play-graph', 'play-graph-1');
+
+		const stats2 = document.createElement('section');
+		stats2.innerHTML = recentOutcomesGraph;
+		stats2.classList.add('play-graph', 'play-graph-2');
+
 		const main = document.querySelector('main');
 		main.classList.add('profile', 'dashboard');
-		this.updateMain(title, profileImage, userSummary, userHistory);
-		this.appendEventListeners();
+		this.updateMain(title, profileImage, userSummary, userHistory, stats1, stats2);
 	}
 }

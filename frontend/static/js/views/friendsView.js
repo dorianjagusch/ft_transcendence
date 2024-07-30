@@ -153,7 +153,7 @@ export default class extends AView {
 				constants.FRIENDSHIPSTATUS.PENDINGRECEIVED
 			);
 		} catch (error) {
-			console.error('An error occured when retrieving your friends', error);
+			this.notify('An error occured when retrieving your friends', 'error');
 		}
 	}
 }

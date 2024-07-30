@@ -1,7 +1,8 @@
 import Aview from './AView.js';
 import {PlayerInfo} from '../components/playerInfo.js';
 import {OpponentSelection} from '../components/opponentSelection.js';
-import UserService from '../services/userService.js'; // TODO: Switch out for stats service
+import UserService from '../services/userService.js';
+import StatsService from '../services/statsService.js';
 import getProfilePicture from '../components/profilePicture.js';
 import AcceptDeclineModal from '../components/dialogs/acceptDeclineModal.js';
 import AuthenticationModal from '../components/dialogs/authenticationModal.js';
@@ -13,6 +14,7 @@ export default class extends Aview {
 		this.setTitle('Modal');
 		this.userService = new UserService();
 		this.authenticationService = new AuthenticationService();
+		this.statsService = new StatsService();
 		this.attachEventListeners = this.attachEventListeners.bind(this);
 		this.attachPlayerInfo = this.attachPlayerInfo.bind(this);
 		this.createAiMatch = this.createAiMatch.bind(this);
@@ -62,8 +64,8 @@ export default class extends Aview {
 	async attachPlayerInfo(tokenData) {
 		this.token = tokenData.token.token;
 		this.opponent = tokenData.guest_user;
-		// Proper error handling
 		this.opponent.img = await getProfilePicture(this.opponent.id);
+		this.opponent.stats = await this.statsService.getRequest(this.opponent.id);
 		const playerRight = PlayerInfo(this.opponent);
 
 		const container = document.createElement('div');
@@ -96,9 +98,10 @@ export default class extends Aview {
 		try {
 			const userData = await this.userService.getRequest(localStorage.getItem('user_id'));
 			userData.img = await getProfilePicture(userData.id);
+			userData.stats = await this.statsService.getRequest(userData.id);
 			playerLeft = PlayerInfo(userData);
 		} catch (error) {
-			notify(error, 'error');
+			this.notify(error, 'error');
 		}
 
 		const opponentSelection = OpponentSelection();
