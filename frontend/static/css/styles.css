@@ -926,7 +926,7 @@ button:is(:focus, :hover) {
 
 .profile .play-history {
 	grid-area: play-history;
-	height: 100%;
+	max-height: 100vh;
 }
 
 .profile .play-history ul {
@@ -1050,7 +1050,7 @@ button:is(:focus, :hover) {
 
 .dashboard .play-history {
 	grid-area: history;
-	height: 100%;
+	max-height: 100vh;
 }
 
 .dashboard .play-history ul {
