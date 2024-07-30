@@ -25,7 +25,9 @@ export default class extends AView {
 			localStorage.setItem('user_id', user.id)
 			this.navigateTo('/dashboard');
 		} catch (error) {
-			if (error.status === 401) {
+			if (!error.status){
+				console.error('Could not connect to server:', error);
+			} else if (error.status === 401) {
 				this.notify("Username or password is incorrect. Try again.", 'error');
 			} else {
 				this.notify(error.message, 'error');
