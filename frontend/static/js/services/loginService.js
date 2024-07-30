@@ -12,11 +12,12 @@ class LoginService extends ARequestService {
 			JSON.stringify({
 				username: username,
 				password: password,
-			})
+			}),
+			false
 		);
 	}
 
-	
+
 }
 
 export default LoginService;
