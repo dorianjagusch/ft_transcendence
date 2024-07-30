@@ -11,15 +11,23 @@ export default class StatsService extends ARequestService {
 		return super.getRequest(`${backendURL.userURL}${userId}/stats/`);
 	}
 
-	async getImage(id, graphType) {
-		const request = fetch(`${backendURL.userURL}${id}/${graphType}/`, {
-			method: 'GET',
-			headers: {
-				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'image/svg+xml',
-			},
-			credentials: 'include',
-		});
-		return this.checkResponseWithNonJsonBody(request);
+	async getImage(userId, type) {
+		try {
+			const response = await fetch(`${backendURL.userURL}${userId}/${type}/`, {
+				method: 'GET',
+				headers: {
+					'X-CSRFToken': getCookie('csrftoken'),
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include',
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const svgText = await response.text();
+			return svgText;
+		} catch (error) {
+			console.error("Couldn't fetch data", error);
+		}
 	}
 }
