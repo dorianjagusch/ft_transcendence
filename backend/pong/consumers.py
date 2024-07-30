@@ -138,7 +138,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             if not self.ai_opponent:
                 self.right_name = self.player_right.user.username
             else:
-                self.right_name = "AI-opponent"
+                self.right_name = "AI"
         else:
             self.left_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_left.user).first().display_name
             self.right_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_right.user).first().display_name
