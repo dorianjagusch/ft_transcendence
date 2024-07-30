@@ -59,7 +59,6 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if not self.match_ended_normally:
             await self.abort_match(self.match)
-        await self.close()
 
     async def receive(self, text_data):
         key_press = text_data.strip()
