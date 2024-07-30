@@ -10,6 +10,10 @@ export default class MatchService extends ARequestService {
 		return await super.getRequest(`${backendURL.matchURL}?user_id=${userId}`);
 	}
 
+	async getMatchDetails(matchId) {
+		return await super.getRequest(`${backendURL.matchURL}${matchId}/`);
+	}
+
 	async getMatchPlayers(matchId) {
 		return await super.getRequest(`${backendURL.matchURL}${matchId}/players/`);
 	}

@@ -138,7 +138,6 @@ class ARequestService {
 			method: 'DELETE',
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
-				'Content-Type': 'image/svg+xml',
 			},
 			credentials: 'include',
 		});

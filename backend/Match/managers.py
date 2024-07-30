@@ -67,7 +67,8 @@ class MatchSetupManager:
 			'winner' : winner,
 			'loser' : loser,
 			'ball_max_speed' : match.ball_max_speed,
-			'ball_contacts' : match.ball_contacts
+			'ball_contacts' : match.ball_contacts,
+			'duration': match.duration
 			}
 		return Response(match_details, status=status.HTTP_200_OK)
 

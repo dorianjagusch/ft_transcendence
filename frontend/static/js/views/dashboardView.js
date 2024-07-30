@@ -48,16 +48,20 @@ export default class extends AView {
 		const matchData = await Promise.all(
 			finishedMatches.map(async (match) => {
 				const players = await this.matchService.getMatchPlayers(match.id);
-				const opponent = await this.getOpponent(players);
+				const matchDetails = await this.matchService.getMatchDetails(match.id);
+				const opponent = await this.getOpponent(players, matchDetails);
 				const self = players.find((player) => player.user == this.userId);
 				return {
 					match_id: match.id,
 					opponent: opponent.username,
-					opponentId: opponent.id ?? 'AI',
-					winner: self.score > opponent.score,
+					winner: matchDetails.winner,
+					loser: matchDetails.loser,
 					scoreSelf: self.score,
-					scoreOpponent: opponent.score,
-					date: match.insert_ts,
+					scoreOpponent: opponent.username === 'AI' ? 'XX' : opponent.score,
+					date: match.start_ts,
+					duration: matchDetails.duration,
+					ball_contacts: matchDetails.ball_contacts,
+					ball_max_speed: matchDetails.ball_max_contacts
 				};
 			})
 		);
