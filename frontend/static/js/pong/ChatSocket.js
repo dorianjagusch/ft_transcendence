@@ -10,8 +10,7 @@ class ChatSocket {
 		try {
 			this.chatSocket = new WebSocket(url);
 		} catch (error) {
-			notify('Could not connect to server', 'error');
-			setTimeout(() => navigateTo('/play'), 100);
+			throw new Error('Could not connect to chat socket');
 		}
 
 		this.acceptMessage = this.acceptMessage.bind(this);
@@ -21,14 +20,37 @@ class ChatSocket {
 		this.removeEventListeners = this.removeEventListeners.bind(this);
 		this.connect = this.connect.bind(this);
 		this.game = null;
+		this.messageTimeout = null;
+		this.startMessageTimeout = this.startMessageTimeout.bind(this);
+		this.clearMessageTimeout = this.clearMessageTimeout.bind(this);
 	}
 
 	acceptMessage(e) {
+		this.clearMessageTimeout();
 		const data = JSON.parse(e.data);
 		if (this.game === null) {
 			this.game = new PongGame(data);
 		}
 		this.game.animate(data);
+		if (data.game && data.game.over === false)
+		{
+			this.startMessageTimeout();
+		}
+	}
+
+	startMessageTimeout() {
+		this.messageTimeout = setTimeout(() => {
+			notify('Disconnecting...');
+			this.handleClose();
+			navigateTo('/play');
+		}, 5000);
+	}
+
+	clearMessageTimeout() {
+		if (this.messageTimeout) {
+			clearTimeout(this.messageTimeout);
+			this.messageTimeout = null;
+		}
 	}
 
 	handleClose(e) {
@@ -38,8 +60,7 @@ class ChatSocket {
 			this.chatSocket = null;
 		}
 
-		notify('Connection closed');
-		setTimeout(() => navigateTo('/play'), 100);
+		this.clearMessageTimeout();
 	}
 
 	handleError(e) {
@@ -90,7 +111,7 @@ class ChatSocket {
     }
 
     scheduleReconnect() {
-        setTimeout(() => this.connect(), 1000);
+        setTimeout(() => this.connect(), 100);
     }
 }
 
