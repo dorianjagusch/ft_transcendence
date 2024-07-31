@@ -161,16 +161,15 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.player_right.match_winner = True
 
         try:
-            with transaction.atomic():
-                self.match.save()
-                self.player_left.save()
-                if self.ai_opponent is False:
-                    self.player_right.save()
+            self.match.save()
+            self.player_left.save()
+            if self.ai_opponent is False:
+                self.player_right.save()
 
-                if self.match.tournament:
-                    self.update_tournament_data_with_match_results(self.match)
+            if self.match.tournament:
+                self.update_tournament_data_with_match_results(self.match)
 
-                self.match_ended_normally = True
+            self.match_ended_normally = True
 
         except Exception as e:
             self.abort_match(self.match)
@@ -185,18 +184,17 @@ class PongConsumer(AsyncWebsocketConsumer):
             # this shouldn't happen, but in case, abort tournament
             if not winning_player:
                 TournamentManager.in_progress.abort_tournament(match.tournament)
+                return
 
-            with transaction.atomic():
+            winning_tournament_player = TournamentPlayer.objects.get(
+                tournament=match.tournament,
+                user=winning_player.user
+            )
 
-                winning_tournament_player = TournamentPlayer.objects.get(
-                    tournament=match.tournament,
-                    user=winning_player.user
-                )
+            match.tournament.next_match += 1
+            match.tournament.save()
 
-                match.tournament.next_match += 1
-                match.tournament.save()
-
-                TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
+            TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
 
         except Exception as e:
             TournamentManager.in_progress.abort_tournament(match.tournament)

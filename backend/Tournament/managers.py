@@ -107,20 +107,20 @@ class TournamentInProgressManager:
 
     @staticmethod
     def update_tournament_with_winning_tournament_player(winning_tournament_player: TournamentPlayer) -> None:
+
+        print("update_tournament_with_winning_tournament_player", file=sys.stderr)
+        print(f"\twinning tournamentplayer id: {winning_tournament_player.id}; user id: {winning_tournament_player.user.id}", file=sys.stderr)
         try:
-            with transaction.atomic():
-                tournament = winning_tournament_player.tournament
+            tournament = winning_tournament_player.tournament
 
-                # if no next match, set user as tournament winner and finish tournament
-                if tournament.next_match >= tournament.matches.count():
-                    tournament.winner = winning_tournament_player.user
-                    tournament.state = TournamentState.FINISHED
-                    tournament.save()
-                else:
-                    # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
-                    TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
-
-                # TournamentManager.in_progress.print_tournament_match_details(tournament)
+            # if no next match, set user as tournament winner and finish tournament
+            if tournament.next_match >= tournament.matches.count():
+                tournament.winner = winning_tournament_player.user
+                tournament.state = TournamentState.FINISHED
+                tournament.save()
+            else:
+                # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
+                TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while updating tournament data after finished match: {e}")
@@ -128,28 +128,22 @@ class TournamentInProgressManager:
     @staticmethod
     def assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player: TournamentPlayer) -> None:
         try:
-            # print("assign_winner_to_next_tournament_match_with_less_than_two_players", file=sys.stderr)
-            # print(f"\ttournamentplayer: {winning_tournament_player.id}, user: {winning_tournament_player.user.id}", file=sys.stderr)
-            with transaction.atomic():
-                tournament = winning_tournament_player.tournament
-                try:
-                    tournament_matches = Match.objects.filter(
-                        tournament=tournament
-                    ).order_by('id')
+            print("assign_winner_to_next_tournament_match_with_less_than_two_players", file=sys.stderr)
+            print(f"\twinning tournamentplayer id: {winning_tournament_player.id}; user id: {winning_tournament_player.user.id}", file=sys.stderr)
+            tournament_matches = winning_tournament_player.tournament.matches.all().order_by('id')
 
-                except Match.DoesNotExist:
-                    raise TournamentInProgressException("No future matchup with empty player slot")
+            for match in tournament_matches:
+                print(f"\tmatch id: {match.id}", file=sys.stderr)
+                if match.players.all().count() < 2:
+                    print("\t\tnot full; assigning user here!", file=sys.stderr)
+                    Player.objects.create(
+                        user=winning_tournament_player.user,
+                        match=match
+                    )
+                    return
 
-                for match in tournament_matches:
-                    if len(Player.objects.filter(match=match)) < 2:
-                        Player.objects.create(
-                            user=winning_tournament_player.user,
-                            match=match
-                        )
-                        break
-
-                # something went wrong if we got here
-                raise TournamentInProgressException("No future tournament match with empty players")
+            # something went wrong if we got here
+            raise TournamentInProgressException("No future tournament match with empty players")
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while assigning the match winner to future match: {e}")
@@ -170,20 +164,6 @@ class TournamentInProgressManager:
             if match.state in [MatchState.LOBBY, MatchState.IN_PROGRESS]:
                 match.state = MatchState.ABORTED
                 match.save()
-
-    @staticmethod
-    def print_tournament_match_details(tournament: Tournament):
-        print("print_tournament_match_details", file=sys.stderr)
-        tournament_matches = Match.objects.filter(
-                        tournament=tournament
-                    ).order_by('id')
-        for match in tournament_matches:
-            players = match.players.all()
-            print(f"match: {match.id}", file=sys.stderr)
-            if players.count() >= 1:
-                print(f"\tplayer1 user id: {players[0].user.id}", file=sys.stderr)
-            if players.count() >= 2:
-                print(f"\tplayer2 user id: {players[1].user.id}", file=sys.stderr)
 
 class TournamentPlayerManager:
     @staticmethod
