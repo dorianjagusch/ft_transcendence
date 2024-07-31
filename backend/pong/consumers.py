@@ -37,6 +37,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.ball_max_speed = BALL_SPEED
         self.game = PongStatus(self.ball, self.pong_player_left, self.pong_player_right, self.ball_contacts, self.ball_max_speed)
         self.match_ended_normally = False
+        self.match_results_saved = False
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
@@ -66,11 +67,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         raise StopConsumer()
 
     async def receive(self, text_data):
-        if self.game.game_stats.game_over == True:
-            return
-
         key_press = text_data.strip()
         self.game.update_positions(key_press)
+
+        if self.game.game_stats.game_over == True:
+            await self.send_positions()
+            await self.save_match_results()
+            await self.close()
+
         await self.send_positions()
 
     async def ai_move_loop(self):
@@ -146,6 +150,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_match_results(self):
+        if self.match_results_saved == True:
+            return
+        self.match_results_saved = True
+
         self.match.finish_match()
         ball_stats = self.game.get_ball_stats()
         self.match.ball_contacts = ball_stats['ball_contacts']
@@ -188,15 +196,15 @@ class PongConsumer(AsyncWebsocketConsumer):
                 TournamentManager.in_progress.abort_tournament(match.tournament)
                 return
 
-                winning_tournament_player = TournamentPlayer.objects.get(
-                    tournament=match.tournament,
-                    user=winning_player.user
-                )
+            winning_tournament_player = TournamentPlayer.objects.get(
+                tournament=match.tournament,
+                user=winning_player.user
+            )
 
-                match.tournament.next_match += 1
-                match.tournament.save()
+            match.tournament.next_match += 1
+            match.tournament.save()
 
-                TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
+            TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
 
         except Exception as e:
             TournamentManager.in_progress.abort_tournament(match.tournament)
