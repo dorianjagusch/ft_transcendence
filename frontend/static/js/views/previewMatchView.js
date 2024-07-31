@@ -61,7 +61,6 @@ export default class extends Aview {
 		let playerLeft = null;
 		let playerRight = null;
 		let matchData = null;
-		// TODO: Add stats to userService
 		try {
 			matchData = await this.getCurrentMatchData();
 			if (!matchData) {
