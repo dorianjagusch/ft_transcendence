@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y openssl && \
 	openssl req -newkey rsa:2048 -x509 -sha256 -days 365 -nodes \
 	-out /etc/nginx/ssl/nginx.crt \
 	-keyout /etc/nginx/ssl/nginx.key \
-	 -subj "/C=FI/ST=HEL/L=Helsinki/O=Hive/OU=TheBest/CN=transcendence.com"
+	-subj "/C=FI/ST=HEL/L=Helsinki/O=Hive/OU=TheBest/CN=transcendence.com"
 
 COPY ./nginx.production.conf /etc/nginx/nginx.conf
 COPY ./index.html /usr/share/nginx/html/index.html
