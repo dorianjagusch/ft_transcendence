@@ -69,7 +69,7 @@ export default class extends Aview {
 			playerLeft = await this.setupPlayerInfo(matchData.tournament_player_left.user);
 			playerRight = await this.setupPlayerInfo(matchData.tournament_player_right.user);
 		} catch (error) {
-			notify(error, 'error');
+			this.notify(error, 'error');
 		}
 
 		const continueButton = this.continueButton();
