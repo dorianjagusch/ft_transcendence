@@ -24,42 +24,39 @@ services:
       retries: 3
       start_period: 80s
     networks:
-      - ft_transcendence_network
+     - ft_transcendence_network
 
   backend:
     image: backend:adsjm
     container_name: backend_c
     build:
       context: ./backend
-    ports:
-      - 8080:8080
     env_file:
       ./backend/.env
     entrypoint: ./entrypoint.sh
-    command: bash -c "python manage.py runserver 0.0.0.0:8080"
+    command: daphne -b 0.0.0.0 -p 8001 backend.asgi:application
     depends_on:
-        postgres:
-          condition: service_healthy
+       postgres:
+         condition: service_healthy
     restart: always
     volumes:
       - ./backend:/app
     networks:
-      - ft_transcendence_network
+     - ft_transcendence_network
 
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     image: frontend:adsjm
     container_name: frontend_c
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./frontend:/usr/share/nginx/html:ro
     ports:
-      # - 443:443
-      - 80:80
+      - 443:443
     depends_on:
       - backend
     restart: on-failure
     networks:
       - ft_transcendence_network
-    # remember to expose port 443 for host

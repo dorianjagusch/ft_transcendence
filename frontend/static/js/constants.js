@@ -1,5 +1,5 @@
-const protocol = 'http://';
-const location = 'localhost:8080/';
+const protocol = 'https://';
+const location = 'localhost/';
 const baseURL = `${protocol}${location}`;
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
