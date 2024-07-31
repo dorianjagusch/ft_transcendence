@@ -2,7 +2,6 @@
 from django.db import transaction
 import json
 import asyncio
-import sys
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game import PongStatus
@@ -182,7 +181,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.match_ended_normally = True
 
         except Exception as e:
-            print(f"RECEIVED ERROR: {e}", file=sys.stderr)
             self.abort_match(self.match)
 
     def update_tournament_data_with_match_results(self, match: Match):
