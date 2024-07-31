@@ -68,7 +68,7 @@ services:
     image: frontend_production:42
     container_name: frontend_c
     ports:
-      - 443:443
+      - 444:443
     depends_on:
       - backend
     restart: on-failure
