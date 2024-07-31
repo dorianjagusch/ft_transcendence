@@ -2,6 +2,7 @@
 from django.db import transaction
 import json
 import asyncio
+import sys
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game import PongStatus
@@ -65,6 +66,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         raise StopConsumer()
 
     async def receive(self, text_data):
+        if self.game.game_stats.game_over == True:
+            return
+
         key_press = text_data.strip()
         self.game.update_positions(key_press)
         await self.send_positions()
@@ -90,10 +94,10 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def send_positions_loop(self):
         await self.send_consts()
         while True:
-            self.game.update_ball_position()
             if self.game.game_stats.game_over == True:
                 self.match.end_time = timezone.now
                 break
+            self.game.update_ball_position()
             await self.send_positions()
             await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)
 
