@@ -44,25 +44,25 @@ ALLOWED_HOSTS = [
 	'localhost',
 	'127.0.0.1',
 	'localhost:443',
-	'127.0.0.1:443'
+	'127.0.0.1:443',
+	'asgiserver'
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+	'daphne',
     'corsheaders', #Added for CORS header configuration
     'rest_framework',
     'backend',
 	'channels',
-	'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Backend apps here
     'User',
     'Friends',

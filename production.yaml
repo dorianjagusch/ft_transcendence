@@ -17,7 +17,7 @@ services:
       - database:/var/lib/postgresql/data/
     healthcheck:
       test: "pg_isready -U postgres"
-      interval: 30s
+      interval: 5s
       timeout: 60s
       retries: 3
       start_period: 80s
@@ -36,6 +36,25 @@ services:
     depends_on:
        postgres:
          condition: service_healthy
+    restart: always
+    volumes:
+      - ./backend:/app
+    networks:
+     - ft_transcendence_network
+
+  ws:
+    image: backend:42
+    container_name: daphne
+    build:
+      context: ./backend
+    env_file:
+      ./backend/.env
+    entrypoint: ./entrypoint.sh
+    command: bash -c "daphne -b 0.0.0.0 -p 8000 backend.asgi:application"
+    expose:
+      - 8000
+    depends_on:
+      - backend
     restart: always
     volumes:
       - ./backend:/app
