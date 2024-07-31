@@ -1,5 +1,6 @@
 #!/bin/sh
 
+export DJANGO_SETTINGS_MODULE=backend.settings
 # Initial sleep period (e.g., 5 seconds)
 echo "Waiting for the database to start..."
 sleep 5
@@ -14,6 +15,7 @@ for i in {1..30}; do
 	python manage.py migrate
 
 	exec "$@"
+	daphne -b 0.0.0.0 -p 8080 backend.asgi:application
 	exit 0
   fi
   echo "Waiting for the database... attempt $i"

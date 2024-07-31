@@ -13,8 +13,11 @@ COPY entrypoint.sh app/
 
 WORKDIR /app
 
+ENV DJANGO_SETTINGS_MODULE=backend.settings
+
 RUN pip install --upgrade pip \
 	&& pip install -r requirements.txt \
 	&& chmod 755 entrypoint.sh
+
 
 EXPOSE 8081

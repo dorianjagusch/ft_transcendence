@@ -1,3 +1,5 @@
+version: '3.8'
+
 networks:
   ft_transcendence_network:
     name: ft_transcendence_network
@@ -14,17 +16,17 @@ services:
     ports:
       - 5432:5432
     env_file:
-      ./backend/.env
+      - ./backend/.env
     volumes:
       - database:/var/lib/postgresql/data/
     healthcheck:
-      test: "pg_isready -U postgres"
+      test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 30s
       timeout: 60s
       retries: 3
       start_period: 80s
     networks:
-     - ft_transcendence_network
+      - ft_transcendence_network
 
   backend:
     image: backend:adsjm
@@ -32,17 +34,19 @@ services:
     build:
       context: ./backend
     env_file:
-      ./backend/.env
+      - ./backend/.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings
     entrypoint: ./entrypoint.sh
     command: daphne -b 0.0.0.0 -p 8001 backend.asgi:application
     depends_on:
-       postgres:
-         condition: service_healthy
+      postgres:
+        condition: service_healthy
     restart: always
     volumes:
       - ./backend:/app
     networks:
-     - ft_transcendence_network
+      - ft_transcendence_network
 
   frontend:
     build:
