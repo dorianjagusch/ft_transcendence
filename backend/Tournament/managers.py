@@ -182,9 +182,9 @@ class TournamentInProgressManager:
             players = match.players.all()
             print(f"match: {match.id}", file=sys.stderr)
             if players[0] is not None:
-                print(f"\tplayer1: {players[0].user.id}", file=sys.stderr)
+                print(f"\tplayer1 user id: {players[0].user.id}", file=sys.stderr)
             if players[1] is not None:
-                print(f"\tplayer2: {players[1].user.id}", file=sys.stderr)
+                print(f"\tplayer2 user id: {players[1].user.id}", file=sys.stderr)
 
 class TournamentPlayerManager:
     @staticmethod
