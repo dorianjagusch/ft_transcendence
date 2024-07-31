@@ -44,7 +44,7 @@ stop:
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
 clean: stop
-	sudo ${DOCKER_COMPOSE} down -v
+	${DOCKER_COMPOSE} down -v
 	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
 
 fclean: clean
