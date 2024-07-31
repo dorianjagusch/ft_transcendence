@@ -12,7 +12,7 @@ def validate_image(file):
 		raise ValidationError('Unsupported file extension. Allowed extensions are: .jpg, .jpeg, .png')
 
 	if file.size > max_file_size:
-		raise ValidationError('File size exceeds the maximum limit of 2MB.')
+		raise ValidationError('File size exceeds the maximum limit of 1MB.')
 
 	if file.content_type not in valid_mime_types:
 		raise ValidationError('Unsupported file type. Allowed types are: jpeg, jpg, png.')
