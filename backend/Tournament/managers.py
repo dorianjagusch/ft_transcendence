@@ -110,15 +110,21 @@ class TournamentInProgressManager:
 
         print("update_tournament_with_winning_tournament_player", file=sys.stderr)
         print(f"\twinning tournamentplayer id: {winning_tournament_player.id}; user id: {winning_tournament_player.user.id}", file=sys.stderr)
+        print(f"\ttournament id: {winning_tournament_player.tournament}", file=sys.stderr)
+        print("")
         try:
             tournament = winning_tournament_player.tournament
+            print("\t1", file=sys.stderr)
 
             # if no next match, set user as tournament winner and finish tournament
+            print(f"\ttournament.next_match: {tournament.next_match} >= tournament.matches.count(): {tournament.matches.count()}", file=sys.stderr)
             if tournament.next_match >= tournament.matches.count():
+                print("\t\tT FINISHED!!!", file=sys.stderr)
                 tournament.winner = winning_tournament_player.user
                 tournament.state = TournamentState.FINISHED
                 tournament.save()
             else:
+                print("\t\tT NOT FINISHED!!!", file=sys.stderr)
                 # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
                 TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
 
@@ -127,9 +133,9 @@ class TournamentInProgressManager:
 
     @staticmethod
     def assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player: TournamentPlayer) -> None:
+        print("assign_winner_to_next_tournament_match_with_less_than_two_players", file=sys.stderr)
+        print(f"\twinning tournamentplayer id: {winning_tournament_player.id}; user id: {winning_tournament_player.user.id}", file=sys.stderr)
         try:
-            print("assign_winner_to_next_tournament_match_with_less_than_two_players", file=sys.stderr)
-            print(f"\twinning tournamentplayer id: {winning_tournament_player.id}; user id: {winning_tournament_player.user.id}", file=sys.stderr)
             tournament_matches = winning_tournament_player.tournament.matches.all().order_by('id')
 
             for match in tournament_matches:
