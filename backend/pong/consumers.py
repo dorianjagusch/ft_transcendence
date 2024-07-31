@@ -67,12 +67,6 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         key_press = text_data.strip()
         self.game.update_positions(key_press)
-
-        if self.game.game_stats.game_over == True:
-            await self.send_positions()
-            await self.save_match_results()
-            await self.close()
-
         await self.send_positions()
 
     async def ai_move_loop(self):
@@ -145,7 +139,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         else:
             self.left_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_left.user).first().display_name
             self.right_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_right.user).first().display_name
-
 
     @database_sync_to_async
     def save_match_results(self):
