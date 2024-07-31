@@ -37,7 +37,7 @@ FILE_UPLOAD_HANDLERS = [
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-^6z#%nf*!6vj*+*nxf^-+qq!by6&zb7_7u8r$_t-6+u#$5o$j='
 
-DEBUG = 'True'
+DEBUG = True
 
 
 ALLOWED_HOSTS = [

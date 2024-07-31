@@ -1,6 +1,6 @@
 const protocol = 'https://';
-const location = 'localhost/';
-const baseURL = `${protocol}${location}`;
+const location = 'localhost:8080/';
+const baseURL = `${protocol}${location}api/`; // Add /api/ here
 const userURL = `${baseURL}users/`;
 const loginURL = `${baseURL}login/`;
 const logoutURL = `${baseURL}logout/`;
