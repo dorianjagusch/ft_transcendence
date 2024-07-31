@@ -14,6 +14,8 @@ from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
 
+import sys
+
 class TournamentSetupManager:
     @staticmethod
     def create_tournament_and_tournament_player_for_host(validated_data: TournamentCreationSerializer.validated_data):
@@ -118,6 +120,7 @@ class TournamentInProgressManager:
                     # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
                     TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
 
+                TournamentManager.in_progress.print_tournament_match_details(tournament)
 
         except Exception as e:
             raise TournamentInProgressException(f"An error occurred while updating tournament data after finished match: {e}")
@@ -125,7 +128,9 @@ class TournamentInProgressManager:
     @staticmethod
     def assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player: TournamentPlayer) -> None:
         try:
+            print("assign_winner_to_next_tournament_match_with_less_than_two_players", file=sys.stderr)
             with transaction.atomic():
+                print(f"\ttournamentplayer: {winning_tournament_player.id}, user: {winning_tournament_player.user.id}", file=sys.stderr)
                 tournament = winning_tournament_player.tournament
                 try:
                     tournament_matches = Match.objects.filter(
@@ -137,6 +142,7 @@ class TournamentInProgressManager:
 
                 for match in tournament_matches:
                     if len(Player.objects.filter(match=match)) < 2:
+                        print(f"\tmatch to which assign the winner: {match.id}", file=sys.stderr)
                         Player.objects.create(
                             user=winning_tournament_player.user,
                             match=match
@@ -165,6 +171,20 @@ class TournamentInProgressManager:
             if match.state in [MatchState.LOBBY, MatchState.IN_PROGRESS]:
                 match.state = MatchState.ABORTED
                 match.save()
+
+    @staticmethod
+    def print_tournament_match_details(tournament: Tournament):
+        print("print_tournament_match_details", file=sys.stderr)
+        tournament_matches = Match.objects.filter(
+                        tournament=tournament
+                    ).order_by('id')
+        for match in tournament_matches:
+            players = match.players.all()
+            print(f"match: {match.id}", file=sys.stderr)
+            if players[0] is not None:
+                print(f"\tplayer1: {players[0].id}", file=sys.stderr)
+            if players[1] is not None:
+                print(f"\tplayer2: {players[1].id}", file=sys.stderr)
 
 class TournamentPlayerManager:
     @staticmethod
