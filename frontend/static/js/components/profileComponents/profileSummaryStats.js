@@ -13,13 +13,13 @@ const profileSummaryStats = ({
 	total_games_played,
 	win_loss_ratio,
 	winning_streak,
-	position_in_leaderBoard,}) => {
+	position_in_leaderboard,}) => {
 	const statsList = document.createElement('section');
 	statsList.classList.add('summary');
-	const RankArticle = SummaryItem('dashboard-item', `Rank ${position_in_leaderBoard || 'N/A'}`);
+	const RankArticle = SummaryItem('dashboard-item', `Rank ${position_in_leaderboard || 'N/A'}`);
 	const winsArticle = SummaryItem('dashboard-item', `${wins} wins`);
 	const lossesArticle = SummaryItem('dashboard-item', `${losses} losses`);
-	const wlRatio = SummaryItem('dashboard-item', `W/G: ${total_games_played === 0 ? 'N/A' : win_loss_ratio}`);
+	const wlRatio = SummaryItem('dashboard-item', `W-ratio: ${total_games_played === 0 ? 'N/A' : (win_loss_ratio * 100).toFixed(2)}%`);
 	const gamesPlayedArticle = SummaryItem('dashboard-item', `${total_games_played || 0} games played`);
 	const streak = SummaryItem('dashboard-item', `Streak of ${winning_streak}`);
 
