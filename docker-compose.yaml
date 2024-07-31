@@ -38,7 +38,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
     entrypoint: ./entrypoint.sh
-    command: daphne -b 0.0.0.0 -p 8001 backend.asgi:application
+    command: bash -c "python manage.py runserver 0.0.0.0:8080"
     depends_on:
       postgres:
         condition: service_healthy
