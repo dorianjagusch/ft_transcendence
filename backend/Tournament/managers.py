@@ -142,7 +142,7 @@ class TournamentInProgressManager:
 
                 for match in tournament_matches:
                     if len(Player.objects.filter(match=match)) < 2:
-                        print(f"\tmatch to which assign the winner: {match.id}", file=sys.stderr)
+                        print(f"\tmatch winner gets assigned to: {match.id}", file=sys.stderr)
                         Player.objects.create(
                             user=winning_tournament_player.user,
                             match=match
@@ -182,9 +182,9 @@ class TournamentInProgressManager:
             players = match.players.all()
             print(f"match: {match.id}", file=sys.stderr)
             if players[0] is not None:
-                print(f"\tplayer1: {players[0].id}", file=sys.stderr)
+                print(f"\tplayer1: {players[0].user.id}", file=sys.stderr)
             if players[1] is not None:
-                print(f"\tplayer2: {players[1].id}", file=sys.stderr)
+                print(f"\tplayer2: {players[1].user.id}", file=sys.stderr)
 
 class TournamentPlayerManager:
     @staticmethod

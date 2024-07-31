@@ -71,7 +71,6 @@ export default class extends AView {
 				return;
 			}
 			const match_id = Number(this.params.match_id) + 1;
-			debugger
 			if (await this.isTournamentFinished(this.params)) {
 				this.navigateTo(`/winner/tournaments/${this.params.tournament_id}`);
 			} else {
