@@ -5,7 +5,7 @@ import re
 def validate_image(file):
 	valid_mime_types = ['image/jpeg', 'image/jpg', 'image/png']
 	valid_file_extensions = ['.jpg', '.jpeg', '.png']
-	max_file_size = 2097152  # 2MB
+	max_file_size = 1048576
 
 	ext = os.path.splitext(file.name)[1].lower()
 	if ext not in valid_file_extensions:
