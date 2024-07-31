@@ -1,5 +1,5 @@
 const protocol = 'https://';
-const location = 'localhost:444/';
+const location = 'localhost:8443/';
 const baseURL = `${protocol}${location}`;
 const userURL = `${baseURL}api/users/`;
 const loginURL = `${baseURL}api/login/`;

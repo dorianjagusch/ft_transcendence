@@ -162,7 +162,7 @@ class TournamentMatchDetailView(APIView):
 				return Response({"message": f"The tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
 			next_match = tournament_matches[tournament_match_id]
 			token = MatchTokenManager.create_tournament_match_token(next_match)
-			pong_match_url = f'wss://localhost:444/pong/{next_match.id}?token={token.token}'
+			pong_match_url = f'wss://localhost:8443/pong/{next_match.id}?token={token.token}'
 			return Response(pong_match_url, status=status.HTTP_200_OK)
 		else:
 			tournament_match_serializer = TournamentSerializers.match(tournament_matches[tournament_match_id])
