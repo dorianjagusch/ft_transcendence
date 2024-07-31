@@ -20,4 +20,4 @@ RUN pip install --upgrade pip \
 	&& chmod 755 entrypoint.sh
 
 
-EXPOSE 8081
+EXPOSE 8080
