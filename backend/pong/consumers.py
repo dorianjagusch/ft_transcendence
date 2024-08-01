@@ -48,15 +48,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         authenticated = await self.authenticate_match_token_and_fetch_match_and_players(token, match_id)
         if authenticated:
             await self.set_names(self.match)
-            if self.ai_opponent is True:
-                self.game.use_ai_opponent()
-                asyncio.create_task(self.ai_opponent_loop())
-                asyncio.create_task(self.ai_move_loop())
-
             self.match.start_time = timezone.now
             await self.start_match(self.match)
             await self.accept()
             asyncio.create_task(self.send_positions_loop())
+            if self.ai_opponent is True:
+                self.game.use_ai_opponent()
+                asyncio.create_task(self.ai_opponent_loop())
+                asyncio.create_task(self.ai_move_loop())
         else:
             await self.close()
             return
@@ -167,12 +166,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         # Save scores when the game is over
         self.player_left.score = self.game.player_left.score
-        self.player_right.score = self.game.player_right.score
+        if self.ai_opponent is False:
+            self.player_right.score = self.game.player_right.score
 
         # Determine and save the winner
         if self.game.player_left.score > self.game.player_right.score:
             self.player_left.match_winner = True
-        else:
+        elif self.ai_opponent is False:
             self.player_right.match_winner = True
 
         try:
@@ -235,5 +235,5 @@ class PongConsumer(AsyncWebsocketConsumer):
             if not right_user.is_active:
                 self.abort_match(self.match)
                 return False
-            
+
         return True
