@@ -1176,6 +1176,7 @@ aside {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: space-between;
+	z-index: 9999;
 }
 
 aside > * {
