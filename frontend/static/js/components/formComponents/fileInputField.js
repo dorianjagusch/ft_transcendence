@@ -7,7 +7,7 @@ function validateFile(file) {
 		return false;
 	}
 
-	const maxSizeInBytes = 2097152;
+	const maxSizeInBytes = 1048576;
 	if (file.size > maxSizeInBytes) {
 		notify('Please select an image smaller than 2MB.', 'error');
 		return false;

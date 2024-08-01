@@ -21,10 +21,8 @@ APP_DIRS = [
     os.path.join(BASE_DIR, "Friends"),
 ]
 
-TEMPLATE_DIRS = [os.path.join(app, 'templates') for app in APP_DIRS if os.path.exists(os.path.join(app, 'templates'))]
-
-FILE_UPLOAD_MAX_MEMORY_SIZE = 2097152
-DATA_UPLOAD_MAX_MEMORY_SIZE = 2097152
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576
 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.MemoryFileUploadHandler',
@@ -35,29 +33,34 @@ FILE_UPLOAD_HANDLERS = [
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^6z#%nf*!6vj*+*nxf^-+qq!by6&zb7_7u8r$_t-6+u#$5o$j='
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'localhost',
+	'127.0.0.1',
+	'localhost:443',
+	'127.0.0.1:443',
+	'asgiserver'
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+	'daphne',
     'corsheaders', #Added for CORS header configuration
     'rest_framework',
     'backend',
 	'channels',
-	'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Backend apps here
     'User',
     'Friends',
@@ -85,7 +88,6 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': TEMPLATE_DIRS,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,8 +122,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default database-backed sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 100 # session expiration time (in seconds)
-SESSION_COOKIE_HTTPONLY = False # Set to True in production
-SESSION_COOKIE_SECURE = False  # Set to True in production
+SESSION_COOKIE_HTTPONLY = True # Set to True in production
+SESSION_COOKIE_SECURE = True  # Set to True in production
 SESSION_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
 
 # our custom User model
@@ -174,14 +176,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #CSRF settings
 
 CSRF_COOKIE_SAMESITE = 'Lax' #set to 'Lax' in production
-CSRF_COOKIE_HTTPONLY = False #set to true in production
-CSRF_COOKIE_SECURE = False #set to true in production
+CSRF_COOKIE_SECURE = True #set to true in production
 
 CSRF_TRUSTED_ORIGINS = [
-		'http://localhost:80',
-		'http://127.0.0.1:80',
-		'http://localhost',
-		'http://127.0.0.1',
 		'https://localhost',
 		'https://127.0.0.1',
 		'https://localhost:443',
@@ -189,14 +186,9 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 #CORS settings
-
 CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "X-CSRFToken", "x-sessionid", "x-requested-with"]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-		'http://localhost:80',
-		'http://127.0.0.1:80',
-		'http://localhost',
-		'http://127.0.0.1',
 		'https://localhost',
 		'https://127.0.0.1',
 		'https://localhost:443',
@@ -205,5 +197,5 @@ CORS_ALLOWED_ORIGINS = [
 
 
 # SSL Settings
-
-# SECURE_SSL_REDIRECT = True # uncomment in production
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
