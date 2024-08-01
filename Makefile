@@ -25,7 +25,7 @@ BLUE = \033[0;94m
 B_MAGENTA = \033[1;35m
 CYAN = \033[0;96m
 
-all: up
+all: prod
 
 up:
 	${DOCKER_COMPOSE} up --build --detach
