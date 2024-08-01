@@ -7,6 +7,7 @@ import UpdateUserModal from './dialogs/updateUserModal.js';
 import UserService from '../services/userService.js';
 import ProfilePictureService from '../services/profilePictureService.js';
 import validatePassword from '../utils/validatePassword.js';
+import validateUsername from '../utils/validateUsername.js';
 
 const sideBarButton = (classes, text, callback) => {
 	const sideBarButton = document.createElement('button');
@@ -57,6 +58,12 @@ let updateUser = async (userId) => {
 
 	if (username !== '' && username !== savebleUsername) {
 		savebleUsername = username;
+		try {
+			validateUsername(savebleUsername);
+		} catch (error) {
+			notify(error.message, 'error');
+			return;
+		}
 	}
 
 	if (password === '' && username === '') {
@@ -69,15 +76,15 @@ let updateUser = async (userId) => {
 		return;
 	}
 
+
 	if (password !== '' && repeatPassword !== '') {
 		saveblePassword = password;
-		// TODO: Use password validation
-		//try {
-		//	validatePassword(saveblePassword);
-		//} catch (error) {
-		//	notify(error.message, 'error');
-		//	return;
-		//}
+		try {
+			validatePassword(saveblePassword);
+		} catch (error) {
+			notify(error.message, 'error');
+			return;
+		}
 	}
 
 	const data = {
