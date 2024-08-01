@@ -13,6 +13,7 @@ from Match.matchState import MatchState
 from Player.models import Player
 from Tournament.models import Tournament, TournamentPlayer
 from Tournament.managers import TournamentManager
+from User.models import User
 from .pongPlayer import PongPlayer
 from .ball import Ball
 from django.utils import timezone
@@ -130,6 +131,9 @@ class PongConsumer(AsyncWebsocketConsumer):
                         return False
                 else:
                     self.ai_opponent = True
+
+                if not self.are_player_users_still_active():
+                    return False
                 return True
 
         except Exception:
@@ -152,6 +156,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.match_results_saved == True:
             return
         self.match_results_saved = True
+
+        if not self.are_player_users_still_active():
+            return
 
         self.match.finish_match()
         ball_stats = self.game.get_ball_stats()
@@ -217,3 +224,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         match.abort_match()
         if match.tournament:
             TournamentManager.in_progress.abort_tournament(match.tournament)
+
+    def are_player_users_still_active(self) -> bool:
+        left_user = User.objects.get(pk=self.player_left.user.id)
+        if not left_user.is_active:
+            self.abort_match(self.match)
+            return False
+        if self.player_right:
+            right_user = User.objects.get(pk=self.player_right.user.id)
+            if not right_user.is_active:
+                self.abort_match(self.match)
+                return False
+            
+        return True
