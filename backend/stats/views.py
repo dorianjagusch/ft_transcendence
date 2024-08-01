@@ -72,14 +72,16 @@ class MatchScoreGraphView(APIView, UserTableMixin):
 			return Response({"message": "User was not found"}, status=status.HTTP_404_NOT_FOUND)
 		scores = self.get_last_5_game_scores(user)
 		match_ids = [score['match_id'] for score in scores]
-		match_scores = [score['score'] for score in scores]
+		match_scores = [0.2 if score['score'] == 0 else score['score'] for score in scores]
 		match_colors = ['green' if score['win'] else 'red' for score in scores]
+		match_texts = ['0' if score['score'] == 0 else str(score['score']) for score in scores]
+
 		
 		fig = go.Figure(data=[go.Bar(
 			x=match_ids,
 			y=match_scores,
 			marker_color=match_colors,
-			text=match_scores, 
+			text=match_texts, 
             textposition='inside',
 		)])
 
@@ -87,7 +89,8 @@ class MatchScoreGraphView(APIView, UserTableMixin):
 			title='Last 5 Match Scores',
 			xaxis_title='Match ID',
 			yaxis_title='Score',
-			xaxis=dict(showticklabels=False)
+			xaxis=dict(showticklabels=False),
+			yaxis=dict(showticklabels=False)
 		)
 
 		svg_str = fig.to_image(format="svg").decode("utf-8")
