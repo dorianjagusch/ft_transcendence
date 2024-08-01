@@ -3,6 +3,7 @@ import AView from './AView.js';
 import RegisterForm from '../components/formComponents/registerForm.js';
 import UserService from '../services/userService.js';
 import validatePassword from '../utils/validatePassword.js';
+import validateUsername from '../utils/validateUsername.js';
 
 export default class extends AView {
 	constructor(params) {
@@ -40,13 +41,13 @@ export default class extends AView {
 			password: password,
 		};
 
-		// TODO: Use password validation
-		//try {
-		//	validatePassword(password);
-		//} catch (error) {
-		//	this.notify(error.message, 'error');
-		//	return;
-		//}
+		try {
+			validateUsername(username);
+			validatePassword(password);
+		} catch (error) {
+			this.notify(error.message, 'error');
+			return;
+		}
 
 		const userService = new UserService();
 		try {
