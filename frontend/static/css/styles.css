@@ -553,6 +553,7 @@ main#content-container .user-card {
 	min-width: 75px;
 	max-width: 120px;
 	border-radius: 50%;
+	position: relative;
 }
 
 .user-card-text {
@@ -926,7 +927,7 @@ button:is(:focus, :hover) {
 
 .profile .play-history {
 	grid-area: play-history;
-	max-height: 100vh;
+	height: 100vh;
 }
 
 .profile .play-history ul {
@@ -1050,7 +1051,7 @@ button:is(:focus, :hover) {
 
 .dashboard .play-history {
 	grid-area: history;
-	max-height: 100vh;
+	height: 100vh;
 }
 
 .dashboard .play-history ul {
