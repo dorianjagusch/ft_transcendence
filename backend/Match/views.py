@@ -39,7 +39,7 @@ class MatchView(APIView):
         if not match:
             return Response({"message": "Something went wrong when creating the match and players."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        pong_match_url = f'ws://localhost:8080/pong/{match.id}?token={token.token}'
+        pong_match_url = f'wss://localhost:8443/pong/{match.id}?token={token.token}'
         return Response(pong_match_url, status=status.HTTP_200_OK)
 
 

@@ -54,45 +54,45 @@ from stats.views import StatsView, \
 from leaderboard.views import LeaderboardListView
 
 urlpatterns = [
-	path('admin/', admin.site.urls),
+	path('api/admin/', admin.site.urls),
 
 	# User views
-	path('users/', UserListView.as_view()),
-	path('users/<int:user_id>', UserDetailView.as_view()),
-	path('users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
-	path('login/', UserLoginView.as_view()),
-	path('logout/', UserLogoutView.as_view()),
+	path('api/users/', UserListView.as_view()),
+	path('api/users/<int:user_id>', UserDetailView.as_view()),
+	path('api/users/<int:user_id>/profile_pictures/', UserProfilePictureView.as_view()),
+	path('api/login/', UserLoginView.as_view()),
+	path('api/logout/', UserLogoutView.as_view()),
 
 	# Friends views
-	path('friends/', FriendsListView.as_view()),
-	path('friends/<int:friend_id>', FriendshipDetailView.as_view()),
+	path('api/friends/', FriendsListView.as_view()),
+	path('api/friends/<int:friend_id>', FriendshipDetailView.as_view()),
 
 	# Tokens views
-	path('tokens/match/', SingleMatchGuestTokenView.as_view()),
+	path('api/tokens/match/', SingleMatchGuestTokenView.as_view()),
 
 	# Match Views
-	path('match/', MatchView.as_view()),
-	path('matches/', MatchHistoryView.as_view()),
-	path('matches/<int:match_id>/', MatchDetailView.as_view()),
+	path('api/match/', MatchView.as_view()),
+	path('api/matches/', MatchHistoryView.as_view()),
+	path('api/matches/<int:match_id>/', MatchDetailView.as_view()),
 
 	# Player views
-	path('players/', PlayerListView.as_view()),
-	path('players/<int:player_id>', PlayerDetailView.as_view()),
-	path('matches/<int:match_id>/players/', MatchPlayerListView.as_view()),
+	path('api/players/', PlayerListView.as_view()),
+	path('api/players/<int:player_id>', PlayerDetailView.as_view()),
+	path('api/matches/<int:match_id>/players/', MatchPlayerListView.as_view()),
 
 	# Tournament views
-	path('tournaments/', TournamentListView.as_view()),
-	path('tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
-	path('tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
-	path('tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
-	path('tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
-	path('tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
+	path('api/tournaments/', TournamentListView.as_view()),
+	path('api/tournaments/<int:tournament_id>', TournamentDetailView.as_view()),
+	path('api/tournaments/<int:tournament_id>/players/', TournamentPlayerListView.as_view()),
+	path('api/tournaments/<int:tournament_id>/players/<int:tournamentplayer_id>', TournamentPlayerDetailView.as_view()),
+	path('api/tournaments/<int:tournament_id>/matches/', TournamentMatchListView.as_view()),
+	path('api/tournaments/<int:tournament_id>/matches/<int:tournament_match_id>', TournamentMatchDetailView.as_view()),
 
 	# Stats Views
-	path('users/<int:user_id>/stats/', StatsView.as_view()),
-	path('leaderboard/', LeaderboardListView.as_view()),
-	path('users/<int:user_id>/win-loss/', StatsGraphView.as_view()),
-	path('users/<int:user_id>/recent-outcomes/', MatchScoreGraphView.as_view())
+	path('api/users/<int:user_id>/stats/', StatsView.as_view()),
+	path('api/leaderboard/', LeaderboardListView.as_view()),
+	path('api/users/<int:user_id>/win-loss/', StatsGraphView.as_view()),
+	path('api/users/<int:user_id>/recent-outcomes/', MatchScoreGraphView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
