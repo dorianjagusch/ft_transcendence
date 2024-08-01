@@ -16,23 +16,27 @@ from Tournament.managers import TournamentManager
 from .pongPlayer import PongPlayer
 from .ball import Ball
 from django.utils import timezone
+from channels.exceptions import StopConsumer
 
 class PongConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.match = None
-        self.player_left = PongPlayer(WALL_MARGIN)
+        self.pong_player_left = PongPlayer(WALL_MARGIN)
+        self.player_left = None
         self.left_name = None
-        self.player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
+        self.pong_player_right = PongPlayer(PLAYGROUND_WIDTH - WALL_MARGIN)
+        self.player_right = None
         self.right_name = None
         self.ai_opponent = False
-        self.ai_target_y = self.player_right.y
+        self.ai_target_y = self.pong_player_right.y
         self.ball = Ball()
         self.ball_contacts = 0
         self.ball_max_speed = BALL_SPEED
-        self.game = PongStatus(self.ball, self.player_left, self.player_right, self.ball_contacts, self.ball_max_speed)
+        self.game = PongStatus(self.ball, self.pong_player_left, self.pong_player_right, self.ball_contacts, self.ball_max_speed)
         self.match_ended_normally = False
+        self.match_results_saved = False
 
     async def connect(self):
         # Extract the match id and the token from the URL query string
@@ -59,6 +63,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if not self.match_ended_normally:
             await self.abort_match(self.match)
+        raise StopConsumer()
 
     async def receive(self, text_data):
         key_press = text_data.strip()
@@ -92,12 +97,12 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def send_positions_loop(self):
         await self.send_consts()
         while True:
-            self.game.update_ball_position()
-            await self.send_positions()
-            await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)
             if self.game.game_stats.game_over == True:
                 self.match.end_time = timezone.now
                 break
+            self.game.update_ball_position()
+            await self.send_positions()
+            await asyncio.sleep(MESSAGE_INTERVAL_SECONDS)
 
         await self.save_match_results()
         await self.close()
@@ -142,9 +147,12 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.left_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_left.user).first().display_name
             self.right_name = TournamentPlayer.objects.filter(tournament=self.match.tournament, user=self.player_right.user).first().display_name
 
-
     @database_sync_to_async
     def save_match_results(self):
+        if self.match_results_saved == True:
+            return
+        self.match_results_saved = True
+
         self.match.finish_match()
         ball_stats = self.game.get_ball_stats()
         self.match.ball_contacts = ball_stats['ball_contacts']
@@ -185,7 +193,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             # this shouldn't happen, but in case, abort tournament
             if not winning_player:
                 TournamentManager.in_progress.abort_tournament(match.tournament)
-
+                return
             with transaction.atomic():
 
                 winning_tournament_player = TournamentPlayer.objects.get(
