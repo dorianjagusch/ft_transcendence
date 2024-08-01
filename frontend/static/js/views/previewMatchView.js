@@ -21,7 +21,7 @@ export default class extends Aview {
 		if (startButton) {
 			startButton.addEventListener('click', () => {
 				this.navigateTo(
-					`/pong/tournaments/${this.params.tournament_id}/matches/${this.params.match_id}`
+					`/game/tournaments/${this.params.tournament_id}/matches/${this.params.match_id}`
 				);
 			});
 		}

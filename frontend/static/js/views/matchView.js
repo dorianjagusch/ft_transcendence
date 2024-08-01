@@ -26,7 +26,7 @@ export default class extends Aview {
 		try {
 			const data = await this.authenticationService.postAiMatch({ai_opponent: true});
 			localStorage.setItem('token', data.token.token);
-			this.navigateTo('/pong');
+			this.navigateTo('/game');
 		} catch (error) {
 			this.notify('Error creating AI match');
 			this.navigateTo('/match');
@@ -56,7 +56,7 @@ export default class extends Aview {
 		if (startButton) {
 			startButton.addEventListener('click', () => {
 				localStorage.setItem('token', this.token);
-				this.navigateTo('/pong');
+				this.navigateTo('/game');
 			});
 		}
 	}
