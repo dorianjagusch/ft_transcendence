@@ -6,8 +6,8 @@ BACKEND_ENV				= ./backend/.env
 FRONTEND_DIR			= ./frontend
 FRONTEND_ENV			= ./frontend/.env
 
-DOCKER_COMPOSE_FILE		= ./docker-compose.yaml
-DOCKER_COMPOSE_PROD_FILE= ./production.yaml
+DOCKER_COMPOSE_FILE		= ./docker-compose-dev.yaml
+DOCKER_COMPOSE_PROD_FILE= ./docker-compose.yaml
 
 # add later '--env-file ${FRONTEND_ENV}' to DOCKER_COMPOSE below
 DOCKER_COMPOSE			= docker compose \

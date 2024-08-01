@@ -46,7 +46,7 @@ const router = async () => {
 	} else if (
 		!isLoggedOut &&
 		constants.allowedPaths.includes(match.route.path) &&
-		match.route.path !== '/pong'
+		match.route.path !== '/game'
 	) {
 		const userService = new UserService();
 		const user_id = localStorage.getItem('user_id');

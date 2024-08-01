@@ -13,7 +13,7 @@ const tournamentURL = `${baseURL}api/tournaments/`;
 const matchURL = `${baseURL}api/matches/`;
 const playerURL = `${baseURL}api/players/`;
 
-const allowedPaths = ['/login', '/register', '/', '/pong'];
+const allowedPaths = ['/login', '/register', '/', '/game'];
 
 const problemWithFetchMsg = 'There was a problem with the fetch operation: ';
 

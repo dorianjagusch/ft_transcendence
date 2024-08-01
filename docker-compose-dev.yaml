@@ -1,0 +1,66 @@
+networks:
+  ft_transcendence_network:
+    name: ft_transcendence_network
+    driver: bridge
+
+volumes:
+  database:
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres_c
+    user: postgres
+    ports:
+      - 5432:5432
+    env_file:
+      ./backend/.env
+    volumes:
+      - database:/var/lib/postgresql/data/
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 80s
+    networks:
+      - ft_transcendence_network
+
+  backend:
+    image: backend:adsjm
+    container_name: backend_c
+    build:
+      context: ./backend
+    ports:
+      - 8080:8080
+    env_file:
+      ./backend/.env
+    entrypoint: ./entrypoint.sh
+    command: bash -c "python manage.py runserver 0.0.0.0:8080"
+    depends_on:
+        postgres:
+          condition: service_healthy
+    restart: always
+    volumes:
+      - ./backend:/app
+    networks:
+      - ft_transcendence_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: frontend:adsjm
+    container_name: frontend_c
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      # - 443:443
+      - 80:80
+    depends_on:
+      - backend
+    restart: on-failure
+    networks:
+      - ft_transcendence_network
+    # remember to expose port 443 for host
