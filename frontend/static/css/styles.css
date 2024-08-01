@@ -553,6 +553,7 @@ main#content-container .user-card {
 	min-width: 75px;
 	max-width: 120px;
 	border-radius: 50%;
+	position: relative;
 }
 
 .user-card-text {
@@ -926,7 +927,7 @@ button:is(:focus, :hover) {
 
 .profile .play-history {
 	grid-area: play-history;
-	height: 100%;
+	height: 100vh;
 }
 
 .profile .play-history ul {
@@ -1050,7 +1051,7 @@ button:is(:focus, :hover) {
 
 .dashboard .play-history {
 	grid-area: history;
-	height: 100%;
+	height: 100vh;
 }
 
 .dashboard .play-history ul {
@@ -1176,6 +1177,7 @@ aside {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: space-between;
+	z-index: 9999;
 }
 
 aside > * {

@@ -19,7 +19,7 @@ const profileSummaryStats = ({
 	const RankArticle = SummaryItem('dashboard-item', `Rank ${position_in_leaderboard || 'N/A'}`);
 	const winsArticle = SummaryItem('dashboard-item', `${wins} wins`);
 	const lossesArticle = SummaryItem('dashboard-item', `${losses} losses`);
-	const wlRatio = SummaryItem('dashboard-item', `W-ratio: ${total_games_played === 0 ? 'N/A' : win_loss_ratio.toFixed(4)*100}%`);
+	const wlRatio = SummaryItem('dashboard-item', `W-ratio: ${total_games_played === 0 ? 'N/A' : (win_loss_ratio * 100).toFixed(2)}%`);
 	const gamesPlayedArticle = SummaryItem('dashboard-item', `${total_games_played || 0} games played`);
 	const streak = SummaryItem('dashboard-item', `Streak of ${winning_streak}`);
 

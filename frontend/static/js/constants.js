@@ -1,17 +1,17 @@
-const protocol = 'http://';
-const location = 'localhost:8080/';
+const protocol = 'https://';
+const location = 'localhost:8443/';
 const baseURL = `${protocol}${location}`;
-const userURL = `${baseURL}users/`;
-const loginURL = `${baseURL}login/`;
-const logoutURL = `${baseURL}logout/`;
-const leaderboardURL = `${baseURL}leaderboard/`;
-const settingsURL = `${baseURL}settings/`;
-const friendURL = `${baseURL}friends/`;
-const pongURL = `${baseURL}match/`;
-const authenticationURL = `${baseURL}tokens/`;
-const tournamentURL = `${baseURL}tournaments/`;
-const matchURL = `${baseURL}matches/`;
-const playerURL = `${baseURL}players/`;
+const userURL = `${baseURL}api/users/`;
+const loginURL = `${baseURL}api/login/`;
+const logoutURL = `${baseURL}api/logout/`;
+const leaderboardURL = `${baseURL}api/leaderboard/`;
+const settingsURL = `${baseURL}api/settings/`;
+const friendURL = `${baseURL}api/friends/`;
+const pongURL = `${baseURL}api/match/`;
+const authenticationURL = `${baseURL}api/tokens/`;
+const tournamentURL = `${baseURL}api/tournaments/`;
+const matchURL = `${baseURL}api/matches/`;
+const playerURL = `${baseURL}api/players/`;
 
 const allowedPaths = ['/login', '/register', '/', '/pong'];
 

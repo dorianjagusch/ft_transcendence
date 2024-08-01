@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 import base64
 
 from .models import User, ProfilePicture
-from .validators import validate_image, validate_password
+from .validators import validate_image, validate_password, validate_username
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
 from Friends.models import Friend
@@ -60,6 +60,7 @@ class CreateUserMixin:
 		username = input_serializer.validated_data.get('username')
 		password = input_serializer.validated_data.get('password')
 		try:
+			validate_username(username)
 			validate_password(password)
 		except ValidationError as e:
 			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -87,6 +88,7 @@ class UpdateUserMixin:
 				validate_password(password)
 				result.set_password(password)
 			if username != None and username != '':
+				validate_username(username)
 				result.username = username
 			result.save()
 			outputSerializer = UserOutputSerializer(result)

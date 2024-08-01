@@ -71,7 +71,7 @@ class PongGame {
 				type: THREE.SpotLight,
 				props: {
 					color: 0xffffff,
-					intensity: 750,
+					intensity: 1000,
 					position: {
 						x: constants.game.width / 2,
 						y: constants.game.height / 2,
@@ -83,7 +83,7 @@ class PongGame {
 				type: THREE.SpotLight,
 				props: {
 					color: this.playerLeft.color,
-					intensity: 1000,
+					intensity: 1250,
 					position: {
 						x: this.playerRight.object.position.x,
 						y: this.playerRight.object.position.y,
@@ -96,7 +96,7 @@ class PongGame {
 				type: THREE.SpotLight,
 				props: {
 					color: this.playerRight.color,
-					intensity: 1000,
+					intensity: 1250,
 					position: {
 						x: this.playerLeft.object.position.x,
 						y: this.playerLeft.object.position.y,
@@ -108,7 +108,7 @@ class PongGame {
 			{
 				type: THREE.AmbientLight,
 				props: {
-					color: 0x404040,
+					color: 0x606060,
 					intensity: 3,
 					position: {},
 				},
@@ -123,8 +123,8 @@ class PongGame {
 		const materials = {
 			default: new THREE.MeshBasicMaterial({color: 0xffffff}),
 			plane: new THREE.MeshLambertMaterial({color: 0x444444}),
-			playerLeft: new THREE.MeshLambertMaterial({color: 0xff2222}),
-			playerRight: new THREE.MeshLambertMaterial({color: 0x2222ff}),
+			playerLeft: new THREE.MeshLambertMaterial({color: 0xfd4444}),
+			playerRight: new THREE.MeshLambertMaterial({color: 0x4444df}),
 			ball: new THREE.MeshLambertMaterial({color: 0xffffff}),
 		};
 		this.materials = materials;
@@ -140,7 +140,7 @@ class PongGame {
 			color: 0xffffff,
 			dashSize: 5,
 			gapSize: 5,
-			lineWidth: 3,
+			linewidth: 3,
 		});
 
 		const line = new THREE.Line(lineGeometry, lineMaterial);
@@ -162,7 +162,7 @@ class PongGame {
 				alternative: this.materials.playerLeft,
 			},
 			isLeft: true,
-			color: 0xff0000,
+			color: 0xfd4444,
 		});
 
 		this.playerRight = this.addObject(Player, constants, {
@@ -171,7 +171,7 @@ class PongGame {
 				alternative: this.materials.playerRight,
 			},
 			isLeft: false,
-			color: 0x0000ff,
+			color: 0x4444df,
 		});
 
 		this.gameBall = this.addObject(Ball, constants, {
@@ -194,7 +194,9 @@ class PongGame {
 		const gameOver = document.getElementById('game-over');
 		gameOver.querySelector('p').textContent = 'Game Over';
 		gameOver.style.display = 'grid';
-		document.getElementById('winner').textContent = `${game.winner == 'player_left' ? playerLeft.name : playerRight.name} won!`;
+		document.getElementById('winner').textContent = `${
+			game.winner == 'player_left' ? playerLeft.name : playerRight.name
+		} won!`;
 		return;
 	}
 
@@ -252,6 +254,44 @@ class PongGame {
 		this.gameBall.object.rotation.x = 0;
 		this.gameBall.object.rotation.y = 0;
 		this.plane.setVisibility(false);
+	}
+
+	dispose() {
+		for (let key in this.materials) {
+			const material = this.materials[key];
+			if (material.dispose) {
+				material.dispose();
+			}
+		}
+
+		if (this.scene) {
+			this.scene.traverse((object) => {
+				this.disposeObject(object);
+			});
+		}
+
+		const gl = this.renderer.getContext();
+		const loseContextExtension = gl.getExtension('WEBGL_lose_context');
+		if (loseContextExtension) {
+			loseContextExtension.loseContext();
+		}
+	}
+
+	disposeObject(object) {
+		if (object.geometry) {
+			object.geometry.dispose();
+		}
+		if (object.material) {
+			this.disposeMaterial(object.material);
+		}
+	}
+
+	disposeMaterial(material) {
+		if (Array.isArray(material)) {
+			material.forEach((mat) => mat.dispose());
+		} else {
+			material.dispose();
+		}
 	}
 }
 

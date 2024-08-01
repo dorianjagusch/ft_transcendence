@@ -30,7 +30,6 @@ class MatchSetupManager:
 					)
 
 		except Exception as e:
-			print(f"An error occurred: {e}", file=sys.stderr)
 			return None
 
 		return match

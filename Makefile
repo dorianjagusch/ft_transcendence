@@ -25,7 +25,7 @@ BLUE = \033[0;94m
 B_MAGENTA = \033[1;35m
 CYAN = \033[0;96m
 
-all: up
+all: prod
 
 up:
 	${DOCKER_COMPOSE} up --build --detach
@@ -34,6 +34,13 @@ up:
 prod:
 	${DOCKER_COMPOSE_PROD} up --build --detach
 	@echo "${GREEN}${NAME} deployed to production!${C_RESET}"
+
+kill_prod:
+	${DOCKER_COMPOSE_PROD} stop
+	${DOCKER_COMPOSE_PROD} down -v
+	${DOCKER_COMPOSE_PROD} down --rmi all --volumes --remove-orphans
+	python3 ./clear_migrations.py
+	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
 
 start:
 	${DOCKER_COMPOSE} start
@@ -44,7 +51,7 @@ stop:
 	@echo "${GREEN}${NAME} has stopped!${C_RESET}"
 
 clean: stop
-	sudo ${DOCKER_COMPOSE} down -v
+	${DOCKER_COMPOSE} down -v
 	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
 
 fclean: clean
