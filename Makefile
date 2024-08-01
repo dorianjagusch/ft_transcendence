@@ -37,7 +37,7 @@ prod:
 
 kill_prod:
 	${DOCKER_COMPOSE_PROD} stop
-	sudo ${DOCKER_COMPOSE_PROD} down -v
+	${DOCKER_COMPOSE_PROD} down -v
 	${DOCKER_COMPOSE_PROD} down --rmi all --volumes --remove-orphans
 	python3 ./clear_migrations.py
 	@echo "${GREEN}${NAME} has been cleaned!${C_RESET}"
