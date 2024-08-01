@@ -57,7 +57,6 @@ class MatchHistoryView(APIView):
                 match.start_ts = timezone.make_aware(match.start_ts)
             if match.end_ts and timezone.is_naive(match.end_ts):
                 match.end_ts = timezone.make_aware(match.end_ts)
-            print(f"duration: {match.duration}", file=sys.stderr)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
