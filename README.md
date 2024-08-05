@@ -15,19 +15,28 @@ https://github.com/user-attachments/assets/b94b961d-60e3-4d42-9deb-35b95b425f9b
 
 
 ### Editing Profile
-file:///home/djagusch/Desktop/hive_projects/ft_transcendence/demo/user-profile.mov
+
+https://github.com/user-attachments/assets/3798f120-5503-4904-8bb9-f34f8803a424
 
 
 ### Friends
 
+https://github.com/user-attachments/assets/79cdfa9b-d9c7-4de3-9656-fc5cc5fa6eab
+
 
 ### Pong
+
+https://github.com/user-attachments/assets/3cfbae96-fd20-4e81-ba1e-142e22e8b41c
 
 
 ### Tournament
 
+https://github.com/user-attachments/assets/888e766a-8547-4adb-bad3-c83191b8b91e
+
 
 ### Stats
+
+https://github.com/user-attachments/assets/66320134-88b4-49e8-ade3-00a4308adfe4
 
 
 
