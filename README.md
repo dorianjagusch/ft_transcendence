@@ -11,7 +11,7 @@ Welcome to the "ft_transcendence" project! This project is part of the curriculu
 
 ### Registration & Login
 
-file:///home/djagusch/Desktop/hive_projects/ft_transcendence/demo/login.mov
+[https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/login.mov]
 
 
 ### Editing Profile
