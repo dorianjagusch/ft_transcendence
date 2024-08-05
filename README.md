@@ -11,30 +11,24 @@ Welcome to the "ft_transcendence" project! This project is part of the curriculu
 
 ### Registration & Login
 
-
-[Watch the video](https://raw.githubusercontent.com/dorianjagusch/repository/main/demo/login.mp4)
-
+https://github.com/user-attachments/assets/b94b961d-60e3-4d42-9deb-35b95b425f9b
 
 
 ### Editing Profile
+file:///home/djagusch/Desktop/hive_projects/ft_transcendence/demo/user-profile.mov
 
-https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/user-profile.mov
 
 ### Friends
 
-https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/friends.mov
 
 ### Pong
 
-https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/pong.mov
 
 ### Tournament
 
-https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/setup-tournament.mov
 
 ### Stats
 
-https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/stats.mov
 
 
 ## Table of Contents
