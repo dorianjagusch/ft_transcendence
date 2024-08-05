@@ -11,15 +11,27 @@ Welcome to the "ft_transcendence" project! This project is part of the curriculu
 
 ### Registration & Login
 
+<video src='./demo/login.mov' width=180 />
+
 ### Editing Profile
+
+<video src='./demo/user-profile.mov' width=180 />
 
 ### Friends
 
+<video src='./demo/friends.mov.mov' width=180 />
+
 ### Pong
+
+<video src='./demo/pong.mov' width=180 />
 
 ### Tournament
 
+<video src='./demo/setup-tournament.mov' width=180 />
+
 ### Stats
+
+<video src='./demo/stats.mov' width=180 />
 
 
 ## Table of Contents
