@@ -11,27 +11,27 @@ Welcome to the "ft_transcendence" project! This project is part of the curriculu
 
 ### Registration & Login
 
-<video src='./demo/login.mov' width=180></video>
+[<video src='./demo/login.mov' width=180></video>](https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/login.mov)
 
 ### Editing Profile
 
-<video src='./demo/user-profile.mov' width=180></video>
+[<video src='./demo/user-profile.mov' width=180></video>](https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/user-profile.mov)
 
 ### Friends
 
-<video src='./demo/friends.mov.mov' width=180></video>
+[<video src='./demo/friends.mov.mov' width=180></video>](https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/friends.mov)
 
 ### Pong
 
-<video src='./demo/pong.mov' width=180></video>
+[<video src='./demo/pong.mov' width=180></video>](https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/pong.mov)
 
 ### Tournament
 
-<video src='./demo/setup-tournament.mov' width=180></video>
+[<video src='./demo/setup-tournament.mov' width=180></video>](https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/setup-tournament.mov)
 
 ### Stats
 
-<video src='./demo/stats.mov' width=180></video>
+[<video src='./demo/stats.mov' width=180></video>](https://github.com/dorianjagusch/ft_transcendence/blob/main/demo/stats.mov)
 
 
 ## Table of Contents
