@@ -11,7 +11,6 @@ class MatchView(APIView, GetMatchUrlMixin):
     @method_decorator(must_be_authenticated)
     def get(self, request: Request) -> Response:
         return self.get_match_url(request)
-    
 
 class MatchHistoryView(APIView, GetUserMatchHistoryMixin):
     @method_decorator(must_be_authenticated)

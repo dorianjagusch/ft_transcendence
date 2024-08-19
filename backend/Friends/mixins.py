@@ -37,7 +37,6 @@ class GetUserFriendsMixin:
 		friends = User.objects.filter(id__in=friends_to_get)
 		return friends
 
-
 class GetFriendshipStatusMixin:
 	"""
 	Mixin for getting friendship status of another user to own user.
@@ -53,7 +52,6 @@ class GetFriendshipStatusMixin:
 			return FriendShipStatus.PENDINGRECEIVED.value
 		else:
 			return FriendShipStatus.NOTFRIEND.value
-
 
 class CreateFriendshipMixin:
 	"""
@@ -72,7 +70,6 @@ class CreateFriendshipMixin:
 			return Response({"message": "Cannot add deleted user as friend."}, status=status.HTTP_400_BAD_REQUEST)
 		
 		return Friend.objects.create(user_id=user_id, friend_id=friend_id)
-
 
 class DeleteFriendshipMixin:
 	"""
@@ -94,7 +91,6 @@ class DeleteFriendshipMixin:
 			if friend_user:
 				friend_user.delete()
 			return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class DeleteAllUserFriendshipsMixin:
 	"""

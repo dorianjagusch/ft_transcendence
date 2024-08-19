@@ -41,7 +41,6 @@ class UserListView(APIView, GetAllUsersMixin, GetUsersWithUsernameContainsMixin,
 		output_serializer = UserOutputSerializer(result)
 		return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-
 class UserDetailView(APIView, GetUserMixin, IsRequestFromSpecificUserMixin, UpdateUserMixin, DeleteUserMixin):
 	@method_decorator(must_be_authenticated)
 	def get(self, request: Request, user_id: int) -> Response:
@@ -66,7 +65,6 @@ class UserDetailView(APIView, GetUserMixin, IsRequestFromSpecificUserMixin, Upda
 	def delete(self, request: Request, user_id: int) -> Response:
 		return self.delete_user(request, user_id)
 
-
 class UserProfilePictureView(APIView, SaveUserProfilePictureMixin, GetProfilePictureMixin):
 	@method_decorator(csrf_exempt)
 	@method_decorator(must_be_authenticated)
@@ -78,7 +76,6 @@ class UserProfilePictureView(APIView, SaveUserProfilePictureMixin, GetProfilePic
 	def get(self, request: Request, user_id: int) -> Response:
 		return self.get_profile_picture(user_id)
 
-
 class UserLoginView(APIView, AuthenticateUserMixin, LoginUserMixin):
 	@method_decorator(csrf_exempt)
 	def post(self, request: Request) -> Response:
@@ -88,7 +85,6 @@ class UserLoginView(APIView, AuthenticateUserMixin, LoginUserMixin):
 
 		self.login_user(request, result)
 		return Response(UserOutputSerializer(result).data, status=status.HTTP_202_ACCEPTED)
-
 
 class UserLogoutView(APIView, LogoutUserMixin):
 	@method_decorator(must_be_authenticated)

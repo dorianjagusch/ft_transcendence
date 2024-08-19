@@ -14,6 +14,7 @@ from .validators import validate_image, validate_password, validate_username
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Friends.mixins import DeleteAllUserFriendshipsMixin
 
+
 class GetAllUsersMixin:
 	"""
 	Mixin to get all Users.
@@ -43,7 +44,6 @@ class GetUserMixin:
 
 		return user
 
-
 class CreateUserMixin:
 	"""
 	Mixin to create a new user.
@@ -64,7 +64,6 @@ class CreateUserMixin:
 		except ValidationError as e:
 			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 		return User.objects.create_user(username=username, password=password)
-
 
 class UpdateUserMixin:
 	"""
@@ -99,7 +98,6 @@ class UpdateUserMixin:
 		except Exception as e:
 			return Response({"message": "Updating the user failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class AuthenticateUserMixin:
 	"""
 	Mixin to authenticate a user.
@@ -116,7 +114,6 @@ class AuthenticateUserMixin:
 			return user
 		return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
 class LoginUserMixin:
 	"""
 	Mixin to log a user in.
@@ -124,7 +121,6 @@ class LoginUserMixin:
 	def login_user(self, request: Request, user: User) -> None:
 		login(request, user)
 		request.session['is_authenticated'] = True
-
 
 class LogoutUserMixin:
 	"""
@@ -175,7 +171,6 @@ class DeleteUserMixin(DeleteAllUserFriendshipsMixin):
 
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class SaveUserProfilePictureMixin(GetUserMixin):
 	"""
 	Mixin to save a user's profile picture.
@@ -203,7 +198,6 @@ class SaveUserProfilePictureMixin(GetUserMixin):
 			profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
 
-
 class GetProfilePictureMixin(GetUserMixin):
 	"""
 	Mixin to get a user's profile picture.
@@ -225,7 +219,6 @@ class GetProfilePictureMixin(GetUserMixin):
 				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
 		except FileNotFoundError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 class IsRequestFromSpecificUserMixin:
 	"""

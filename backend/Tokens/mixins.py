@@ -9,13 +9,14 @@ from User.serializers import UserOutputSerializer
 from User.mixins import AuthenticateUserMixin
 from Match.models import Match
 
+
+# used in CreateSingleMatchTokenMixin and CreateTournamentMatchTokenMixin
 def create_match_token(user_left_side: User, user_right_side: User | None) -> MatchToken:
 	match_token = MatchToken.objects.create(
 		user_left_side=user_left_side,
 		user_right_side=user_right_side
 	)
 	return match_token
-
 
 class CreateSingleMatchTokenMixin(AuthenticateUserMixin):
 	"""
@@ -49,7 +50,6 @@ class CreateSingleMatchTokenMixin(AuthenticateUserMixin):
 			'guest_user': user_serializer.data
 		}, status=status.HTTP_201_CREATED)
 
-
 class DeactivateMatchToken:
 	"""
 	Mixin for deactivating match token.
@@ -67,7 +67,6 @@ class DeactivateMatchToken:
 				return Response({"message": "Token is now expired."}, status=status.HTTP_200_OK)
 		except Exception:
 			return Response({"message": "Token was not found."}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class CreateTournamentMatchTokenMixin:
 	"""

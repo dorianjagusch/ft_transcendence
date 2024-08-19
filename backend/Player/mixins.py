@@ -13,7 +13,6 @@ class GetAllPlayersMixin:
 	def get_all_players(self) -> QuerySet:
 		return Player.objects.all().order_by('id')
 
-
 class GetPlayerMixin:
 	'''
 	Get a specific match player.
@@ -24,7 +23,6 @@ class GetPlayerMixin:
 			return Response({"message": "Player not found."}, status=status.HTTP_404_NOT_FOUND)
 		
 		return player
-
 
 class GetMatchPlayersMixin:
 	'''

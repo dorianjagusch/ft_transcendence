@@ -9,6 +9,7 @@ from .serializers import PlayerSerializer
 from .mixins import GetAllPlayersMixin, GetPlayerMixin, GetMatchPlayersMixin
 from shared_utilities.decorators import must_be_authenticated
 
+
 class PlayerListView(APIView, GetAllPlayersMixin):
 	@method_decorator(must_be_authenticated)
 	def get(self, request: Request) -> Response:

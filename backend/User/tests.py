@@ -5,6 +5,7 @@ from rest_framework import status
 
 from .serializers import UserInputSerializer, UserOutputSerializer
 
+
 class UserListViewTests(TestCase):
     def setUp(self):
         self.url = '/users/'

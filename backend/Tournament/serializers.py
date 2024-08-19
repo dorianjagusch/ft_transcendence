@@ -4,6 +4,7 @@ from .models import Tournament, TournamentPlayer
 from Match.models import Match
 from Match.matchState import MatchState
 
+
 class TournamentSerializer(serializers.ModelSerializer):
 	state_display = serializers.CharField(source='get_state_display', read_only=True)
 
@@ -11,12 +12,10 @@ class TournamentSerializer(serializers.ModelSerializer):
 		model = Tournament
 		fields = ['id', 'name', 'state_display', 'player_amount']
 
-
 class TournamentPlayerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = TournamentPlayer
 		fields = ['id', 'user', 'display_name']
-
 
 class TournamentMatchSerializer(serializers.ModelSerializer):
 	tournament_match_id = serializers.SerializerMethodField()
@@ -64,7 +63,6 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
 				return TournamentPlayerSerializer(winning_tournament_player).data if winning_tournament_player else None
 		return None
 
-
 class TournamentCreationSerializer(serializers.ModelSerializer):
 	host_user_display_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
@@ -101,7 +99,6 @@ class TournamentCreationSerializer(serializers.ModelSerializer):
 
 		return data
 
-
 class TournamentInProgressSerializer(serializers.ModelSerializer):
 	state = serializers.CharField(source='get_state_display', read_only=True)
 
@@ -116,7 +113,6 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'player_amount',
 			'next_match',
 		]
-
 
 class TournamentSerializers:
 	default = TournamentSerializer

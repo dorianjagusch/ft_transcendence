@@ -7,6 +7,7 @@ from .serializers import MatchTokenSerializer
 from .mixins import CreateSingleMatchTokenMixin, DeactivateMatchToken
 from shared_utilities.decorators import must_be_authenticated, valid_serializer_in_body
 
+
 class SingleMatchGuestTokenView(APIView, CreateSingleMatchTokenMixin, DeactivateMatchToken):
 	@method_decorator(must_be_authenticated)
 	def post(self, request: Request) -> Response:

@@ -11,7 +11,7 @@ from Player.models import Player
 from Tokens.models import MatchToken
 from User.models import User
 
-
+# used in GetMatchUrlMixin
 def create_match_and_its_players(match_token: MatchToken) -> Match | None:
 		try:
 			with transaction.atomic():
@@ -37,10 +37,9 @@ def create_match_and_its_players(match_token: MatchToken) -> Match | None:
 
 		return match
 
-
 class GetMatchUrlMixin:
 	"""
-	Mixin for getting the url for a pong match game.
+	Mixin for getting the url for a match game.
 	Sets up the Match and its players with the match token that is passed as a query parameter.
 	"""
 	def get_match_url(self, request: Request) -> Response:
@@ -70,7 +69,6 @@ class GetMatchUrlMixin:
 
 		pong_match_url = f'wss://localhost:8443/pong/{match.id}?token={token.token}'
 		return Response(pong_match_url, status=status.HTTP_200_OK)
-
 
 class GetUserMatchHistoryMixin:
 	"""
