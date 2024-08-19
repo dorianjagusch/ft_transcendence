@@ -1,23 +1,15 @@
-import json
 from functools import wraps
-from django.utils import timezone
 from typing import Iterable
 from rest_framework import serializers, status
 from rest_framework.response import Response
-from rest_framework.request import Request
-from django.http import HttpResponseForbidden, \
-							HttpResponseNotFound
+from django.http import HttpResponseForbidden, HttpResponseNotFound
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
-from Tournament.models import Tournament, \
-								TournamentPlayer
-from Tournament.managers import TournamentInProgressManager
+from Tournament.models import Tournament
+from Tournament.managers import TournamentManager
 from Tournament.exceptions import TournamentInProgressException
 from Tournament.tournamentState import TournamentState
 
-from rest_framework.validators import UniqueValidator, \
-										UniqueTogetherValidator
-
-import sys
 
 def must_be_authenticated(view_func):
 	@wraps(view_func)
@@ -62,7 +54,6 @@ def must_be_body_user_id(view_func):
 
 		return view_func(*args, **kwargs)
 	return wrapper
-
 
 def valid_serializer_in_body(serializer_class, **kwargs):
 	def decorator(view_func):
@@ -135,15 +126,14 @@ def validate_tournament_request(tournament_states: Iterable[TournamentState]):
 				return HttpResponseForbidden("You are not authorized to modify this resource.")
 
 			if tournament.state not in tournament_states:
-				#TODO: 409 Conflict
-				return HttpResponseForbidden(f"Cannot modify this resource because tournament state is not in '{tournament_states}'.")
+				return Response({"message": f"Cannot modify this resource because tournament state is not in '{tournament_states}'."}, status=status.HTTP_409_CONFLICT)
 
 			try:
-				TournamentInProgressManager.raise_error_if_tournament_has_expired(tournament)
-				TournamentInProgressManager.raise_error_if_inactive_user_in_tournament(tournament)
+				TournamentManager.raise_error_if_tournament_has_expired(tournament)
+				TournamentManager.raise_error_if_inactive_user_in_tournament(tournament)
 
 			except TournamentInProgressException as e:
-				TournamentInProgressManager.abort_tournament(tournament)
+				TournamentManager.abort_tournament(tournament)
 				return HttpResponseForbidden(f"{str(e)}; tournament aborted!")
 
 			return view_func(*args, **kwargs)

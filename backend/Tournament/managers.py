@@ -2,11 +2,9 @@ from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
 
-from .models import Tournament, \
-                        TournamentPlayer
+from .models import Tournament, TournamentPlayer
 from .serializers import TournamentCreationSerializer
-from .exceptions import TournamentSetupException, \
-                            TournamentInProgressException
+from .exceptions import TournamentSetupException, TournamentInProgressException
 from .tournamentState import TournamentState
 from .tournamentMacros import TOURNAMENT_EXPIRY_TIME_SECONDS
 from User.models import User
@@ -14,7 +12,7 @@ from Match.models import Match
 from Match.matchState import MatchState
 from Player.models import Player
 
-class TournamentSetupManager:
+class TournamentManager:
     @staticmethod
     def create_tournament_and_tournament_player_for_host(validated_data: TournamentCreationSerializer.validated_data):
         try:
@@ -29,7 +27,7 @@ class TournamentSetupManager:
                 display_name = validated_data.get('host_user_display_name', None)
                 username = tournament.host_user.username
                 try:
-                    TournamentPlayerManager.create_tournament_player(tournament, tournament.host_user, display_name or username)
+                    TournamentManager.create_tournament_player(tournament, tournament.host_user, display_name or username)
                 except Exception as e:
                     tournament.delete()
                     raise Exception(e)
@@ -55,7 +53,7 @@ class TournamentSetupManager:
         try:
             with transaction.atomic():
 
-                # assignement of players to initial matches are done based on the order of the TournamentPlayers
+                # assignment of players to initial matches are done based on the order of the TournamentPlayers
                 # if you want to set the players for the initial matches based on some other algorithm, replace this part
                 for i in range(0, len(tournament_players), 2):
                     match = Match.objects.create(
@@ -85,12 +83,11 @@ class TournamentSetupManager:
         player_amount = tournament.players.count()
         if player_amount != tournament.player_amount:
             raise TournamentSetupException(f"Tournament must have {tournament.player_amount} players to start, but currently it has {player_amount} players.")
-        TournamentSetupManager.setup_tournament_matches(tournament)
+        TournamentManager.setup_tournament_matches(tournament)
         tournament.start_tournament()
         tournament.save()
 
 
-class TournamentInProgressManager:
     @staticmethod
     def raise_error_if_tournament_has_expired(tournament: Tournament) -> None:
         if timezone.now() > tournament.expire_ts:
@@ -116,7 +113,7 @@ class TournamentInProgressManager:
                     tournament.save()
                 else:
                     # if there is a next match, create a player from the winning_tournament_player.user for next tournament match with less than two players
-                    TournamentInProgressManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
+                    TournamentManager.assign_winner_to_next_tournament_match_with_less_than_two_players(winning_tournament_player)
 
 
         except Exception as e:
@@ -153,7 +150,7 @@ class TournamentInProgressManager:
     @staticmethod
     def abort_tournament(tournament: Tournament) -> None:
         tournament.abort_tournament()
-        TournamentInProgressManager.abort_tournament_matches(tournament)
+        TournamentManager.abort_tournament_matches(tournament)
 
     @staticmethod
     def abort_tournament_matches(tournament: Tournament):
@@ -166,7 +163,6 @@ class TournamentInProgressManager:
                 match.state = MatchState.ABORTED
                 match.save()
 
-class TournamentPlayerManager:
     @staticmethod
     def create_tournament_player(tournament: Tournament, user: User, display_name: str | None) -> TournamentPlayer:
         tournament_player = TournamentPlayer.objects.create(
@@ -175,8 +171,3 @@ class TournamentPlayerManager:
                     display_name=display_name
                 )
         return tournament_player
-
-class TournamentManager:
-    setup = TournamentSetupManager
-    in_progress = TournamentInProgressManager
-    players = TournamentPlayerManager
