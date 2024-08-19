@@ -14,6 +14,7 @@ from .validators import validate_image, validate_password, validate_username
 from .serializers import UserInputSerializer, UserOutputSerializer
 from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
 from Friends.models import Friend
+from Friends.mixins import DeleteAllUserFriendshipsMixin
 
 class GetAllUsersMixin:
 	"""
@@ -136,7 +137,7 @@ class LogoutUserMixin:
 		return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
 
 
-class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
+class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin, DeleteAllUserFriendshipsMixin):
 	"""
 	Mixin to delete a user by ID.
 	"""
@@ -164,7 +165,7 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
 			profile_picture.delete()
 
 		self.change_tournament_player_names_to_deleted(result)
-		Friend.objects.delete_user_friendships(result)
+		self.delete_user_friendships(result)
 
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
