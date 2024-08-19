@@ -10,7 +10,7 @@ from .exceptions import TournamentInProgressException
 from .tournamentState import TournamentState
 from User.models import User
 from User.mixins import AuthenticateUserMixin
-from Tokens.managers import MatchTokenManager
+from Tokens.mixins import CreateTournamentMatchTokenMixin
 from shared_utilities.decorators import must_be_authenticated, \
 											validate_tournament_request
 
@@ -136,7 +136,7 @@ class TournamentMatchListView(APIView):
 		tournament_match_serializers = TournamentSerializers.match(tournament_matches, many=True)
 		return Response(tournament_match_serializers.data, status=status.HTTP_200_OK)
 
-class TournamentMatchDetailView(APIView):
+class TournamentMatchDetailView(APIView, CreateTournamentMatchTokenMixin):
 	@method_decorator(must_be_authenticated)
 	def get(self, request, tournament_id, tournament_match_id):
 		tournament = Tournament.objects.get(id=tournament_id)
@@ -161,7 +161,7 @@ class TournamentMatchDetailView(APIView):
 			if tournament_matches[tournament_match_id].state != TournamentState.LOBBY:
 				return Response({"message": f"The tournament match {tournament_match_id} is not in LOBBY state"}, status=status.HTTP_400_BAD_REQUEST)
 			next_match = tournament_matches[tournament_match_id]
-			token = MatchTokenManager.create_tournament_match_token(next_match)
+			token = self.create_tournament_match_token(next_match)
 			pong_match_url = f'wss://localhost:8443/pong/{next_match.id}?token={token.token}'
 			return Response(pong_match_url, status=status.HTTP_200_OK)
 		else:
