@@ -199,7 +199,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
             # this shouldn't happen, but in case, abort tournament
             if not winning_player:
-                TournamentManager.in_progress.abort_tournament(match.tournament)
+                TournamentManager.abort_tournament(match.tournament)
                 return
             with transaction.atomic():
 
@@ -211,10 +211,10 @@ class PongConsumer(AsyncWebsocketConsumer):
                 match.tournament.next_match += 1
                 match.tournament.save()
 
-                TournamentManager.in_progress.update_tournament_with_winning_tournament_player(winning_tournament_player)
+                TournamentManager.update_tournament_with_winning_tournament_player(winning_tournament_player)
 
         except Exception as e:
-            TournamentManager.in_progress.abort_tournament(match.tournament)
+            TournamentManager.abort_tournament(match.tournament)
 
     async def start_match(self, match: Match):
         await sync_to_async(match.start_match)()
@@ -223,7 +223,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     def abort_match(self, match: Match):
         match.abort_match()
         if match.tournament:
-            TournamentManager.in_progress.abort_tournament(match.tournament)
+            TournamentManager.abort_tournament(match.tournament)
 
     def are_player_users_still_active(self) -> bool:
         left_user = User.objects.get(pk=self.player_left.user.id)
