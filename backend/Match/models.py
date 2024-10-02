@@ -3,7 +3,6 @@ from datetime import datetime
 from .matchState import MatchState
 from Tournament.models import Tournament
 from django.utils import timezone
-import sys
 
 class Match(models.Model):
 	state = models.IntegerField(choices=MatchState.choices, default=MatchState.LOBBY)
@@ -58,5 +57,4 @@ class Match(models.Model):
 		return f'{int(hours):02}:{int(minutes):02}:{int(seconds):02}'
 
 	def __str__(self):
-		# The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.
-		return f'Match {self.id} - {self.get_state_display()}'
+		return f'Match {self.id} - {self.get_state_display()}' # The method to retrieve the human-readable representation of an IntegerChoices enumeration is get_FOO_display(), where FOO is the name of the field.

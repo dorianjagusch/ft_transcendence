@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from .models import User
-from Friends.managers import FriendsManager
 from Friends.models import Friend
+from Friends.mixins import GetFriendshipStatusMixin
 
 class UserInputSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -16,7 +16,7 @@ class UserOutputSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'is_online']
 
-class UserFriendOutputSerializer(serializers.ModelSerializer):
+class UserFriendOutputSerializer(serializers.ModelSerializer, GetFriendshipStatusMixin):
     friendship = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,5 +28,5 @@ class UserFriendOutputSerializer(serializers.ModelSerializer):
         friend_id = obj.id
         if not user_id or not friend_id:
             return None
-        status = FriendsManager.get_friendship_status(Friend.objects, user_id, friend_id)
+        status = self.get_friendship_status(user_id, friend_id)
         return status

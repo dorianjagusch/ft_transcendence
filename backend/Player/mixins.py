@@ -5,13 +5,14 @@ from django.db.models.query import QuerySet
 from .models import Player
 from Match.models import Match
 
+
 class GetAllPlayersMixin:
 	'''
 	Mixin to get all match players.
 	'''
 	def get_all_players(self) -> QuerySet:
 		return Player.objects.all().order_by('id')
-	
+
 class GetPlayerMixin:
 	'''
 	Get a specific match player.

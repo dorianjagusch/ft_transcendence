@@ -12,8 +12,8 @@ import base64
 from .models import User, ProfilePicture
 from .validators import validate_image, validate_password, validate_username
 from .serializers import UserInputSerializer, UserOutputSerializer
-from Tournament.mixins import ChangeDeletedUserTournamentNamesMixin
-from Friends.models import Friend
+from Friends.mixins import DeleteAllUserFriendshipsMixin
+
 
 class GetAllUsersMixin:
 	"""
@@ -44,7 +44,6 @@ class GetUserMixin:
 
 		return user
 
-
 class CreateUserMixin:
 	"""
 	Mixin to create a new user.
@@ -65,7 +64,6 @@ class CreateUserMixin:
 		except ValidationError as e:
 			return Response({"message": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 		return User.objects.create_user(username=username, password=password)
-
 
 class UpdateUserMixin:
 	"""
@@ -100,7 +98,6 @@ class UpdateUserMixin:
 		except Exception as e:
 			return Response({"message": "Updating the user failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class AuthenticateUserMixin:
 	"""
 	Mixin to authenticate a user.
@@ -117,7 +114,6 @@ class AuthenticateUserMixin:
 			return user
 		return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
 class LoginUserMixin:
 	"""
 	Mixin to log a user in.
@@ -125,7 +121,6 @@ class LoginUserMixin:
 	def login_user(self, request: Request, user: User) -> None:
 		login(request, user)
 		request.session['is_authenticated'] = True
-
 
 class LogoutUserMixin:
 	"""
@@ -135,8 +130,14 @@ class LogoutUserMixin:
 		logout(request)
 		return Response({"message": "User logged out"}, status=status.HTTP_200_OK)
 
+# used in DeleteUserMixin
+def change_tournament_player_names_to_deleted(self, user: User) -> None:
+		tournament_players = user.tournament_players.all()
+		for player in tournament_players:
+			player.display_name = "deleted_user"
+			player.save()
 
-class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
+class DeleteUserMixin(DeleteAllUserFriendshipsMixin):
 	"""
 	Mixin to delete a user by ID.
 	"""
@@ -147,27 +148,28 @@ class DeleteUserMixin(ChangeDeletedUserTournamentNamesMixin):
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 		result = get_object_or_404(User, pk=user_id)
 		if not isinstance(result, User):
-				return result
+				response = result
+				return response
 
-		result.username = f"deleted_user_{user_id + 42}"
-		result.set_password(get_random_string(length=30))
-		result.is_active = False
-		result.is_staff = False
-		result.is_superuser = False
-		result.insert_ts = None
-		result.last_login = None
-		result.is_online = False
-		result.save()
-		profile_picture = ProfilePicture.objects.filter(user=result).first()
+		user = result
+		user.username = f"deleted_user_{user_id + 42}"
+		user.set_password(get_random_string(length=30))
+		user.is_active = False
+		user.is_staff = False
+		user.is_superuser = False
+		user.insert_ts = None
+		user.last_login = None
+		user.is_online = False
+		user.save()
+		profile_picture = ProfilePicture.objects.filter(user=user).first()
 		if profile_picture:
 			profile_picture.delete_profile_picture()
 			profile_picture.delete()
 
-		self.change_tournament_player_names_to_deleted(result)
-		Friend.objects.delete_user_friendships(result)
+		change_tournament_player_names_to_deleted(user)
+		self.delete_user_friendships(user)
 
 		return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class SaveUserProfilePictureMixin(GetUserMixin):
 	"""
@@ -196,7 +198,6 @@ class SaveUserProfilePictureMixin(GetUserMixin):
 			profile_picture.save()
 		return Response(status=status.HTTP_200_OK)
 
-
 class GetProfilePictureMixin(GetUserMixin):
 	"""
 	Mixin to get a user's profile picture.
@@ -218,7 +219,6 @@ class GetProfilePictureMixin(GetUserMixin):
 				return Response({'image': encoded_image}, status=status.HTTP_200_OK)
 		except FileNotFoundError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 class IsRequestFromSpecificUserMixin:
 	"""

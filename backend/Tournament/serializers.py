@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from rest_framework.utils.serializer_helpers import ReturnDict
 
-from .models import Tournament, \
-						TournamentPlayer
+from .models import Tournament, TournamentPlayer
 from Match.models import Match
 from Match.matchState import MatchState
+
 
 class TournamentSerializer(serializers.ModelSerializer):
 	state_display = serializers.CharField(source='get_state_display', read_only=True)
@@ -111,7 +110,7 @@ class TournamentInProgressSerializer(serializers.ModelSerializer):
 			'name',
 			'state',
 			'expire_ts',
-			'player_amount', #information about the players about to play in the match
+			'player_amount',
 			'next_match',
 		]
 
